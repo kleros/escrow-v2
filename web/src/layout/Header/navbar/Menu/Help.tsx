@@ -69,10 +69,6 @@ const Icon = styled.svg`
 
 const ITEMS = [
   {
-    text: "Onboarding",
-    Icon: Book,
-  },
-  {
     text: "Get Help",
     Icon: Telegram,
     url: "https://t.me/kleros",
@@ -80,12 +76,12 @@ const ITEMS = [
   {
     text: "Report a Bug",
     Icon: Bug,
-    url: "https://github.com/kleros/kleros-v2/issues",
+    url: "https://github.com/kleros/escrow-v2/issues",
   },
   {
     text: "DApp Guide",
     Icon: Guide,
-    url: "https://docs.kleros.io/products/court-v2",
+    url: "https://docs.kleros.io/products/escrow",
   },
   {
     text: "Crypto Beginner's Guide",
