@@ -1,0 +1,72 @@
+{
+  "name": "escrow-v2",
+  "version": "0.1.0",
+  "description": "Escrow version 2",
+  "main": "index.js",
+  "repository": "git@github.com:kleros/escrow-v2.git",
+  "author": {
+    "name": "Kleros",
+    "email": "contact@kleros.io",
+    "url": "https://kleros.io"
+  },
+  "bugs": {
+    "url": "https://github.com/kleros/escrow-v2/issues",
+    "email": "contact@kleros.io"
+  },
+  "license": "MIT",
+  "private": true,
+  "workspaces": [
+    "bots",
+    "bot-pinner",
+    "contracts",
+    "dynamic-script",
+    "evidence-display",
+    "kleros-sdk",
+    "subgraph",
+    "web",
+    "eslint-config",
+    "prettier-config",
+    "tsconfig"
+  ],
+  "packageManager": "yarn@3.3.1",
+  "volta": {
+    "node": "16.20.1",
+    "yarn": "3.3.1"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^17.7.2",
+    "@commitlint/config-conventional": "^17.6.7",
+    "buffer": "^5.5.0",
+    "conventional-changelog-cli": "^2.2.2",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.2.2",
+    "process": "^0.11.10"
+  },
+  "resolutions": {
+    "async@npm^2.4.0": "^2.6.4",
+    "ejs@npm^2.6.1": "^3.1.7",
+    "ejs@npm:3.1.6": "^3.1.8",
+    "loader-utils@npm:^1.0.2": "^1.4.1",
+    "loader-utils@npm:^1.1.0": "^1.4.1",
+    "lodash@npm^4.17.4": "^4.17.21",
+    "minimist@npm^1.2.0": "^1.2.7",
+    "minimatch@npm:3.0.4": "^3.0.8",
+    "minimatch@npm:^3.0.4": "^3.0.8",
+    "nanoid^3.3.1": "^3.3.4",
+    "node-fetch": "^2.6.7",
+    "underscore@npm^3.0.4": "^1.12.1",
+    "eth-sig-util@npm:^1.4.2": "3.0.0",
+    "fast-xml-parser": "^4.2.5"
+  },
+  "scripts": {
+    "check-prerequisites": "scripts/check-prerequisites.sh",
+    "local-stack": "scripts/tmux-local-stack.sh",
+    "changelog": "conventional-changelog --infile CHANGELOG.md --same-file --release-count 0 && prettier --write CHANGELOG.md",
+    "postinstall": "yarn check-prerequisites; husky install",
+    "reinstall": "YARN_CHECKSUM_BEHAVIOR=update yarn install --no-immutable"
+  },
+  "alias": {
+    "process": "process/browser.js",
+    "buffer": "buffer"
+  }
+}

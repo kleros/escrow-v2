@@ -1,0 +1,3 @@
+{
+  "extends": ["@kleros/escrow-v2-eslint-config"]
+}

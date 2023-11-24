@@ -1,0 +1,73 @@
+{
+  "extends": "@kleros/escrow-v2-tsconfig/react-library.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "~*": [
+        "./*"
+      ],
+      "src*": [
+        "./src*"
+      ],
+      "utils*": [
+        "./src/utils*"
+      ],
+      "assets*": [
+        "./src/assets*"
+      ],
+      "components*": [
+        "./src/components*"
+      ],
+      "connectors*": [
+        "./src/connectors*"
+      ],
+      "context*": [
+        "./src/context*"
+      ],
+      "layout*": [
+        "./src/layout*"
+      ],
+      "consts*": [
+        "./src/consts*"
+      ],
+      "hooks*": [
+        "./src/hooks*"
+      ],
+      "queries*": [
+        "./src/hooks/queries*"
+      ],
+      "pages*": [
+        "./src/pages*"
+      ],
+      "styles*": [
+        "./src/styles*"
+      ],
+      "svgs*": [
+        "./src/assets/svgs*"
+      ]
+    },
+    "target": "es2020",
+    "rootDir": "src",
+    "outDir": "build/dist",
+    "allowJs": true,
+    "forceConsistentCasingInFileNames": true,
+    "strictNullChecks": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "noUnusedLocals": true,
+    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true,
+    "removeComments": true,
+    "isolatedModules": true
+  },
+  "exclude": [
+    "node_modules",
+    "build",
+    "scripts",
+    "acceptance-tests",
+    "webpack",
+    "jest",
+    "src/setupTests.ts",
+    "dist",
+    "commitlint.config.js"
+  ]
+}
