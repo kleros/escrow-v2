@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext } from "react";
+import React, { createContext, useState, useContext, useEffect } from "react";
 
 interface INewTransactionContext {
   escrowType: string;
@@ -45,15 +45,39 @@ const NewTransactionContext = createContext<INewTransactionContext>({
 export const useNewTransactionContext = () => useContext(NewTransactionContext);
 
 export const NewTransactionProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [escrowType, setEscrowType] = useState("general");
-  const [escrowTitle, setEscrowTitle] = useState("");
-  const [deliverableText, setDeliverableText] = useState("");
-  const [deliverableFile, setDeliverableFile] = useState<File>();
-  const [paymentQuantity, setPaymentQuantity] = useState<string>("");
-  const [paymentToken, setPaymentToken] = useState<string>("");
-  const [paymentRecipientAddress, setPaymentRecipientAddress] = useState<string>("");
-  const [deadline, setDeadline] = useState("");
-  const [notificationEmail, setNotificationEmail] = useState("");
+  const [escrowType, setEscrowType] = useState<string>(localStorage.getItem("escrowType") || "general");
+  const [escrowTitle, setEscrowTitle] = useState<string>(localStorage.getItem("escrowTitle") || "");
+  const [deliverableText, setDeliverableText] = useState<string>(localStorage.getItem("deliverableText") || "");
+  const [paymentQuantity, setPaymentQuantity] = useState<string>(localStorage.getItem("paymentQuantity") || "");
+  const [paymentToken, setPaymentToken] = useState<string>(localStorage.getItem("paymentToken") || "");
+  const [deliverableFile, setDeliverableFile] = useState<File>(localStorage.getItem("deliverableFile") || "");
+  const [paymentRecipientAddress, setPaymentRecipientAddress] = useState<string>(
+    localStorage.getItem("paymentRecipientAddress") || ""
+  );
+  const [deadline, setDeadline] = useState<string>(localStorage.getItem("deadline") || "");
+  const [notificationEmail, setNotificationEmail] = useState<string>(localStorage.getItem("notificationEmail") || "");
+
+  useEffect(() => {
+    localStorage.setItem("escrowType", escrowType);
+    localStorage.setItem("escrowTitle", escrowTitle);
+    localStorage.setItem("deliverableText", deliverableText);
+    localStorage.setItem("paymentQuantity", paymentQuantity);
+    localStorage.setItem("paymentToken", paymentToken);
+    localStorage.setItem("deliverableFile", deliverableFile);
+    localStorage.setItem("paymentRecipientAddress", paymentRecipientAddress);
+    localStorage.setItem("deadline", deadline);
+    localStorage.setItem("notificationEmail", notificationEmail);
+  }, [
+    escrowType,
+    escrowTitle,
+    deliverableText,
+    paymentQuantity,
+    paymentToken,
+    deliverableFile,
+    paymentRecipientAddress,
+    deadline,
+    notificationEmail,
+  ]);
 
   return (
     <NewTransactionContext.Provider

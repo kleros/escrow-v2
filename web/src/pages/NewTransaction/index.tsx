@@ -29,7 +29,6 @@ const Container = styled.div`
 const MiddleContentContainer = styled.div`
   display: flex;
   justify-content: center;
-  flex-grow: 1; // Take up remaining space
 `;
 
 const Home: React.FC = () => {
@@ -40,9 +39,9 @@ const Home: React.FC = () => {
 
   return (
     <>
-      {(!isPreviewPage || isMobileView) && <HeroImage />}
+      {!isPreviewPage || isMobileView ? <HeroImage /> : null}
       <Container>
-        {!isPreviewPage && <Timeline />}
+        {!isPreviewPage ? <Timeline /> : null}
         <MiddleContentContainer>
           <Routes>
             <Route index element={<Navigate to="typeOfEscrow" replace />} />

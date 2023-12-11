@@ -19,7 +19,7 @@ const StyledSteps = styled(Steps)`
 
 const items = [
   { title: "Escrow Details", subitems: ["Type of Escrow", "Title"] },
-  { title: "Terms", subitems: ["Deliverable", "Payment", "Deadline", "Notifications"] },
+  { title: "Terms", subitems: ["Deliverable", "Payment", "Deadline"] },
   { title: "Preview" },
 ];
 
