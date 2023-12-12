@@ -1,7 +1,7 @@
 import React from "react";
 import styled, { css } from "styled-components";
 import { landscapeStyle } from "styles/landscapeStyle";
-import { calcMinMax } from "~src/utils/calcMinMax";
+import { responsiveSize } from "utils/responsiveSize";
 import AmountField from "./AmountField";
 import Token from "./Token";
 
@@ -10,7 +10,7 @@ const Container = styled.div`
   flex-direction: column;
   gap: 24px;
   align-items: center;
-  margin-bottom: ${calcMinMax(24, 18)};
+  margin-bottom: ${responsiveSize(24, 18)};
 
   ${landscapeStyle(
     () => css`
@@ -19,11 +19,18 @@ const Container = styled.div`
   )}
 `;
 
-const TokenAndAmount: React.FC = () => {
+interface ITokenAndAmount {
+  quantity: string;
+  setQuantity: (value: string) => void;
+  token: string;
+  setToken: (value: string) => void;
+}
+
+const TokenAndAmount: React.FC<ITokenAndAmount> = ({ quantity, setQuantity, token, setToken }) => {
   return (
     <Container>
-      <AmountField />
-      <Token />
+      <AmountField quantity={quantity} setQuantity={setQuantity} />
+      <Token token={token} setToken={setToken} />
     </Container>
   );
 };

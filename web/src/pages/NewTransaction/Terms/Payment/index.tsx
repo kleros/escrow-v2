@@ -1,26 +1,29 @@
 import React from "react";
-import styled from "styled-components";
-import Header from "components/Header";
-import NavigationButtons from "../../NavigationButtons";
-import DestinationAddress from "./DestinationAddress";
-import ToDivider from "./ToDivider";
-import TokenAndAmount from "./TokenAndAmount";
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
+import { useNewTransactionContext } from "context/NewTransactionContext";
+import TokenTransaction from "../TokenTransaction";
 
 const Payment: React.FC = () => {
+  const {
+    sendingQuantity,
+    setSendingQuantity,
+    sendingToken,
+    setSendingToken,
+    sendingRecipientAddress,
+    setSendingRecipientAddress,
+  } = useNewTransactionContext();
+
   return (
-    <Container>
-      <Header text="I am paying" />
-      <TokenAndAmount />
-      <ToDivider />
-      <DestinationAddress />
-      <NavigationButtons prevRoute="/newTransaction/deliverable" nextRoute="/newTransaction/deadline" />
-    </Container>
+    <TokenTransaction
+      headerText="I am paying"
+      prevRoute="/newTransaction/deliverable"
+      nextRoute="/newTransaction/deadline"
+      quantity={sendingQuantity}
+      setQuantity={setSendingQuantity}
+      token={sendingToken}
+      setToken={setSendingToken}
+      recipientAddress={sendingRecipientAddress}
+      setRecipientAddress={setSendingRecipientAddress}
+    />
   );
 };
 export default Payment;

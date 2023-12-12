@@ -12,16 +12,16 @@ import Deliverable from "./Terms/Deliverable";
 import Notifications from "./Terms/Notifications";
 import Payment from "./Terms/Payment";
 import Timeline from "./Timeline";
-import { calcMinMax } from "utils/calcMinMax";
+import { responsiveSize } from "utils/responsiveSize";
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
   background-color: ${({ theme }) => theme.lightBackground};
-  padding: ${calcMinMax(24, 32)};
-  padding-top: ${calcMinMax(36, 42)};
-  padding-bottom: ${calcMinMax(76, 96)};
+  padding: ${responsiveSize(24, 32)};
+  padding-top: ${responsiveSize(36, 42)};
+  padding-bottom: ${responsiveSize(76, 96)};
   max-width: 1780px;
   margin: 0 auto;
 `;

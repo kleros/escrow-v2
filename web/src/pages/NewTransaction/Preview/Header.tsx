@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { calcMinMax } from "utils/calcMinMax";
+import { responsiveSize } from "utils/responsiveSize";
 
 const StyledHeader = styled.h1`
   display: flex;
@@ -8,7 +8,7 @@ const StyledHeader = styled.h1`
   color: ${({ theme }) => theme.secondaryPurple};
   font-weight: 400;
   margin-bottom: 48px;
-  margin-top: ${calcMinMax(4, 20)};
+  margin-top: ${responsiveSize(4, 20)};
 `;
 
 const Header: React.FC = () => {

@@ -4,8 +4,9 @@ import { landscapeStyle } from "styles/landscapeStyle";
 import Header from "components/Header";
 import { FileUploader, Textarea } from "@kleros/ui-components-library";
 import { useNewTransactionContext } from "context/NewTransactionContext";
-import { calcMinMax } from "utils/calcMinMax";
+import { responsiveSize } from "utils/responsiveSize";
 import NavigationButtons from "../../NavigationButtons";
+import TokenTransaction from "../TokenTransaction";
 
 const Container = styled.div`
   display: flex;
@@ -20,24 +21,36 @@ const StyledTextArea = styled(Textarea)`
 
   ${landscapeStyle(
     () => css`
-      width: ${calcMinMax(342, 699)};
+      width: ${responsiveSize(342, 699)};
     `
   )}
 `;
 
 const StyledFileUploader = styled(FileUploader)`
   width: 84vw;
-  margin-bottom: ${calcMinMax(52, 32)};
+  margin-bottom: ${responsiveSize(52, 32)};
 
   ${landscapeStyle(
     () => css`
-      width: ${calcMinMax(342, 699)};
+      width: ${responsiveSize(342, 699)};
     `
   )}
 `;
 
 const Deliverable: React.FC = () => {
-  const { deliverableText, setDeliverableText, deliverableFile, setDeliverableFile } = useNewTransactionContext();
+  const {
+    escrowType,
+    deliverableText,
+    setDeliverableText,
+    deliverableFile,
+    setDeliverableFile,
+    receivingQuantity,
+    setReceivingQuantity,
+    receivingToken,
+    setReceivingToken,
+    receivingRecipientAddress,
+    setReceivingRecipientAddress,
+  } = useNewTransactionContext();
 
   const handleWrite = (event: React.ChangeEvent<HTMLInputElement>) => {
     setDeliverableText(event.target.value);
@@ -45,19 +58,38 @@ const Deliverable: React.FC = () => {
 
   return (
     <Container>
-      <Header text="I should receive" />
-      <StyledTextArea
-        value={deliverableText}
-        onChange={handleWrite}
-        placeholder="eg. A website created in React with the following specification: x,y,z"
-      />
-      <StyledFileUploader
-        callback={(file: File) => setDeliverableFile(file)}
-        variant="info"
-        msg="Additionally, you can add an external file in PDF or add multiple files in a single .zip file."
-      />
-      <NavigationButtons prevRoute="/newTransaction/title" nextRoute="/newTransaction/payment" />
+      {escrowType === "general" ? (
+        <>
+          <Header text="I should receive" />
+          <StyledTextArea
+            value={deliverableText}
+            onChange={handleWrite}
+            placeholder="eg. A website created in React with the following specification: x,y,z"
+          />
+          <StyledFileUploader
+            callback={(file: File) => setDeliverableFile(file)}
+            variant="info"
+            msg="Additionally, you can add an external file in PDF or add multiple files in a single .zip file."
+          />
+          <NavigationButtons prevRoute="/newTransaction/title" nextRoute="/newTransaction/payment" />
+        </>
+      ) : (
+        <>
+          <TokenTransaction
+            headerText="I should receive"
+            prevRoute="/newTransaction/title"
+            nextRoute="/newTransaction/payment"
+            quantity={receivingQuantity}
+            setQuantity={setReceivingQuantity}
+            token={receivingToken}
+            setToken={setReceivingToken}
+            recipientAddress={receivingRecipientAddress}
+            setRecipientAddress={setReceivingRecipientAddress}
+          />
+        </>
+      )}
     </Container>
   );
 };
+
 export default Deliverable;

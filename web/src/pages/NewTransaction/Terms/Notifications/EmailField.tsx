@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Field } from "@kleros/ui-components-library";
 import { landscapeStyle } from "styles/landscapeStyle";
 import styled, { css } from "styled-components";
-import { calcMinMax } from "utils/calcMinMax";
+import { responsiveSize } from "utils/responsiveSize";
 import { useNewTransactionContext } from "context/NewTransactionContext";
 
 const StyledField = styled(Field)`
@@ -11,7 +11,7 @@ const StyledField = styled(Field)`
 
   ${landscapeStyle(
     () => css`
-      width: ${calcMinMax(342, 476)};
+      width: ${responsiveSize(342, 476)};
     `
   )}
 `;

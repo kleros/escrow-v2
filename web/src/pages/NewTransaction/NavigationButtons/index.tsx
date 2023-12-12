@@ -3,12 +3,12 @@ import styled from "styled-components";
 import PreviousButton from "./PreviousButton";
 import NextButton from "./NextButton";
 import DepositPaymentButton from "./DepositPaymentButton";
-import { calcMinMax } from "utils/calcMinMax";
+import { responsiveSize } from "utils/responsiveSize";
 
 const Container = styled.div`
   display: flex;
   gap: 24px;
-  margin-top: ${calcMinMax(32, 24)};
+  margin-top: ${responsiveSize(32, 24)};
   flex-wrap: wrap;
   justify-content: center;
 `;

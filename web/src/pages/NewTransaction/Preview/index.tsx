@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 import { formatEther } from "viem";
 import { isUndefined } from "utils/index";
-import { calcMinMax } from "utils/calcMinMax";
+import { responsiveSize } from "utils/responsiveSize";
 import PolicyIcon from "svgs/icons/policy.svg";
 import { Card } from "@kleros/ui-components-library";
 import Header from "./Header";
@@ -23,8 +23,8 @@ const StyledCard = styled(Card)`
   width: 84vw;
   display: flex;
   flex-direction: column;
-  gap: calc(16px + (32 - 16) * (min(max(100vw, 375px), 1250px) - 375px) / 875);
-  padding: calc(16px + (32 - 16) * (min(max(100vw, 375px), 1250px) - 375px) / 875);
+  gap: ${responsiveSize(16, 32)};
+  padding: ${responsiveSize(16, 32)};
 
   > h1 {
     margin: 0;
@@ -36,7 +36,7 @@ const StyledCard = styled(Card)`
 
   ${landscapeStyle(
     () => css`
-      width: ${calcMinMax(342, 1178)};
+      width: ${responsiveSize(342, 1178)};
     `
   )}
 `;
@@ -71,8 +71,7 @@ const ShadeArea = styled.div`
   flex-direction: column;
   justify-content: center;
   width: 100%;
-  padding: calc(16px + (20 - 16) * (min(max(100vw, 375px), 1250px) - 375px) / 875)
-    calc(16px + (32 - 16) * (min(max(100vw, 375px), 1250px) - 375px) / 875);
+  padding: ${responsiveSize(16, 20)} ${responsiveSize(16, 32)};
   margin-top: 16px;
   background-color: ${({ theme }) => theme.mediumBlue};
   > p {
@@ -105,7 +104,7 @@ const StyledA = styled.a`
 
 const LinkContainer = styled.div`
   display: flex;
-  gap: calc(8px + (24 - 8) * (min(max(100vw, 375px), 1250px) - 375px) / 875);
+  gap: ${responsiveSize(8, 24)};
 `;
 
 const Divider = styled.hr`
