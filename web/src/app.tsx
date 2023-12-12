@@ -1,5 +1,5 @@
 import React from "react";
-import { Route } from "react-router-dom";
+import { Navigate, Route } from "react-router-dom";
 import { SentryRoutes } from "./utils/sentry";
 import "react-loading-skeleton/dist/skeleton.css";
 import "react-toastify/dist/ReactToastify.css";
@@ -11,6 +11,7 @@ import RefetchOnBlock from "context/RefetchOnBlock";
 import Layout from "layout/index";
 import NewTransaction from "./pages/NewTransaction";
 import MyTransactions from "./pages/MyTransactions";
+import { NewTransactionProvider } from "./context/NewTransactionContext";
 
 const App: React.FC = () => {
   return (
@@ -19,13 +20,16 @@ const App: React.FC = () => {
         <RefetchOnBlock />
         <Web3Provider>
           <IsListProvider>
-            <SentryRoutes>
-              <Route path="/" element={<Layout />}>
-                <Route index element={<NewTransaction />} />
-                <Route path="myTransactions" element={<MyTransactions />} />
-                <Route path="*" element={<h1>Justice not found here ¯\_( ͡° ͜ʖ ͡°)_/¯</h1>} />
-              </Route>
-            </SentryRoutes>
+            <NewTransactionProvider>
+              <SentryRoutes>
+                <Route path="/" element={<Layout />}>
+                  <Route index element={<Navigate to="newTransaction" replace />} />
+                  <Route path="newTransaction/*" element={<NewTransaction />} />
+                  <Route path="myTransactions/*" element={<MyTransactions />} />
+                  <Route path="*" element={<h1>404 not found</h1>} />
+                </Route>
+              </SentryRoutes>
+            </NewTransactionProvider>
           </IsListProvider>
         </Web3Provider>
       </QueryClientProvider>

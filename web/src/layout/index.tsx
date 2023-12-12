@@ -42,7 +42,6 @@ const Layout: React.FC = () => {
           <OutletContainer>
             <Outlet />
           </OutletContainer>
-
           <Footer />
         </Container>
       </StyledOverlayScrollbarsComponent>
