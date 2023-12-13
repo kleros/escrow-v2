@@ -24,7 +24,7 @@
   "packageManager": "yarn@3.3.1",
   "scripts": {
     "clear": "rm -fr ../.parcel-cache dist/bundle.js",
-    "start": "yarn start-devnet",
+    "start": "node scripts/gitInfo.js && yarn start-devnet",
     "start-local": "scripts/runEnv.sh local 'yarn generate && parcel'",
     "start-devnet": "parcel",
     "start-testnet": "scripts/runEnv.sh testnet 'yarn generate && parcel'",

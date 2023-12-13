@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import Header from "components/Header";
 import { Datepicker } from "@kleros/ui-components-library";
 import NavigationButtons from "../../NavigationButtons";
+import { useNewTransactionContext } from "context/NewTransactionContext";
 
 const Container = styled.div`
   display: flex;
@@ -13,14 +14,12 @@ const Container = styled.div`
 const StyledDatepicker = styled(Datepicker)``;
 
 const Deadline: React.FC = () => {
-  const [date, setDate] = useState();
+  const { setDeadline } = useNewTransactionContext();
 
   const handleDateSelect = (date: Date) => {
     console.log("Selected Date:", date);
-    setDate(date);
+    setDeadline(date);
   };
-
-  console.log(date), date;
 
   return (
     <Container>

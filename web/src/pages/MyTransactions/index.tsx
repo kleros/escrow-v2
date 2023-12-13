@@ -15,7 +15,7 @@ const Container = styled.div`
   margin: 0 auto;
 `;
 
-const ConnectWalletContainer = styled.div`
+export const ConnectWalletContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -30,8 +30,6 @@ const Dashboard: React.FC = () => {
   const navigate = useNavigate();
   const casesPerPage = 3;
   const pageNumber = parseInt(page ?? "1");
-  const disputeSkip = casesPerPage * (pageNumber - 1);
-  const decodedFilter = decodeURIFilter(filter ?? "all");
 
   return (
     <Container>

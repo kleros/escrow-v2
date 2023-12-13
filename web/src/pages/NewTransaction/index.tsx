@@ -13,6 +13,9 @@ import Notifications from "./Terms/Notifications";
 import Payment from "./Terms/Payment";
 import Timeline from "./Timeline";
 import { responsiveSize } from "utils/responsiveSize";
+import { useAccount } from "wagmi";
+import ConnectWallet from "components/ConnectWallet";
+import { ConnectWalletContainer } from "../MyTransactions";
 
 const Container = styled.div`
   display: flex;
@@ -31,9 +34,10 @@ const MiddleContentContainer = styled.div`
   justify-content: center;
 `;
 
-const Home: React.FC = () => {
+const NewTransaction: React.FC = () => {
   const location = useLocation();
   const { width } = useWindowSize();
+  const { isConnected } = useAccount();
   const isPreviewPage = location.pathname.includes("/preview");
   const isMobileView = width <= BREAKPOINT_LANDSCAPE;
 
@@ -41,22 +45,30 @@ const Home: React.FC = () => {
     <>
       {!isPreviewPage || isMobileView ? <HeroImage /> : null}
       <Container>
-        {!isPreviewPage ? <Timeline /> : null}
-        <MiddleContentContainer>
-          <Routes>
-            <Route index element={<Navigate to="typeOfEscrow" replace />} />
-            <Route path="/typeOfEscrow/*" element={<TypeOfEscrow />} />
-            <Route path="/title/*" element={<Title />} />
-            <Route path="/deliverable/*" element={<Deliverable />} />
-            <Route path="/payment/*" element={<Payment />} />
-            <Route path="/deadline/*" element={<Deadline />} />
-            <Route path="/notifications/*" element={<Notifications />} />
-            <Route path="/preview/*" element={<Preview />} />
-          </Routes>
-        </MiddleContentContainer>
+        {isConnected && !isPreviewPage ? <Timeline /> : null}
+        {isConnected ? (
+          <MiddleContentContainer>
+            <Routes>
+              <Route index element={<Navigate to="typeOfEscrow" replace />} />
+              <Route path="/typeOfEscrow/*" element={<TypeOfEscrow />} />
+              <Route path="/title/*" element={<Title />} />
+              <Route path="/deliverable/*" element={<Deliverable />} />
+              <Route path="/payment/*" element={<Payment />} />
+              <Route path="/deadline/*" element={<Deadline />} />
+              <Route path="/notifications/*" element={<Notifications />} />
+              <Route path="/preview/*" element={<Preview />} />
+            </Routes>
+          </MiddleContentContainer>
+        ) : (
+          <ConnectWalletContainer>
+            To create a new escrow transaction, connect first
+            <hr />
+            <ConnectWallet />
+          </ConnectWalletContainer>
+        )}
       </Container>
     </>
   );
 };
 
-export default Home;
+export default NewTransaction;
