@@ -12,7 +12,7 @@ import Deliverable from "./Terms/Deliverable";
 import Notifications from "./Terms/Notifications";
 import Payment from "./Terms/Payment";
 import Timeline from "./Timeline";
-import { responsiveSize } from "utils/responsiveSize";
+import { responsiveSize } from "styles/responsiveSize";
 import { useAccount } from "wagmi";
 import ConnectWallet from "components/ConnectWallet";
 import { ConnectWalletContainer } from "../MyTransactions";

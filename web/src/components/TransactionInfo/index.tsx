@@ -1,13 +1,13 @@
 import React from "react";
 import styled, { css } from "styled-components";
 import { landscapeStyle } from "styles/landscapeStyle";
-import { Periods } from "consts/periods";
+import { Statuses } from "consts/statuses";
 import { useIsList } from "context/IsListProvider";
 import CalendarIcon from "svgs/icons/calendar.svg";
 import PileCoinsIcon from "svgs/icons/pile-coins.svg";
 import UserIcon from "svgs/icons/user.svg";
 import Field from "./Field";
-import { responsiveSize } from "utils/responsiveSize";
+import { responsiveSize } from "styles/responsiveSize";
 
 const Container = styled.div<{ isList: boolean; isPreview?: boolean }>`
   display: flex;
@@ -58,16 +58,18 @@ const RestOfFieldsContainer = styled.div<{ isList?: boolean; isPreview?: boolean
     `};
 `;
 
-const getPeriodPhrase = (period: Periods): string => {
-  switch (period) {
-    case Periods.evidence:
-      return "Voting Starts";
-    case Periods.appeal:
-      return "Appeal Deadline";
-    case Periods.execution:
-      return "Final Decision";
+const getStatusPhrase = (status: Statuses): string => {
+  switch (status) {
+    case Statuses.disputed:
+      return "Disputed";
+    case Statuses.concluded:
+      return "Concluded";
+    case Statuses.inProgress:
+      return "In Progress";
+    case Statuses.settlement:
+      return "Settlement";
     default:
-      return "Delivery Deadline";
+      return "In Progress";
   }
 };
 
@@ -75,7 +77,7 @@ export interface ITransactionInfo {
   amount?: string;
   deadline?: Date;
   token?: string;
-  period?: Periods;
+  status?: Statuses;
   overrideIsList?: boolean;
   isPreview?: boolean;
   receiver?: string;
@@ -85,7 +87,7 @@ const TransactionInfo: React.FC<ITransactionInfo> = ({
   amount,
   token,
   deadline,
-  period,
+  status,
   receiver,
   overrideIsList,
   isPreview,
@@ -111,7 +113,7 @@ const TransactionInfo: React.FC<ITransactionInfo> = ({
         {deadline ? (
           <Field
             icon={CalendarIcon}
-            name={getPeriodPhrase(period)}
+            name={getStatusPhrase(status)}
             value={new Date(deadline).toLocaleString()}
             displayAsList={displayAsList}
             isPreview={isPreview}

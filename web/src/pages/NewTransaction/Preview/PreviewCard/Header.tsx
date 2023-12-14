@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { useNewTransactionContext } from "context/NewTransactionContext";
 
 const Container = styled.div`
   display: flex;
@@ -16,10 +17,12 @@ const StyledHeader = styled.h1`
 `;
 
 const Header: React.FC = () => {
+  const { escrowTitle } = useNewTransactionContext();
+
   return (
     <Container>
       <StyledLabel>General Escrow #1</StyledLabel>
-      <StyledHeader>Escrow with John.</StyledHeader>
+      <StyledHeader>{escrowTitle}</StyledHeader>
     </Container>
   );
 };

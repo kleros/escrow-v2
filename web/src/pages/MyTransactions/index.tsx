@@ -1,9 +1,10 @@
 import React from "react";
 import styled from "styled-components";
-import { useNavigate, useParams } from "react-router-dom";
+import { Route, Routes, useNavigate, useParams } from "react-router-dom";
 import { useAccount } from "wagmi";
 import { decodeURIFilter, useRootPath } from "utils/uri";
 import ConnectWallet from "components/ConnectWallet";
+import TransactionsFetcher from "./TransactionsFetcher";
 
 const Container = styled.div`
   width: 100%;
@@ -34,7 +35,10 @@ const Dashboard: React.FC = () => {
   return (
     <Container>
       {isConnected ? (
-        <>Hi. These are your transactions</>
+        <Routes>
+          <Route path="/display/:page/:order/:filter" element={<TransactionsFetcher />} />
+          <Route path="/:id/*" element={<>hi. Transaction Overview will go here</>} />
+        </Routes>
       ) : (
         <ConnectWalletContainer>
           To see your transactions, connect first

@@ -1,7 +1,7 @@
 import React from "react";
 import styled, { css } from "styled-components";
 import { landscapeStyle } from "styles/landscapeStyle";
-import { responsiveSize } from "utils/responsiveSize";
+import { responsiveSize } from "styles/responsiveSize";
 import AmountField from "./AmountField";
 import Token from "./Token";
 

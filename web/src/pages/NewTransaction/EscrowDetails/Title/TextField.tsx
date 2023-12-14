@@ -1,7 +1,7 @@
 import React from "react";
 import { Field } from "@kleros/ui-components-library";
 import styled, { css } from "styled-components";
-import { responsiveSize } from "utils/responsiveSize";
+import { responsiveSize } from "styles/responsiveSize";
 import { useNewTransactionContext } from "context/NewTransactionContext";
 import { landscapeStyle } from "styles/landscapeStyle";
 

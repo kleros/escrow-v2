@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { responsiveSize } from "utils/responsiveSize";
+import { responsiveSize } from "styles/responsiveSize";
 
 const StyledHeader = styled.h1`
   display: flex;
