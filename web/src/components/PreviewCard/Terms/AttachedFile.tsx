@@ -1,11 +1,12 @@
 import React from "react";
 import styled from "styled-components";
+import { responsiveSize } from "styles/responsiveSize";
 import { useNewTransactionContext } from "context/NewTransactionContext";
 import AttachmentIcon from "svgs/icons/attachment.svg";
 
 const StyledA = styled.a`
   display: flex;
-  gap: calc(5px + (6 - 5) * (min(max(100vw, 375px), 1250px) - 375px) / 875);
+  gap: ${responsiveSize(5, 6)};
   > svg {
     width: 16px;
     fill: ${({ theme }) => theme.primaryBlue};

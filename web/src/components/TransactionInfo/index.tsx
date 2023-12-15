@@ -58,21 +58,6 @@ const RestOfFieldsContainer = styled.div<{ isList?: boolean; isPreview?: boolean
     `};
 `;
 
-const getStatusPhrase = (status: Statuses): string => {
-  switch (status) {
-    case Statuses.disputed:
-      return "Disputed";
-    case Statuses.concluded:
-      return "Concluded";
-    case Statuses.inProgress:
-      return "In Progress";
-    case Statuses.settlement:
-      return "Settlement";
-    default:
-      return "In Progress";
-  }
-};
-
 export interface ITransactionInfo {
   amount?: string;
   deadline?: Date;
@@ -113,7 +98,7 @@ const TransactionInfo: React.FC<ITransactionInfo> = ({
         {deadline ? (
           <Field
             icon={CalendarIcon}
-            name={getStatusPhrase(status)}
+            name="Delivery Deadline"
             value={new Date(deadline).toLocaleString()}
             displayAsList={displayAsList}
             isPreview={isPreview}

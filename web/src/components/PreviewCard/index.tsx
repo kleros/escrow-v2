@@ -9,7 +9,7 @@ import { useNewTransactionContext } from "context/NewTransactionContext";
 import Terms from "./Terms";
 import EscrowTimeline from "./EscrowTimeline";
 
-const StyledCard = styled(Card)`
+export const StyledCard = styled(Card)`
   height: auto;
   min-height: 100px;
   width: 84vw;
@@ -29,7 +29,7 @@ const StyledCard = styled(Card)`
 
   ${landscapeStyle(
     () => css`
-      width: ${responsiveSize(342, 1178)};
+      width: 100%;
     `
   )}
 `;

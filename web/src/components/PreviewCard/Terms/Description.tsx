@@ -32,8 +32,8 @@ const Description: React.FC = () => {
   const cryptoSwapSummary =
     `By Paying ${sendingQuantity + " " + sendingToken}, [Blockchain] address ${address} should receive ${
       receivingQuantity + " " + receivingToken
-    } at the [Blockchain] ` +
-    `address ${receivingRecipientAddress} from [Blockchain] address ${sendingRecipientAddress} before the delivery deadline ${deadline}.`;
+    } at the [Blockchain] address ${receivingRecipientAddress}` +
+    ` from [Blockchain] address ${sendingRecipientAddress} before the delivery deadline ${deadline}.`;
 
   return (
     <div>

@@ -7,7 +7,7 @@ const getFormattedDate = (dateString: string) => {
   return date.toLocaleDateString("en-US", options);
 };
 
-const useItems = (escrowCreateDate: string) => {
+const useEscrowTimelineItems = (escrowCreateDate: string) => {
   const theme = useTheme();
 
   return useMemo(() => {
@@ -25,4 +25,4 @@ const useItems = (escrowCreateDate: string) => {
   }, [escrowCreateDate, theme]);
 };
 
-export default useItems;
+export default useEscrowTimelineItems;

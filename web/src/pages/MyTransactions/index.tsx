@@ -5,6 +5,7 @@ import { useAccount } from "wagmi";
 import { decodeURIFilter, useRootPath } from "utils/uri";
 import ConnectWallet from "components/ConnectWallet";
 import TransactionsFetcher from "./TransactionsFetcher";
+import TransactionDetails from "./TransactionDetails";
 
 const Container = styled.div`
   width: 100%;
@@ -37,7 +38,7 @@ const Dashboard: React.FC = () => {
       {isConnected ? (
         <Routes>
           <Route path="/display/:page/:order/:filter" element={<TransactionsFetcher />} />
-          <Route path="/:id/*" element={<>hi. Transaction Overview will go here</>} />
+          <Route path="/:id/*" element={<TransactionDetails />} />
         </Routes>
       ) : (
         <ConnectWalletContainer>
