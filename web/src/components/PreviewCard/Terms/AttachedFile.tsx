@@ -16,8 +16,6 @@ const StyledA = styled.a`
 const AttachedFile: React.FC = () => {
   const { deliverableFile } = useNewTransactionContext();
 
-  console.log(deliverableFile);
-
   return (
     <StyledA target="_blank" rel="noreferrer">
       <AttachmentIcon />

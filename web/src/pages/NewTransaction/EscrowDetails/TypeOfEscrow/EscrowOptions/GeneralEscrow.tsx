@@ -28,7 +28,6 @@ const Title = styled.p`
 const GeneralEscrow: React.FC = () => {
   const { escrowType, setEscrowType } = useNewTransactionContext();
 
-  console.log("escrowType:", escrowType);
   const handleSelect = () => {
     setEscrowType("general");
   };
