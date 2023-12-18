@@ -17,7 +17,6 @@ const Deadline: React.FC = () => {
   const { setDeadline } = useNewTransactionContext();
 
   const handleDateSelect = (date: Date) => {
-    console.log("Selected Date:", date);
     setDeadline(date);
   };
 
