@@ -12,7 +12,8 @@ import EscrowTimeline from "./EscrowTimeline";
 export const StyledCard = styled(Card)`
   height: auto;
   min-height: 100px;
-  width: 84vw;
+  width: 86vw;
+  align-self: center;
   display: flex;
   flex-direction: column;
   gap: 48px;

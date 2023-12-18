@@ -10,9 +10,10 @@ const StyledCard = styled(Card)`
   gap: 32px;
   background-color: ${({ theme }) => theme.mediumBlue};
   border: 1px solid ${({ theme }) => theme.primaryBlue};
-  width: 100%;
+  width: 86vw;
   height: auto;
   align-items: center;
+  align-self: center;
   justify-content: center;
   flex-direction: column;
   padding: 32px 40px 51px 40px;
@@ -23,6 +24,7 @@ const StyledCard = styled(Card)`
         padding-bottom: 36px;
         height: 157px;
         gap: 22px;
+        width: 100%;
       `
   )}
 `;

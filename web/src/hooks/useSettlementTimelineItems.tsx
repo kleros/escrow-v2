@@ -1,11 +1,8 @@
 import { useMemo } from "react";
 import { useTheme } from "styled-components";
-
-const getFormattedDate = (dateString: string) => {
-  const options: Intl.DateTimeFormatOptions = { year: "numeric", month: "long", day: "numeric" };
-  const date = new Date(dateString);
-  return date.toLocaleDateString("en-US", options);
-};
+import { getFormattedDate } from "utils/getFormattedDate";
+import ClosedCircleIcon from "components/StyledIcons/ClosedCircleIcon";
+import HourglassIcon from "components/StyledIcons/HourglassIcon";
 
 const useSettlementTimelineItems = (escrowCreateDate: string) => {
   const theme = useTheme();
@@ -20,6 +17,7 @@ const useSettlementTimelineItems = (escrowCreateDate: string) => {
         subtitle: `${formattedDate} - 0x9812...AB1A proposed`,
         rightSided: true,
         variant: "refused",
+        Icon: ClosedCircleIcon,
       },
       {
         title: "Pay 240 DAI",
@@ -27,6 +25,7 @@ const useSettlementTimelineItems = (escrowCreateDate: string) => {
         subtitle: `${formattedDate} - 0x1234...BABA proposed`,
         rightSided: true,
         variant: "refused",
+        Icon: ClosedCircleIcon,
       },
       {
         title: "Pay 180 DAI",
@@ -34,13 +33,14 @@ const useSettlementTimelineItems = (escrowCreateDate: string) => {
         subtitle: `${formattedDate} - 0x9812...AB1A proposed`,
         rightSided: true,
         variant: "refused",
+        Icon: ClosedCircleIcon,
       },
       {
         title: "Pay 230 DAI",
         party: "Waiting response",
         subtitle: `${formattedDate} - 0x1234...BABA proposed`,
         rightSided: true,
-        variant: theme.primaryBlue,
+        Icon: HourglassIcon,
       },
     ];
   }, [escrowCreateDate, theme]);

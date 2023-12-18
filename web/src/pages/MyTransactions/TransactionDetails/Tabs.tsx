@@ -36,7 +36,7 @@ const TABS = [
     value: 2,
     Icon: BalanceIcon,
     path: "Dispute",
-    disabled: true,
+    // disabled: true,
   },
 ];
 

@@ -124,7 +124,7 @@ const TransactionCard: React.FC<ITransactionCard> = ({ id, status, overrideIsLis
           </CardContainer>
         </StyledCard>
       ) : (
-        <StyledListItem hover onClick={() => navigate(`/transactions/${id.toString()}`)}>
+        <StyledListItem hover onClick={() => navigate(`/myTransactions/${id.toString()}`)}>
           <StatusBanner isCard={false} id={parseInt(id)} status={currentStatusIndex} />
           <ListContainer>
             <ListTitle>
