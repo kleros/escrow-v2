@@ -1,8 +1,14 @@
-import React from "react";
-import styled, { Theme } from "styled-components";
+import React, { useMemo } from "react";
+import styled, { Theme, useTheme, css } from "styled-components";
 import { Statuses } from "consts/statuses";
 
-const Container = styled.div<Omit<IStatusBanner, "id">>`
+interface IContainer {
+  isCard: boolean;
+  frontColor: string;
+  backgroundColor: string;
+}
+
+const Container = styled.div<IContainer>`
   height: ${({ isCard }) => (isCard ? "45px" : "100%")};
   width: auto;
   border-top-right-radius: 3px;
@@ -11,7 +17,17 @@ const Container = styled.div<Omit<IStatusBanner, "id">>`
   align-items: center;
   justify-content: space-between;
   padding: 0 24px;
-  .dot {
+  ${({ isCard, frontColor, backgroundColor }) => {
+    return `
+      ${isCard ? `border-top: 5px solid ${frontColor}` : `border-left: 5px solid ${frontColor}`};
+      ${isCard ? `background-color: ${backgroundColor}` : null};
+    `;
+  }};
+`;
+
+const StyledLabel = styled.label<{ frontColor: string, withDot?: boolean }>`
+  color: ${({ frontColor }) => frontColor};
+  ${({ withDot, frontColor }) => withDot ? css`
     ::before {
       content: "";
       display: inline-block;
@@ -19,23 +35,9 @@ const Container = styled.div<Omit<IStatusBanner, "id">>`
       width: 8px;
       border-radius: 50%;
       margin-right: 8px;
+      background-color: ${frontColor};
     }
-  }
-  ${({ theme, status, isCard }) => {
-    const [frontColor, backgroundColor] = getStatusColors(status, theme);
-    return `
-      ${isCard ? `border-top: 5px solid ${frontColor}` : `border-left: 5px solid ${frontColor}`};
-      ${isCard && `background-color: ${backgroundColor}`};
-      .front-color {
-        color: ${frontColor};
-      }
-      .dot {
-        ::before {
-          background-color: ${frontColor};
-        }
-      }
-    `;
-  }};
+  ` : null}
 `;
 
 export interface IStatusBanner {
@@ -74,11 +76,15 @@ const getStatusLabel = (status: Statuses): string => {
   }
 };
 
-const StatusBanner: React.FC<IStatusBanner> = ({ id, status, isCard = true }) => (
-  <Container status={status} isCard={isCard}>
-    {isCard && <label className="front-color dot">{getStatusLabel(status)}</label>}
-    <label className="front-color">#{id}</label>
-  </Container>
-);
+const StatusBanner: React.FC<IStatusBanner> = ({ id, status, isCard = true }) => {
+  const theme = useTheme();
+  const [frontColor, backgroundColor] = useMemo(() => getStatusColors(status, theme), [theme, status]);
+  return (
+    <Container {...{ isCard, frontColor, backgroundColor}}>
+      {isCard ? <StyledLabel frontColor={frontColor} withDot>{getStatusLabel(status)}</StyledLabel> : null}
+      <StyledLabel frontColor={frontColor}>#{id}</StyledLabel>
+    </Container>
+  );
+}
 
 export default StatusBanner;

@@ -1,5 +1,5 @@
 import React from "react";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { formatEther } from "viem";
 import { StyledSkeleton } from "components/StyledSkeleton";
@@ -7,7 +7,6 @@ import { Card } from "@kleros/ui-components-library";
 import { Statuses } from "consts/statuses";
 import { useIsList } from "context/IsListProvider";
 // import { TransactionDetailsFragment } from "queries/useTransactionsQuery";
-import { landscapeStyle } from "styles/landscapeStyle";
 // import { useCourtPolicy } from "queries/useCourtPolicy";
 // import { useTransactionTemplate } from "queries/useTransactionTemplate";
 // import { useVotingHistory } from "queries/useVotingHistory";
@@ -20,18 +19,6 @@ import { shortenAddress } from "utils/shortenAddress";
 const StyledCard = styled(Card)`
   width: 100%;
   height: ${responsiveSize(260, 260)};
-
-  ${landscapeStyle(
-    () =>
-      css`
-        /* Explanation of this formula:
-          - The 48px accounts for the total width of gaps: 2 gaps * 24px each.
-          - The 0.333 is used to equally distribute width among 3 cards per row.
-          - The 348px ensures the card has a minimum width.
-        */
-        width: max(calc((100% - 48px) * 0.333), 348px);
-      `
-  )}
 `;
 
 const StyledListItem = styled(Card)`
