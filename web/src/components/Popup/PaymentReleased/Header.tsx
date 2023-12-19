@@ -4,6 +4,7 @@ import styled from "styled-components";
 const StyledHeader = styled.h1`
   margin: 0;
   margin-bottom: 24px;
+  text-align: center;
 `;
 
 const Header: React.FC = () => {

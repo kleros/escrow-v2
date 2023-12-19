@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
+import { useClickAway } from "react-use";
 import Description from "./Description";
 import { Overlay } from "components/Overlay";
-import { useFocusOutside } from "hooks/useFocusOutside";
 import Header from "./Header";
 import AmountField from "./AmountField";
 import Buttons from "./Buttons";
@@ -14,9 +14,7 @@ interface IProposeSettlementModal {
 
 const ProposeSettlementModal: React.FC<IProposeSettlementModal> = ({ toggleModal, text }) => {
   const containerRef = useRef(null);
-  useFocusOutside(containerRef, () => {
-    toggleModal();
-  });
+  useClickAway(containerRef, () => toggleModal());
 
   return (
     <>

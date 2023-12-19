@@ -3,6 +3,12 @@ import styled, { css } from "styled-components";
 import { landscapeStyle } from "styles/landscapeStyle";
 import { Link } from "react-router-dom";
 
+type FieldContainerProps = {
+  width?: string;
+  isList?: boolean;
+  isPreview?: boolean;
+};
+
 const FieldContainer = styled.div<FieldContainerProps>`
   display: flex;
   align-items: center;
@@ -10,11 +16,6 @@ const FieldContainer = styled.div<FieldContainerProps>`
   flex-wrap: wrap;
   word-break: break-word;
   width: 100%;
-  .value {
-    flex-grow: 1;
-    text-align: end;
-    color: ${({ theme }) => theme.primaryText};
-  }
 
   svg {
     fill: ${({ theme }) => theme.secondaryPurple};
@@ -22,22 +23,12 @@ const FieldContainer = styled.div<FieldContainerProps>`
     width: 14px;
   }
 
-  .link {
-    color: ${({ theme }) => theme.primaryBlue};
-    :hover {
-      cursor: pointer;
-    }
-  }
   ${({ isList }) =>
     isList &&
     css`
       ${landscapeStyle(
         () => css`
           width: auto;
-          .value {
-            flex-grow: 0;
-            text-align: center;
-          }
         `
       )}
     `};
@@ -46,22 +37,31 @@ const FieldContainer = styled.div<FieldContainerProps>`
     css`
       width: auto;
       gap: 8px;
-      .value {
-        flex-grow: 0;
-        text-align: none;
-        font-weight: 600;
-      }
       svg {
         margin-right: 0;
       }
     `};
 `;
 
-type FieldContainerProps = {
-  width?: string;
-  isList?: boolean;
-  isPreview?: boolean;
-};
+const StyledValue = styled.label<{ isPreview?: boolean }>`
+  flex-grow: 1;
+  text-align: end;
+  color: ${({ theme }) => theme.primaryText};
+  ${({ isPreview }) =>
+    isPreview &&
+    css`
+      font-weight: 600;
+    `}
+`;
+
+const StyledLink = styled(Link)<{ isPreview?: boolean }>`
+  flex-grow: 1;
+  text-align: end;
+  color: ${({ theme }) => theme.primaryBlue};
+  &:hover {
+    cursor: pointer;
+  }
+`;
 
 interface IField {
   icon: React.FunctionComponent<React.SVGAttributes<SVGElement>>;
@@ -76,20 +76,21 @@ interface IField {
 const Field: React.FC<IField> = ({ icon: Icon, name, value, link, width, displayAsList, isPreview }) => {
   return (
     <FieldContainer isList={displayAsList} isPreview={isPreview} width={width}>
-      {(!displayAsList || isPreview) && (
+      {!displayAsList || isPreview ? (
         <>
           <Icon />
           <label>{name}:</label>
         </>
-      )}
+      ) : null}
       {link ? (
-        <Link className="link value" to={link}>
+        <StyledLink isPreview={isPreview} to={link}>
           {value}
-        </Link>
+        </StyledLink>
       ) : (
-        <label className="value">{value}</label>
+        <StyledValue isPreview={isPreview}>{value}</StyledValue>
       )}
     </FieldContainer>
   );
 };
+
 export default Field;

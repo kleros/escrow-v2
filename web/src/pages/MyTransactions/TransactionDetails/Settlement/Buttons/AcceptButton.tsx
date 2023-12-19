@@ -8,7 +8,7 @@ const AcceptButton: React.FC = () => {
   return (
     <>
       <Button text={"Accept"} onClick={toggleModal} />
-      {isModalOpen && <PaymentReleased toggleModal={toggleModal} />}
+      {isModalOpen ? <PaymentReleased toggleModal={toggleModal} /> : null}
     </>
   );
 };

@@ -1,8 +1,8 @@
 import React from "react";
-import Header from "../../../../components/Header";
+import Header from "pages/NewTransaction/Header";
 import styled from "styled-components";
 import TextField from "./TextField";
-import NavigationButtons from "../../NavigationButtons";
+import NavigationButtons from "pages/NewTransaction/NavigationButtons";
 
 const Container = styled.div`
   display: flex;

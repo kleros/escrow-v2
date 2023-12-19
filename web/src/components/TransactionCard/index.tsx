@@ -1,8 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import { formatEther } from "viem";
-import { StyledSkeleton } from "components/StyledSkeleton";
+// import { formatEther } from "viem";
+// import { StyledSkeleton } from "components/StyledSkeleton";
 import { Card } from "@kleros/ui-components-library";
 import { Statuses } from "consts/statuses";
 import { useIsList } from "context/IsListProvider";
@@ -12,13 +12,13 @@ import { useIsList } from "context/IsListProvider";
 // import { useVotingHistory } from "queries/useVotingHistory";
 import TransactionInfo from "../TransactionInfo";
 import StatusBanner from "./StatusBanner";
-import { isUndefined } from "utils/index";
+// import { isUndefined } from "utils/index";
 import { responsiveSize } from "styles/responsiveSize";
 import { shortenAddress } from "utils/shortenAddress";
 
 const StyledCard = styled(Card)`
   width: 100%;
-  height: ${responsiveSize(260, 260)};
+  height: 260px;
 `;
 
 const StyledListItem = styled(Card)`
@@ -34,9 +34,6 @@ const CardContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  h3 {
-    margin: 0;
-  }
 `;
 const ListContainer = styled.div`
   display: flex;
@@ -44,10 +41,6 @@ const ListContainer = styled.div`
   align-items: flex-start;
   width: 100%;
   margin-right: 8px;
-
-  h3 {
-    margin: 0;
-  }
 `;
 
 const ListTitle = styled.div`
@@ -56,6 +49,10 @@ const ListTitle = styled.div`
   justify-content: start;
   align-items: center;
   width: calc(30vw + (40 - 30) * (min(max(100vw, 300px), 1250px)- 300px) / 950);
+`;
+
+const StyledTitle = styled.h3`
+  margin: 0;
 `;
 
 export const getStatusEndTimestamp = (
@@ -69,7 +66,7 @@ export const getStatusEndTimestamp = (
 
 const TruncatedTitle = ({ text, maxLength }) => {
   const truncatedText = text.length <= maxLength ? text : text.slice(0, maxLength) + "…";
-  return <h3>{truncatedText}</h3>;
+  return <StyledTitle>{truncatedText}</StyledTitle>;
 };
 
 interface ITransactionCard {
@@ -100,7 +97,7 @@ const TransactionCard: React.FC<ITransactionCard> = ({ id, status, overrideIsLis
         <StyledCard hover onClick={() => navigate(`/myTransactions/${id.toString()}`)}>
           <StatusBanner id={parseInt(id)} status={currentStatusIndex} />
           <CardContainer>
-            <h3>{title}</h3>
+            <StyledTitle>{title}</StyledTitle>
             <TransactionInfo
               amount="610"
               token="ETH"

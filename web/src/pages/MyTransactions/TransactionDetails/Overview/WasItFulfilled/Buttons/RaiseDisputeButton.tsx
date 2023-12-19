@@ -9,7 +9,7 @@ const RaiseDisputeButton: React.FC = () => {
   return (
     <>
       <Button variant="secondary" text={"Raise a dispute"} onClick={toggleModal} />
-      {isModalOpen && <RaiseDisputeModal toggleModal={toggleModal} />}
+      {isModalOpen ? <RaiseDisputeModal toggleModal={toggleModal} /> : null}
     </>
   );
 };

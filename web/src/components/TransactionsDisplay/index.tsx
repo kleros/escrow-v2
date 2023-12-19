@@ -6,7 +6,6 @@ import TransactionsGrid, { ITransactionsGrid } from "./TransactionsGrid";
 import { responsiveSize } from "styles/responsiveSize";
 
 const Divider = styled.hr`
-  display: flex;
   border: none;
   height: 1px;
   background-color: ${({ theme }) => theme.stroke};

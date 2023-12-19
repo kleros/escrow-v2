@@ -1,10 +1,10 @@
 import React, { useRef } from "react";
+import { useClickAway } from "react-use";
 import { StyledModal } from "components/Modal/StyledModal";
 import VerifiedLogo from "./VerifiedLogo";
 import Header from "./Header";
 import Description from "./Description";
 import CloseButton from "./CloseButton";
-import { useFocusOutside } from "hooks/useFocusOutside";
 import { Overlay } from "components/Overlay";
 
 interface IPaymentReleased {
@@ -13,9 +13,7 @@ interface IPaymentReleased {
 
 const PaymentReleased: React.FC<IPaymentReleased> = ({ toggleModal }) => {
   const containerRef = useRef(null);
-  useFocusOutside(containerRef, () => {
-    toggleModal();
-  });
+  useClickAway(containerRef, () => toggleModal());
 
   return (
     <>

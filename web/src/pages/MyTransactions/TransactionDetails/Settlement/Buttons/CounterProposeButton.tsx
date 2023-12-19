@@ -9,7 +9,7 @@ const CounterProposeButton: React.FC = () => {
   return (
     <>
       <Button text={"Counter-propose"} onClick={toggleModal} />
-      {isModalOpen && <ProposeSettlementModal text="Counter-propose" toggleModal={toggleModal} />}
+      {isModalOpen ? <ProposeSettlementModal text="Counter-propose" toggleModal={toggleModal} /> : null}
     </>
   );
 };

@@ -20,14 +20,6 @@ export const StyledCard = styled(Card)`
   padding: ${responsiveSize(24, 32)};
   padding-bottom: 52px;
 
-  > h1 {
-    margin: 0;
-  }
-
-  > hr {
-    width: 100%;
-  }
-
   ${landscapeStyle(
     () => css`
       width: 100%;

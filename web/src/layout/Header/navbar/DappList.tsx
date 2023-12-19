@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import styled, { css } from "styled-components";
+import { useClickAway } from "react-use";
 import { landscapeStyle } from "styles/landscapeStyle";
-import { useFocusOutside } from "hooks/useFocusOutside";
 import Curate from "svgs/icons/curate-image.png";
 import Resolver from "svgs/icons/dispute-resolver.svg";
 import Escrow from "svgs/icons/escrow.svg";
@@ -14,7 +14,6 @@ import Tokens from "svgs/icons/tokens.svg";
 import Product from "./Product";
 
 const Header = styled.h1`
-  display: flex;
   padding-top: 32px;
   padding-bottom: 20px;
   font-size: 24px;
@@ -125,9 +124,7 @@ interface IDappList {
 
 const DappList: React.FC<IDappList> = ({ toggleIsDappListOpen }) => {
   const containerRef = useRef(null);
-  useFocusOutside(containerRef, () => {
-    toggleIsDappListOpen();
-  });
+  useClickAway(containerRef, () => toggleIsDappListOpen());
 
   return (
     <Container ref={containerRef}>

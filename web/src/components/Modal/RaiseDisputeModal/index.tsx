@@ -2,10 +2,10 @@ import React, { useRef } from "react";
 import Description from "./Description";
 import { Overlay } from "components/Overlay";
 import Header from "./Header";
+import { useClickAway } from "react-use";
 import AmountClaimed from "./AmountClaimed";
 import Buttons from "./Buttons";
 import FeeRequired from "./FeeRequired";
-import { useFocusOutside } from "hooks/useFocusOutside";
 import { StyledModal } from "../StyledModal";
 import styled from "styled-components";
 
@@ -19,9 +19,7 @@ interface IRaiseDisputeModal {
 
 const RaiseDisputeModal: React.FC<IRaiseDisputeModal> = ({ toggleModal }) => {
   const containerRef = useRef(null);
-  useFocusOutside(containerRef, () => {
-    toggleModal();
-  });
+  useClickAway(containerRef, () => toggleModal());
 
   return (
     <>

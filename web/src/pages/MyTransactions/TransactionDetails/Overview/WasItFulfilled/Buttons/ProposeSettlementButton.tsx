@@ -9,7 +9,7 @@ const ProposeSettlementButton: React.FC = () => {
   return (
     <>
       <Button variant="secondary" text={"Propose a settlement"} onClick={toggleModal} />
-      {isModalOpen && <ProposeSettlementModal text="Propose a settlement" toggleModal={toggleModal} />}
+      {isModalOpen ? <ProposeSettlementModal text="Propose a settlement" toggleModal={toggleModal} /> : null}
     </>
   );
 };

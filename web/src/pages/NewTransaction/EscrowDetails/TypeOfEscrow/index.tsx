@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import EscrowOptions from "./EscrowOptions";
-import Header from "components/Header";
+import Header from "pages/NewTransaction/Header";
 import Info from "./Info";
 import NavigationButtons from "../../NavigationButtons";
 

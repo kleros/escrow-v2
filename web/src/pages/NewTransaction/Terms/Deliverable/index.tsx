@@ -1,7 +1,7 @@
 import React from "react";
 import styled, { css } from "styled-components";
 import { landscapeStyle } from "styles/landscapeStyle";
-import Header from "components/Header";
+import Header from "pages/NewTransaction/Header";
 import { FileUploader, Textarea } from "@kleros/ui-components-library";
 import { useNewTransactionContext } from "context/NewTransactionContext";
 import { responsiveSize } from "styles/responsiveSize";

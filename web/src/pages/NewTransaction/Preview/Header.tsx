@@ -3,7 +3,6 @@ import styled from "styled-components";
 import { responsiveSize } from "styles/responsiveSize";
 
 const StyledHeader = styled.h1`
-  display: flex;
   margin: 0;
   color: ${({ theme }) => theme.secondaryPurple};
   font-weight: 400;

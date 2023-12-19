@@ -9,7 +9,7 @@ const ReleasePaymentButton: React.FC = () => {
   return (
     <>
       <Button text={"Yes. Release full payment"} onClick={toggleModal} />
-      {isModalOpen && <PaymentReleased toggleModal={toggleModal} />}
+      {isModalOpen ? <PaymentReleased toggleModal={toggleModal} /> : null}
     </>
   );
 };

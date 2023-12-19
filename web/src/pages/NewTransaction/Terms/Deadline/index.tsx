@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import Header from "components/Header";
+import Header from "pages/NewTransaction/Header";
 import { Datepicker } from "@kleros/ui-components-library";
 import NavigationButtons from "../../NavigationButtons";
 import { useNewTransactionContext } from "context/NewTransactionContext";
