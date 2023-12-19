@@ -1,5 +1,5 @@
 import React from "react";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { formatEther } from "viem";
 import { StyledSkeleton } from "components/StyledSkeleton";
@@ -7,7 +7,6 @@ import { Card } from "@kleros/ui-components-library";
 import { Statuses } from "consts/statuses";
 import { useIsList } from "context/IsListProvider";
 // import { TransactionDetailsFragment } from "queries/useTransactionsQuery";
-import { landscapeStyle } from "styles/landscapeStyle";
 // import { useCourtPolicy } from "queries/useCourtPolicy";
 // import { useTransactionTemplate } from "queries/useTransactionTemplate";
 // import { useVotingHistory } from "queries/useVotingHistory";
