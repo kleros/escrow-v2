@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import Header from "components/Header";
+import Header from "pages/NewTransaction/Header";
 import EmailField from "./EmailField";
 import NavigationButtons from "../../NavigationButtons";
 

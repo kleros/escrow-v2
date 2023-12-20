@@ -7,7 +7,7 @@ interface INewTransactionContext {
   setEscrowTitle: (title: string) => void;
   deliverableText: string;
   setDeliverableText: (deliverableText: string) => void;
-  deliverableFile: string;
+  deliverableFile: File;
   setDeliverableFile: (deliverableFile: File) => void;
   receivingQuantity: string;
   setReceivingQuantity: (quantity: string) => void;

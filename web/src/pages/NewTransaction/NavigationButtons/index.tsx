@@ -3,7 +3,7 @@ import styled from "styled-components";
 import PreviousButton from "./PreviousButton";
 import NextButton from "./NextButton";
 import DepositPaymentButton from "./DepositPaymentButton";
-import { responsiveSize } from "utils/responsiveSize";
+import { responsiveSize } from "styles/responsiveSize";
 
 const Container = styled.div`
   display: flex;

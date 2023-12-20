@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import Header from "components/Header";
+import Header from "pages/NewTransaction/Header";
 import NavigationButtons from "../../NavigationButtons";
 import DestinationAddress from "./DestinationAddress";
 import ToDivider from "./ToDivider";

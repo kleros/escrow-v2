@@ -1,9 +1,11 @@
 import React from "react";
 import styled from "styled-components";
-import { useNavigate, useParams } from "react-router-dom";
+import { Route, Routes, useNavigate, useParams } from "react-router-dom";
 import { useAccount } from "wagmi";
 import { decodeURIFilter, useRootPath } from "utils/uri";
 import ConnectWallet from "components/ConnectWallet";
+import TransactionsFetcher from "./TransactionsFetcher";
+import TransactionDetails from "./TransactionDetails";
 
 const Container = styled.div`
   width: 100%;
@@ -15,11 +17,11 @@ const Container = styled.div`
   margin: 0 auto;
 `;
 
-const ConnectWalletContainer = styled.div`
+export const ConnectWalletContainer = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
+  text-align: center;
   color: ${({ theme }) => theme.primaryText};
 `;
 
@@ -30,13 +32,14 @@ const Dashboard: React.FC = () => {
   const navigate = useNavigate();
   const casesPerPage = 3;
   const pageNumber = parseInt(page ?? "1");
-  const disputeSkip = casesPerPage * (pageNumber - 1);
-  const decodedFilter = decodeURIFilter(filter ?? "all");
 
   return (
     <Container>
       {isConnected ? (
-        <>Hi. These are your transactions</>
+        <Routes>
+          <Route path="/display/:page/:order/:filter" element={<TransactionsFetcher />} />
+          <Route path="/:id/*" element={<TransactionDetails />} />
+        </Routes>
       ) : (
         <ConnectWalletContainer>
           To see your transactions, connect first

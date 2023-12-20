@@ -22,6 +22,7 @@ const NextButton: React.FC<INextButton> = ({ nextRoute }) => {
     sendingRecipientAddress,
     sendingQuantity,
     sendingToken,
+    deadline,
     notificationEmail,
   } = useNewTransactionContext();
 
@@ -33,14 +34,14 @@ const NextButton: React.FC<INextButton> = ({ nextRoute }) => {
 
   const isEmailValid = notificationEmail === "" || EMAIL_REGEX.test(notificationEmail);
 
-  const isDeliverableValid = escrowType === "general"
-    ? !!deliverableText
-    : !(areReceivingFieldsEmpty || !isReceivingAddressValid);
+  const isDeliverableValid =
+    escrowType === "general" ? !!deliverableText : !(areReceivingFieldsEmpty || !isReceivingAddressValid);
 
   const isButtonDisabled =
     (location.pathname.includes("/newTransaction/title") && !escrowTitle) ||
     (location.pathname.includes("/newTransaction/deliverable") && !isDeliverableValid) ||
     (location.pathname.includes("/newTransaction/payment") && (areSendingFieldsEmpty || !isSendingAddressValid)) ||
+    (location.pathname.includes("/newTransaction/deadline") && !deadline) ||
     (location.pathname.includes("/newTransaction/notifications") && !isEmailValid);
 
   return <Button disabled={isButtonDisabled} onClick={() => navigate(nextRoute)} text="Next" />;

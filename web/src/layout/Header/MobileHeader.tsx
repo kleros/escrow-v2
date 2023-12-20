@@ -1,13 +1,12 @@
 import React, { useContext, useMemo, useRef } from "react";
 import styled, { css } from "styled-components";
-import { useToggle } from "react-use";
+import { useClickAway, useToggle } from "react-use";
 import { landscapeStyle } from "styles/landscapeStyle";
 import { Link } from "react-router-dom";
 import EscrowLogo from "svgs/header/escrow.svg";
 import HamburgerIcon from "svgs/header/hamburger.svg";
 import LightButton from "components/LightButton";
 import NavBar from "./navbar";
-import { useFocusOutside } from "hooks/useFocusOutside";
 
 const Container = styled.div`
   display: flex;
@@ -52,7 +51,7 @@ export function useOpenContext() {
 const MobileHeader = () => {
   const [isOpen, toggleIsOpen] = useToggle(false);
   const containerRef = useRef(null);
-  useFocusOutside(containerRef, () => toggleIsOpen(false));
+  useClickAway(containerRef, () => toggleIsOpen(false));
   const memoizedContext = useMemo(() => ({ isOpen, toggleIsOpen }), [isOpen, toggleIsOpen]);
   return (
     <Container ref={containerRef}>
