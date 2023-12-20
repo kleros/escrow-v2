@@ -20,8 +20,8 @@ const Container = styled.div`
 export const ConnectWalletContainer = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
+  text-align: center;
   color: ${({ theme }) => theme.primaryText};
 `;
 
