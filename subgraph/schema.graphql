@@ -1,0 +1,63 @@
+enum Status {
+  NoDispute
+  WaitingBuyer
+  WaitingSeller
+  DisputeCreated
+  TransactionResolved
+}
+
+enum Party {
+  None
+  Buyer
+  Seller
+}
+
+enum Resolution {
+  TransactionExecuted
+  TimeoutByBuyer
+  TimeoutBySeller
+  RulingEnforced
+}
+
+type Escrow @entity {
+  id: ID!
+  buyer: Bytes!
+  seller: Bytes!
+  amount: BigInt!
+  deadline: BigInt
+  disputeID: BigInt
+  buyerFee: BigInt
+  sellerFee: BigInt
+  lastFeePaymentTime: BigInt
+  templateData: String
+  templateDataMappings: String
+  status: Status
+  payments: [Payment!]! @derivedFrom(field: "escrow")
+  hasToPayFees: [HasToPayFee!]! @derivedFrom(field: "escrow")
+  createdEvents: [TransactionCreated!]! @derivedFrom(field: "escrow")
+  resolvedEvents: [TransactionResolved!]! @derivedFrom(field: "escrow")
+}
+
+type Payment @entity {
+  id: ID!
+  escrow: Escrow!
+  amount: BigInt!
+  party: Bytes!
+}
+
+type HasToPayFee @entity {
+  id: ID!
+  escrow: Escrow!
+  party: Party!
+}
+
+type TransactionCreated @entity {
+  id: ID!
+  escrow: Escrow!
+}
+
+type TransactionResolved @entity {
+  id: ID!
+  escrow: Escrow!
+  resolution: Resolution!
+}

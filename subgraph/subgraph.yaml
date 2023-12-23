@@ -1,0 +1,33 @@
+specVersion: 0.0.4
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: Escrow
+    network: arbitrum-sepolia
+    source:
+      address: '0x224E52523354BEdCaFF3e98de463E829f3388f84'
+      abi: Escrow
+      startBlock: 3087475
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      file: ./mappings/escrow.ts
+      entities:
+        - Payment
+        - HasToPayFee
+        - TransactionCreated
+        - TransactionResolved
+      abis:
+        - name: Escrow
+          file: ../contracts/deployments/arbitrumSepoliaDevnet/Escrow.json
+      eventHandlers:
+        - event: Payment(indexed uint256,uint256,address)
+          handler: handlePayment
+        - event: HasToPayFee(indexed uint256,uint8)
+          handler: handleHasToPayFee
+        - event: TransactionCreated(indexed uint256,indexed address,indexed address,uint256)
+          handler: handleTransactionCreated
+        - event: TransactionResolved(indexed uint256,indexed uint8)
+          handler: handleTransactionResolved
