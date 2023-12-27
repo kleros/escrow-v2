@@ -35,7 +35,7 @@
     "build-netlify": "node scripts/gitInfo.js && parcel build",
     "check-style": "eslint 'src/**/*.{js,jsx,ts,tsx}'",
     "check-types": "tsc --noEmit",
-    "generate": "echo 'Nothing to generate for now, later replace with yarn generate:gql && yarn generate:hooks'",
+    "generate": "echo 'later add also yarn generate:gql' && yarn generate:hooks",
     "generate:gql": "graphql-codegen --require tsconfig-paths/register",
     "generate:hooks": "NODE_NO_WARNINGS=1 wagmi generate",
     "generate:supabase": "scripts/generateSupabaseTypes.sh"
