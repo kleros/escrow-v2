@@ -38,6 +38,7 @@ const NextButton: React.FC<INextButton> = ({ nextRoute }) => {
     escrowType === "general" ? !!deliverableText : !(areReceivingFieldsEmpty || !isReceivingAddressValid);
 
   const isButtonDisabled =
+    escrowType === "swap" ||
     (location.pathname.includes("/newTransaction/title") && !escrowTitle) ||
     (location.pathname.includes("/newTransaction/deliverable") && !isDeliverableValid) ||
     (location.pathname.includes("/newTransaction/payment") && (areSendingFieldsEmpty || !isSendingAddressValid)) ||
