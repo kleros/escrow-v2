@@ -1,12 +1,13 @@
 import React from "react";
 import styled, { css } from "styled-components";
 import { landscapeStyle } from "styles/landscapeStyle";
-import Header from "pages/NewTransaction/Header";
 import { FileUploader, Textarea } from "@kleros/ui-components-library";
 import { useNewTransactionContext } from "context/NewTransactionContext";
 import { responsiveSize } from "styles/responsiveSize";
+import { uploadFileToIPFS } from "utils/uploadFileToIPFS";
 import NavigationButtons from "../../NavigationButtons";
 import TokenTransaction from "../TokenTransaction";
+import Header from "pages/NewTransaction/Header";
 
 const Container = styled.div`
   display: flex;
@@ -56,6 +57,16 @@ const Deliverable: React.FC = () => {
     setDeliverableText(event.target.value);
   };
 
+  const handleFileUpload = async (file: File) => {
+    try {
+      const ipfsHash = await uploadFileToIPFS(file);
+      console.log("ipfshash", ipfsHash)
+      setDeliverableFile(ipfsHash);
+    } catch (error) {
+      console.error("Error uploading file to IPFS:", error);
+    }
+  };
+
   return (
     <Container>
       {escrowType === "general" ? (
@@ -67,7 +78,7 @@ const Deliverable: React.FC = () => {
             placeholder="eg. A website created in React with the following specification: x,y,z"
           />
           <StyledFileUploader
-            callback={(file: File) => setDeliverableFile(file)}
+            callback={handleFileUpload}
             variant="info"
             msg="Additionally, you can add an external file in PDF or add multiple files in a single .zip file."
           />
