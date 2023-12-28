@@ -43,7 +43,7 @@ const Deliverable: React.FC = () => {
     escrowType,
     deliverableText,
     setDeliverableText,
-    deliverableFile,
+    setIsFileUploading,
     setDeliverableFile,
     receivingQuantity,
     setReceivingQuantity,
@@ -59,11 +59,13 @@ const Deliverable: React.FC = () => {
 
   const handleFileUpload = async (file: File) => {
     try {
+      setIsFileUploading(true);
       const response = await uploadFileToIPFS(file);
       const responseData = await response.json();
       const ipfsHash = responseData.cids[0];
       console.log("IPFS hash:", ipfsHash);
       setDeliverableFile(ipfsHash);
+      setIsFileUploading(false);
     } catch (error) {
       console.error("Error uploading file to IPFS:", error);
     }

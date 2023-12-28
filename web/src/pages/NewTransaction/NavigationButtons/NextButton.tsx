@@ -16,6 +16,7 @@ const NextButton: React.FC<INextButton> = ({ nextRoute }) => {
     escrowType,
     escrowTitle,
     deliverableText,
+    isFileUploading,
     receivingRecipientAddress,
     receivingQuantity,
     receivingToken,
@@ -38,7 +39,9 @@ const NextButton: React.FC<INextButton> = ({ nextRoute }) => {
   const isEmailValid = notificationEmail === "" || EMAIL_REGEX.test(notificationEmail);
 
   const isDeliverableValid =
-    escrowType === "general" ? !!deliverableText : !(areReceivingFieldsEmpty || !isReceivingAddressValid);
+    escrowType === "general"
+      ? !!deliverableText && !isFileUploading
+      : !(areReceivingFieldsEmpty || !isReceivingAddressValid);
 
   const deadlineTimestamp = deadline ? new Date(deadline).getTime() : 0;
   const currentTime = Date.now();
