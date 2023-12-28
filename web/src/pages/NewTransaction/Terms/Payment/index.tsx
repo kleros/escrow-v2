@@ -1,9 +1,11 @@
 import React from "react";
 import { useNewTransactionContext } from "context/NewTransactionContext";
-import TokenTransaction from "../TokenTransaction";
+import TokenTransaction from "./TokenTransaction";
+import GeneralTransaction from "./GeneralTransaction";
 
 const Payment: React.FC = () => {
   const {
+    escrowType,
     sendingQuantity,
     setSendingQuantity,
     sendingToken,
@@ -12,7 +14,9 @@ const Payment: React.FC = () => {
     setSendingRecipientAddress,
   } = useNewTransactionContext();
 
-  return (
+  return escrowType === "general" ? (
+    <GeneralTransaction />
+  ) : (
     <TokenTransaction
       headerText="I am paying"
       prevRoute="/newTransaction/deliverable"
@@ -26,4 +30,5 @@ const Payment: React.FC = () => {
     />
   );
 };
+
 export default Payment;

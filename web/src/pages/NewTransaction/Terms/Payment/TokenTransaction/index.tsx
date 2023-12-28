@@ -1,9 +1,9 @@
 import React from "react";
 import styled from "styled-components";
 import Header from "pages/NewTransaction/Header";
-import NavigationButtons from "../../NavigationButtons";
-import DestinationAddress from "./DestinationAddress";
-import ToDivider from "./ToDivider";
+import NavigationButtons from "../../../NavigationButtons";
+import DestinationAddress from "../DestinationAddress";
+import ToDivider from "../ToDivider";
 import TokenAndAmount from "./TokenAndAmount";
 
 const Container = styled.div`

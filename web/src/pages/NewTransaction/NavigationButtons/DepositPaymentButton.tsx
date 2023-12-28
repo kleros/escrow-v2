@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@kleros/ui-components-library";
 import { useEscrowCreateTransaction, usePrepareEscrowCreateTransaction } from "hooks/contracts/generated";
 import { useNewTransactionContext } from "context/NewTransactionContext";
 import { useEnsAddress, usePublicClient } from "wagmi";
+import { parseEther } from "viem";
 import { isUndefined } from "utils/index";
 import { wrapWithToast } from "utils/wrapWithToast";
-import { ethAddressPattern } from "../Terms/TokenTransaction/DestinationAddress";
-import { parseEther } from "viem";
+import { ethAddressPattern } from "../Terms/Payment/DestinationAddress";
 
 const StyledButton = styled(Button)``;
 
@@ -27,8 +28,9 @@ const DepositPaymentButton: React.FC = () => {
   } = useNewTransactionContext();
 
   const [finalRecipientAddress, setFinalRecipientAddress] = useState(sendingRecipientAddress);
-  const ensResult = useEnsAddress({ name: sendingRecipientAddress });
+  const ensResult = useEnsAddress({ name: sendingRecipientAddress, chainId: 1 });
   const publicClient = usePublicClient();
+  const navigate = useNavigate();
   const [isSending, setIsSending] = useState<boolean>(false);
 
   useEffect(() => {
@@ -48,8 +50,6 @@ const DepositPaymentButton: React.FC = () => {
     Object.assign(templateData, {
       deliverableText,
       deliverableFile,
-      sendingQuantity,
-      sendingToken,
     });
   } else if (escrowType === "swap") {
     Object.assign(templateData, {
@@ -73,7 +73,7 @@ const DepositPaymentButton: React.FC = () => {
       BigInt(Math.floor(timeoutPayment)),
       finalRecipientAddress,
       stringifiedTemplateData,
-      "{}", // Assuming no template data mappings are needed
+      "", // Assuming no template data mappings are needed
     ],
     value: parseEther(sendingQuantity),
   });
@@ -86,6 +86,7 @@ const DepositPaymentButton: React.FC = () => {
       wrapWithToast(async () => await createTransaction().then((response) => response.hash), publicClient).finally(
         () => {
           setIsSending(false);
+          navigate("/");
         }
       );
     }
