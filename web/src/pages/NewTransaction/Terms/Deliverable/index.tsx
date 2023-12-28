@@ -6,7 +6,7 @@ import { useNewTransactionContext } from "context/NewTransactionContext";
 import { responsiveSize } from "styles/responsiveSize";
 import { uploadFileToIPFS } from "utils/uploadFileToIPFS";
 import NavigationButtons from "../../NavigationButtons";
-import TokenTransaction from "../TokenTransaction";
+import TokenTransaction from "../Payment/TokenTransaction";
 import Header from "pages/NewTransaction/Header";
 
 const Container = styled.div`
@@ -60,7 +60,7 @@ const Deliverable: React.FC = () => {
   const handleFileUpload = async (file: File) => {
     try {
       const ipfsHash = await uploadFileToIPFS(file);
-      console.log("ipfshash", ipfsHash)
+      console.log("ipfshash", ipfsHash);
       setDeliverableFile(ipfsHash);
     } catch (error) {
       console.error("Error uploading file to IPFS:", error);
@@ -85,19 +85,17 @@ const Deliverable: React.FC = () => {
           <NavigationButtons prevRoute="/newTransaction/title" nextRoute="/newTransaction/payment" />
         </>
       ) : (
-        <>
-          <TokenTransaction
-            headerText="I should receive"
-            prevRoute="/newTransaction/title"
-            nextRoute="/newTransaction/payment"
-            quantity={receivingQuantity}
-            setQuantity={setReceivingQuantity}
-            token={receivingToken}
-            setToken={setReceivingToken}
-            recipientAddress={receivingRecipientAddress}
-            setRecipientAddress={setReceivingRecipientAddress}
-          />
-        </>
+        <TokenTransaction
+          headerText="I should receive"
+          prevRoute="/newTransaction/title"
+          nextRoute="/newTransaction/payment"
+          quantity={receivingQuantity}
+          setQuantity={setReceivingQuantity}
+          token={receivingToken}
+          setToken={setReceivingToken}
+          recipientAddress={receivingRecipientAddress}
+          setRecipientAddress={setReceivingRecipientAddress}
+        />
       )}
     </Container>
   );
