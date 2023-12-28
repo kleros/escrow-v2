@@ -13,9 +13,10 @@ import Notifications from "./Terms/Notifications";
 import Payment from "./Terms/Payment";
 import Timeline from "./Timeline";
 import { responsiveSize } from "styles/responsiveSize";
-import { useAccount } from "wagmi";
+import { useAccount, useNetwork } from "wagmi";
 import ConnectWallet from "components/ConnectWallet";
 import { ConnectWalletContainer } from "../MyTransactions";
+import { DEFAULT_CHAIN } from "consts/chains";
 
 const Container = styled.div`
   display: flex;
@@ -38,15 +39,17 @@ const NewTransaction: React.FC = () => {
   const location = useLocation();
   const { width } = useWindowSize();
   const { isConnected } = useAccount();
+  const { chain } = useNetwork();
   const isPreviewPage = location.pathname.includes("/preview");
   const isMobileView = width <= BREAKPOINT_LANDSCAPE;
+  const isOnSupportedChain = chain?.id === DEFAULT_CHAIN;
 
   return (
     <>
       {!isPreviewPage || isMobileView ? <HeroImage /> : null}
       <Container>
-        {isConnected && !isPreviewPage ? <Timeline /> : null}
-        {isConnected ? (
+        {isConnected && isOnSupportedChain && !isPreviewPage ? <Timeline /> : null}
+        {isConnected && isOnSupportedChain ? (
           <MiddleContentContainer>
             <Routes>
               <Route index element={<Navigate to="typeOfEscrow" replace />} />
@@ -61,7 +64,7 @@ const NewTransaction: React.FC = () => {
           </MiddleContentContainer>
         ) : (
           <ConnectWalletContainer>
-            To create a new escrow transaction, connect first
+            To create a new escrow transaction, connect first and switch to the supported chain
             <hr />
             <ConnectWallet />
           </ConnectWalletContainer>
