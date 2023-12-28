@@ -68,6 +68,7 @@ const Deliverable: React.FC = () => {
       setIsFileUploading(false);
     } catch (error) {
       console.error("Error uploading file to IPFS:", error);
+      setIsFileUploading(false);
     }
   };
 

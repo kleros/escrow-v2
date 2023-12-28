@@ -25,6 +25,7 @@ const DepositPaymentButton: React.FC = () => {
     receivingToken,
     receivingRecipientAddress,
     deadline,
+    resetContext,
   } = useNewTransactionContext();
 
   const [finalRecipientAddress, setFinalRecipientAddress] = useState(sendingRecipientAddress);
@@ -42,8 +43,8 @@ const DepositPaymentButton: React.FC = () => {
   }, [sendingRecipientAddress, ensResult.data]);
 
   let templateData = {
-    title: escrowTitle,
     type: escrowType,
+    title: escrowTitle,
   };
 
   if (escrowType === "general") {
@@ -86,6 +87,7 @@ const DepositPaymentButton: React.FC = () => {
       wrapWithToast(async () => await createTransaction().then((response) => response.hash), publicClient).finally(
         () => {
           setIsSending(false);
+          resetContext();
           navigate("/");
         }
       );

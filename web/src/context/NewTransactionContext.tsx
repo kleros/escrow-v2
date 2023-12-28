@@ -27,6 +27,7 @@ interface INewTransactionContext {
   setDeadline: (deadline: string) => void;
   notificationEmail: string;
   setNotificationEmail: (email: string) => void;
+  resetContext: () => void;
 }
 
 const NewTransactionContext = createContext<INewTransactionContext>({
@@ -56,6 +57,7 @@ const NewTransactionContext = createContext<INewTransactionContext>({
   setDeadline: () => {},
   notificationEmail: "",
   setNotificationEmail: () => {},
+  resetContext: () => {},
 });
 
 export const useNewTransactionContext = () => useContext(NewTransactionContext);
@@ -80,6 +82,22 @@ export const NewTransactionProvider: React.FC<{ children: React.ReactNode }> = (
   );
   const [deadline, setDeadline] = useState<string>(localStorage.getItem("deadline") || "");
   const [notificationEmail, setNotificationEmail] = useState<string>(localStorage.getItem("notificationEmail") || "");
+
+  const resetContext = () => {
+    setEscrowType("general");
+    setEscrowTitle("");
+    setDeliverableText("");
+    setDeliverableFile("");
+    setIsFileUploading(false);
+    setReceivingQuantity("");
+    setReceivingToken("");
+    setReceivingRecipientAddress("");
+    setSendingQuantity("");
+    setSendingToken("");
+    setSendingRecipientAddress("");
+    setDeadline("");
+    setNotificationEmail("");
+  };
 
   useEffect(() => {
     localStorage.setItem("escrowType", escrowType);
@@ -140,6 +158,7 @@ export const NewTransactionProvider: React.FC<{ children: React.ReactNode }> = (
         setDeadline,
         notificationEmail,
         setNotificationEmail,
+        resetContext,
       }}
     >
       {children}
