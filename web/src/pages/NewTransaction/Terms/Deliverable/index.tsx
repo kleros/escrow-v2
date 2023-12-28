@@ -59,7 +59,10 @@ const Deliverable: React.FC = () => {
 
   const handleFileUpload = async (file: File) => {
     try {
-      const ipfsHash = await uploadFileToIPFS(file);
+      const ipfsHash = await uploadFileToIPFS(file).then(async (res) => {
+        const response = await res.json();
+        return response["cids"][0];
+      });
       console.log("ipfshash", ipfsHash);
       setDeliverableFile(ipfsHash);
     } catch (error) {
