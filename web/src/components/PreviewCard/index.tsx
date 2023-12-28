@@ -8,6 +8,7 @@ import TransactionInfo from "components/TransactionInfo";
 import { useNewTransactionContext } from "context/NewTransactionContext";
 import Terms from "./Terms";
 import EscrowTimeline from "./EscrowTimeline";
+import { useNativeTokenSymbol } from "hooks/useNativeTokenSymbol";
 
 export const StyledCard = styled(Card)`
   height: auto;
@@ -42,7 +43,8 @@ const TransactionInfoContainer = styled.div`
 `;
 
 const PreviewCard: React.FC = () => {
-  const { sendingQuantity, sendingToken, sendingRecipientAddress, deadline } = useNewTransactionContext();
+  const { escrowType, sendingQuantity, sendingToken, sendingRecipientAddress, deadline } = useNewTransactionContext();
+  const nativeTokenSymbol = useNativeTokenSymbol();
 
   return (
     <StyledCard>
@@ -51,7 +53,7 @@ const PreviewCard: React.FC = () => {
         <Divider />
         <TransactionInfo
           amount={sendingQuantity}
-          token={sendingToken}
+          token={escrowType === "general" ? nativeTokenSymbol : sendingToken}
           receiver={sendingRecipientAddress}
           deadline={deadline}
           isPreview={true}

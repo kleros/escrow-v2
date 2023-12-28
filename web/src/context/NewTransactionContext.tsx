@@ -7,8 +7,8 @@ interface INewTransactionContext {
   setEscrowTitle: (title: string) => void;
   deliverableText: string;
   setDeliverableText: (deliverableText: string) => void;
-  deliverableFile: File;
-  setDeliverableFile: (deliverableFile: File) => void;
+  deliverableFile: string;
+  setDeliverableFile: (deliverableFile: string) => void;
   receivingQuantity: string;
   setReceivingQuantity: (quantity: string) => void;
   receivingToken: string;
@@ -70,7 +70,7 @@ export const NewTransactionProvider: React.FC<{ children: React.ReactNode }> = (
   const [sendingRecipientAddress, setSendingRecipientAddress] = useState<string>(
     localStorage.getItem("sendingRecipientAddress") || ""
   );
-  const [deliverableFile, setDeliverableFile] = useState<File>(localStorage.getItem("deliverableFile") || "");
+  const [deliverableFile, setDeliverableFile] = useState<string>(localStorage.getItem("deliverableFile") || "");
   const [deadline, setDeadline] = useState<string>(localStorage.getItem("deadline") || "");
   const [notificationEmail, setNotificationEmail] = useState<string>(localStorage.getItem("notificationEmail") || "");
 

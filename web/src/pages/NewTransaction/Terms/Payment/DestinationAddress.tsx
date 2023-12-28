@@ -15,8 +15,9 @@ const StyledField = styled(Field)`
   )}
 `;
 
+export const ethAddressPattern = /^0x[a-fA-F0-9]{40}$/;
+
 export const validateAddress = (input: string) => {
-  const ethAddressPattern = /^0x[a-fA-F0-9]{40}$/;
   const ensDomainPattern = /^[a-zA-Z0-9-]{1,}\.eth$/;
   return ethAddressPattern.test(input) || ensDomainPattern.test(input);
 };
