@@ -17,10 +17,13 @@ const AttachedFile: React.FC = () => {
   const { deliverableFile } = useNewTransactionContext();
 
   return (
-    <StyledA target="_blank" rel="noreferrer">
-      <AttachmentIcon />
-      {deliverableFile.name}
-    </StyledA>
+    deliverableFile ? (
+      <StyledA href={`https://ipfs.kleros.io${deliverableFile}`} target="_blank" rel="noreferrer">
+        <AttachmentIcon />
+        View Attached File
+      </StyledA>
+    ) : null
   );
 };
+
 export default AttachedFile;
