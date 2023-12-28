@@ -9,7 +9,7 @@ export function uploadFileToIPFS(file: File): Promise<Response> {
 
       console.log("File for upload:", file); // Debug log
 
-      const url = "/.netlify/functions/uploadToIPFS?dapp=court&key=kleros-v2&operation=evidence";
+      const url = "/.netlify/functions/uploadToIPFS?dapp=escrow&key=escrow-v2&operation=file";
       console.log("URL for upload:", url);
 
       const response = await fetch(url, {
