@@ -18,7 +18,10 @@ const Container = styled.div`
 const StyledTextArea = styled(Textarea)`
   width: 84vw;
   height: 200px;
-  margin-bottom: 24px;
+  margin-bottom: 16px;
+  textarea {
+    font-size: 16px;
+  }
 
   ${landscapeStyle(
     () => css`

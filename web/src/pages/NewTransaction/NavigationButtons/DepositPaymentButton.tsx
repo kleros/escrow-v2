@@ -28,11 +28,18 @@ const DepositPaymentButton: React.FC = () => {
     resetContext,
   } = useNewTransactionContext();
 
+  const [currentTime, setCurrentTime] = useState(Date.now());
   const [finalRecipientAddress, setFinalRecipientAddress] = useState(sendingRecipientAddress);
   const ensResult = useEnsAddress({ name: sendingRecipientAddress, chainId: 1 });
   const publicClient = usePublicClient();
   const navigate = useNavigate();
   const [isSending, setIsSending] = useState<boolean>(false);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => setCurrentTime(Date.now()), 1000);
+
+    return () => clearInterval(intervalId);
+  }, []);
 
   useEffect(() => {
     if (ensResult.data) {
@@ -45,27 +52,19 @@ const DepositPaymentButton: React.FC = () => {
   let templateData = {
     type: escrowType,
     title: escrowTitle,
-  };
-
-  if (escrowType === "general") {
-    Object.assign(templateData, {
-      deliverableText,
-      deliverableFile,
-    });
-  } else if (escrowType === "swap") {
-    Object.assign(templateData, {
+    ...(escrowType === "general" && { deliverableText, deliverableFile }),
+    ...(escrowType === "swap" && {
       receivingQuantity,
       receivingToken,
       receivingRecipientAddress,
       sendingQuantity,
       sendingToken,
-    });
-  }
+    }),
+  };
 
   const stringifiedTemplateData = JSON.stringify(templateData);
 
   const deadlineTimestamp = new Date(deadline).getTime();
-  const currentTime = Date.now();
   const timeoutPayment = (deadlineTimestamp - currentTime) / 1000;
 
   const { config: createTransactionConfig } = usePrepareEscrowCreateTransaction({

@@ -51,6 +51,7 @@ const StyledValue = styled.label<{ isPreview?: boolean }>`
     isPreview &&
     css`
       font-weight: 600;
+      text-align: start;
     `}
 `;
 

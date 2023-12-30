@@ -28,6 +28,10 @@ interface INewTransactionContext {
   notificationEmail: string;
   setNotificationEmail: (email: string) => void;
   resetContext: () => void;
+  hasSufficientNativeBalance: boolean;
+  setHasSufficientNativeBalance: (hasSufficientNativeBalance: boolean) => void;
+  isRecipientAddressResolved: boolean;
+  setIsRecipientAddressResolved: (isRecipientAddressResolved: boolean) => void;
 }
 
 const NewTransactionContext = createContext<INewTransactionContext>({
@@ -58,6 +62,10 @@ const NewTransactionContext = createContext<INewTransactionContext>({
   notificationEmail: "",
   setNotificationEmail: () => {},
   resetContext: () => {},
+  hasSufficientNativeBalance: true,
+  setHasSufficientNativeBalance: () => {},
+  isRecipientAddressResolved: false,
+  setIsRecipientAddressResolved: () => {},
 });
 
 export const useNewTransactionContext = () => useContext(NewTransactionContext);
@@ -67,9 +75,8 @@ export const NewTransactionProvider: React.FC<{ children: React.ReactNode }> = (
   const [escrowTitle, setEscrowTitle] = useState<string>(localStorage.getItem("escrowTitle") || "");
   const [deliverableText, setDeliverableText] = useState<string>(localStorage.getItem("deliverableText") || "");
   const [deliverableFile, setDeliverableFile] = useState<string>(localStorage.getItem("deliverableFile") || "");
-  const [isFileUploading, setIsFileUploading] = useState<boolean>(
-    JSON.parse(localStorage.getItem("isFileUploading") || "false")
-  );
+  const [isFileUploading, setIsFileUploading] = useState<boolean>(false);
+  const [hasSufficientNativeBalance, setHasSufficientNativeBalance] = useState<boolean>(true);
   const [receivingQuantity, setReceivingQuantity] = useState<string>(localStorage.getItem("receivingQuantity") || "");
   const [receivingToken, setReceivingToken] = useState<string>(localStorage.getItem("receivingToken") || "");
   const [receivingRecipientAddress, setReceivingRecipientAddress] = useState<string>(
@@ -80,6 +87,7 @@ export const NewTransactionProvider: React.FC<{ children: React.ReactNode }> = (
   const [sendingRecipientAddress, setSendingRecipientAddress] = useState<string>(
     localStorage.getItem("sendingRecipientAddress") || ""
   );
+  const [isRecipientAddressResolved, setIsRecipientAddressResolved] = useState(false);
   const [deadline, setDeadline] = useState<string>(localStorage.getItem("deadline") || "");
   const [notificationEmail, setNotificationEmail] = useState<string>(localStorage.getItem("notificationEmail") || "");
 
@@ -97,6 +105,7 @@ export const NewTransactionProvider: React.FC<{ children: React.ReactNode }> = (
     setSendingRecipientAddress("");
     setDeadline("");
     setNotificationEmail("");
+    setHasSufficientNativeBalance(true);
   };
 
   useEffect(() => {
@@ -104,7 +113,6 @@ export const NewTransactionProvider: React.FC<{ children: React.ReactNode }> = (
     localStorage.setItem("escrowTitle", escrowTitle);
     localStorage.setItem("deliverableText", deliverableText);
     localStorage.setItem("deliverableFile", deliverableFile);
-    localStorage.setItem("isFileUploading", JSON.stringify(isFileUploading));
     localStorage.setItem("receivingQuantity", receivingQuantity);
     localStorage.setItem("receivingToken", receivingToken);
     localStorage.setItem("receivingRecipientAddress", receivingRecipientAddress);
@@ -118,7 +126,6 @@ export const NewTransactionProvider: React.FC<{ children: React.ReactNode }> = (
     escrowTitle,
     deliverableText,
     deliverableFile,
-    isFileUploading,
     receivingQuantity,
     receivingToken,
     receivingRecipientAddress,
@@ -150,10 +157,14 @@ export const NewTransactionProvider: React.FC<{ children: React.ReactNode }> = (
         setReceivingRecipientAddress,
         sendingQuantity,
         setSendingQuantity,
+        hasSufficientNativeBalance,
+        setHasSufficientNativeBalance,
         sendingToken,
         setSendingToken,
         sendingRecipientAddress,
         setSendingRecipientAddress,
+        isRecipientAddressResolved,
+        setIsRecipientAddressResolved,
         deadline,
         setDeadline,
         notificationEmail,

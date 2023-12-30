@@ -25,6 +25,8 @@ const NextButton: React.FC<INextButton> = ({ nextRoute }) => {
     sendingToken,
     deadline,
     notificationEmail,
+    hasSufficientNativeBalance,
+    isRecipientAddressResolved,
   } = useNewTransactionContext();
 
   const isReceivingAddressValid = validateAddress(receivingRecipientAddress);
@@ -51,7 +53,11 @@ const NextButton: React.FC<INextButton> = ({ nextRoute }) => {
     escrowType === "swap" ||
     (location.pathname.includes("/newTransaction/title") && !escrowTitle) ||
     (location.pathname.includes("/newTransaction/deliverable") && !isDeliverableValid) ||
-    (location.pathname.includes("/newTransaction/payment") && (areSendingFieldsEmpty || !isSendingAddressValid)) ||
+    (location.pathname.includes("/newTransaction/payment") &&
+      (areSendingFieldsEmpty ||
+        !isSendingAddressValid ||
+        !isRecipientAddressResolved ||
+        !hasSufficientNativeBalance)) ||
     (location.pathname.includes("/newTransaction/deadline") && (!deadline || isDeadlineInPast)) ||
     (location.pathname.includes("/newTransaction/notifications") && !isEmailValid);
 

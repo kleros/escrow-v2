@@ -17,13 +17,13 @@ export const StyledCard = styled(Card)`
   align-self: center;
   display: flex;
   flex-direction: column;
-  gap: 48px;
+  gap: 32px;
   padding: ${responsiveSize(24, 32)};
   padding-bottom: 52px;
 
   ${landscapeStyle(
     () => css`
-      width: 100%;
+      max-width: 100%;
     `
   )}
 `;

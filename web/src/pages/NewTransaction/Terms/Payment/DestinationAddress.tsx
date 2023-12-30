@@ -1,12 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled, { css } from "styled-components";
 import { landscapeStyle } from "styles/landscapeStyle";
 import { Field } from "@kleros/ui-components-library";
 import { responsiveSize } from "styles/responsiveSize";
+import { useEnsAddress } from "wagmi";
+import { useNewTransactionContext } from "context/NewTransactionContext";
 
 const StyledField = styled(Field)`
   width: 84vw;
   margin-bottom: ${responsiveSize(68, 40)};
+
+  input {
+    font-size: 16px;
+  }
 
   ${landscapeStyle(
     () => css`
@@ -16,9 +22,9 @@ const StyledField = styled(Field)`
 `;
 
 export const ethAddressPattern = /^0x[a-fA-F0-9]{40}$/;
+export const ensDomainPattern = /^[a-zA-Z0-9-]{1,}\.eth$/;
 
 export const validateAddress = (input: string) => {
-  const ensDomainPattern = /^[a-zA-Z0-9-]{1,}\.eth$/;
   return ethAddressPattern.test(input) || ensDomainPattern.test(input);
 };
 
@@ -29,18 +35,37 @@ interface IDestinationAddress {
 
 const DestinationAddress: React.FC<IDestinationAddress> = ({ recipientAddress, setRecipientAddress }) => {
   const [isValid, setIsValid] = useState(true);
+  const ensResult = useEnsAddress({ name: recipientAddress, chainId: 1 });
+  const { setIsRecipientAddressResolved } = useNewTransactionContext();
+
+  useEffect(() => {
+    if (recipientAddress === "") {
+      setIsValid(true);
+      setIsRecipientAddressResolved(false);
+    } else if (ethAddressPattern.test(recipientAddress)) {
+      setIsValid(true);
+      setIsRecipientAddressResolved(true);
+    } else if (ensDomainPattern.test(recipientAddress)) {
+      const isResolved = !!ensResult.data;
+      setIsValid(isResolved);
+      setIsRecipientAddressResolved(isResolved);
+    } else {
+      setIsValid(false);
+      setIsRecipientAddressResolved(false);
+    }
+  }, [recipientAddress, ensResult.data, setIsRecipientAddressResolved]);
 
   const handleWrite = (event: React.ChangeEvent<HTMLInputElement>) => {
     const input = event.target.value;
-    setRecipientAddress(event.target.value);
-    setIsValid(validateAddress(input) || input === "");
+    setRecipientAddress(input);
   };
 
-  const message = isValid
-    ? "The ETH address or ENS of the person/entity that will receive " +
-      "the funds after the contract is complete. (Note: Do not use an " +
-      " exchange wallet address.)"
-    : "The ETH address or ENS of the person/entity that will receive the funds is not correct.";
+  const message =
+    recipientAddress === ""
+      ? "The ETH address or ENS of the person/entity that will receive the funds."
+      : isValid
+      ? "The ETH address or ENS of the person/entity that will receive the funds."
+      : "The ETH address or ENS of the person/entity is not correct.";
 
   const variant = recipientAddress === "" ? "info" : isValid ? "success" : "error";
 
@@ -49,7 +74,7 @@ const DestinationAddress: React.FC<IDestinationAddress> = ({ recipientAddress, s
       type="text"
       value={recipientAddress}
       onChange={handleWrite}
-      placeholder="eg. 0x123456789a123456789b123456789123456789cd or John.eth"
+      placeholder="eg. 0x123ABC... or john.eth"
       variant={variant}
       message={message}
       maxLength={42}

@@ -7,7 +7,7 @@ import NativeToken from "./NativeToken";
 const Container = styled.div`
   display: flex;
   flex-direction: row;
-  gap: 12px;
+  gap: 8px;
   align-items: center;
   margin-bottom: ${responsiveSize(24, 18)};
 `;

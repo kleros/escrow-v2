@@ -14,6 +14,9 @@ const StyledLabel = styled.label`
 
 const StyledHeader = styled.h1`
   margin: 0;
+  flex-wrap: wrap;
+  word-break: break-word;
+  width: 100%;
 `;
 
 const Header: React.FC = () => {
