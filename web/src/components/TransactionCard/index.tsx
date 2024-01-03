@@ -81,7 +81,7 @@ const TransactionCard: React.FC<ITransactionCard> = ({ id, status, overrideIsLis
   const title = "Escrow with John";
   const navigate = useNavigate();
 
-  // const date =
+  // const deadline =
   //   currentStatusIndex === 4
   //     ? lastStatusChange
   //     : getStatusEndTimestamp(lastStatusChange, currentStatusIndex, court.timesPerStatus);

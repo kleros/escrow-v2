@@ -25,17 +25,17 @@ const Field: React.FC<{ label: string; value: string }> = ({ label, value }) => 
 const Separator: React.FC = () => <SeparatorLabel>|</SeparatorLabel>;
 
 export interface IStats {
-  totalDisputes: number;
-  closedDisputes: number;
+  totalTransactions: number;
+  resolvedTransactions: number;
 }
 
-const Stats: React.FC<IStats> = ({ totalDisputes, closedDisputes }) => {
-  const inProgressDisputes = (totalDisputes - closedDisputes).toString();
+const Stats: React.FC<IStats> = ({ totalTransactions, resolvedTransactions }) => {
+  const inProgressDisputes = (totalTransactions - resolvedTransactions).toString();
 
   const fields = [
-    { label: "Total", value: totalDisputes.toString() },
+    { label: "Total", value: totalTransactions.toString() },
     { label: "In Progress", value: inProgressDisputes },
-    { label: "Concluded", value: closedDisputes.toString() },
+    { label: "Concluded", value: resolvedTransactions.toString() },
   ];
 
   return (

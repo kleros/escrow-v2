@@ -11,9 +11,9 @@ const Container = styled.div`
   justify-content: space-between;
 `;
 
-const StatsAndFilters: React.FC<IStats> = ({ totalDisputes, closedDisputes }) => (
+const StatsAndFilters: React.FC<IStats> = ({ totalTransactions, resolvedTransactions }) => (
   <Container>
-    <Stats {...{ totalDisputes, closedDisputes }} />
+    <Stats {...{ totalTransactions, resolvedTransactions }} />
     <Filters />
   </Container>
 );

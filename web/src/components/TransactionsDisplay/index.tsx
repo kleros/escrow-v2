@@ -18,8 +18,8 @@ const StyledTitle = styled.h1`
 
 interface ITransactionsDisplay extends ITransactionsGrid {
   transactions: [];
-  numberTransactions?: number;
-  numberClosedDisputes?: number;
+  totalTransactions?: number;
+  resolvedTransactions?: number;
   title?: string;
   className?: string;
 }
@@ -28,8 +28,8 @@ const TransactionsDisplay: React.FC<ITransactionsDisplay> = ({
   transactions,
   currentPage,
   setCurrentPage,
-  numberTransactions,
-  numberClosedDisputes,
+  totalTransactions,
+  resolvedTransactions,
   transactionsPerPage,
   title = "My Transactions",
   className,
@@ -39,7 +39,7 @@ const TransactionsDisplay: React.FC<ITransactionsDisplay> = ({
     <div {...{ className }}>
       <StyledTitle>{title}</StyledTitle>
       <Search />
-      <StatsAndFilters totalDisputes={numberTransactions ?? 0} closedDisputes={numberClosedDisputes ?? 0} />
+      <StatsAndFilters totalTransactions={totalTransactions ?? 0} resolvedTransactions={resolvedTransactions ?? 0} />
       <Divider />
 
       {transactions?.length === 0 ? (

@@ -1,7 +1,7 @@
 import { useLocation } from "react-router-dom";
-import { Dispute_Filter } from "src/graphql/graphql";
+import { Escrow_Filter } from "src/graphql/graphql";
 
-export const encodeURIFilter = (filter: Dispute_Filter): string => {
+export const encodeURIFilter = (filter: Escrow_Filter): string => {
   if (Object.keys(filter).length === 0) {
     return "all";
   } else {
@@ -9,7 +9,7 @@ export const encodeURIFilter = (filter: Dispute_Filter): string => {
   }
 };
 
-export const decodeURIFilter = (filter: string): Dispute_Filter => {
+export const decodeURIFilter = (filter: string): Escrow_Filter => {
   if (filter === "all") {
     return {};
   } else {
