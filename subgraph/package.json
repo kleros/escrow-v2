@@ -1,0 +1,32 @@
+{
+  "name": "@kleros/escrow-v2-subgraph",
+  "license": "MIT",
+  "scripts": {
+    "clean": "graph clean",
+    "codegen": "graph codegen",
+    "build": "graph build",
+    "create-local": "graph create --node http://localhost:8020/ kleros/escrow-v2-local",
+    "remove-local": "graph remove --node http://localhost:8020/ kleros/escrow-v2-local",
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 kleros/escrow-v2-local --version-label v$(date +%s)",
+    "rebuild-deploy-local": "yarn clean && yarn codegen && yarn build && yarn create-local && yarn deploy-local",
+    "start-local-indexer": "docker compose -f ../services/graph-node/docker-compose.yml up -d && docker compose -f ../services/graph-node/docker-compose.yml logs -f",
+    "stop-local-indexer": "docker compose -f ../services/graph-node/docker-compose.yml down && rm -rf ../services/graph-node/data"
+  },
+  "volta": {
+    "node": "16.20.1",
+    "yarn": "3.3.1"
+  },
+  "dependencies": {
+    "@graphprotocol/graph-ts": "^0.32.0"
+  },
+  "devDependencies": {
+    "@graphprotocol/graph-cli": "0.64.0",
+    "@kleros/escrow-v2-eslint-config": "workspace:^",
+    "@kleros/escrow-v2-prettier-config": "workspace:^",
+    "gluegun": "^5.1.2",
+    "matchstick-as": "0.6.0"
+  },
+  "dependenciesComments": {
+    "@graphprotocol/graph-cli": "pinned because of this issue: https://github.com/graphprotocol/graph-tooling/issues/1399#issuecomment-1676104540"
+  }
+}

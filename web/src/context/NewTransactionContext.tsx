@@ -7,8 +7,10 @@ interface INewTransactionContext {
   setEscrowTitle: (title: string) => void;
   deliverableText: string;
   setDeliverableText: (deliverableText: string) => void;
-  deliverableFile: File;
-  setDeliverableFile: (deliverableFile: File) => void;
+  deliverableFile: string;
+  setDeliverableFile: (deliverableFile: string) => void;
+  isFileUploading: boolean;
+  setIsFileUploading: (isFileUploading: boolean) => void;
   receivingQuantity: string;
   setReceivingQuantity: (quantity: string) => void;
   receivingToken: string;
@@ -25,6 +27,11 @@ interface INewTransactionContext {
   setDeadline: (deadline: string) => void;
   notificationEmail: string;
   setNotificationEmail: (email: string) => void;
+  resetContext: () => void;
+  hasSufficientNativeBalance: boolean;
+  setHasSufficientNativeBalance: (hasSufficientNativeBalance: boolean) => void;
+  isRecipientAddressResolved: boolean;
+  setIsRecipientAddressResolved: (isRecipientAddressResolved: boolean) => void;
 }
 
 const NewTransactionContext = createContext<INewTransactionContext>({
@@ -34,6 +41,8 @@ const NewTransactionContext = createContext<INewTransactionContext>({
   setEscrowTitle: () => {},
   deliverableText: "",
   setDeliverableText: () => {},
+  isFileUploading: false,
+  setIsFileUploading: () => {},
   deliverableFile: "",
   setDeliverableFile: () => {},
   receivingQuantity: "",
@@ -52,6 +61,11 @@ const NewTransactionContext = createContext<INewTransactionContext>({
   setDeadline: () => {},
   notificationEmail: "",
   setNotificationEmail: () => {},
+  resetContext: () => {},
+  hasSufficientNativeBalance: true,
+  setHasSufficientNativeBalance: () => {},
+  isRecipientAddressResolved: false,
+  setIsRecipientAddressResolved: () => {},
 });
 
 export const useNewTransactionContext = () => useContext(NewTransactionContext);
@@ -60,6 +74,9 @@ export const NewTransactionProvider: React.FC<{ children: React.ReactNode }> = (
   const [escrowType, setEscrowType] = useState<string>(localStorage.getItem("escrowType") || "general");
   const [escrowTitle, setEscrowTitle] = useState<string>(localStorage.getItem("escrowTitle") || "");
   const [deliverableText, setDeliverableText] = useState<string>(localStorage.getItem("deliverableText") || "");
+  const [deliverableFile, setDeliverableFile] = useState<string>(localStorage.getItem("deliverableFile") || "");
+  const [isFileUploading, setIsFileUploading] = useState<boolean>(false);
+  const [hasSufficientNativeBalance, setHasSufficientNativeBalance] = useState<boolean>(true);
   const [receivingQuantity, setReceivingQuantity] = useState<string>(localStorage.getItem("receivingQuantity") || "");
   const [receivingToken, setReceivingToken] = useState<string>(localStorage.getItem("receivingToken") || "");
   const [receivingRecipientAddress, setReceivingRecipientAddress] = useState<string>(
@@ -70,34 +87,51 @@ export const NewTransactionProvider: React.FC<{ children: React.ReactNode }> = (
   const [sendingRecipientAddress, setSendingRecipientAddress] = useState<string>(
     localStorage.getItem("sendingRecipientAddress") || ""
   );
-  const [deliverableFile, setDeliverableFile] = useState<File>(localStorage.getItem("deliverableFile") || "");
+  const [isRecipientAddressResolved, setIsRecipientAddressResolved] = useState(false);
   const [deadline, setDeadline] = useState<string>(localStorage.getItem("deadline") || "");
   const [notificationEmail, setNotificationEmail] = useState<string>(localStorage.getItem("notificationEmail") || "");
+
+  const resetContext = () => {
+    setEscrowType("general");
+    setEscrowTitle("");
+    setDeliverableText("");
+    setDeliverableFile("");
+    setIsFileUploading(false);
+    setReceivingQuantity("");
+    setReceivingToken("");
+    setReceivingRecipientAddress("");
+    setSendingQuantity("");
+    setSendingToken("");
+    setSendingRecipientAddress("");
+    setDeadline("");
+    setNotificationEmail("");
+    setHasSufficientNativeBalance(true);
+  };
 
   useEffect(() => {
     localStorage.setItem("escrowType", escrowType);
     localStorage.setItem("escrowTitle", escrowTitle);
     localStorage.setItem("deliverableText", deliverableText);
+    localStorage.setItem("deliverableFile", deliverableFile);
     localStorage.setItem("receivingQuantity", receivingQuantity);
     localStorage.setItem("receivingToken", receivingToken);
     localStorage.setItem("receivingRecipientAddress", receivingRecipientAddress);
     localStorage.setItem("sendingQuantity", sendingQuantity);
     localStorage.setItem("sendingToken", sendingToken);
     localStorage.setItem("sendingRecipientAddress", sendingRecipientAddress);
-    localStorage.setItem("deliverableFile", deliverableFile);
     localStorage.setItem("deadline", deadline);
     localStorage.setItem("notificationEmail", notificationEmail);
   }, [
     escrowType,
     escrowTitle,
     deliverableText,
+    deliverableFile,
     receivingQuantity,
     receivingToken,
     receivingRecipientAddress,
     sendingQuantity,
     sendingToken,
     sendingRecipientAddress,
-    deliverableFile,
     deadline,
     notificationEmail,
   ]);
@@ -113,6 +147,8 @@ export const NewTransactionProvider: React.FC<{ children: React.ReactNode }> = (
         setDeliverableText,
         deliverableFile,
         setDeliverableFile,
+        isFileUploading,
+        setIsFileUploading,
         receivingQuantity,
         setReceivingQuantity,
         receivingToken,
@@ -121,14 +157,19 @@ export const NewTransactionProvider: React.FC<{ children: React.ReactNode }> = (
         setReceivingRecipientAddress,
         sendingQuantity,
         setSendingQuantity,
+        hasSufficientNativeBalance,
+        setHasSufficientNativeBalance,
         sendingToken,
         setSendingToken,
         sendingRecipientAddress,
         setSendingRecipientAddress,
+        isRecipientAddressResolved,
+        setIsRecipientAddressResolved,
         deadline,
         setDeadline,
         notificationEmail,
         setNotificationEmail,
+        resetContext,
       }}
     >
       {children}

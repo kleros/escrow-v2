@@ -9,6 +9,10 @@ const StyledField = styled(Field)`
   width: 84vw;
   margin-bottom: 48px;
 
+  input {
+    font-size: 16px;
+  }
+
   ${landscapeStyle(
     () => css`
       width: ${responsiveSize(342, 476)};

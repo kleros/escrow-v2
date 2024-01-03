@@ -1,8 +1,8 @@
 import React from "react";
 import styled from "styled-components";
-import { Route, Routes, useNavigate, useParams } from "react-router-dom";
-import { useAccount } from "wagmi";
-import { decodeURIFilter, useRootPath } from "utils/uri";
+import { Route, Routes } from "react-router-dom";
+import { useAccount, useNetwork } from "wagmi";
+import { DEFAULT_CHAIN } from "consts/chains";
 import ConnectWallet from "components/ConnectWallet";
 import TransactionsFetcher from "./TransactionsFetcher";
 import TransactionDetails from "./TransactionDetails";
@@ -26,23 +26,20 @@ export const ConnectWalletContainer = styled.div`
 `;
 
 const Dashboard: React.FC = () => {
-  const { isConnected, address } = useAccount();
-  const { page, order, filter } = useParams();
-  const location = useRootPath();
-  const navigate = useNavigate();
-  const casesPerPage = 3;
-  const pageNumber = parseInt(page ?? "1");
+  const { isConnected } = useAccount();
+  const { chain } = useNetwork();
+  const isOnSupportedChain = chain?.id === DEFAULT_CHAIN;
 
   return (
     <Container>
-      {isConnected ? (
+      {isConnected && isOnSupportedChain ? (
         <Routes>
           <Route path="/display/:page/:order/:filter" element={<TransactionsFetcher />} />
           <Route path="/:id/*" element={<TransactionDetails />} />
         </Routes>
       ) : (
         <ConnectWalletContainer>
-          To see your transactions, connect first
+          To see your transactions, connect first and switch to the supported chain
           <hr />
           <ConnectWallet />
         </ConnectWalletContainer>

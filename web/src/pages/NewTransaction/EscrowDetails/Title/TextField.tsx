@@ -7,10 +7,13 @@ import { landscapeStyle } from "styles/landscapeStyle";
 
 const StyledField = styled(Field)`
   width: 84vw;
+  input {
+    font-size: 16px;
+  }
 
   ${landscapeStyle(
     () => css`
-      width: ${responsiveSize(342, 700)};
+      width: ${responsiveSize(342, 500)};
     `
   )}
 `;

@@ -6,7 +6,7 @@ const StyledHeader = styled.h1`
   margin: 0;
   color: ${({ theme }) => theme.secondaryPurple};
   font-weight: 400;
-  margin-bottom: 48px;
+  margin-bottom: 32px;
   margin-top: ${responsiveSize(4, 20)};
 `;
 

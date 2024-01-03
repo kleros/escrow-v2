@@ -14,16 +14,20 @@ const StyledLabel = styled.label`
 
 const StyledHeader = styled.h1`
   margin: 0;
+  flex-wrap: wrap;
+  word-break: break-word;
+  width: 100%;
 `;
 
 const Header: React.FC = () => {
-  const { escrowTitle } = useNewTransactionContext();
+  const { escrowType, escrowTitle } = useNewTransactionContext();
 
   return (
     <Container>
-      <StyledLabel>General Escrow #1</StyledLabel>
+      <StyledLabel>{escrowType === "general" ? "General Escrow" : "Crypto Swap"}</StyledLabel>
       <StyledHeader>{escrowTitle}</StyledHeader>
     </Container>
   );
 };
+
 export default Header;

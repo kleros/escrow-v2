@@ -3,7 +3,7 @@ import styled, { css } from "styled-components";
 import { landscapeStyle } from "styles/landscapeStyle";
 
 const Container = styled.h1`
-  margin-bottom: 32px;
+  margin-bottom: 29px;
   width: 84vw;
   text-align: center;
 

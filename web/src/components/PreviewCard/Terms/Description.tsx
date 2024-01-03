@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { useNewTransactionContext } from "context/NewTransactionContext";
 import { useAccount } from "wagmi";
+import { useNativeTokenSymbol } from "hooks/useNativeTokenSymbol";
 
 const StyledP = styled.p`
   margin: 0;
@@ -20,12 +21,13 @@ const Description: React.FC = () => {
     sendingRecipientAddress,
     deadline,
   } = useNewTransactionContext();
+  const nativeTokenSymbol = useNativeTokenSymbol();
 
   const { address } = useAccount();
 
   const generalEscrowSummary =
-    `By Paying ${sendingQuantity + " " + sendingToken}, [Blockchain] address ${address} should receive` +
-    ` ${deliverableText} from [Blockchain] address ${sendingRecipientAddress} before the delivery deadline ${deadline}.`;
+    `By Paying ${sendingQuantity + " " + nativeTokenSymbol}, address ${address} should receive` +
+    ` ${deliverableText} from address ${sendingRecipientAddress} before the delivery deadline ${deadline}.`;
 
   const cryptoSwapSummary =
     `By Paying ${sendingQuantity + " " + sendingToken}, [Blockchain] address ${address} should receive` +
