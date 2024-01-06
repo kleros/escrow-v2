@@ -4,8 +4,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useNewTransactionContext } from "context/NewTransactionContext";
 import { validateAddress } from "../Terms/Payment/DestinationAddress";
 import { EMAIL_REGEX } from "../Terms/Notifications/EmailField";
-import { uploadFileToIPFS } from "utils/uploadFileToIPFS";
-import { uploadTransactionObject } from "utils/uploadTransactionObject";
+import { handleFileUpload } from "utils/handleFileUpload";
 
 interface INextButton {
   nextRoute: string;
@@ -66,38 +65,24 @@ const NextButton: React.FC<INextButton> = ({ nextRoute }) => {
     (location.pathname.includes("/newTransaction/deadline") && (!deadline || isDeadlineInPast)) ||
     (location.pathname.includes("/newTransaction/notifications") && !isEmailValid);
 
-    const handleFileUpload = async () => {
-      try {
-        const transactionDetails = {
-          title: escrowTitle,
-          description: deliverableText,
-        };
-    
-        if (deliverableFile) {
-          const fileResponse = await uploadFileToIPFS(deliverableFile);
-          const fileData = await fileResponse.json();
-          const fileHash = fileData.cids[0];
-          transactionDetails.extraDescriptionUri = fileHash;
-        }
-    
-        return await uploadTransactionObject(transactionDetails);
-    
-      } catch (error) {
-        console.error("Error in file upload process:", error);
-        setIsFileUploading(false);
-      }
-    };
-
   const handleNextClick = async () => {
     try {
       if (location.pathname.includes("/newTransaction/deliverable") && escrowType === "general") {
-        setIsFileUploading(true);
-        const transactionUri = await handleFileUpload();
-        console.log("transactionUri", transactionUri);
-        setTransactionUri(transactionUri);
-      }
+        const transactionUri = await handleFileUpload(
+          escrowTitle,
+          deliverableText,
+          setIsFileUploading,
+          deliverableFile
+        );
 
-      navigate(nextRoute);
+        if (transactionUri) {
+          console.log("transactionUri", transactionUri);
+          setTransactionUri(transactionUri);
+          navigate(nextRoute);
+        }
+      } else {
+        navigate(nextRoute);
+      }
     } catch (error) {
       console.error("Error in upload process:", error);
     }

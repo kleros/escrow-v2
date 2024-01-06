@@ -1,0 +1,31 @@
+import { uploadFileToIPFS } from "./uploadFileToIPFS";
+import { uploadTransactionObject } from "./uploadTransactionObject";
+
+export const handleFileUpload = async (
+  escrowTitle: string,
+  deliverableText: string,
+  setIsFileUploading: (isFileUploading: boolean) => void,
+  deliverableFile?: File
+) => {
+  try {
+    setIsFileUploading(true);
+    const transactionDetails = {
+      title: escrowTitle,
+      description: deliverableText,
+    };
+
+    if (deliverableFile) {
+      const fileResponse = await uploadFileToIPFS(deliverableFile);
+      const fileData = await fileResponse.json();
+      const fileHash = fileData.cids[0];
+      transactionDetails.extraDescriptionUri = fileHash;
+    }
+
+    const transactionObject = await uploadTransactionObject(transactionDetails);
+    setIsFileUploading(false);
+    return transactionObject;
+  } catch (error) {
+    console.error("Error in file upload process:", error);
+    setIsFileUploading(false);
+  }
+};
