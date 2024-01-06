@@ -19,8 +19,8 @@ export const handleFileUpload = async (
       const fileResponse = await uploadFileToIPFS(deliverableFile);
       const fileData = await fileResponse.json();
       const fileHash = fileData.cids[0];
-      setExtraDescriptionUri(fileHash);
       transactionDetails.extraDescriptionUri = fileHash;
+      setExtraDescriptionUri(fileHash);
     }
 
     const transactionObject = await uploadTransactionObject(transactionDetails);

@@ -8,7 +8,7 @@ interface INewTransactionContext {
   deliverableText: string;
   setDeliverableText: (deliverableText: string) => void;
   deliverableFile: File | undefined;
-  setDeliverableFile: (deliverableFile: File) => void;
+  setDeliverableFile: (deliverableFile: File | undefined) => void;
   extraDescriptionUri: string;
   setExtraDescriptionUri: (extraDescriptionUri: string) => void;
   transactionUri: string;
@@ -50,7 +50,7 @@ const NewTransactionContext = createContext<INewTransactionContext>({
   isFileUploading: false,
   setIsFileUploading: () => {},
   deliverableFile: undefined,
-  setDeliverableFile: () => undefined,
+  setDeliverableFile: () => {},
   extraDescriptionUri: "",
   setExtraDescriptionUri: () => {},
   receivingQuantity: "",
@@ -82,7 +82,7 @@ export const NewTransactionProvider: React.FC<{ children: React.ReactNode }> = (
   const [escrowType, setEscrowType] = useState<string>(localStorage.getItem("escrowType") || "general");
   const [escrowTitle, setEscrowTitle] = useState<string>(localStorage.getItem("escrowTitle") || "");
   const [deliverableText, setDeliverableText] = useState<string>(localStorage.getItem("deliverableText") || "");
-  const [deliverableFile, setDeliverableFile] = useState<object | undefined>(localStorage.getItem("deliverableFile") || undefined);
+  const [deliverableFile, setDeliverableFile] = useState<File | undefined>();
   const [transactionUri, setTransactionUri] = useState<string>(localStorage.getItem("transactionUri") || "");
   const [extraDescriptionUri, setExtraDescriptionUri] = useState<string>(
     localStorage.getItem("extraDescriptionUri") || ""
@@ -126,7 +126,6 @@ export const NewTransactionProvider: React.FC<{ children: React.ReactNode }> = (
     localStorage.setItem("escrowType", escrowType);
     localStorage.setItem("escrowTitle", escrowTitle);
     localStorage.setItem("deliverableText", deliverableText);
-    localStorage.setItem("deliverableFile", deliverableFile);
     localStorage.setItem("extraDescriptionUri", extraDescriptionUri);
     localStorage.setItem("transactionUri", transactionUri);
     localStorage.setItem("receivingQuantity", receivingQuantity);
@@ -141,7 +140,6 @@ export const NewTransactionProvider: React.FC<{ children: React.ReactNode }> = (
     escrowType,
     escrowTitle,
     deliverableText,
-    deliverableFile,
     extraDescriptionUri,
     transactionUri,
     receivingQuantity,
