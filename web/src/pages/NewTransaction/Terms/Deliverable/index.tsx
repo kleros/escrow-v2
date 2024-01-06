@@ -58,7 +58,7 @@ const Deliverable: React.FC = () => {
     setDeliverableText(event.target.value);
   };
 
-  const handleFileUpload = (file: File) => {
+  const handleAttachFile = (file: File) => {
     console.log("file", file);
     setDeliverableFile(file);
   };
@@ -75,9 +75,9 @@ const Deliverable: React.FC = () => {
           <StyledTextArea
             value={deliverableText}
             onChange={handleWrite}
-            placeholder="eg. A website created in React with the following specification: x,y,z"
+            placeholder="eg. I should receive a website created in React with the following specification: x,y,z."
           />
-          <StyledFileUploader callback={handleFileUpload} variant="info" msg={fileFootMessage} />
+          <StyledFileUploader callback={handleAttachFile} variant="info" msg={fileFootMessage} />
           <NavigationButtons prevRoute="/newTransaction/title" nextRoute="/newTransaction/payment" />
         </>
       ) : (

@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import { useNewTransactionContext } from "context/NewTransactionContext";
 import AttachedFile from "./AttachedFile";
 import Description from "./Description";
 import Header from "./Header";

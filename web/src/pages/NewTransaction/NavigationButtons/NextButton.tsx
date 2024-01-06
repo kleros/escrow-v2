@@ -20,6 +20,7 @@ const NextButton: React.FC<INextButton> = ({ nextRoute }) => {
     deliverableFile,
     isFileUploading,
     setIsFileUploading,
+    setExtraDescriptionUri,
     setTransactionUri,
     receivingRecipientAddress,
     receivingQuantity,
@@ -72,6 +73,7 @@ const NextButton: React.FC<INextButton> = ({ nextRoute }) => {
           escrowTitle,
           deliverableText,
           setIsFileUploading,
+          setExtraDescriptionUri,
           deliverableFile
         );
 

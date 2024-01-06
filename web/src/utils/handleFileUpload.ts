@@ -5,6 +5,7 @@ export const handleFileUpload = async (
   escrowTitle: string,
   deliverableText: string,
   setIsFileUploading: (isFileUploading: boolean) => void,
+  setExtraDescriptionUri: (extraDescriptionUri: string) => void,
   deliverableFile?: File
 ) => {
   try {
@@ -18,6 +19,7 @@ export const handleFileUpload = async (
       const fileResponse = await uploadFileToIPFS(deliverableFile);
       const fileData = await fileResponse.json();
       const fileHash = fileData.cids[0];
+      setExtraDescriptionUri(fileHash);
       transactionDetails.extraDescriptionUri = fileHash;
     }
 

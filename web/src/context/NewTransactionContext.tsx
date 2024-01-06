@@ -7,8 +7,8 @@ interface INewTransactionContext {
   setEscrowTitle: (title: string) => void;
   deliverableText: string;
   setDeliverableText: (deliverableText: string) => void;
-  deliverableFile: string;
-  setDeliverableFile: (deliverableFile: string) => void;
+  deliverableFile: File | undefined;
+  setDeliverableFile: (deliverableFile: File) => void;
   extraDescriptionUri: string;
   setExtraDescriptionUri: (extraDescriptionUri: string) => void;
   transactionUri: string;
@@ -49,8 +49,8 @@ const NewTransactionContext = createContext<INewTransactionContext>({
   setTransactionUri: () => {},
   isFileUploading: false,
   setIsFileUploading: () => {},
-  deliverableFile: "",
-  setDeliverableFile: () => {},
+  deliverableFile: undefined,
+  setDeliverableFile: () => undefined,
   extraDescriptionUri: "",
   setExtraDescriptionUri: () => {},
   receivingQuantity: "",
@@ -82,7 +82,7 @@ export const NewTransactionProvider: React.FC<{ children: React.ReactNode }> = (
   const [escrowType, setEscrowType] = useState<string>(localStorage.getItem("escrowType") || "general");
   const [escrowTitle, setEscrowTitle] = useState<string>(localStorage.getItem("escrowTitle") || "");
   const [deliverableText, setDeliverableText] = useState<string>(localStorage.getItem("deliverableText") || "");
-  const [deliverableFile, setDeliverableFile] = useState<string>(localStorage.getItem("deliverableFile") || "");
+  const [deliverableFile, setDeliverableFile] = useState<object | undefined>(localStorage.getItem("deliverableFile") || undefined);
   const [transactionUri, setTransactionUri] = useState<string>(localStorage.getItem("transactionUri") || "");
   const [extraDescriptionUri, setExtraDescriptionUri] = useState<string>(
     localStorage.getItem("extraDescriptionUri") || ""
@@ -107,7 +107,7 @@ export const NewTransactionProvider: React.FC<{ children: React.ReactNode }> = (
     setEscrowType("general");
     setEscrowTitle("");
     setDeliverableText("");
-    setDeliverableFile("");
+    setDeliverableFile(undefined);
     setExtraDescriptionUri("");
     setTransactionUri("");
     setIsFileUploading(false);
