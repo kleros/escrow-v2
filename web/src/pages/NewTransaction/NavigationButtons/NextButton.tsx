@@ -66,22 +66,27 @@ const NextButton: React.FC<INextButton> = ({ nextRoute }) => {
     (location.pathname.includes("/newTransaction/deadline") && (!deadline || isDeadlineInPast)) ||
     (location.pathname.includes("/newTransaction/notifications") && !isEmailValid);
 
-  const handleFileUpload = async () => {
-    try {
-      const fileResponse = await uploadFileToIPFS(deliverableFile);
-      const fileData = await fileResponse.json();
-      const fileHash = fileData.cids[0];
-
-      return await uploadTransactionObject({
-        title: escrowTitle,
-        description: deliverableText,
-        extraDescriptionUri: fileHash,
-      });
-    } catch (error) {
-      console.error("Error in file upload process:", error);
-      setIsFileUploading(false);
-    }
-  };
+    const handleFileUpload = async () => {
+      try {
+        const transactionDetails = {
+          title: escrowTitle,
+          description: deliverableText,
+        };
+    
+        if (deliverableFile) {
+          const fileResponse = await uploadFileToIPFS(deliverableFile);
+          const fileData = await fileResponse.json();
+          const fileHash = fileData.cids[0];
+          transactionDetails.extraDescriptionUri = fileHash;
+        }
+    
+        return await uploadTransactionObject(transactionDetails);
+    
+      } catch (error) {
+        console.error("Error in file upload process:", error);
+        setIsFileUploading(false);
+      }
+    };
 
   const handleNextClick = async () => {
     try {
