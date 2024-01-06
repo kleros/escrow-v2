@@ -9,6 +9,8 @@ interface INewTransactionContext {
   setDeliverableText: (deliverableText: string) => void;
   deliverableFile: string;
   setDeliverableFile: (deliverableFile: string) => void;
+  transactionUri: string;
+  setTransactionUri: (transactionUri: string) => void;
   isFileUploading: boolean;
   setIsFileUploading: (isFileUploading: boolean) => void;
   receivingQuantity: string;
@@ -41,6 +43,8 @@ const NewTransactionContext = createContext<INewTransactionContext>({
   setEscrowTitle: () => {},
   deliverableText: "",
   setDeliverableText: () => {},
+  transactionUri: "",
+  setTransactionUri: () => {},
   isFileUploading: false,
   setIsFileUploading: () => {},
   deliverableFile: "",
@@ -75,6 +79,7 @@ export const NewTransactionProvider: React.FC<{ children: React.ReactNode }> = (
   const [escrowTitle, setEscrowTitle] = useState<string>(localStorage.getItem("escrowTitle") || "");
   const [deliverableText, setDeliverableText] = useState<string>(localStorage.getItem("deliverableText") || "");
   const [deliverableFile, setDeliverableFile] = useState<string>(localStorage.getItem("deliverableFile") || "");
+  const [transactionUri, setTransactionUri] = useState<string>(localStorage.getItem("transactionUri") || "");
   const [isFileUploading, setIsFileUploading] = useState<boolean>(false);
   const [hasSufficientNativeBalance, setHasSufficientNativeBalance] = useState<boolean>(true);
   const [receivingQuantity, setReceivingQuantity] = useState<string>(localStorage.getItem("receivingQuantity") || "");
@@ -96,6 +101,7 @@ export const NewTransactionProvider: React.FC<{ children: React.ReactNode }> = (
     setEscrowTitle("");
     setDeliverableText("");
     setDeliverableFile("");
+    setTransactionUri("");
     setIsFileUploading(false);
     setReceivingQuantity("");
     setReceivingToken("");
@@ -113,6 +119,7 @@ export const NewTransactionProvider: React.FC<{ children: React.ReactNode }> = (
     localStorage.setItem("escrowTitle", escrowTitle);
     localStorage.setItem("deliverableText", deliverableText);
     localStorage.setItem("deliverableFile", deliverableFile);
+    localStorage.setItem("transactionUri", transactionUri);
     localStorage.setItem("receivingQuantity", receivingQuantity);
     localStorage.setItem("receivingToken", receivingToken);
     localStorage.setItem("receivingRecipientAddress", receivingRecipientAddress);
@@ -126,6 +133,7 @@ export const NewTransactionProvider: React.FC<{ children: React.ReactNode }> = (
     escrowTitle,
     deliverableText,
     deliverableFile,
+    transactionUri,
     receivingQuantity,
     receivingToken,
     receivingRecipientAddress,
@@ -147,6 +155,8 @@ export const NewTransactionProvider: React.FC<{ children: React.ReactNode }> = (
         setDeliverableText,
         deliverableFile,
         setDeliverableFile,
+        transactionUri,
+        setTransactionUri,
         isFileUploading,
         setIsFileUploading,
         receivingQuantity,

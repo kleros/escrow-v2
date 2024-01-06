@@ -4,6 +4,8 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useNewTransactionContext } from "context/NewTransactionContext";
 import { validateAddress } from "../Terms/Payment/DestinationAddress";
 import { EMAIL_REGEX } from "../Terms/Notifications/EmailField";
+import { uploadFileToIPFS } from "utils/uploadFileToIPFS";
+import { uploadTransactionObject } from "utils/uploadTransactionObject";
 
 interface INextButton {
   nextRoute: string;
@@ -16,7 +18,10 @@ const NextButton: React.FC<INextButton> = ({ nextRoute }) => {
     escrowType,
     escrowTitle,
     deliverableText,
+    deliverableFile,
     isFileUploading,
+    setIsFileUploading,
+    setTransactionUri,
     receivingRecipientAddress,
     receivingQuantity,
     receivingToken,
@@ -61,7 +66,39 @@ const NextButton: React.FC<INextButton> = ({ nextRoute }) => {
     (location.pathname.includes("/newTransaction/deadline") && (!deadline || isDeadlineInPast)) ||
     (location.pathname.includes("/newTransaction/notifications") && !isEmailValid);
 
-  return <Button disabled={isButtonDisabled} onClick={() => navigate(nextRoute)} text="Next" />;
+  const handleFileUpload = async () => {
+    try {
+      const fileResponse = await uploadFileToIPFS(deliverableFile);
+      const fileData = await fileResponse.json();
+      const fileHash = fileData.cids[0];
+
+      return await uploadTransactionObject({
+        title: escrowTitle,
+        description: deliverableText,
+        extraDescriptionUri: fileHash,
+      });
+    } catch (error) {
+      console.error("Error in file upload process:", error);
+      setIsFileUploading(false);
+    }
+  };
+
+  const handleNextClick = async () => {
+    try {
+      if (location.pathname.includes("/newTransaction/deliverable") && escrowType === "general") {
+        setIsFileUploading(true);
+        const transactionUri = await handleFileUpload();
+        console.log("transactionUri", transactionUri);
+        setTransactionUri(transactionUri);
+      }
+
+      navigate(nextRoute);
+    } catch (error) {
+      console.error("Error in upload process:", error);
+    }
+  };
+
+  return <Button disabled={isButtonDisabled} onClick={handleNextClick} text="Next" />;
 };
 
 export default NextButton;

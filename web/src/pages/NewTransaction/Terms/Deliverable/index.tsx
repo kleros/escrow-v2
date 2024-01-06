@@ -4,7 +4,6 @@ import { landscapeStyle } from "styles/landscapeStyle";
 import { FileUploader, Textarea } from "@kleros/ui-components-library";
 import { useNewTransactionContext } from "context/NewTransactionContext";
 import { responsiveSize } from "styles/responsiveSize";
-import { uploadFileToIPFS } from "utils/uploadFileToIPFS";
 import NavigationButtons from "../../NavigationButtons";
 import TokenTransaction from "../Payment/TokenTransaction";
 import Header from "pages/NewTransaction/Header";
@@ -32,7 +31,7 @@ const StyledTextArea = styled(Textarea)`
 
 const StyledFileUploader = styled(FileUploader)`
   width: 84vw;
-  margin-bottom: ${responsiveSize(52, 32)};
+  margin-bottom: ${responsiveSize(72, 52)};
 
   ${landscapeStyle(
     () => css`
@@ -46,7 +45,6 @@ const Deliverable: React.FC = () => {
     escrowType,
     deliverableText,
     setDeliverableText,
-    setIsFileUploading,
     setDeliverableFile,
     receivingQuantity,
     setReceivingQuantity,
@@ -60,36 +58,26 @@ const Deliverable: React.FC = () => {
     setDeliverableText(event.target.value);
   };
 
-  const handleFileUpload = async (file: File) => {
-    try {
-      setIsFileUploading(true);
-      const response = await uploadFileToIPFS(file);
-      const responseData = await response.json();
-      const ipfsHash = responseData.cids[0];
-      console.log("IPFS hash:", ipfsHash);
-      setDeliverableFile(ipfsHash);
-      setIsFileUploading(false);
-    } catch (error) {
-      console.error("Error uploading file to IPFS:", error);
-      setIsFileUploading(false);
-    }
+  const handleFileUpload = (file: File) => {
+    console.log("file", file);
+    setDeliverableFile(file);
   };
+
+  const fileFootMessage =
+    "You can attach additional information as a PDF file. Important: the above description must reference " +
+    "the relevant parts of the file content.";
 
   return (
     <Container>
       {escrowType === "general" ? (
         <>
-          <Header text="I should receive" />
+          <Header text="Contract Terms" />
           <StyledTextArea
             value={deliverableText}
             onChange={handleWrite}
             placeholder="eg. A website created in React with the following specification: x,y,z"
           />
-          <StyledFileUploader
-            callback={handleFileUpload}
-            variant="info"
-            msg="Additionally, you can add an external file in PDF or add multiple files in a single .zip file."
-          />
+          <StyledFileUploader callback={handleFileUpload} variant="info" msg={fileFootMessage} />
           <NavigationButtons prevRoute="/newTransaction/title" nextRoute="/newTransaction/payment" />
         </>
       ) : (
