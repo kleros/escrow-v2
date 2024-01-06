@@ -12,13 +12,11 @@ const Container = styled.div`
 `;
 
 const Terms: React.FC = () => {
-  const { deliverableFile } = useNewTransactionContext();
-
   return (
     <Container>
       <Header />
       <Description />
-      {deliverableFile ? <AttachedFile /> : null}
+      <AttachedFile />
     </Container>
   );
 };
