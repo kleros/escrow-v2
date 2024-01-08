@@ -83,13 +83,17 @@ const DepositPaymentButton: React.FC = () => {
   const handleCreateTransaction = () => {
     if (!isUndefined(createTransaction)) {
       setIsSending(true);
-      wrapWithToast(async () => await createTransaction().then((response) => response.hash), publicClient).finally(
-        () => {
-          setIsSending(false);
+      wrapWithToast(async () => await createTransaction().then((response) => response.hash), publicClient)
+        .then(() => {
           resetContext();
           navigate("/");
-        }
-      );
+        })
+        .catch((error) => {
+          console.error("Transaction failed:", error);
+        })
+        .finally(() => {
+          setIsSending(false);
+        });
     }
   };
 
