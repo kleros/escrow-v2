@@ -14,6 +14,7 @@ export const handleFileUpload = async (
       title: escrowTitle,
       description: deliverableText,
     };
+    setExtraDescriptionUri("");
 
     if (deliverableFile) {
       const fileResponse = await uploadFileToIPFS(deliverableFile);
