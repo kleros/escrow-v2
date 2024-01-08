@@ -4,6 +4,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useNewTransactionContext } from "context/NewTransactionContext";
 import { validateAddress } from "../Terms/Payment/DestinationAddress";
 import { EMAIL_REGEX } from "../Terms/Notifications/EmailField";
+import { handleFileUpload } from "utils/handleFileUpload";
 
 interface INextButton {
   nextRoute: string;
@@ -16,7 +17,11 @@ const NextButton: React.FC<INextButton> = ({ nextRoute }) => {
     escrowType,
     escrowTitle,
     deliverableText,
+    deliverableFile,
     isFileUploading,
+    setIsFileUploading,
+    setExtraDescriptionUri,
+    setTransactionUri,
     receivingRecipientAddress,
     receivingQuantity,
     receivingToken,
@@ -61,7 +66,31 @@ const NextButton: React.FC<INextButton> = ({ nextRoute }) => {
     (location.pathname.includes("/newTransaction/deadline") && (!deadline || isDeadlineInPast)) ||
     (location.pathname.includes("/newTransaction/notifications") && !isEmailValid);
 
-  return <Button disabled={isButtonDisabled} onClick={() => navigate(nextRoute)} text="Next" />;
+  const handleNextClick = async () => {
+    try {
+      if (location.pathname.includes("/newTransaction/deliverable") && escrowType === "general") {
+        const transactionUri = await handleFileUpload(
+          escrowTitle,
+          deliverableText,
+          setIsFileUploading,
+          setExtraDescriptionUri,
+          deliverableFile
+        );
+
+        if (transactionUri) {
+          console.log("transactionUri", transactionUri);
+          setTransactionUri(transactionUri);
+          navigate(nextRoute);
+        }
+      } else {
+        navigate(nextRoute);
+      }
+    } catch (error) {
+      console.error("Error in upload process:", error);
+    }
+  };
+
+  return <Button disabled={isButtonDisabled} onClick={handleNextClick} text="Next" />;
 };
 
 export default NextButton;
