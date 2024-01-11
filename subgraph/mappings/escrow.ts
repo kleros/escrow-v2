@@ -1,4 +1,4 @@
-import { BigInt, Bytes, ethereum } from '@graphprotocol/graph-ts'
+import { BigInt, Bytes } from '@graphprotocol/graph-ts'
 import {
   Escrow,
   Payment,
@@ -43,6 +43,9 @@ export function handleTransactionCreated(event: TransactionCreatedEvent): void {
   escrow!.buyer = event.params._buyer;
   escrow!.seller = event.params._seller;
   escrow!.amount = event.params._amount;
+  escrow!.asset = event.params._asset;
+  escrow!.transactionUri = event.params._transactionUri;
+  escrow!.deadline = event.params._deadline;
   escrow!.status = 'NoDispute';
 
   let transactionCreatedId = event.transaction.hash.toHex() + '-' + event.logIndex.toString();
@@ -72,7 +75,9 @@ function createEscrow(id: string): Escrow {
   let escrow = new Escrow(id)
   escrow.buyer = Bytes.empty()
   escrow.seller = Bytes.empty()
+  escrow.transactionUri = ''
   escrow.amount = BigInt.fromI32(0)
+  escrow.asset = ''
   escrow.deadline = BigInt.fromI32(0)
   escrow.disputeID = BigInt.fromI32(0)
   escrow.buyerFee = BigInt.fromI32(0)

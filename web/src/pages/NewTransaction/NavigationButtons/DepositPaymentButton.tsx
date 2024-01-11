@@ -17,6 +17,7 @@ const DepositPaymentButton: React.FC = () => {
     escrowType,
     escrowTitle,
     deliverableText,
+    transactionUri,
     deliverableFile,
     sendingQuantity,
     sendingToken,
@@ -71,6 +72,7 @@ const DepositPaymentButton: React.FC = () => {
     enabled: !isUndefined(ensResult) && ethAddressPattern.test(finalRecipientAddress),
     args: [
       BigInt(Math.floor(timeoutPayment)),
+      transactionUri,
       finalRecipientAddress,
       stringifiedTemplateData,
       "", // Assuming no template data mappings are needed

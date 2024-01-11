@@ -6,9 +6,9 @@ dataSources:
     name: Escrow
     network: arbitrum-sepolia
     source:
-      address: '0x224E52523354BEdCaFF3e98de463E829f3388f84'
+      address: '0x10f7A6f42Af606553883415bc8862643A6e63fdA'
       abi: Escrow
-      startBlock: 3087475
+      startBlock: 6159752
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -27,7 +27,7 @@ dataSources:
           handler: handlePayment
         - event: HasToPayFee(indexed uint256,uint8)
           handler: handleHasToPayFee
-        - event: TransactionCreated(indexed uint256,indexed address,indexed address,uint256)
+        - event: TransactionCreated(indexed uint256,string,indexed address,indexed address,uint256,string,uint256)
           handler: handleTransactionCreated
         - event: TransactionResolved(indexed uint256,indexed uint8)
           handler: handleTransactionResolved
