@@ -24,6 +24,7 @@ type Escrow @entity {
   transactionUri: String!
   buyer: Bytes!
   seller: Bytes!
+  users: [User!]!
   amount: BigInt!
   asset: String!
   deadline: BigInt!
@@ -38,6 +39,13 @@ type Escrow @entity {
   hasToPayFees: [HasToPayFee!]! @derivedFrom(field: "escrow")
   createdEvents: [TransactionCreated!]! @derivedFrom(field: "escrow")
   resolvedEvents: [TransactionResolved!]! @derivedFrom(field: "escrow")
+}
+
+type User @entity {
+  id: ID!
+  escrows: [Escrow!]! @derivedFrom(field: "users")
+  totalEscrows: BigInt!
+  totalResolvedEscrows: BigInt!
 }
 
 type Payment @entity {
