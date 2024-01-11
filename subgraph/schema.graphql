@@ -21,11 +21,13 @@ enum Resolution {
 
 type Escrow @entity {
   id: ID!
+  transactionUri: String!
   buyer: Bytes!
   seller: Bytes!
   users: [User!]!
   amount: BigInt!
-  deadline: BigInt
+  asset: String!
+  deadline: BigInt!
   disputeID: BigInt
   buyerFee: BigInt
   sellerFee: BigInt

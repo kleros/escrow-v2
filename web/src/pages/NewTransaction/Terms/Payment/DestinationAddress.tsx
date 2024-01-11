@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import styled, { css } from "styled-components";
 import { landscapeStyle } from "styles/landscapeStyle";
 import { Field } from "@kleros/ui-components-library";
@@ -60,14 +60,17 @@ const DestinationAddress: React.FC<IDestinationAddress> = ({ recipientAddress, s
     setRecipientAddress(input);
   };
 
-  const message =
-    recipientAddress === ""
-      ? "The ETH address or ENS of the person/entity that will receive the funds."
-      : isValid
+  const message = useMemo(() => {
+    return recipientAddress === "" || isValid
       ? "The ETH address or ENS of the person/entity that will receive the funds."
       : "The ETH address or ENS of the person/entity is not correct.";
+  }, [recipientAddress, isValid]);
 
-  const variant = recipientAddress === "" ? "info" : isValid ? "success" : "error";
+  const variant = useMemo(() => {
+    if (recipientAddress === "") return "info";
+    else if (isValid) return "success";
+    else return "error";
+  }, [recipientAddress, isValid]);
 
   return (
     <StyledField

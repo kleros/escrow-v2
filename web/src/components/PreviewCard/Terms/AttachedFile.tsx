@@ -14,11 +14,11 @@ const StyledA = styled.a`
 `;
 
 const AttachedFile: React.FC = () => {
-  const { deliverableFile } = useNewTransactionContext();
+  const { extraDescriptionUri } = useNewTransactionContext();
 
   return (
-    deliverableFile ? (
-      <StyledA href={`https://ipfs.kleros.io${deliverableFile}`} target="_blank" rel="noreferrer">
+    extraDescriptionUri ? (
+      <StyledA href={`https://ipfs.kleros.io${extraDescriptionUri}`} target="_blank" rel="noreferrer">
         <AttachmentIcon />
         View Attached File
       </StyledA>

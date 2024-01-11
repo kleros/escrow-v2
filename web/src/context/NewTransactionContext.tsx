@@ -7,8 +7,12 @@ interface INewTransactionContext {
   setEscrowTitle: (title: string) => void;
   deliverableText: string;
   setDeliverableText: (deliverableText: string) => void;
-  deliverableFile: string;
-  setDeliverableFile: (deliverableFile: string) => void;
+  deliverableFile: File | undefined;
+  setDeliverableFile: (deliverableFile: File | undefined) => void;
+  extraDescriptionUri: string;
+  setExtraDescriptionUri: (extraDescriptionUri: string) => void;
+  transactionUri: string;
+  setTransactionUri: (transactionUri: string) => void;
   isFileUploading: boolean;
   setIsFileUploading: (isFileUploading: boolean) => void;
   receivingQuantity: string;
@@ -41,10 +45,14 @@ const NewTransactionContext = createContext<INewTransactionContext>({
   setEscrowTitle: () => {},
   deliverableText: "",
   setDeliverableText: () => {},
+  transactionUri: "",
+  setTransactionUri: () => {},
   isFileUploading: false,
   setIsFileUploading: () => {},
-  deliverableFile: "",
+  deliverableFile: undefined,
   setDeliverableFile: () => {},
+  extraDescriptionUri: "",
+  setExtraDescriptionUri: () => {},
   receivingQuantity: "",
   setReceivingQuantity: () => {},
   receivingToken: "",
@@ -74,7 +82,11 @@ export const NewTransactionProvider: React.FC<{ children: React.ReactNode }> = (
   const [escrowType, setEscrowType] = useState<string>(localStorage.getItem("escrowType") || "general");
   const [escrowTitle, setEscrowTitle] = useState<string>(localStorage.getItem("escrowTitle") || "");
   const [deliverableText, setDeliverableText] = useState<string>(localStorage.getItem("deliverableText") || "");
-  const [deliverableFile, setDeliverableFile] = useState<string>(localStorage.getItem("deliverableFile") || "");
+  const [deliverableFile, setDeliverableFile] = useState<File | undefined>();
+  const [transactionUri, setTransactionUri] = useState<string>(localStorage.getItem("transactionUri") || "");
+  const [extraDescriptionUri, setExtraDescriptionUri] = useState<string>(
+    localStorage.getItem("extraDescriptionUri") || ""
+  );
   const [isFileUploading, setIsFileUploading] = useState<boolean>(false);
   const [hasSufficientNativeBalance, setHasSufficientNativeBalance] = useState<boolean>(true);
   const [receivingQuantity, setReceivingQuantity] = useState<string>(localStorage.getItem("receivingQuantity") || "");
@@ -95,7 +107,9 @@ export const NewTransactionProvider: React.FC<{ children: React.ReactNode }> = (
     setEscrowType("general");
     setEscrowTitle("");
     setDeliverableText("");
-    setDeliverableFile("");
+    setDeliverableFile(undefined);
+    setExtraDescriptionUri("");
+    setTransactionUri("");
     setIsFileUploading(false);
     setReceivingQuantity("");
     setReceivingToken("");
@@ -112,7 +126,8 @@ export const NewTransactionProvider: React.FC<{ children: React.ReactNode }> = (
     localStorage.setItem("escrowType", escrowType);
     localStorage.setItem("escrowTitle", escrowTitle);
     localStorage.setItem("deliverableText", deliverableText);
-    localStorage.setItem("deliverableFile", deliverableFile);
+    localStorage.setItem("extraDescriptionUri", extraDescriptionUri);
+    localStorage.setItem("transactionUri", transactionUri);
     localStorage.setItem("receivingQuantity", receivingQuantity);
     localStorage.setItem("receivingToken", receivingToken);
     localStorage.setItem("receivingRecipientAddress", receivingRecipientAddress);
@@ -125,7 +140,8 @@ export const NewTransactionProvider: React.FC<{ children: React.ReactNode }> = (
     escrowType,
     escrowTitle,
     deliverableText,
-    deliverableFile,
+    extraDescriptionUri,
+    transactionUri,
     receivingQuantity,
     receivingToken,
     receivingRecipientAddress,
@@ -147,6 +163,10 @@ export const NewTransactionProvider: React.FC<{ children: React.ReactNode }> = (
         setDeliverableText,
         deliverableFile,
         setDeliverableFile,
+        extraDescriptionUri,
+        setExtraDescriptionUri,
+        transactionUri,
+        setTransactionUri,
         isFileUploading,
         setIsFileUploading,
         receivingQuantity,
