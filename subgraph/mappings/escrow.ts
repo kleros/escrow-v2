@@ -76,13 +76,13 @@ export function handleTransactionCreated(event: TransactionCreatedEvent): void {
   let escrowId = event.params._transactionID.toString()
   let escrow = Escrow.load(escrowId) || createEscrow(escrowId)
 
-  escrow!.buyer = event.params._buyer;
-  escrow!.seller = event.params._seller;
-  escrow!.amount = event.params._amount;
-  escrow!.asset = event.params._asset;
-  escrow!.transactionUri = event.params._transactionUri;
-  escrow!.deadline = event.params._deadline;
-  escrow!.status = 'NoDispute';
+  escrow!.buyer = event.params._buyer
+  escrow!.seller = event.params._seller
+  escrow!.amount = event.params._amount
+  escrow!.asset = event.params._asset
+  escrow!.transactionUri = event.params._transactionUri
+  escrow!.deadline = event.params._deadline
+  escrow!.status = 'NoDispute'
 
   let buyer = getUser(event.params._buyer.toHex())
   let seller = getUser(event.params._seller.toHex())
@@ -129,21 +129,4 @@ export function handleTransactionResolved(
     buyer.save()
     seller.save()
   }
-
-function createEscrow(id: string): Escrow {
-  let escrow = new Escrow(id)
-  escrow.buyer = Bytes.empty()
-  escrow.seller = Bytes.empty()
-  escrow.transactionUri = ''
-  escrow.amount = BigInt.fromI32(0)
-  escrow.asset = ''
-  escrow.deadline = BigInt.fromI32(0)
-  escrow.disputeID = BigInt.fromI32(0)
-  escrow.buyerFee = BigInt.fromI32(0)
-  escrow.sellerFee = BigInt.fromI32(0)
-  escrow.lastFeePaymentTime = BigInt.fromI32(0)
-  escrow.templateData = ''
-  escrow.templateDataMappings = ''
-  escrow.status = 'NoDispute'
-  return escrow
 }
