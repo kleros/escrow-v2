@@ -9,7 +9,9 @@ const myTransactionsQuery = graphql(`
       id
       buyer
       seller
+      transactionUri
       amount
+      asset
       deadline
       disputeID
       buyerFee
