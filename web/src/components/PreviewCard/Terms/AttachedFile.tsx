@@ -17,7 +17,7 @@ interface IAttachedFile {
 }
 
 const AttachedFile: React.FC<IAttachedFile> = ({ extraDescriptionUri }) => {
-  const href = extraDescriptionUri.replace(/^ipfs:\/\//, "https://ipfs.kleros.io/ipfs/");
+  const href = extraDescriptionUri?.replace(/^ipfs:\/\//, "https://ipfs.kleros.io/ipfs/");
 
   return extraDescriptionUri ? (
     <StyledA href={href} target="_blank" rel="noreferrer">
