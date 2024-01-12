@@ -11,6 +11,7 @@ import { decodeURIFilter } from "utils/uri";
 // import { TransactionDetailsFragment } from "queries/useCasesQuery";
 import TransactionCard from "components/TransactionCard";
 import TransactionsListHeader from "./TransactionsListHeader";
+import { TransactionDetailsFragment } from "src/graphql/graphql"
 
 const GridContainer = styled.div`
   --gap: 24px;
@@ -34,7 +35,7 @@ const StyledPagination = styled(StandardPagination)`
 `;
 
 export interface ITransactionsGrid {
-  transactions?: [];
+  transactions?: TransactionDetailsFragment[];
   currentPage: number;
   setCurrentPage: (newPage: number) => void;
   transactionsPerPage: number;

@@ -60,20 +60,20 @@ const RestOfFieldsContainer = styled.div<{ isList?: boolean; isPreview?: boolean
 
 export interface ITransactionInfo {
   amount?: string;
-  deadline?: Date;
+  deadlineDate: Date;
   token?: string;
   status?: Statuses;
   overrideIsList?: boolean;
   isPreview?: boolean;
-  receiver?: string;
+  receiverAddress?: string;
 }
 
 const TransactionInfo: React.FC<ITransactionInfo> = ({
   amount,
   token,
-  deadline,
+  deadlineDate,
   status,
-  receiver,
+  receiverAddress,
   overrideIsList,
   isPreview,
 }) => {
@@ -92,14 +92,20 @@ const TransactionInfo: React.FC<ITransactionInfo> = ({
             isPreview={isPreview}
           />
         ) : null}
-        {receiver ? (
-          <Field icon={UserIcon} name="Receiver" value={receiver} displayAsList={displayAsList} isPreview={isPreview} />
+        {receiverAddress ? (
+          <Field
+            icon={UserIcon}
+            name="Receiver"
+            value={receiverAddress}
+            displayAsList={displayAsList}
+            isPreview={isPreview}
+          />
         ) : null}
-        {deadline ? (
+        {deadlineDate ? (
           <Field
             icon={CalendarIcon}
             name="Delivery Deadline"
-            value={new Date(deadline).toLocaleString()}
+            value={deadlineDate}
             displayAsList={displayAsList}
             isPreview={isPreview}
           />

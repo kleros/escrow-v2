@@ -8,6 +8,7 @@ import TransactionsDisplay from "components/TransactionsDisplay";
 import { BREAKPOINT_LANDSCAPE } from "styles/landscapeStyle";
 import { useUserQuery } from "hooks/queries/useUserQuery";
 import { isUndefined } from "utils/index";
+import { TransactionDetailsFragment } from "~src/graphql/graphql";
 
 const TransactionsFetcher: React.FC = () => {
   const { page, order, filter } = useParams();
@@ -21,6 +22,7 @@ const TransactionsFetcher: React.FC = () => {
   const { address } = useAccount();
 
   const { data: escrowData } = useMyTransactionsQuery(address!, transactionsPerPage, transactionSkip);
+  console.log(escrowData);
 
   const { data: userData } = useUserQuery(address);
   const totalEscrows = userData?.user?.totalEscrows;
@@ -31,7 +33,7 @@ const TransactionsFetcher: React.FC = () => {
 
   return (
     <TransactionsDisplay
-      transactions={escrowData?.escrows}
+      transactions={escrowData?.escrows as TransactionDetailsFragment[]}
       totalTransactions={totalEscrows}
       currentPage={pageNumber}
       setCurrentPage={(newPage: number) => navigate(`${location}/${newPage}/${order}/${filter}`)}

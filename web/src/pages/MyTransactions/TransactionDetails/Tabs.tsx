@@ -5,6 +5,7 @@ import { Tabs as TabsComponent } from "@kleros/ui-components-library";
 import EyeIcon from "assets/svgs/icons/eye.svg";
 import HandshakeIcon from "assets/svgs/icons/handshake.svg";
 import BalanceIcon from "assets/svgs/icons/law-balance.svg";
+import { isUndefined } from "utils/index";
 
 const StyledTabs = styled(TabsComponent)`
   width: 100%;
@@ -30,24 +31,41 @@ const TABS = [
     value: 1,
     Icon: HandshakeIcon,
     path: "settlement",
+    disabled: true,
   },
   {
     text: "Dispute",
     value: 2,
     Icon: BalanceIcon,
     path: "Dispute",
-    // disabled: true,
   },
 ];
 
-const Tabs: React.FC = () => {
+interface ITabs {
+  disputeID: string;
+}
+
+const Tabs: React.FC<ITabs> = ({ disputeID }) => {
   const navigate = useNavigate();
   const { id } = useParams();
   const location = useLocation();
   const currentPathName = location.pathname.split("/").at(-1);
 
-  const findTabIndex = (pathName) => TABS.findIndex(({ path }) => path === pathName);
+  const [tabs, setTabs] = useState(TABS);
+  const findTabIndex = (pathName) => tabs.findIndex(({ path }) => path === pathName);
   const [currentTab, setCurrentTab] = useState(findTabIndex(currentPathName));
+
+  console.log("disputeid", disputeID);
+  useEffect(() => {
+    setTabs(
+      TABS.map((tab) => {
+        if (tab.text === "Dispute") {
+          return { ...tab, disabled: isUndefined(disputeID) };
+        }
+        return tab;
+      })
+    );
+  }, [disputeID]);
 
   useEffect(() => {
     const newTabIndex = findTabIndex(currentPathName);
@@ -59,11 +77,11 @@ const Tabs: React.FC = () => {
   const handleTabChange = (n: number) => {
     if (n !== currentTab) {
       setCurrentTab(n);
-      navigate(`/myTransactions/${id}/${TABS[n].path}`);
+      navigate(`/myTransactions/${id}/${tabs[n].path}`);
     }
   };
 
-  return <StyledTabs currentValue={currentTab} items={TABS} callback={handleTabChange} />;
+  return <StyledTabs currentValue={currentTab} items={tabs} callback={handleTabChange} />;
 };
 
 export default Tabs;

@@ -12,6 +12,7 @@ import {
   HasToPayFee as HasToPayFeeEvent,
   TransactionCreated as TransactionCreatedEvent,
   TransactionResolved as TransactionResolvedEvent,
+  DisputeRequest as DisputeRequestEvent,
 } from '../generated/Escrow/Escrow'
 import { ZERO, ONE } from './utils'
 
@@ -21,7 +22,7 @@ function createEscrow(id: string): Escrow {
   escrow.seller = Bytes.empty()
   escrow.amount = ZERO
   escrow.deadline = ZERO
-  escrow.disputeID = ZERO
+  escrow.disputeID = ''
   escrow.buyerFee = ZERO
   escrow.sellerFee = ZERO
   escrow.lastFeePaymentTime = ZERO
@@ -129,4 +130,19 @@ export function handleTransactionResolved(
     buyer.save()
     seller.save()
   }
+}
+
+export function handleDisputeRequest(event: DisputeRequestEvent): void {
+  let transactionID = event.params._externalDisputeID.toString()
+  let disputeID = event.params._arbitrableDisputeID.toString()
+
+  let escrow = Escrow.load(transactionID)
+  if (escrow === null) {
+    escrow = createEscrow(transactionID)
+  }
+
+  escrow.disputeID = disputeID
+  escrow.status = 'DisputeCreated'
+
+  escrow.save()
 }

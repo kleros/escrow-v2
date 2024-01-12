@@ -1,20 +1,18 @@
 import React from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-// import { formatEther } from "viem";
-// import { StyledSkeleton } from "components/StyledSkeleton";
+import { formatEther } from "viem";
 import { Card } from "@kleros/ui-components-library";
 import { Statuses } from "consts/statuses";
 import { useIsList } from "context/IsListProvider";
-// import { TransactionDetailsFragment } from "queries/useTransactionsQuery";
-// import { useCourtPolicy } from "queries/useCourtPolicy";
-// import { useTransactionTemplate } from "queries/useTransactionTemplate";
-// import { useVotingHistory } from "queries/useVotingHistory";
 import TransactionInfo from "../TransactionInfo";
 import StatusBanner from "./StatusBanner";
-// import { isUndefined } from "utils/index";
 import { responsiveSize } from "styles/responsiveSize";
 import { shortenAddress } from "utils/shortenAddress";
+import { TransactionDetailsFragment } from "src/graphql/graphql";
+import { useNativeTokenSymbol } from "hooks/useNativeTokenSymbol";
+import useFetchIpfsJson from "hooks/useFetchIpfsJson";
+import { StyledSkeleton } from "../StyledSkeleton";
 
 const StyledCard = styled(Card)`
   width: 100%;
@@ -69,27 +67,26 @@ const TruncatedTitle = ({ text, maxLength }) => {
   return <StyledTitle>{truncatedText}</StyledTitle>;
 };
 
-interface ITransactionCard {
-  id: number;
-  status: string;
+interface ITransactionCard extends TransactionDetailsFragment {
   overrideIsList?: boolean;
 }
 
-const TransactionCard: React.FC<ITransactionCard> = ({ id, status, overrideIsList }) => {
+const TransactionCard: React.FC<ITransactionCard> = ({
+  id,
+  status,
+  overrideIsList,
+  transactionUri,
+  deadline,
+  buyer,
+  amount,
+  asset,
+}) => {
+  const transactionInfo = useFetchIpfsJson(transactionUri);
   const { isList } = useIsList();
+  const nativeTokenSymbol = useNativeTokenSymbol();
   const currentStatusIndex = Statuses[status];
-  const title = "Escrow with John";
+  const title = transactionInfo?.title ?? <StyledSkeleton />;
   const navigate = useNavigate();
-
-  // const deadline =
-  //   currentStatusIndex === 4
-  //     ? lastStatusChange
-  //     : getStatusEndTimestamp(lastStatusChange, currentStatusIndex, court.timesPerStatus);
-  // const { data: transactionTemplate } = useTransactionTemplate(id, arbitrated.id as `0x${string}`);
-  // const { data: courtPolicy } = useCourtPolicy(court.id);
-  // const courtName = courtPolicy?.name;
-  // const category = transactionTemplate ? transactionTemplate.category : undefined;
-  // const { data: votingHistory } = useVotingHistory(id);
 
   return (
     <>
@@ -99,10 +96,10 @@ const TransactionCard: React.FC<ITransactionCard> = ({ id, status, overrideIsLis
           <CardContainer>
             <StyledTitle>{title}</StyledTitle>
             <TransactionInfo
-              amount="610"
-              token="ETH"
-              receiver={shortenAddress("0x4C36d2919e407f0Cc2Ee3c993ccF8ac26d9CE64e")}
-              deadline={new Date()}
+              amount={formatEther(amount)}
+              token={asset === "native" ? nativeTokenSymbol : ""}
+              receiverAddress={shortenAddress(buyer)}
+              deadlineDate={new Date(deadline * 1000).toLocaleString()}
               isPreview={false}
             />
           </CardContainer>
@@ -112,13 +109,13 @@ const TransactionCard: React.FC<ITransactionCard> = ({ id, status, overrideIsLis
           <StatusBanner isCard={false} id={parseInt(id)} status={currentStatusIndex} />
           <ListContainer>
             <ListTitle>
-              <TruncatedTitle text={"Escrow with John"} maxLength={50} />
+              <TruncatedTitle text={title} maxLength={50} />
             </ListTitle>
             <TransactionInfo
-              amount="610"
-              token="ETH"
-              receiver={shortenAddress("0x4C36d2919e407f0Cc2Ee3c993ccF8ac26d9CE64e")}
-              deadline={new Date()}
+              amount={amount}
+              token={asset === "native" ? nativeTokenSymbol : ""}
+              receiverAddress={shortenAddress(buyer)}
+              deadlineDate={new Date(deadline * 1000).toLocaleString()}
               isPreview={false}
             />
           </ListContainer>

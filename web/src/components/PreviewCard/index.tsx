@@ -5,10 +5,8 @@ import { Card } from "@kleros/ui-components-library";
 import { responsiveSize } from "styles/responsiveSize";
 import Header from "./Header";
 import TransactionInfo from "components/TransactionInfo";
-import { useNewTransactionContext } from "context/NewTransactionContext";
 import Terms from "./Terms";
 import EscrowTimeline from "./EscrowTimeline";
-import { useNativeTokenSymbol } from "hooks/useNativeTokenSymbol";
 
 export const StyledCard = styled(Card)`
   height: auto;
@@ -42,29 +40,70 @@ const TransactionInfoContainer = styled.div`
   gap: 32px;
 `;
 
-const PreviewCard: React.FC = () => {
-  const { escrowType, sendingQuantity, sendingToken, sendingRecipientAddress, deadline } = useNewTransactionContext();
-  const nativeTokenSymbol = useNativeTokenSymbol();
+interface IPreviewCard {
+  escrowType: string;
+  escrowTitle: string;
+  deliverableText: string;
+  receivingQuantity: string;
+  receivingToken: string;
+  receivingRecipientAddress: string;
+  sendingQuantity: string;
+  sendingToken: string;
+  sendingRecipientAddress: string;
+  deadlineDate: Date;
+  tokenSymbol: string;
+  overrideIsList: boolean;
+  extraDescriptionUri: string;
+  buyer: string;
+}
 
-  return (
-    <StyledCard>
-      <Header />
-      <TransactionInfoContainer>
-        <Divider />
-        <TransactionInfo
-          amount={sendingQuantity}
-          token={escrowType === "general" ? nativeTokenSymbol : sendingToken}
-          receiver={sendingRecipientAddress}
-          deadline={deadline}
-          isPreview={true}
-          overrideIsList={true}
-        />
-        <Divider />
-      </TransactionInfoContainer>
-      <Terms />
+const PreviewCard: React.FC<IPreviewCard> = ({
+  escrowType,
+  deliverableText,
+  receivingQuantity,
+  receivingToken,
+  receivingRecipientAddress,
+  sendingRecipientAddress,
+  sendingQuantity,
+  sendingToken,
+  escrowTitle,
+  tokenSymbol,
+  deadlineDate,
+  overrideIsList,
+  extraDescriptionUri,
+  buyer,
+}) => (
+  <StyledCard>
+    <Header escrowType={escrowType} escrowTitle={escrowTitle} />
+    <TransactionInfoContainer>
       <Divider />
-      <EscrowTimeline />
-    </StyledCard>
-  );
-};
+      <TransactionInfo
+        amount={sendingQuantity}
+        token={tokenSymbol}
+        receiverAddress={buyer}
+        deadlineDate={deadlineDate}
+        isPreview={true}
+        overrideIsList={overrideIsList}
+      />
+      <Divider />
+    </TransactionInfoContainer>
+    <Terms
+      buyer={buyer}
+      escrowType={escrowType}
+      deliverableText={deliverableText}
+      receivingQuantity={receivingQuantity}
+      receivingToken={receivingToken}
+      receivingRecipientAddress={receivingRecipientAddress}
+      sendingQuantity={sendingQuantity}
+      sendingToken={sendingToken}
+      sendingRecipientAddress={sendingRecipientAddress}
+      deadlineDate={deadlineDate}
+      tokenSymbol={tokenSymbol}
+      extraDescriptionUri={extraDescriptionUri}
+    />
+    <Divider />
+    <EscrowTimeline />
+  </StyledCard>
+);
+
 export default PreviewCard;

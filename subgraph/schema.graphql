@@ -28,7 +28,7 @@ type Escrow @entity {
   amount: BigInt!
   asset: String!
   deadline: BigInt!
-  disputeID: BigInt
+  disputeID: String
   buyerFee: BigInt
   sellerFee: BigInt
   lastFeePaymentTime: BigInt

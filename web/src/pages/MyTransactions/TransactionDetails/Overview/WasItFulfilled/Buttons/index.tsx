@@ -16,7 +16,7 @@ const Buttons: React.FC = () => {
   return (
     <Container>
       <ReleasePaymentButton />
-      <ProposeSettlementButton />
+      {/* <ProposeSettlementButton /> */}
       <RaiseDisputeButton />
     </Container>
   );

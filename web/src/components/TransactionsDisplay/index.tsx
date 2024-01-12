@@ -4,6 +4,7 @@ import Search from "./Search";
 import StatsAndFilters from "./StatsAndFilters";
 import TransactionsGrid, { ITransactionsGrid } from "./TransactionsGrid";
 import { responsiveSize } from "styles/responsiveSize";
+import { TransactionDetailsFragment } from "src/graphql/graphql";
 
 const Divider = styled.hr`
   border: none;
@@ -17,7 +18,7 @@ const StyledTitle = styled.h1`
 `;
 
 interface ITransactionsDisplay extends ITransactionsGrid {
-  transactions: [];
+  transactions?: TransactionDetailsFragment[];
   totalTransactions?: number;
   resolvedTransactions?: number;
   title?: string;
