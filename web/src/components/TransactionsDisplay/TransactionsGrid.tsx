@@ -15,7 +15,7 @@ import TransactionsListHeader from "./TransactionsListHeader";
 const GridContainer = styled.div`
   --gap: 24px;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, max(348px, (100% - var(--gap) * 2)/3)), 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, max(348px, (100% - var(--gap) * 2)/3)), 1fr));
   align-items: center;
   gap: var(--gap);
 `;
