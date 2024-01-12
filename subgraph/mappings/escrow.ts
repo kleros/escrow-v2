@@ -1,10 +1,11 @@
-import { BigInt, Bytes, ethereum } from '@graphprotocol/graph-ts'
+import { BigInt, Bytes } from '@graphprotocol/graph-ts'
 import {
   Escrow,
   Payment,
   HasToPayFee,
   TransactionCreated,
   TransactionResolved,
+  User,
 } from '../generated/schema'
 import {
   Payment as PaymentEvent,
@@ -12,10 +13,44 @@ import {
   TransactionCreated as TransactionCreatedEvent,
   TransactionResolved as TransactionResolvedEvent,
 } from '../generated/Escrow/Escrow'
+import { ZERO, ONE } from './utils'
+
+function createEscrow(id: string): Escrow {
+  let escrow = new Escrow(id)
+  escrow.buyer = Bytes.empty()
+  escrow.seller = Bytes.empty()
+  escrow.amount = ZERO
+  escrow.deadline = ZERO
+  escrow.disputeID = ZERO
+  escrow.buyerFee = ZERO
+  escrow.sellerFee = ZERO
+  escrow.lastFeePaymentTime = ZERO
+  escrow.templateData = ''
+  escrow.templateDataMappings = ''
+  escrow.status = 'NoDispute'
+  return escrow
+}
+
+function createUser(id: string): User {
+  let user = new User(id)
+  user.totalEscrows = ZERO
+  user.totalResolvedEscrows = ZERO
+  user.save()
+  return user
+}
+
+function getUser(id: string): User {
+  let user = User.load(id)
+  if (user === null) {
+    user = createUser(id)
+  }
+  return user as User
+}
 
 export function handlePayment(event: PaymentEvent): void {
   let escrowId = event.params._transactionID.toString()
-  let paymentId = event.transaction.hash.toHex() + '-' + event.logIndex.toString()
+  let paymentId =
+    event.transaction.hash.toHex() + '-' + event.logIndex.toString()
   let payment = new Payment(paymentId)
 
   payment.escrow = escrowId
@@ -27,7 +62,8 @@ export function handlePayment(event: PaymentEvent): void {
 
 export function handleHasToPayFee(event: HasToPayFeeEvent): void {
   let escrowId = event.params._transactionID.toString()
-  let hasToPayFeeId = event.transaction.hash.toHex() + '-' + event.logIndex.toString()
+  let hasToPayFeeId =
+    event.transaction.hash.toHex() + '-' + event.logIndex.toString()
   let hasToPayFee = new HasToPayFee(hasToPayFeeId)
 
   hasToPayFee.escrow = escrowId
@@ -37,49 +73,60 @@ export function handleHasToPayFee(event: HasToPayFeeEvent): void {
 }
 
 export function handleTransactionCreated(event: TransactionCreatedEvent): void {
-  let escrowId = event.params._transactionID.toString();
-  let escrow = Escrow.load(escrowId) || createEscrow(escrowId);
+  let escrowId = event.params._transactionID.toString()
+  let escrow = Escrow.load(escrowId) || createEscrow(escrowId)
 
-  escrow!.buyer = event.params._buyer;
-  escrow!.seller = event.params._seller;
-  escrow!.amount = event.params._amount;
-  escrow!.status = 'NoDispute';
+  escrow!.buyer = event.params._buyer
+  escrow!.seller = event.params._seller
+  escrow!.amount = event.params._amount
+  escrow!.asset = event.params._asset
+  escrow!.transactionUri = event.params._transactionUri
+  escrow!.deadline = event.params._deadline
+  escrow!.status = 'NoDispute'
 
-  let transactionCreatedId = event.transaction.hash.toHex() + '-' + event.logIndex.toString();
-  let transactionCreated = new TransactionCreated(transactionCreatedId);
-  transactionCreated.escrow = escrowId;
+  let buyer = getUser(event.params._buyer.toHex())
+  let seller = getUser(event.params._seller.toHex())
 
-  transactionCreated.save();
-  escrow!.save();
+  escrow!.users = [buyer.id, seller.id]
+  escrow!.save()
+
+  buyer.totalEscrows = buyer.totalEscrows.plus(ONE)
+  seller.totalEscrows = seller.totalEscrows.plus(ONE)
+  buyer.save()
+  seller.save()
+
+  let transactionCreatedId =
+    event.transaction.hash.toHex() + '-' + event.logIndex.toString()
+  let transactionCreated = new TransactionCreated(transactionCreatedId)
+  transactionCreated.escrow = escrowId
+
+  transactionCreated.save()
 }
 
-export function handleTransactionResolved(event: TransactionResolvedEvent): void {
-  let escrowId = event.params._transactionID.toString();
-  let escrow = Escrow.load(escrowId) || createEscrow(escrowId);
+export function handleTransactionResolved(
+  event: TransactionResolvedEvent
+): void {
+  let escrowId = event.params._transactionID.toString()
+  let escrow = Escrow.load(escrowId) || createEscrow(escrowId)
 
-  escrow!.status = 'TransactionResolved';
+  escrow!.status = 'TransactionResolved'
 
-  let transactionResolvedId = event.transaction.hash.toHex() + '-' + event.logIndex.toString();
-  let transactionResolved = new TransactionResolved(transactionResolvedId);
-  transactionResolved.escrow = escrowId;
-  transactionResolved.resolution = event.params._resolution.toString();
+  let transactionResolvedId =
+    event.transaction.hash.toHex() + '-' + event.logIndex.toString()
+  let transactionResolved = new TransactionResolved(transactionResolvedId)
+  transactionResolved.escrow = escrowId
+  transactionResolved.resolution = event.params._resolution.toString()
 
-  transactionResolved.save();
-  escrow!.save();
-}
+  transactionResolved.save()
+  escrow!.save()
 
-function createEscrow(id: string): Escrow {
-  let escrow = new Escrow(id)
-  escrow.buyer = Bytes.empty()
-  escrow.seller = Bytes.empty()
-  escrow.amount = BigInt.fromI32(0)
-  escrow.deadline = BigInt.fromI32(0)
-  escrow.disputeID = BigInt.fromI32(0)
-  escrow.buyerFee = BigInt.fromI32(0)
-  escrow.sellerFee = BigInt.fromI32(0)
-  escrow.lastFeePaymentTime = BigInt.fromI32(0)
-  escrow.templateData = ''
-  escrow.templateDataMappings = ''
-  escrow.status = 'NoDispute'
-  return escrow
+  if (escrow !== null) {
+    let buyer = getUser(escrow.buyer.toHex())
+    let seller = getUser(escrow.seller.toHex())
+
+    buyer.totalResolvedEscrows = buyer.totalResolvedEscrows.plus(ONE)
+    seller.totalResolvedEscrows = seller.totalResolvedEscrows.plus(ONE)
+    buyer.save()
+    seller.save()
+  }
 }
