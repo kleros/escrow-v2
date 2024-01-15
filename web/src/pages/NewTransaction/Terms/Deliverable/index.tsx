@@ -1,6 +1,8 @@
 import React from "react";
 import styled, { css } from "styled-components";
 import { landscapeStyle } from "styles/landscapeStyle";
+import { toast } from "react-toastify";
+import { OPTIONS } from "utils/wrapWithToast";
 import { FileUploader, Textarea } from "@kleros/ui-components-library";
 import { useNewTransactionContext } from "context/NewTransactionContext";
 import { responsiveSize } from "styles/responsiveSize";
@@ -62,7 +64,7 @@ const Deliverable: React.FC = () => {
     console.log("file", file);
     setDeliverableFile(file);
     if (file.type !== "application/pdf") {
-      alert("That type of file is not valid. Please upload a PDF file.");
+      toast.error("That type of file is not valid. Please upload a PDF file.", OPTIONS);
     }
   };
 

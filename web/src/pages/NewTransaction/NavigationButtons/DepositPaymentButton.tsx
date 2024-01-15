@@ -86,9 +86,11 @@ const DepositPaymentButton: React.FC = () => {
     if (!isUndefined(createTransaction)) {
       setIsSending(true);
       wrapWithToast(async () => await createTransaction().then((response) => response.hash), publicClient)
-        .then(() => {
-          resetContext();
-          navigate("/");
+        .then((wrapResult) => {
+          if (wrapResult.status) {
+            resetContext();
+            navigate("/");
+          }
         })
         .catch((error) => {
           console.error("Transaction failed:", error);

@@ -1,5 +1,7 @@
+import { toast } from "react-toastify";
 import { uploadFileToIPFS } from "./uploadFileToIPFS";
 import { uploadTransactionObject } from "./uploadTransactionObject";
+import { OPTIONS } from "./wrapWithToast";
 
 export const handleFileUpload = async (
   escrowTitle: string,
@@ -18,7 +20,7 @@ export const handleFileUpload = async (
 
     if (deliverableFile) {
       if (deliverableFile.type !== "application/pdf") {
-        alert("That type of file is not valid. Please upload a PDF file.");
+        toast.error("That type of file is not valid. Please upload a PDF file.", OPTIONS);
         setIsFileUploading(false);
         return;
       }
