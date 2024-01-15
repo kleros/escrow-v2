@@ -51,6 +51,8 @@ const Preview: React.FC = () => {
         overrideIsList={false}
         escrowTitle={escrowTitle}
         extraDescriptionUri={extraDescriptionUri}
+        timestamp={new Date()}
+        isPreview={true}
       />
       <NavigationButtons prevRoute="/newTransaction/notifications" nextRoute="/newTransaction/deliverable" />
     </Container>

@@ -16,7 +16,7 @@ const Container = styled.div`
 
 interface IOverview extends TransactionDetailsFragment {}
 
-const Overview: React.FC<IOverview> = ({ transactionUri, amount, deadline, asset, seller, buyer }) => {
+const Overview: React.FC<IOverview> = ({ transactionUri, amount, deadline, asset, seller, buyer, timestamp }) => {
   const nativeTokenSymbol = useNativeTokenSymbol();
   const transactionInfo = useFetchIpfsJson(transactionUri);
   const currentUnixTime = Math.floor(Date.now() / 1000);
@@ -40,6 +40,8 @@ const Overview: React.FC<IOverview> = ({ transactionUri, amount, deadline, asset
         tokenSymbol={asset === "native" ? nativeTokenSymbol : asset}
         overrideIsList={false}
         amount={!isUndefined(amount) ? formatEther(amount) : ""}
+        timestamp={timestamp}
+        isPreview={false}
       />
       {isPastDeadline && <WasItFulfilled />}
     </Container>

@@ -25,7 +25,7 @@ const TransactionDetails: React.FC = () => {
       <Routes>
         <Route path="/" element={<Navigate to="overview" replace />} />
         <Route path="overview" element={<Overview {...transactionData?.escrow} />} />
-        <Route path="settlement" element={<Settlement />} />
+        <Route path="settlement" element={<Settlement transactionData={transactionData?.escrow} />} />
         <Route path="dispute" element={<Dispute />} />
         <Route path="*" element={<Navigate to="overview" replace />} />
       </Routes>

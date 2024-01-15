@@ -56,6 +56,7 @@ export function handlePayment(event: PaymentEvent): void {
 
   payment.escrow = escrowId
   payment.amount = event.params._amount
+  payment.timestamp = event.block.timestamp
   payment.party = Bytes.fromHexString(event.params._party.toHex())
 
   payment.save()
@@ -83,6 +84,7 @@ export function handleTransactionCreated(event: TransactionCreatedEvent): void {
   escrow!.asset = event.params._asset
   escrow!.transactionUri = event.params._transactionUri
   escrow!.deadline = event.params._deadline
+  escrow!.timestamp = event.block.timestamp
   escrow!.status = 'NoDispute'
 
   let buyer = getUser(event.params._buyer.toHex())
@@ -111,6 +113,7 @@ export function handleTransactionResolved(
   let escrow = Escrow.load(escrowId) || createEscrow(escrowId)
 
   escrow!.status = 'TransactionResolved'
+  escrow!.timestamp = event.block.timestamp
 
   let transactionResolvedId =
     event.transaction.hash.toHex() + '-' + event.logIndex.toString()

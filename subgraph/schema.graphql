@@ -35,6 +35,7 @@ type Escrow @entity {
   templateData: String
   templateDataMappings: String
   status: Status
+  timestamp: BigInt!
   payments: [Payment!]! @derivedFrom(field: "escrow")
   hasToPayFees: [HasToPayFee!]! @derivedFrom(field: "escrow")
   createdEvents: [TransactionCreated!]! @derivedFrom(field: "escrow")
@@ -53,6 +54,7 @@ type Payment @entity {
   escrow: Escrow!
   amount: BigInt!
   party: Bytes!
+  timestamp: BigInt!
 }
 
 type HasToPayFee @entity {
@@ -70,4 +72,5 @@ type TransactionResolved @entity {
   id: ID!
   escrow: Escrow!
   resolution: Resolution!
+  timestamp: BigInt!
 }

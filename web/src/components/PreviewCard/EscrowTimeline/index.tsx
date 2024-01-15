@@ -7,8 +7,15 @@ const StyledTimeline = styled(CustomTimeline)`
   width: 100%;
 `;
 
-const EscrowTimeline: React.FC = () => {
-  const items = useEscrowTimelineItems(new Date());
+interface IEscrowTimeline {
+  creationTimestamp: string;
+  isPreview: boolean;
+}
+
+const EscrowTimeline: React.FC<IEscrowTimeline> = ({ creationTimestamp, isPreview }) => {
+  const items = isPreview
+    ? useEscrowTimelineItems(creationTimestamp)
+    : useEscrowTimelineItems(new Date(creationTimestamp * 1000).toLocaleString());
 
   return <StyledTimeline items={items} />;
 };

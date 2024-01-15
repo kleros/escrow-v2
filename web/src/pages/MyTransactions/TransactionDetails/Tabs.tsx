@@ -31,7 +31,6 @@ const TABS = [
     value: 1,
     Icon: HandshakeIcon,
     path: "settlement",
-    disabled: true,
   },
   {
     text: "Dispute",

@@ -55,6 +55,8 @@ interface IPreviewCard {
   overrideIsList: boolean;
   extraDescriptionUri: string;
   buyer: string;
+  timestamp: string;
+  isPreview: boolean;
 }
 
 const PreviewCard: React.FC<IPreviewCard> = ({
@@ -72,6 +74,8 @@ const PreviewCard: React.FC<IPreviewCard> = ({
   overrideIsList,
   extraDescriptionUri,
   buyer,
+  timestamp,
+  isPreview,
 }) => (
   <StyledCard>
     <Header escrowType={escrowType} escrowTitle={escrowTitle} />
@@ -102,7 +106,7 @@ const PreviewCard: React.FC<IPreviewCard> = ({
       extraDescriptionUri={extraDescriptionUri}
     />
     <Divider />
-    <EscrowTimeline />
+    <EscrowTimeline creationTimestamp={timestamp} isPreview={isPreview} />
   </StyledCard>
 );
 

@@ -9,6 +9,7 @@ export const transactionFragment = graphql(`
     buyer
     seller
     transactionUri
+    timestamp
     amount
     asset
     deadline
@@ -23,6 +24,7 @@ export const transactionFragment = graphql(`
       id
       amount
       party
+      timestamp
     }
     hasToPayFees {
       id
