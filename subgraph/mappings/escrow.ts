@@ -110,29 +110,41 @@ export function handleTransactionResolved(
   event: TransactionResolvedEvent
 ): void {
   let escrowId = event.params._transactionID.toString()
-  let escrow = Escrow.load(escrowId) || createEscrow(escrowId)
+  let escrow = Escrow.load(escrowId)
 
-  escrow!.status = 'TransactionResolved'
-  escrow!.timestamp = event.block.timestamp
+  if (!escrow) {
+    escrow = createEscrow(escrowId)
+  }
+
+  escrow.status = 'TransactionResolved'
+  escrow.timestamp = event.block.timestamp
+  escrow.save()
 
   let transactionResolvedId =
     event.transaction.hash.toHex() + '-' + event.logIndex.toString()
   let transactionResolved = new TransactionResolved(transactionResolvedId)
   transactionResolved.escrow = escrowId
-  transactionResolved.resolution = event.params._resolution.toString()
-
+  transactionResolved.resolution = event.params._resolution
+  transactionResolved.timestamp = event.block.timestamp
   transactionResolved.save()
-  escrow!.save()
 
-  if (escrow !== null) {
-    let buyer = getUser(escrow.buyer.toHex())
-    let seller = getUser(escrow.seller.toHex())
-
-    buyer.totalResolvedEscrows = buyer.totalResolvedEscrows.plus(ONE)
-    seller.totalResolvedEscrows = seller.totalResolvedEscrows.plus(ONE)
-    buyer.save()
-    seller.save()
+  let buyerId = escrow.buyer.toHex()
+  let buyer = User.load(buyerId)
+  if (!buyer) {
+    buyer = createUser(buyerId)
   }
+
+  buyer.totalResolvedEscrows = buyer.totalResolvedEscrows.plus(ONE)
+  buyer.save()
+
+  let sellerId = escrow.seller.toHex()
+  let seller = User.load(sellerId)
+  if (!seller) {
+    seller = createUser(sellerId)
+  }
+
+  seller.totalResolvedEscrows = seller.totalResolvedEscrows.plus(ONE)
+  seller.save()
 }
 
 export function handleDisputeRequest(event: DisputeRequestEvent): void {
