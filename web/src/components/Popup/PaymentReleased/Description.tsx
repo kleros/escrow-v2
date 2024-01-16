@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { shortenAddress } from "utils/shortenAddress";
 
 const Container = styled.div`
   flex-direction: column;
@@ -17,10 +18,16 @@ const StyledThanks = styled.p`
   font-weight: 600;
 `;
 
-const Description: React.FC = () => {
+interface IDescription {
+  seller: string;
+}
+
+const Description: React.FC<IDescription> = ({ seller }) => {
   return (
     <Container>
-      <StyledEscrowConcluded>Escrow concluded. The funds were released to John.eth.</StyledEscrowConcluded>
+      <StyledEscrowConcluded>
+        Escrow concluded. The funds were released to {shortenAddress(seller)}.
+      </StyledEscrowConcluded>
       <StyledThanks>Thanks for using Kleros Escrow.</StyledThanks>
     </Container>
   );

@@ -3,6 +3,9 @@ import styled from "styled-components";
 import ProposeSettlementButton from "./ProposeSettlementButton";
 import RaiseDisputeButton from "./RaiseDisputeButton";
 import ReleasePaymentButton from "./ReleasePaymentButton";
+import { useAccount } from "wagmi";
+import { TransactionDetailsFragment } from "src/graphql/graphql";
+import { useNativeTokenSymbol } from "hooks/useNativeTokenSymbol";
 
 const Container = styled.div`
   display: flex;
@@ -12,10 +15,24 @@ const Container = styled.div`
   justify-content: center;
 `;
 
-const Buttons: React.FC = () => {
+interface IButtons {
+  transactionData: TransactionDetailsFragment;
+}
+
+const Buttons: React.FC<IButtons> = ({ transactionData }) => {
+  const { address } = useAccount();
+  const nativeTokenSymbol = useNativeTokenSymbol();
+  const isBuyer = address?.toLowerCase() === transactionData?.buyer?.toLowerCase();
+
   return (
     <Container>
-      <ReleasePaymentButton />
+      <ReleasePaymentButton
+        isBuyer={isBuyer}
+        transactionId={transactionData?.id}
+        amount={transactionData?.amount}
+        asset={transactionData?.asset === "native" ? nativeTokenSymbol : ""}
+        seller={transactionData?.seller}
+      />
       {/* <ProposeSettlementButton /> */}
       <RaiseDisputeButton />
     </Container>

@@ -42,7 +42,7 @@ const Timeline: React.FC<ITimeline> = ({ transactionData }) => {
         title,
         party: payment.party === transactionData.buyer ? "Buyer" : "Seller",
         subtitle,
-        rightSided: payment.party === transactionData.buyer,
+        rightSided: true,
         variant,
         Icon,
       };

@@ -24,7 +24,10 @@ const TransactionDetails: React.FC = () => {
       <Tabs disputeID={transactionData?.disputeID} />
       <Routes>
         <Route path="/" element={<Navigate to="overview" replace />} />
-        <Route path="overview" element={<Overview {...transactionData?.escrow} />} />
+        <Route
+          path="overview"
+          element={<Overview {...transactionData?.escrow} transactionData={transactionData?.escrow} />}
+        />
         <Route path="settlement" element={<Settlement transactionData={transactionData?.escrow} />} />
         <Route path="dispute" element={<Dispute />} />
         <Route path="*" element={<Navigate to="overview" replace />} />

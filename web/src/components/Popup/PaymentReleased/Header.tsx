@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { formatEther } from "viem";
 
 const StyledHeader = styled.h1`
   margin: 0;
@@ -7,7 +8,16 @@ const StyledHeader = styled.h1`
   text-align: center;
 `;
 
-const Header: React.FC = () => {
-  return <StyledHeader>Full payment released: 250 DAI</StyledHeader>;
+interface IHeader {
+  amount: string;
+  asset: string;
+}
+
+const Header: React.FC<IHeader> = ({ amount, asset }) => {
+  return (
+    <StyledHeader>
+      Full payment released: {formatEther(amount)} {asset}
+    </StyledHeader>
+  );
 };
 export default Header;

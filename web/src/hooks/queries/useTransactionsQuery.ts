@@ -36,6 +36,7 @@ export const transactionFragment = graphql(`
     resolvedEvents {
       id
       resolution
+      timestamp
     }
   }
 `);
