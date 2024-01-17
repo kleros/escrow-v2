@@ -67,7 +67,7 @@ const transactionDetailsQuery = graphql(`
 
 export const useTransactionDetailsQuery = (transactionId) => {
   return useQuery({
-    queryKey: [`useTransactionDetailsQuery`, transactionId],
+    queryKey: ["refetchOnBlock", `useTransactionDetailsQuery`, transactionId],
     queryFn: async () => {
       try {
         const data = await graphqlQueryFnHelper(transactionDetailsQuery, {
