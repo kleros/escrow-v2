@@ -14,7 +14,9 @@ const Dispute: React.FC<IDispute> = ({ transactionData }) => {
     <StyledCard>
       <Header text="Dispute" />
       <Timeline transactionData={transactionData} />
-      <Buttons disputeID={transactionData?.disputeRequest?.id} />
+      {transactionData?.disputeRequest ? (
+        <Buttons disputeID={transactionData?.disputeRequest?.id} />
+      ) : null}
     </StyledCard>
   );
 };

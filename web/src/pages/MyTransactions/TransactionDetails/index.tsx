@@ -21,7 +21,7 @@ const TransactionDetails: React.FC = () => {
   return (
     <Container>
       <Header>Transaction #{id}</Header>
-      <Tabs disputeID={transactionData?.escrow?.disputeRequest?.id} payments={transactionData?.escrow?.payments} />
+      <Tabs hasToPayFees={transactionData?.escrow?.hasToPayFees} payments={transactionData?.escrow?.payments} />
       <Routes>
         <Route path="/" element={<Navigate to="overview" replace />} />
         <Route

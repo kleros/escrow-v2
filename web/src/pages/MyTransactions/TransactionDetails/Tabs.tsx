@@ -5,7 +5,6 @@ import { Tabs as TabsComponent } from "@kleros/ui-components-library";
 import EyeIcon from "assets/svgs/icons/eye.svg";
 import HandshakeIcon from "assets/svgs/icons/handshake.svg";
 import BalanceIcon from "assets/svgs/icons/law-balance.svg";
-import { isUndefined } from "utils/index";
 
 const StyledTabs = styled(TabsComponent)`
   width: 100%;
@@ -41,11 +40,11 @@ const TABS = [
 ];
 
 interface ITabs {
-  disputeID: string;
+  hasToPayFees: [];
   payments: [];
 }
 
-const Tabs: React.FC<ITabs> = ({ disputeID, payments }) => {
+const Tabs: React.FC<ITabs> = ({ hasToPayFees, payments }) => {
   const navigate = useNavigate();
   const { id } = useParams();
   const location = useLocation();
@@ -59,7 +58,7 @@ const Tabs: React.FC<ITabs> = ({ disputeID, payments }) => {
     setTabs(
       TABS.map((tab) => {
         if (tab.text === "Dispute") {
-          return { ...tab, disabled: isUndefined(disputeID) };
+          return { ...tab, disabled: hasToPayFees?.length === 0 };
         }
         if (tab.text === "Settlement") {
           return { ...tab, disabled: payments?.length === 0 };
@@ -67,7 +66,7 @@ const Tabs: React.FC<ITabs> = ({ disputeID, payments }) => {
         return tab;
       })
     );
-  }, [disputeID, payments]);
+  }, [hasToPayFees, payments]);
 
   useEffect(() => {
     const newTabIndex = findTabIndex(currentPathName);
