@@ -28,7 +28,6 @@ type Escrow @entity {
   amount: BigInt!
   asset: String!
   deadline: BigInt!
-  disputeID: String
   buyerFee: BigInt
   sellerFee: BigInt
   lastFeePaymentTime: BigInt
@@ -40,6 +39,7 @@ type Escrow @entity {
   hasToPayFees: [HasToPayFee!]! @derivedFrom(field: "escrow")
   createdEvents: [TransactionCreated!]! @derivedFrom(field: "escrow")
   resolvedEvents: [TransactionResolved!]! @derivedFrom(field: "escrow")
+  disputeRequest: DisputeRequest @derivedFrom(field: "escrow")
 }
 
 type User @entity {
@@ -61,6 +61,14 @@ type HasToPayFee @entity {
   id: ID!
   escrow: Escrow!
   party: String
+  timestamp: BigInt
+}
+
+type DisputeRequest @entity {
+  id: ID!
+  escrow: Escrow!
+  timestamp: BigInt
+  from: Bytes
 }
 
 type TransactionCreated @entity {

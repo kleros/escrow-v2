@@ -3,17 +3,18 @@ import { StyledCard } from "components/PreviewCard";
 import Header from "../Header";
 import Timeline from "./Timeline";
 import Buttons from "./Buttons";
+import { TransactionDetailsFragment } from "~src/graphql/graphql";
 
 interface IDispute {
-  disputeID: string;
+  transactionData: TransactionDetailsFragment;
 }
 
-const Dispute: React.FC<IDispute> = ({ disputeID }) => {
+const Dispute: React.FC<IDispute> = ({ transactionData }) => {
   return (
     <StyledCard>
       <Header text="Dispute" />
-      <Timeline />
-      <Buttons disputeID={disputeID} />
+      <Timeline transactionData={transactionData} />
+      <Buttons disputeID={transactionData?.disputeRequest?.id} />
     </StyledCard>
   );
 };

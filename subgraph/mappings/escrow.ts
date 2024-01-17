@@ -6,6 +6,7 @@ import {
   TransactionCreated,
   TransactionResolved,
   User,
+  DisputeRequest,
 } from '../generated/schema'
 import {
   Payment as PaymentEvent,
@@ -22,7 +23,6 @@ function createEscrow(id: string): Escrow {
   escrow.seller = Bytes.empty()
   escrow.amount = ZERO
   escrow.deadline = ZERO
-  escrow.disputeID = ''
   escrow.buyerFee = ZERO
   escrow.sellerFee = ZERO
   escrow.lastFeePaymentTime = ZERO
@@ -73,6 +73,7 @@ export function handleHasToPayFee(event: HasToPayFeeEvent): void {
 
   let partyValue = event.params._party
   hasToPayFee.party = partyValue.toString()
+  hasToPayFee.timestamp = event.block.timestamp
 
   hasToPayFee.save()
 }
@@ -154,12 +155,15 @@ export function handleDisputeRequest(event: DisputeRequestEvent): void {
   let transactionID = event.params._externalDisputeID.toString()
   let disputeID = event.params._arbitrableDisputeID.toString()
 
+  let disputeRequest = new DisputeRequest(disputeID)
+
   let escrow = Escrow.load(transactionID)
   if (!escrow) {
     escrow = createEscrow(transactionID)
   }
 
-  escrow.disputeID = disputeID
-  escrow.status = 'DisputeCreated'
-  escrow.save()
+  disputeRequest.escrow = escrow.id
+  disputeRequest.timestamp = event.block.timestamp
+  disputeRequest.from = Bytes.fromHexString(event.transaction.from.toHex())
+  disputeRequest.save()
 }

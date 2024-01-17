@@ -21,7 +21,7 @@ const TransactionDetails: React.FC = () => {
   return (
     <Container>
       <Header>Transaction #{id}</Header>
-      <Tabs disputeID={transactionData?.escrow?.disputeID} payments={transactionData?.escrow?.payments} />
+      <Tabs disputeID={transactionData?.escrow?.disputeRequest?.id} payments={transactionData?.escrow?.payments} />
       <Routes>
         <Route path="/" element={<Navigate to="overview" replace />} />
         <Route
@@ -29,7 +29,7 @@ const TransactionDetails: React.FC = () => {
           element={<Overview {...transactionData?.escrow} transactionData={transactionData?.escrow} />}
         />
         <Route path="settlement" element={<Settlement transactionData={transactionData?.escrow} />} />
-        <Route path="dispute" element={<Dispute disputeID={transactionData?.escrow?.disputeID} />} />
+        <Route path="dispute" element={<Dispute transactionData={transactionData?.escrow} />} />
         <Route path="*" element={<Navigate to="overview" replace />} />
       </Routes>
     </Container>

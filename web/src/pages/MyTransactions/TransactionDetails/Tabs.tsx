@@ -59,10 +59,10 @@ const Tabs: React.FC<ITabs> = ({ disputeID, payments }) => {
     setTabs(
       TABS.map((tab) => {
         if (tab.text === "Dispute") {
-          return { ...tab, disabled: disputeID === null };
+          return { ...tab, disabled: isUndefined(disputeID) };
         }
         if (tab.text === "Settlement") {
-          return { ...tab, disabled: payments?.length === 0 }; // Disable tab if payments array is empty
+          return { ...tab, disabled: payments?.length === 0 };
         }
         return tab;
       })

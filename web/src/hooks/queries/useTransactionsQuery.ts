@@ -13,7 +13,6 @@ export const transactionFragment = graphql(`
     amount
     asset
     deadline
-    disputeID
     buyerFee
     sellerFee
     lastFeePaymentTime
@@ -29,6 +28,7 @@ export const transactionFragment = graphql(`
     hasToPayFees {
       id
       party
+      timestamp
     }
     createdEvents {
       id
@@ -36,6 +36,14 @@ export const transactionFragment = graphql(`
     resolvedEvents {
       id
       resolution
+      timestamp
+    }
+    disputeRequest {
+      id
+      from
+      escrow {
+        id
+      }
       timestamp
     }
   }
@@ -76,7 +84,7 @@ export const useTransactionDetailsQuery = (transactionId) => {
 
 export const useMyTransactionsQuery = (userAddress: Address, first = 10, skip = 0) => {
   return useQuery({
-    queryKey: [`useMyTransactionsQuery`, userAddress, first, skip],
+    queryKey: ["refetchOnBlock", `useMyTransactionsQuery`, userAddress, first, skip],
     queryFn: async () => {
       try {
         const data = await graphqlQueryFnHelper(myTransactionsQuery, {
