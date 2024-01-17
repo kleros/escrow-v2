@@ -26,7 +26,7 @@ Sentry.init({
   tracesSampleRate: 1.0,
 
   // Set `tracePropagationTargets` to control for which URLs distributed tracing should be enabled
-  tracePropagationTargets: ["localhost", /^https:\/\/.*--kleros-v2\.netlify\.app/],
+  tracePropagationTargets: ["localhost", /^https:\/\/.*--escrow-v2\.netlify\.app/],
 
   // Set profilesSampleRate to 1.0 to profile every transaction.
   // Since profilesSampleRate is relative to tracesSampleRate,
