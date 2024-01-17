@@ -36,15 +36,16 @@ const TABS = [
     text: "Dispute",
     value: 2,
     Icon: BalanceIcon,
-    path: "Dispute",
+    path: "dispute",
   },
 ];
 
 interface ITabs {
   disputeID: string;
+  payments: [];
 }
 
-const Tabs: React.FC<ITabs> = ({ disputeID }) => {
+const Tabs: React.FC<ITabs> = ({ disputeID, payments }) => {
   const navigate = useNavigate();
   const { id } = useParams();
   const location = useLocation();
@@ -54,17 +55,19 @@ const Tabs: React.FC<ITabs> = ({ disputeID }) => {
   const findTabIndex = (pathName) => tabs.findIndex(({ path }) => path === pathName);
   const [currentTab, setCurrentTab] = useState(findTabIndex(currentPathName));
 
-  console.log("disputeid", disputeID);
   useEffect(() => {
     setTabs(
       TABS.map((tab) => {
         if (tab.text === "Dispute") {
-          return { ...tab, disabled: isUndefined(disputeID) };
+          return { ...tab, disabled: disputeID === null };
+        }
+        if (tab.text === "Settlement") {
+          return { ...tab, disabled: payments?.length === 0 }; // Disable tab if payments array is empty
         }
         return tab;
       })
     );
-  }, [disputeID]);
+  }, [disputeID, payments]);
 
   useEffect(() => {
     const newTabIndex = findTabIndex(currentPathName);

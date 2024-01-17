@@ -4,12 +4,16 @@ import Header from "../Header";
 import Timeline from "./Timeline";
 import Buttons from "./Buttons";
 
-const Dispute: React.FC = () => {
+interface IDispute {
+  disputeID: string;
+}
+
+const Dispute: React.FC<IDispute> = ({ disputeID }) => {
   return (
     <StyledCard>
       <Header text="Dispute" />
       <Timeline />
-      <Buttons />
+      <Buttons disputeID={disputeID} />
     </StyledCard>
   );
 };

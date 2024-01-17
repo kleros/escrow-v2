@@ -60,7 +60,7 @@ type Payment @entity {
 type HasToPayFee @entity {
   id: ID!
   escrow: Escrow!
-  party: Party!
+  party: String
 }
 
 type TransactionCreated @entity {

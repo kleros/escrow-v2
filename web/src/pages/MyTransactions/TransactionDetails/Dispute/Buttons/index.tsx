@@ -9,10 +9,14 @@ const Container = styled.div`
   gap: 24px;
 `;
 
-const Buttons: React.FC = () => {
+interface IButtons {
+  disputeID: string;
+}
+
+const Buttons: React.FC<IButtons> = ({ disputeID }) => {
   return (
     <Container>
-      <ViewCaseButton />
+      <ViewCaseButton disputeID={disputeID} />
     </Container>
   );
 };

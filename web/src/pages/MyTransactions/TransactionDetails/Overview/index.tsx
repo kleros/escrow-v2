@@ -43,7 +43,7 @@ const Overview: React.FC<IOverview> = ({ transactionUri, amount, deadline, asset
         isPreview={false}
         transactionData={transactionData}
       />
-      {<WasItFulfilled transactionData={transactionData} />}
+      {transactionData?.status !== "TransactionResolved" ? <WasItFulfilled transactionData={transactionData} /> : null}
     </Container>
   );
 };

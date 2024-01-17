@@ -24,6 +24,11 @@ const StyledSkeletonEvidenceCard = styled(Skeleton)`
   width: 76vw;
 `;
 
+const StyledSkeletonButton = styled(Skeleton)`
+  width: 168px;
+  height: 45px;
+`;
+
 export const SkeletonTransactionCard = () => (
   <SkeletonTransactionCardContainer>
     <StyledSkeletonTransactionCard />
@@ -33,3 +38,5 @@ export const SkeletonTransactionCard = () => (
 export const SkeletonTransactionListItem = () => <StyledSkeletonTransactionListItem />;
 
 export const SkeletonEvidenceCard = () => <StyledSkeletonEvidenceCard />;
+
+export const SkeletonButton = () => <StyledSkeletonButton />;

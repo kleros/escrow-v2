@@ -1,4 +1,4 @@
-import { BigInt, Bytes } from '@graphprotocol/graph-ts'
+import { Bytes } from '@graphprotocol/graph-ts'
 import {
   Escrow,
   Payment,
@@ -64,12 +64,15 @@ export function handlePayment(event: PaymentEvent): void {
 
 export function handleHasToPayFee(event: HasToPayFeeEvent): void {
   let escrowId = event.params._transactionID.toString()
+
   let hasToPayFeeId =
     event.transaction.hash.toHex() + '-' + event.logIndex.toString()
   let hasToPayFee = new HasToPayFee(hasToPayFeeId)
 
   hasToPayFee.escrow = escrowId
-  hasToPayFee.party = event.params._party.toString()
+
+  let partyValue = event.params._party
+  hasToPayFee.party = partyValue.toString()
 
   hasToPayFee.save()
 }
@@ -152,12 +155,11 @@ export function handleDisputeRequest(event: DisputeRequestEvent): void {
   let disputeID = event.params._arbitrableDisputeID.toString()
 
   let escrow = Escrow.load(transactionID)
-  if (escrow === null) {
+  if (!escrow) {
     escrow = createEscrow(transactionID)
   }
 
   escrow.disputeID = disputeID
   escrow.status = 'DisputeCreated'
-
   escrow.save()
 }

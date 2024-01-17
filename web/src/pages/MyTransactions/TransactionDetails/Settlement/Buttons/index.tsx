@@ -25,7 +25,7 @@ const Buttons: React.FC<IButtons> = ({ transactionData }) => {
   const showAcceptButton = transactionData?.status === "WaitingBuyer" && isBuyer;
   const showCounterProposeButton = transactionData?.status === "WaitingSeller" && isSeller;
   const showRaiseDisputeButton =
-    transactionData?.status && ["WaitingBuyer", "WaitingSeller", "DisputeCreated"].includes(transactionData?.status);
+    transactionData?.status && ["WaitingBuyer", "WaitingSeller"].includes(transactionData?.status);
 
   return (
     <Container>
