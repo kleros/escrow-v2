@@ -29,7 +29,7 @@ const useDisputeTimelineItems = (transactionData) => {
     if (transactionData?.disputeRequest) {
       const formattedDate = getFormattedDate(new Date(transactionData.disputeRequest.timestamp * 1000));
       timelineItems.push({
-        title: "Dispute Raised",
+        title: "The other party also paid their fee - Dispute Raised",
         party: `Case #${transactionData.disputeRequest.id}`,
         subtitle: `${formattedDate} - View case on Kleros Court`,
         rightSided: true,

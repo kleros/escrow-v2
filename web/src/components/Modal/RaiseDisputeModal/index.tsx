@@ -8,6 +8,7 @@ import Buttons from "./Buttons";
 import FeeRequired from "./FeeRequired";
 import { StyledModal } from "../StyledModal";
 import styled from "styled-components";
+import { TransactionDetailsFragment } from "src/graphql/graphql";
 
 const ReStyledModal = styled(StyledModal)`
   gap: 32px;
@@ -15,9 +16,10 @@ const ReStyledModal = styled(StyledModal)`
 
 interface IRaiseDisputeModal {
   toggleModal: () => void;
+  transactionData: TransactionDetailsFragment;
 }
 
-const RaiseDisputeModal: React.FC<IRaiseDisputeModal> = ({ toggleModal }) => {
+const RaiseDisputeModal: React.FC<IRaiseDisputeModal> = ({ toggleModal, transactionData }) => {
   const containerRef = useRef(null);
   useClickAway(containerRef, () => toggleModal());
 
@@ -27,9 +29,9 @@ const RaiseDisputeModal: React.FC<IRaiseDisputeModal> = ({ toggleModal }) => {
       <ReStyledModal ref={containerRef}>
         <Header />
         <Description />
-        <AmountClaimed />
+        {/* <AmountClaimed /> */}
         <FeeRequired />
-        <Buttons toggleModal={toggleModal} />
+        <Buttons toggleModal={toggleModal} transactionData={transactionData} />
       </ReStyledModal>
     </>
   );

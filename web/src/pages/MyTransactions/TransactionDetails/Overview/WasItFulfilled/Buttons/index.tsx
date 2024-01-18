@@ -26,15 +26,16 @@ const Buttons: React.FC<IButtons> = ({ transactionData }) => {
 
   return (
     <Container>
-      <ReleasePaymentButton
-        isBuyer={isBuyer}
-        transactionId={transactionData?.id}
-        amount={transactionData?.amount}
-        asset={transactionData?.asset === "native" ? nativeTokenSymbol : ""}
-        seller={transactionData?.seller}
-      />
+      {isBuyer ? (
+        <ReleasePaymentButton
+          transactionId={transactionData?.id}
+          amount={transactionData?.amount}
+          asset={transactionData?.asset === "native" ? nativeTokenSymbol : ""}
+          seller={transactionData?.seller}
+        />
+      ) : null}
       {/* <ProposeSettlementButton /> */}
-      <RaiseDisputeButton />
+      <RaiseDisputeButton transactionData={transactionData} />
     </Container>
   );
 };

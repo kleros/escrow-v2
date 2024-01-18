@@ -8,14 +8,13 @@ import { wrapWithToast } from "utils/wrapWithToast";
 import { usePublicClient } from "wagmi";
 
 interface IReleasePaymentButton {
-  isBuyer: boolean;
   transactionId: string;
   amount: string;
   asset: string;
   seller: string;
 }
 
-const ReleasePaymentButton: React.FC<IReleasePaymentButton> = ({ isBuyer, transactionId, amount, asset, seller }) => {
+const ReleasePaymentButton: React.FC<IReleasePaymentButton> = ({ transactionId, amount, asset, seller }) => {
   const [isModalOpen, toggleModal] = useToggle(false);
   const [isSending, setIsSending] = useState<boolean>(false);
   const publicClient = usePublicClient();
@@ -44,7 +43,7 @@ const ReleasePaymentButton: React.FC<IReleasePaymentButton> = ({ isBuyer, transa
     }
   };
 
-  return isBuyer ? (
+  return (
     <>
       <Button
         isLoading={isSending}
@@ -54,6 +53,6 @@ const ReleasePaymentButton: React.FC<IReleasePaymentButton> = ({ isBuyer, transa
       />
       {isModalOpen ? <PaymentReleased toggleModal={toggleModal} seller={seller} asset={asset} amount={amount} /> : null}
     </>
-  ) : null;
+  );
 };
 export default ReleasePaymentButton;

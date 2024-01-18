@@ -89,7 +89,7 @@ const DepositPaymentButton: React.FC = () => {
         .then((wrapResult) => {
           if (wrapResult.status) {
             resetContext();
-            navigate("/");
+            navigate("/myTransactions/display/1/desc/all");
           }
         })
         .catch((error) => {
