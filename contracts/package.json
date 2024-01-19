@@ -28,6 +28,8 @@
     "start-testnet-fork": "HARDHAT_FORK=arbitrumSepolia hardhat node --tags nop",
     "start-local": "hardhat node --tags Arbitration,HomeArbitrable --hostname 0.0.0.0",
     "deploy": "hardhat deploy",
+    "deploy-devnet-fork": "HARDHAT_FORK=arbitrumSepoliaDevnet yarn deploy --network localhost --tags Escrow",
+    "deploy-testnet-fork": "HARDHAT_FORK=arbitrumSepolia yarn deploy --network localhost --tags Escrow",
     "deploy-local": "hardhat deploy --tags Arbitration,HomeArbitrable --network localhost",
     "viem:generate-devnet": "NODE_NO_WARNINGS=1 wagmi generate -c wagmi.config.devnet.ts",
     "viem:generate-testnet": "NODE_NO_WARNINGS=1 wagmi generate -c wagmi.config.testnet.ts",

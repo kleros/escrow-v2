@@ -35,7 +35,6 @@ const config: HardhatUserConfig = {
       // cf. https://github.com/nomiclabs/hardhat/issues/1139 and https://github.com/wighawag/hardhat-deploy/issues/63
       forking: process.env.HARDHAT_FORK
         ? {
-            blockNumber: 3000000,
             url: process.env.ARBITRUM_SEPOLIA_RPC ?? "https://sepolia-rollup.arbitrum.io/rpc",
           }
         : undefined,
