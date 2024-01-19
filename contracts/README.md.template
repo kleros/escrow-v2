@@ -93,7 +93,9 @@ yarn start-testnet-fork
 **Shell 2: the deploy script**
 
 ```bash
-yarn deploy --network localhost --tags Escrow
+yarn deploy-devnet-fork
+# or
+yarn deploy-testnet-fork
 ```
 
 #### 3. Deploy to Public Testnets
