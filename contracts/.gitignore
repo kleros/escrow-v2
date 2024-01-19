@@ -1,7 +1,24 @@
-#------------------------------------
-# FILE GENERATED AS FOLLOWS
-# curl -sL https://www.toptal.com/developers/gitignore/api/vim,node,visualstudiocode,yarn | sed 's|\(!.yarn/cache\)|#\1|' > .gitignore
-#------------------------------------
+node_modules
+
+# Hardhat files
+cache
+cache_hardhat
+artifacts
+coverage.json
+
+## Hardhat typechain bindings/types
+typechain
+typechain/**
+typechain-types
+typechain-types/**
+
+# Hardhat deploy files
+deployments/localhost
+deployments/hardhat
+deployments/*/solcInputs/
+
+# POA solidity flattener output
+out/
 
 # Created by https://www.toptal.com/developers/gitignore/api/vim,node,visualstudiocode,yarn
 # Edit at https://www.toptal.com/developers/gitignore?templates=vim,node,visualstudiocode,yarn
@@ -14,7 +31,6 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
-.pnpm-debug.log*
 
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
@@ -51,8 +67,8 @@ build/Release
 node_modules/
 jspm_packages/
 
-# Snowpack dependency directory (https://snowpack.dev/)
-web_modules/
+# TypeScript v1 declaration files
+typings/
 
 # TypeScript cache
 *.tsbuildinfo
@@ -81,15 +97,12 @@ web_modules/
 # dotenv environment variables file
 .env
 .env.test
-.env.production
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache
-.parcel-cache
 
 # Next.js build output
 .next
-out
 
 # Nuxt.js build / generate output
 .nuxt
@@ -118,23 +131,6 @@ dist
 
 # Stores VSCode versions used for testing VSCode extensions
 .vscode-test
-
-# yarn v2
-.yarn/cache
-.yarn/unplugged
-.yarn/build-state.yml
-.yarn/install-state.gz
-.pnp.*
-
-### Node Patch ###
-# Serverless Webpack directories
-.webpack/
-
-# Optional stylelint cache
-.stylelintcache
-
-# SvelteKit build / generate output
-.svelte-kit
 
 ### Vim ###
 # Swap
@@ -165,48 +161,30 @@ tags
 !.vscode/extensions.json
 *.code-workspace
 
-# Local History for Visual Studio Code
-.history/
-
 ### VisualStudioCode Patch ###
 # Ignore all local history of files
 .history
-.ionide
-
-# Ignore the .DS_Store file
-.DS_Store
-
-# Support for Project snippet scope
-!.vscode/*.code-snippets
 
 ### yarn ###
 # https://yarnpkg.com/advanced/qa#which-files-should-be-gitignored
 
-.yarn/*
-!.yarn/releases
-!.yarn/plugins
-!.yarn/sdks
-!.yarn/versions
+# .yarn/unplugged and .yarn/build-state.yml should likely always be ignored since
+# they typically hold machine-specific build artifacts. Ignoring them might however
+# prevent Zero-Installs from working (to prevent this, set enableScripts to false).
+.yarn/unplugged
+.yarn/build-state.yml
 
-# if you are NOT using Zero-installs, then:
-# comment the following lines
-#!.yarn/cache
-
-# and uncomment the following lines
+# .yarn/cache and .pnp.* may be safely ignored, but you'll need to run yarn install
+# to regenerate them between each branch switch.
+# Uncomment the following lines if you're not using Zero-Installs:
+# .yarn/cache
 # .pnp.*
 
 # End of https://www.toptal.com/developers/gitignore/api/vim,node,visualstudiocode,yarn
 
-# subgraph
-subgraph/generated/*
-subgraph/build/*
-subgraph/*/generated/*
-subgraph/*/build/*
-subgraph/*/contracts/*
-
-# Local Netlify folder
-.netlify
 .env*
 .flaskenv*
 !.env.project
+.env.vault
+
 !.env.vault

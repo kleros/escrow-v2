@@ -7,8 +7,8 @@
 
 pragma solidity 0.8.18;
 
-import {IArbitrableV2, IArbitratorV2} from "../interfaces/IArbitrableV2.sol";
-import "../interfaces/IDisputeTemplateRegistry.sol";
+import {IArbitrableV2, IArbitratorV2} from "@kleros/kleros-v2-contracts/arbitration/interfaces/IArbitrableV2.sol";
+import "@kleros/kleros-v2-contracts/arbitration/interfaces/IDisputeTemplateRegistry.sol";
 
 /// @title Escrow for a sale paid in ETH and no fees.
 /// @dev MultipleArbitrableTransaction contract that is compatible with V2.

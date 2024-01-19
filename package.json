@@ -1,7 +1,8 @@
 {
   "name": "escrow-v2",
-  "version": "0.1.0",
+  "version": "2.0.0",
   "description": "Escrow version 2",
+  "type": "commonjs",
   "main": "index.js",
   "repository": "git@github.com:kleros/escrow-v2.git",
   "author": {
@@ -16,22 +17,16 @@
   "license": "MIT",
   "private": true,
   "workspaces": [
-    "bots",
-    "bot-pinner",
     "contracts",
-    "dynamic-script",
-    "evidence-display",
-    "kleros-sdk",
     "subgraph",
     "web",
     "eslint-config",
     "prettier-config",
     "tsconfig"
   ],
-  "packageManager": "yarn@3.3.1",
+  "packageManager": "yarn@4.0.2+sha256.825003a0f561ad09a3b1ac4a3b3ea6207af2796d54f62a9420520915721f5186",
   "volta": {
-    "node": "16.20.1",
-    "yarn": "3.3.1"
+    "node": "20.11.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.7.2",
@@ -60,7 +55,6 @@
   },
   "scripts": {
     "check-prerequisites": "scripts/check-prerequisites.sh",
-    "local-stack": "scripts/tmux-local-stack.sh",
     "changelog": "conventional-changelog --infile CHANGELOG.md --same-file --release-count 0 && prettier --write CHANGELOG.md",
     "postinstall": "yarn check-prerequisites; husky install",
     "reinstall": "YARN_CHECKSUM_BEHAVIOR=update yarn install --no-immutable"

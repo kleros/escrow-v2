@@ -8,7 +8,7 @@ export const GIT_BRANCH = gitBranch;
 export const GIT_TAGS = gitTags;
 export const GIT_HASH = gitCommitShortHash;
 export const GIT_DIRTY = clean ? "" : "-dirty";
-export const GIT_URL = `https://github.com/kleros/kleros-v2/tree/${gitCommitHash}/web`;
+export const GIT_URL = `https://github.com/kleros/escrow-v2/tree/${gitCommitHash}/web`;
 export const RELEASE_VERSION = version;
 
 // https://www.w3.org/TR/2012/WD-html-markup-20120329/input.email.html#input.email.attrs.value.single
