@@ -64,13 +64,9 @@ The ones below are optional:
 - `ARBISCAN_API_KEY`: to verify the source of the newly deployed contracts on **Arbitrum**.
 - `GNOSISSCAN_API_KEY`: to verify the source of the newly deployed contracts on **Gnosis chain**.
 
-#### 1. Update the Constructor Parameters (optional)
+#### 1. Deploy to a Local Network
 
-If some of the constructor parameters (such as the Meta Evidence) needs to change, you need to update the files in the `deploy/` directory.
-
-#### 2. Deploy to a Local Network
-
-The complete deployment is multi-chain, so a deployment to the local network can only simulate either the Home chain or the Foreign chain.
+:warning: There is no mocks deployed for the kleros-v2 contracts currently so this would fail. For now consider deploying to a testnet fork (next section).
 
 **Shell 1: the node**
 
@@ -82,6 +78,22 @@ yarn hardhat node --tags nothing
 
 ```bash
 yarn deploy --network localhost --tags Escrow>
+```
+
+#### 2. Deploy to a Public Network Fork
+
+**Shell 1: the node**
+
+```bash
+yarn start-devnet-fork
+# or
+yarn start-testnet-fork
+```
+
+**Shell 2: the deploy script**
+
+```bash
+yarn deploy --network localhost --tags Escrow
 ```
 
 #### 3. Deploy to Public Testnets

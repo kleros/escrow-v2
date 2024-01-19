@@ -31,7 +31,14 @@ const config: HardhatUserConfig = {
   },
   networks: {
     hardhat: {
-      live: false,
+      // hardhat-deploy cannot run a fork on a non-harhat network
+      // cf. https://github.com/nomiclabs/hardhat/issues/1139 and https://github.com/wighawag/hardhat-deploy/issues/63
+      forking: process.env.HARDHAT_FORK
+        ? {
+            blockNumber: 3000000,
+            url: process.env.ARBITRUM_SEPOLIA_RPC ?? "https://sepolia-rollup.arbitrum.io/rpc",
+          }
+        : undefined,
       saveDeployments: true,
       allowUnlimitedContractSize: true,
       tags: ["test", "local"],
@@ -45,28 +52,6 @@ const config: HardhatUserConfig = {
     dockerhost: {
       url: `http://host.docker.internal:8545`,
       chainId: 31337,
-      saveDeployments: true,
-      tags: ["test", "local"],
-    },
-    mainnetFork: {
-      chainId: 1,
-      url: `http://127.0.0.1:8545`,
-      forking: {
-        url: `https://mainnet.infura.io/v3/${process.env.INFURA_API_KEY}`,
-      },
-      accounts: process.env.MAINNET_PRIVATE_KEY !== undefined ? [process.env.MAINNET_PRIVATE_KEY] : [],
-      live: false,
-      saveDeployments: false,
-      tags: ["test", "local"],
-    },
-    arbitrumSepoliaFork: {
-      chainId: 421614,
-      url: `http://127.0.0.1:8545`,
-      forking: {
-        url: process.env.ARBITRUM_SEPOLIA_RPC ?? "https://sepolia-rollup.arbitrum.io/rpc",
-      },
-      accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
-      live: false,
       saveDeployments: true,
       tags: ["test", "local"],
     },
@@ -206,8 +191,11 @@ const config: HardhatUserConfig = {
   external: {
     // https://github.com/wighawag/hardhat-deploy#importing-deployment-from-other-projects-with-truffle-support
     deployments: {
+      localhost: process.env.HARDHAT_FORK
+        ? ["../node_modules/@kleros/kleros-v2-contracts/deployments/" + process.env.HARDHAT_FORK]
+        : [],
+      arbitrumSepoliaDevnet: ["../node_modules/@kleros/kleros-v2-contracts/deployments/arbitrumSepoliaDevnet"],
       arbitrumSepolia: ["../node_modules/@kleros/kleros-v2-contracts/deployments/arbitrumSepolia"],
-      arbitrumSepoliaDevnet: ["../node_modules/@kleros/kleros-v2-contracts/deployments/arbitrumSepolia"],
       arbitrum: ["../node_modules/@kleros/kleros-v2-contracts/deployments/arbitrum"],
     },
   },

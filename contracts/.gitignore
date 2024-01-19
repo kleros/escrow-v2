@@ -186,3 +186,5 @@ tags
 .flaskenv*
 !.env.project
 .env.vault
+
+!.env.vault
