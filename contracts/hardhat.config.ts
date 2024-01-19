@@ -4,15 +4,14 @@ import { HardhatUserConfig } from "hardhat/config";
 import "@nomicfoundation/hardhat-chai-matchers";
 import "@nomiclabs/hardhat-solhint";
 import "@typechain/hardhat";
-// import "hardhat-deploy-tenderly";
 import "hardhat-gas-reporter";
 import "solidity-coverage";
 import "hardhat-deploy";
 import "hardhat-deploy-ethers";
-// import "hardhat-watcher";
-// import "hardhat-docgen";
-// import "hardhat-contract-sizer";
-// import "hardhat-tracer";
+import "hardhat-watcher";
+import "hardhat-docgen";
+// import "hardhat-contract-sizer"; // prevents hardhat-deploy from finding chalk...
+// import "hardhat-tracer"; // prevents hardhat-deploy from finding chalk...
 
 dotenv.config();
 
@@ -203,10 +202,6 @@ const config: HardhatUserConfig = {
   },
   mocha: {
     timeout: 20000,
-  },
-  tenderly: {
-    project: process.env.TENDERLY_PROJECT !== undefined ? process.env.TENDERLY_PROJECT : "kleros-v2",
-    username: process.env.TENDERLY_USERNAME !== undefined ? process.env.TENDERLY_USERNAME : "",
   },
   external: {
     // https://github.com/wighawag/hardhat-deploy#importing-deployment-from-other-projects-with-truffle-support
