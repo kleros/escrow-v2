@@ -5,24 +5,22 @@ import { responsiveSize } from "styles/responsiveSize";
 
 const Container = styled.div`
   display: flex;
-  justify-content: space-between;
   width: 100%;
   height: 100%;
 `;
 
 const TransactionsData = styled.div`
-  display: flex;
-  align-items: center;
+  display: grid;
+  flex: 1;
+  grid-template-columns: repeat(4, ${responsiveSize(100, 130, 900)});
+  column-gap: ${responsiveSize(2, 12, 900)};
   justify-content: space-around;
-  width: 100%;
-  margin-left: ${responsiveSize(0, 33)};
-  flex-wrap: wrap;
-  padding: 0 3%;
-  gap: ${responsiveSize(24, 48, 300)};
+  text-align: end;
 `;
 
 const TransactionTitle = styled.div`
   display: none;
+  width: ${responsiveSize(270, 345, 900)};
   margin-left: 32px;
   gap: 36px;
 
@@ -44,7 +42,7 @@ const TransactionsListHeader: React.FC = () => {
       <TransactionsData>
         <label>Amount</label>
         <label>Receiver</label>
-        <label>Next Deadline</label>
+        <label>Delivery Deadline</label>
       </TransactionsData>
     </Container>
   );

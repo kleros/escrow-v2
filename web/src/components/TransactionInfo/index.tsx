@@ -23,6 +23,7 @@ const Container = styled.div<{ isList: boolean; isPreview?: boolean }>`
         () => css`
           gap: 0;
           height: 100%;
+          flex: 1;
         `
       )}
     `};
@@ -37,14 +38,17 @@ const RestOfFieldsContainer = styled.div<{ isList?: boolean; isPreview?: boolean
   width: 100%;
   height: 100%;
 
-  ${({ isList }) =>
+  ${({ isList, isPreview }) =>
     isList &&
+    !isPreview &&
     css`
       ${landscapeStyle(
         () => css`
-          flex-direction: row;
-          gap: ${responsiveSize(4, 24, 300, 900)};
+          display: grid;
+          grid-template-columns: repeat(4, ${responsiveSize(100, 130, 900)});
+          column-gap: ${responsiveSize(2, 12, 900)};
           justify-content: space-around;
+          align-items: center;
         `
       )}
     `};

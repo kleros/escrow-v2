@@ -8,6 +8,10 @@ const userQuery = graphql(`
     user(id: $userId) {
       totalEscrows
       totalResolvedEscrows
+      totalNoDisputedEscrows
+      totalDisputedEscrows
+      totalWaitingBuyerEscrows
+      totalWaitingSellerEscrows
     }
   }
 `);

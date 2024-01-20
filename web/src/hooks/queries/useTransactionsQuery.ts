@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Address } from "viem";
 import { graphql } from "src/graphql";
 import { graphqlQueryFnHelper } from "utils/graphqlQueryFnHelper";
+import { Escrow_Filter, OrderDirection } from "src/graphql/graphql";
 
 export const transactionFragment = graphql(`
   fragment TransactionDetails on Escrow {
@@ -50,8 +51,20 @@ export const transactionFragment = graphql(`
 `);
 
 const myTransactionsQuery = graphql(`
-  query MyTransactions($userAddress: Bytes!, $first: Int!, $skip: Int!) {
-    escrows(first: $first, skip: $skip, where: { or: [{ buyer: $userAddress }, { seller: $userAddress }] }) {
+  query MyTransactions(
+    $userAddress: Bytes!
+    $first: Int!
+    $skip: Int!
+    $where: Escrow_filter
+    $orderDirection: OrderDirection
+  ) {
+    escrows(
+      first: $first
+      skip: $skip
+      orderBy: timestamp
+      orderDirection: $orderDirection
+      where: { and: [{ or: [{ buyer: $userAddress }, { seller: $userAddress }] }, $where] }
+    ) {
       ...TransactionDetails
     }
   }
@@ -82,15 +95,23 @@ export const useTransactionDetailsQuery = (transactionId) => {
   });
 };
 
-export const useMyTransactionsQuery = (userAddress: Address, first = 10, skip = 0) => {
+export const useMyTransactionsQuery = (
+  userAddress: Address,
+  first = 9,
+  skip = 0,
+  where?: Escrow_Filter,
+  orderDirection?: OrderDirection
+) => {
   return useQuery({
-    queryKey: ["refetchOnBlock", `useMyTransactionsQuery`, userAddress, first, skip],
+    queryKey: ["useMyTransactionsQuery", userAddress, first, skip, where, orderDirection],
     queryFn: async () => {
       try {
         const data = await graphqlQueryFnHelper(myTransactionsQuery, {
           userAddress: userAddress.toLowerCase(),
           first,
           skip,
+          where: where,
+          orderDirection,
         });
         return data;
       } catch (error) {

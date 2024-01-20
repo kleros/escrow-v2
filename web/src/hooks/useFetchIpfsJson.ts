@@ -16,7 +16,6 @@ const useFetchIpfsJson = (ipfsUri: string) => {
           throw new Error(`IPFS fetch failed with status ${response.status}`);
         }
         const jsonData = await response.json();
-        console.log(jsonData);
         setData(jsonData);
       } catch (err) {
         console.error(err);

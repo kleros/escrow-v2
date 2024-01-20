@@ -47,6 +47,10 @@ type User @entity {
   escrows: [Escrow!]! @derivedFrom(field: "users")
   totalEscrows: BigInt!
   totalResolvedEscrows: BigInt!
+  totalDisputedEscrows: BigInt!
+  totalNoDisputedEscrows: BigInt!
+  totalWaitingBuyerEscrows: BigInt!
+  totalWaitingSellerEscrows: BigInt!
 }
 
 type Payment @entity {

@@ -61,7 +61,6 @@ const Deliverable: React.FC = () => {
   };
 
   const handleAttachFile = (file: File) => {
-    console.log("file", file);
     setDeliverableFile(file);
     if (file.type !== "application/pdf") {
       toast.error("That type of file is not valid. Please upload a PDF file.", OPTIONS);

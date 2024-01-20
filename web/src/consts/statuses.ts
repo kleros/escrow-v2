@@ -1,6 +1,7 @@
 export enum Statuses {
   inProgress,
   disputed,
-  settlement,
   concluded,
+  waitingSeller,
+  waitingBuyer,
 }

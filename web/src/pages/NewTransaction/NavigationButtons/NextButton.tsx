@@ -78,7 +78,6 @@ const NextButton: React.FC<INextButton> = ({ nextRoute }) => {
         );
 
         if (transactionUri) {
-          console.log("transactionUri", transactionUri);
           setTransactionUri(transactionUri);
           navigate(nextRoute);
         }

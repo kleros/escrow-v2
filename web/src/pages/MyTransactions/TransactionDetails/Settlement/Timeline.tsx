@@ -19,11 +19,8 @@ interface ITimeline {
 
 const Timeline: React.FC<ITimeline> = ({ transactionData }) => {
   const nativeTokenSymbol = useNativeTokenSymbol();
-  console.log("transactionData", transactionData);
-  console.log("timestamp", transactionData?.timestamp);
   const items = useMemo(() => {
     return transactionData?.payments?.map((payment) => {
-      console.log(new Date(payment.timestamp));
       const formattedDate = getFormattedDate(new Date(payment.timestamp * 1000).toLocaleString());
       const title = `Pay ${formatEther(payment.amount)} ${
         transactionData?.asset === "native" ? nativeTokenSymbol : transactionData?.asset
