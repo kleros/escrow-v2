@@ -2,22 +2,18 @@ import React from "react";
 import styled from "styled-components";
 import { CustomTimeline } from "@kleros/ui-components-library";
 import useDisputeTimelineItems from "hooks/useDisputeTimelineItems";
-import { TransactionDetailsFragment } from "src/graphql/graphql";
 import { StyledSkeleton } from "components/StyledSkeleton";
-import { isUndefined } from "utils/index";
+import { useTransactionDetailsContext } from "context/TransactionDetailsContext";
 
 const StyledTimeline = styled(CustomTimeline)`
   width: 100%;
 `;
 
-interface ITimeline {
-  transactionData: TransactionDetailsFragment;
-}
+const Timeline: React.FC = () => {
+  const { buyer, seller, status, hasToPayFees, disputeRequest, resolvedEvents } = useTransactionDetailsContext();
+  const items = useDisputeTimelineItems(buyer, seller, status, hasToPayFees, disputeRequest, resolvedEvents);
 
-const Timeline: React.FC<ITimeline> = ({ transactionData }) => {
-  const items = useDisputeTimelineItems(transactionData);
-
-  return !isUndefined(transactionData) ? <StyledTimeline items={items} /> : <StyledSkeleton />;
+  return hasToPayFees && hasToPayFees.length !== 0 ? <StyledTimeline items={items} /> : <StyledSkeleton />;
 };
 
 export default Timeline;

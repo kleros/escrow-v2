@@ -2,19 +2,22 @@ import React from "react";
 import styled from "styled-components";
 import { CustomTimeline } from "@kleros/ui-components-library";
 import useEscrowTimelineItems from "hooks/useEscrowTimelineItems";
-import { TransactionDetailsFragment } from "src/graphql/graphql";
+import { useTransactionDetailsContext } from "context/TransactionDetailsContext";
 
 const StyledTimeline = styled(CustomTimeline)`
   width: 100%;
 `;
 
 interface IEscrowTimeline {
-  transactionData?: TransactionDetailsFragment;
   isPreview: boolean;
 }
 
-const EscrowTimeline: React.FC<IEscrowTimeline> = ({ transactionData, isPreview }) => {
-  const items = isPreview ? useEscrowTimelineItems({}, true) : useEscrowTimelineItems(transactionData, false);
+const EscrowTimeline: React.FC<IEscrowTimeline> = ({ isPreview }) => {
+  const { timestamp, status, resolvedEvents } = useTransactionDetailsContext();
+
+  const items = isPreview
+    ? useEscrowTimelineItems(true)
+    : useEscrowTimelineItems(false, timestamp, status, resolvedEvents);
 
   return <StyledTimeline items={items} />;
 };

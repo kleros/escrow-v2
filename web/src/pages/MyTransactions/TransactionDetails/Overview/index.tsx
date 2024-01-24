@@ -2,11 +2,11 @@ import React from "react";
 import styled from "styled-components";
 import PreviewCard from "components/PreviewCard";
 import WasItFulfilled from "./WasItFulfilled";
-import { TransactionDetailsFragment } from "src/graphql/graphql";
 import { useNativeTokenSymbol } from "hooks/useNativeTokenSymbol";
 import { formatEther } from "viem";
 import useFetchIpfsJson from "hooks/useFetchIpfsJson";
 import { isUndefined } from "utils/index";
+import { useTransactionDetailsContext } from "context/TransactionDetailsContext";
 
 const Container = styled.div`
   display: flex;
@@ -14,12 +14,10 @@ const Container = styled.div`
   gap: 32px;
 `;
 
-interface IOverview extends TransactionDetailsFragment {
-  transactionData: TransactionDetailsFragment;
-}
-
-const Overview: React.FC<IOverview> = ({ transactionUri, amount, deadline, asset, seller, buyer, transactionData }) => {
+const Overview: React.FC = () => {
   const nativeTokenSymbol = useNativeTokenSymbol();
+  const { transactionUri, amount, deadline, asset, seller, buyer, status, hasToPayFees } =
+    useTransactionDetailsContext();
   const transactionInfo = useFetchIpfsJson(transactionUri);
 
   return (
@@ -41,11 +39,8 @@ const Overview: React.FC<IOverview> = ({ transactionUri, amount, deadline, asset
         overrideIsList={false}
         amount={!isUndefined(amount) ? formatEther(amount) : ""}
         isPreview={false}
-        transactionData={transactionData}
       />
-      {transactionData?.status !== "TransactionResolved" && transactionData?.hasToPayFees?.length === 0 ? (
-        <WasItFulfilled transactionData={transactionData} />
-      ) : null}
+      {status !== "TransactionResolved" && hasToPayFees?.length === 0 ? <WasItFulfilled /> : null}
     </Container>
   );
 };

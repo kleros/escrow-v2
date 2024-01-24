@@ -3,8 +3,8 @@ import styled from "styled-components";
 import AcceptButton from "./AcceptButton";
 import CounterProposeButton from "./CounterProposeButton";
 import RaiseDisputeButton from "../../Overview/WasItFulfilled/Buttons/RaiseDisputeButton";
-import { TransactionDetailsFragment } from "src/graphql/graphql";
 import { useAccount } from "wagmi";
+import { useTransactionDetailsContext } from "context/TransactionDetailsContext";
 
 const Container = styled.div`
   display: flex;
@@ -13,25 +13,21 @@ const Container = styled.div`
   gap: 24px;
 `;
 
-interface IButtons {
-  transactionData: TransactionDetailsFragment;
-}
-
-const Buttons: React.FC<IButtons> = ({ transactionData }) => {
+const Buttons: React.FC = () => {
   const { address } = useAccount();
-  const isBuyer = address?.toLowerCase() === transactionData?.buyer?.toLowerCase();
-  const isSeller = address?.toLowerCase() === transactionData?.seller?.toLowerCase();
+  const { status, buyer, seller } = useTransactionDetailsContext();
+  const isBuyer = address?.toLowerCase() === buyer?.toLowerCase();
+  const isSeller = address?.toLowerCase() === seller?.toLowerCase();
 
-  const showAcceptButton = transactionData?.status === "WaitingBuyer" && isBuyer;
-  const showCounterProposeButton = transactionData?.status === "WaitingSeller" && isSeller;
-  const showRaiseDisputeButton =
-    transactionData?.status && ["WaitingBuyer", "WaitingSeller"].includes(transactionData?.status);
+  const showAcceptButton = status === "WaitingBuyer" && isBuyer;
+  const showCounterProposeButton = status === "WaitingSeller" && isSeller;
+  const showRaiseDisputeButton = status && ["WaitingBuyer", "WaitingSeller"].includes(status);
 
   return (
     <Container>
-      {showAcceptButton && <AcceptButton transactionData={transactionData} />}
-      {showCounterProposeButton && <CounterProposeButton transactionData={transactionData} />}
-      {showRaiseDisputeButton && <RaiseDisputeButton transactionData={transactionData} />}
+      {showAcceptButton && <AcceptButton />}
+      {showCounterProposeButton && <CounterProposeButton />}
+      {showRaiseDisputeButton && <RaiseDisputeButton />}
     </Container>
   );
 };

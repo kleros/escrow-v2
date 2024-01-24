@@ -4,7 +4,6 @@ import { Card } from "@kleros/ui-components-library";
 import Buttons from "./Buttons";
 import Header from "./Header";
 import { landscapeStyle } from "styles/landscapeStyle";
-import { TransactionDetailsFragment } from "src/graphql/graphql";
 
 const StyledCard = styled(Card)`
   display: flex;
@@ -30,15 +29,11 @@ const StyledCard = styled(Card)`
   )}
 `;
 
-interface IWasItFulfilled {
-  transactionData: TransactionDetailsFragment;
-}
-
-const WasItFulfilled: React.FC<IWasItFulfilled> = ({ transactionData }) => {
+const WasItFulfilled: React.FC = () => {
   return (
     <StyledCard>
       <Header />
-      <Buttons transactionData={transactionData} />
+      <Buttons />
     </StyledCard>
   );
 };

@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { shortenAddress } from "utils/shortenAddress";
+import { useTransactionDetailsContext } from "context/TransactionDetailsContext";
 
 const Container = styled.div`
   flex-direction: column;
@@ -18,11 +19,9 @@ const StyledThanks = styled.p`
   font-weight: 600;
 `;
 
-interface IDescription {
-  seller: string;
-}
+const Description: React.FC = () => {
+  const { seller } = useTransactionDetailsContext();
 
-const Description: React.FC<IDescription> = ({ seller }) => {
   return (
     <Container>
       <StyledEscrowConcluded>

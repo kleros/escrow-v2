@@ -6,21 +6,16 @@ import { useEscrowPay, usePrepareEscrowPay } from "hooks/contracts/generated";
 import { isUndefined } from "utils/index";
 import { wrapWithToast } from "utils/wrapWithToast";
 import { usePublicClient } from "wagmi";
+import { useTransactionDetailsContext } from "context/TransactionDetailsContext";
 
-interface IReleasePaymentButton {
-  transactionId: string;
-  amount: string;
-  asset: string;
-  seller: string;
-}
-
-const ReleasePaymentButton: React.FC<IReleasePaymentButton> = ({ transactionId, amount, asset, seller }) => {
+const ReleasePaymentButton: React.FC = () => {
   const [isModalOpen, toggleModal] = useToggle(false);
   const [isSending, setIsSending] = useState<boolean>(false);
   const publicClient = usePublicClient();
+  const { id, amount } = useTransactionDetailsContext();
 
   const { config: releaseFullPaymentConfig } = usePrepareEscrowPay({
-    args: [transactionId, amount],
+    args: [id, amount],
   });
 
   const { writeAsync: releaseFullPayment } = useEscrowPay(releaseFullPaymentConfig);
@@ -51,7 +46,7 @@ const ReleasePaymentButton: React.FC<IReleasePaymentButton> = ({ transactionId, 
         text={"Yes. Release full payment"}
         onClick={handleReleasePayment}
       />
-      {isModalOpen ? <PaymentReleased toggleModal={toggleModal} seller={seller} asset={asset} amount={amount} /> : null}
+      {isModalOpen ? <PaymentReleased toggleModal={toggleModal} /> : null}
     </>
   );
 };

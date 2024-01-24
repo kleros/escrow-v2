@@ -76,7 +76,6 @@ const TransactionInfo: React.FC<ITransactionInfo> = ({
   amount,
   token,
   deadlineDate,
-  status,
   receiverAddress,
   overrideIsList,
   isPreview,

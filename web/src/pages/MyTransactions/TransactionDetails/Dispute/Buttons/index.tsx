@@ -2,8 +2,8 @@ import React from "react";
 import styled from "styled-components";
 import ViewCaseButton from "./ViewCaseButton";
 import RaiseDisputeButton from "../../Overview/WasItFulfilled/Buttons/RaiseDisputeButton";
-import { TransactionDetailsFragment } from "src/graphql/graphql";
 import { useAccount } from "wagmi";
+import { useTransactionDetailsContext } from "context/TransactionDetailsContext";
 
 const Container = styled.div`
   display: flex;
@@ -12,34 +12,28 @@ const Container = styled.div`
   gap: 24px;
 `;
 
-interface IButtons {
-  disputeID: string;
-  transactionData: TransactionDetailsFragment;
-}
-
-const Buttons: React.FC<IButtons> = ({ disputeID, transactionData }) => {
+const Buttons: React.FC = () => {
   const { address } = useAccount();
   const connectedAddress = address?.toLowerCase();
-  const buyerAddress = transactionData?.buyer?.toLowerCase();
-  const sellerAddress = transactionData?.seller?.toLowerCase();
+  const { buyer, seller, disputeRequest, hasToPayFees } = useTransactionDetailsContext();
 
-  const shouldPayFee = transactionData?.hasToPayFees?.some((fee) => {
+  const shouldPayFee = hasToPayFees?.some((fee) => {
     const partyRequiredToPay = fee.party;
-    if (partyRequiredToPay === "1" && connectedAddress === buyerAddress) {
+    if (partyRequiredToPay === "1" && connectedAddress === buyer.toLowerCase()) {
       return true;
     }
-    if (partyRequiredToPay === "2" && connectedAddress === sellerAddress) {
+    if (partyRequiredToPay === "2" && connectedAddress === seller.toLowerCase()) {
       return true;
     }
     return false;
   });
 
-  const shouldDisplayRaiseDisputeButton = shouldPayFee && !transactionData?.disputeRequest;
+  const shouldDisplayRaiseDisputeButton = shouldPayFee && !disputeRequest;
 
   return (
     <Container>
-      {shouldDisplayRaiseDisputeButton && <RaiseDisputeButton transactionData={transactionData} />}
-      {transactionData?.disputeRequest && <ViewCaseButton disputeID={disputeID} />}
+      {shouldDisplayRaiseDisputeButton && <RaiseDisputeButton />}
+      {disputeRequest && <ViewCaseButton />}
     </Container>
   );
 };

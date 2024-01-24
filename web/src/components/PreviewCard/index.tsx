@@ -7,7 +7,6 @@ import Header from "./Header";
 import TransactionInfo from "components/TransactionInfo";
 import Terms from "./Terms";
 import EscrowTimeline from "./EscrowTimeline";
-import { TransactionDetailsFragment } from "src/graphql/graphql";
 
 export const StyledCard = styled(Card)`
   height: auto;
@@ -56,29 +55,25 @@ interface IPreviewCard {
   overrideIsList: boolean;
   extraDescriptionUri: string;
   buyer: string;
-  timestamp: string;
   isPreview: boolean;
-  status?: string;
-  transactionData?: TransactionDetailsFragment;
 }
 
 const PreviewCard: React.FC<IPreviewCard> = ({
   escrowType,
+  escrowTitle,
   deliverableText,
   receivingQuantity,
   receivingToken,
   receivingRecipientAddress,
-  sendingRecipientAddress,
   sendingQuantity,
   sendingToken,
-  escrowTitle,
-  tokenSymbol,
+  sendingRecipientAddress,
   deadlineDate,
+  tokenSymbol,
   overrideIsList,
   extraDescriptionUri,
   buyer,
   isPreview,
-  transactionData,
 }) => (
   <StyledCard>
     <Header escrowType={escrowType} escrowTitle={escrowTitle} />
@@ -89,8 +84,8 @@ const PreviewCard: React.FC<IPreviewCard> = ({
         token={tokenSymbol}
         receiverAddress={buyer}
         deadlineDate={deadlineDate}
-        isPreview={true}
         overrideIsList={overrideIsList}
+        isPreview={true}
       />
       <Divider />
     </TransactionInfoContainer>
@@ -109,7 +104,7 @@ const PreviewCard: React.FC<IPreviewCard> = ({
       extraDescriptionUri={extraDescriptionUri}
     />
     <Divider />
-    <EscrowTimeline isPreview={isPreview} transactionData={transactionData} />
+    <EscrowTimeline isPreview={isPreview} />
   </StyledCard>
 );
 

@@ -12,6 +12,7 @@ import Layout from "layout/index";
 import NewTransaction from "./pages/NewTransaction";
 import MyTransactions from "./pages/MyTransactions";
 import { NewTransactionProvider } from "./context/NewTransactionContext";
+import { TransactionDetailsProvider } from "./context/TransactionDetailsContext";
 
 const App: React.FC = () => {
   return (
@@ -21,14 +22,16 @@ const App: React.FC = () => {
         <Web3Provider>
           <IsListProvider>
             <NewTransactionProvider>
-              <SentryRoutes>
-                <Route path="/" element={<Layout />}>
-                  <Route index element={<Navigate to="newTransaction" replace />} />
-                  <Route path="newTransaction/*" element={<NewTransaction />} />
-                  <Route path="myTransactions/*" element={<MyTransactions />} />
-                  <Route path="*" element={<h1>404 not found</h1>} />
-                </Route>
-              </SentryRoutes>
+              <TransactionDetailsProvider>
+                <SentryRoutes>
+                  <Route path="/" element={<Layout />}>
+                    <Route index element={<Navigate to="newTransaction" replace />} />
+                    <Route path="newTransaction/*" element={<NewTransaction />} />
+                    <Route path="myTransactions/*" element={<MyTransactions />} />
+                    <Route path="*" element={<h1>404 not found</h1>} />
+                  </Route>
+                </SentryRoutes>
+              </TransactionDetailsProvider>
             </NewTransactionProvider>
           </IsListProvider>
         </Web3Provider>

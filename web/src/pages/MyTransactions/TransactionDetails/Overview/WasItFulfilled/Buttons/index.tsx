@@ -4,8 +4,7 @@ import ProposeSettlementButton from "./ProposeSettlementButton";
 import RaiseDisputeButton from "./RaiseDisputeButton";
 import ReleasePaymentButton from "./ReleasePaymentButton";
 import { useAccount } from "wagmi";
-import { TransactionDetailsFragment } from "src/graphql/graphql";
-import { useNativeTokenSymbol } from "hooks/useNativeTokenSymbol";
+import { useTransactionDetailsContext } from "context/TransactionDetailsContext";
 
 const Container = styled.div`
   display: flex;
@@ -15,27 +14,16 @@ const Container = styled.div`
   justify-content: center;
 `;
 
-interface IButtons {
-  transactionData: TransactionDetailsFragment;
-}
-
-const Buttons: React.FC<IButtons> = ({ transactionData }) => {
+const Buttons: React.FC = () => {
   const { address } = useAccount();
-  const nativeTokenSymbol = useNativeTokenSymbol();
-  const isBuyer = address?.toLowerCase() === transactionData?.buyer?.toLowerCase();
+  const { buyer } = useTransactionDetailsContext();
+  const isBuyer = address?.toLowerCase() === buyer?.toLowerCase();
 
   return (
     <Container>
-      {isBuyer ? (
-        <ReleasePaymentButton
-          transactionId={transactionData?.id}
-          amount={transactionData?.amount}
-          asset={transactionData?.asset === "native" ? nativeTokenSymbol : ""}
-          seller={transactionData?.seller}
-        />
-      ) : null}
+      {isBuyer ? <ReleasePaymentButton /> : null}
       {/* <ProposeSettlementButton /> */}
-      <RaiseDisputeButton transactionData={transactionData} />
+      <RaiseDisputeButton />
     </Container>
   );
 };

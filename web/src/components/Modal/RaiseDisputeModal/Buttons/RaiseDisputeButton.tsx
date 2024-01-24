@@ -7,32 +7,32 @@ import {
   usePrepareEscrowPayArbitrationFeeByBuyer,
   usePrepareEscrowPayArbitrationFeeBySeller,
 } from "hooks/contracts/generated";
-import { TransactionDetailsFragment } from "src/graphql/graphql";
 import { isUndefined } from "utils/index";
 import { wrapWithToast } from "utils/wrapWithToast";
+import { useTransactionDetailsContext } from "context/TransactionDetailsContext";
 
 interface IRaiseDisputeButton {
-  transactionData: TransactionDetailsFragment;
   toggleModal: () => void;
 }
 
-const RaiseDisputeButton: React.FC<IRaiseDisputeButton> = ({ transactionData, toggleModal }) => {
+const RaiseDisputeButton: React.FC<IRaiseDisputeButton> = ({ toggleModal }) => {
   const { address } = useAccount();
   const [isSending, setIsSending] = useState<boolean>(false);
   const publicClient = usePublicClient();
-  const isBuyer = address?.toLowerCase() === transactionData?.buyer?.toLowerCase();
+  const { buyer, id } = useTransactionDetailsContext();
+  const isBuyer = address?.toLowerCase() === buyer?.toLowerCase();
 
   /* IMPORTANT: arbitration cost is hardcoded for now. need to figure out a way to dynamically fetch
   the actual arbitrationCost from the KlerosCore contract */
   const arbitrationCost = BigInt("30000000000000");
 
   const { config: payArbitrationFeeByBuyerConfig } = usePrepareEscrowPayArbitrationFeeByBuyer({
-    args: [BigInt(transactionData?.id)],
+    args: [BigInt(id)],
     value: arbitrationCost,
   });
 
   const { config: payArbitrationFeeBySellerConfig } = usePrepareEscrowPayArbitrationFeeBySeller({
-    args: [BigInt(transactionData?.id)],
+    args: [BigInt(id)],
     value: arbitrationCost,
   });
 

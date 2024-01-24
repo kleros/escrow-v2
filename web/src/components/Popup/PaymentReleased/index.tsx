@@ -9,12 +9,9 @@ import { Overlay } from "components/Overlay";
 
 interface IPaymentReleased {
   toggleModal: () => void;
-  amount: string;
-  asset: string;
-  seller: string;
 }
 
-const PaymentReleased: React.FC<IPaymentReleased> = ({ toggleModal, amount, asset, seller }) => {
+const PaymentReleased: React.FC<IPaymentReleased> = ({ toggleModal }) => {
   const containerRef = useRef(null);
   useClickAway(containerRef, () => toggleModal());
 
@@ -23,8 +20,8 @@ const PaymentReleased: React.FC<IPaymentReleased> = ({ toggleModal, amount, asse
       <Overlay />
       <StyledModal ref={containerRef}>
         <VerifiedLogo />
-        <Header amount={amount} asset={asset} />
-        <Description seller={seller} />
+        <Header />
+        <Description />
         <CloseButton toggleModal={toggleModal} />
       </StyledModal>
     </>
