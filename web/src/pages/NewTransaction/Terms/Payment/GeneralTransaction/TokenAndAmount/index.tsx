@@ -10,6 +10,7 @@ const Container = styled.div`
   gap: 8px;
   align-items: center;
   margin-bottom: ${responsiveSize(24, 18)};
+  margin-left: 36px;
 `;
 
 interface ITokenAndAmount {
