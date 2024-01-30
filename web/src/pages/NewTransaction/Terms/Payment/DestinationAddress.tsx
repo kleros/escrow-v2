@@ -11,6 +11,13 @@ const StyledField = styled(Field)`
   width: 84vw;
   margin-bottom: ${responsiveSize(68, 40)};
 
+  small {
+    margin-top: 6px;
+    svg {
+      margin-top: 8px;
+    }
+  }
+
   input {
     font-size: 16px;
   }

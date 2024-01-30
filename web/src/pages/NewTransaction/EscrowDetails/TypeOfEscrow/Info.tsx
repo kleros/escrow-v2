@@ -10,11 +10,6 @@ const Container = styled.div`
   justify-content: center;
   width: 84vw;
 
-  svg {
-    width: 48px !important;
-    height: 48px !important;
-  }
-
   ${landscapeStyle(
     () => css`
       width: ${responsiveSize(342, 618)};
