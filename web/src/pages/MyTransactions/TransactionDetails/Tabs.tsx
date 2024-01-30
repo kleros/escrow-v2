@@ -4,7 +4,6 @@ import { useNavigate, useLocation, useParams } from "react-router-dom";
 import { Tabs as TabsComponent } from "@kleros/ui-components-library";
 import EyeIcon from "assets/svgs/icons/eye.svg";
 import HandshakeIcon from "assets/svgs/icons/handshake.svg";
-import BalanceIcon from "assets/svgs/icons/law-balance.svg";
 
 const StyledTabs = styled(TabsComponent)`
   width: 100%;
@@ -31,12 +30,6 @@ const TABS = [
     Icon: HandshakeIcon,
     path: "settlement",
   },
-  {
-    text: "Dispute",
-    value: 2,
-    Icon: BalanceIcon,
-    path: "dispute",
-  },
 ];
 
 interface ITabs {
@@ -57,9 +50,6 @@ const Tabs: React.FC<ITabs> = ({ hasToPayFees, payments }) => {
   useEffect(() => {
     setTabs(
       TABS.map((tab) => {
-        if (tab.text === "Dispute") {
-          return { ...tab, disabled: hasToPayFees?.length === 0 };
-        }
         if (tab.text === "Settlement") {
           return { ...tab, disabled: payments?.length === 0 };
         }

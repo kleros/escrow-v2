@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { Button } from "@kleros/ui-components-library";
-import RaiseDisputeButton from "./RaiseDisputeButton";
+import RaiseDisputeButton from "components/RaiseDisputeButton";
 
 const Container = styled.div`
   display: flex;
@@ -19,7 +19,7 @@ const Buttons: React.FC<IButtons> = ({ toggleModal }) => {
   return (
     <Container>
       <Button variant="secondary" text="Return" onClick={toggleModal} />
-      <RaiseDisputeButton toggleModal={toggleModal} />
+      <RaiseDisputeButton buttonText="Raise a dispute" toggleModal={toggleModal} />
     </Container>
   );
 };

@@ -2,11 +2,13 @@ import React from "react";
 import styled from "styled-components";
 import PreviewCard from "components/PreviewCard";
 import WasItFulfilled from "./WasItFulfilled";
+import WaitingPartyInfo from "./WaitingPartyInfo";
 import { useNativeTokenSymbol } from "hooks/useNativeTokenSymbol";
 import { formatEther } from "viem";
 import useFetchIpfsJson from "hooks/useFetchIpfsJson";
 import { isUndefined } from "utils/index";
 import { useTransactionDetailsContext } from "context/TransactionDetailsContext";
+import DisputeInfo from "./DisputeInfo";
 
 const Container = styled.div`
   display: flex;
@@ -41,6 +43,9 @@ const Overview: React.FC = () => {
         isPreview={false}
       />
       {status !== "TransactionResolved" && hasToPayFees?.length === 0 ? <WasItFulfilled /> : null}
+      {status === "WaitingSeller" ? <WaitingPartyInfo pendingParty="seller" /> : null}
+      {status === "WaitingBuyer" ? <WaitingPartyInfo pendingParty="buyer" /> : null}
+      {status === "DisputeCreated" ? <DisputeInfo /> : null}
     </Container>
   );
 };

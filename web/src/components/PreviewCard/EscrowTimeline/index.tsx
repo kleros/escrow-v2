@@ -13,11 +13,18 @@ interface IEscrowTimeline {
 }
 
 const EscrowTimeline: React.FC<IEscrowTimeline> = ({ isPreview }) => {
-  const { timestamp, status, resolvedEvents } = useTransactionDetailsContext();
+  const { timestamp, status, resolvedEvents, buyer, seller, hasToPayFees, disputeRequest } = useTransactionDetailsContext();
 
-  const items = isPreview
-    ? useEscrowTimelineItems(true)
-    : useEscrowTimelineItems(false, timestamp, status, resolvedEvents);
+  const items = useEscrowTimelineItems(
+    isPreview,
+    timestamp,
+    status,
+    resolvedEvents,
+    buyer,
+    seller,
+    hasToPayFees,
+    disputeRequest
+  );
 
   return <StyledTimeline items={items} />;
 };

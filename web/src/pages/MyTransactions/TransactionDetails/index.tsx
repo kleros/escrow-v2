@@ -4,7 +4,6 @@ import { Route, Routes, useParams, Navigate } from "react-router-dom";
 import Tabs from "./Tabs";
 import Overview from "./Overview";
 import Settlement from "./Settlement";
-import Dispute from "./Dispute";
 import { responsiveSize } from "styles/responsiveSize";
 import { useTransactionDetailsQuery } from "hooks/queries/useTransactionsQuery";
 import { useTransactionDetailsContext } from "context/TransactionDetailsContext";
@@ -34,7 +33,6 @@ const TransactionDetails: React.FC = () => {
         <Route path="/" element={<Navigate to="overview" replace />} />
         <Route path="overview" element={<Overview />} />
         <Route path="settlement" element={<Settlement />} />
-        <Route path="dispute" element={<Dispute />} />
         <Route path="*" element={<Navigate to="overview" replace />} />
       </Routes>
     </Container>

@@ -1,16 +1,21 @@
 import React from "react";
+import styled from "styled-components";
 import { Button } from "@kleros/ui-components-library";
 import { useToggle } from "react-use";
 import RaiseDisputeModal from "components/Modal/RaiseDisputeModal";
 
-const RaiseDisputeButton: React.FC = () => {
+const StyledButton = styled(Button)`
+  margin-bottom: 32px;
+`;
+
+const OpenModalRaiseDisputeButton: React.FC = () => {
   const [isModalOpen, toggleModal] = useToggle(false);
 
   return (
     <>
-      <Button variant="secondary" text={"Raise a dispute"} onClick={toggleModal} />
+      <StyledButton variant="secondary" text={"Raise a dispute"} onClick={toggleModal} />
       {isModalOpen ? <RaiseDisputeModal toggleModal={toggleModal} /> : null}
     </>
   );
 };
-export default RaiseDisputeButton;
+export default OpenModalRaiseDisputeButton;

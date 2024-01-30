@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import AcceptButton from "./AcceptButton";
 import CounterProposeButton from "./CounterProposeButton";
-import RaiseDisputeButton from "../../Overview/WasItFulfilled/Buttons/RaiseDisputeButton";
+import RaiseDisputeButton from "../../../../../components/OpenModalRaiseDisputeButton";
 import { useAccount } from "wagmi";
 import { useTransactionDetailsContext } from "context/TransactionDetailsContext";
 

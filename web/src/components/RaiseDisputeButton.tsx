@@ -12,10 +12,11 @@ import { wrapWithToast } from "utils/wrapWithToast";
 import { useTransactionDetailsContext } from "context/TransactionDetailsContext";
 
 interface IRaiseDisputeButton {
-  toggleModal: () => void;
+  toggleModal?: () => void;
+  buttonText: string;
 }
 
-const RaiseDisputeButton: React.FC<IRaiseDisputeButton> = ({ toggleModal }) => {
+const RaiseDisputeButton: React.FC<IRaiseDisputeButton> = ({ toggleModal, buttonText }) => {
   const { address } = useAccount();
   const [isSending, setIsSending] = useState<boolean>(false);
   const publicClient = usePublicClient();
@@ -44,42 +45,30 @@ const RaiseDisputeButton: React.FC<IRaiseDisputeButton> = ({ toggleModal }) => {
       setIsSending(true);
       wrapWithToast(async () => await payArbitrationFeeByBuyer().then((response) => response.hash), publicClient)
         .then((wrapResult) => {
-          if (wrapResult.status) {
+          if (wrapResult.status && toggleModal) {
             toggleModal();
           }
         })
         .catch((error) => {
           console.error("Error raising dispute as buyer:", error);
-        })
-        .finally(() => {
           setIsSending(false);
         });
     } else if (!isBuyer && !isUndefined(payArbitrationFeeBySeller)) {
       setIsSending(true);
       wrapWithToast(async () => await payArbitrationFeeBySeller().then((response) => response.hash), publicClient)
         .then((wrapResult) => {
-          if (wrapResult.status) {
+          if (wrapResult.status && toggleModal) {
             toggleModal();
           }
         })
         .catch((error) => {
           console.error("Error raising dispute as seller:", error);
-        })
-        .finally(() => {
           setIsSending(false);
         });
     }
   };
 
-  return (
-    <Button
-      isLoading={isSending}
-      disabled={isSending}
-      variant="secondary"
-      text="Raise a dispute"
-      onClick={handleRaiseDispute}
-    />
-  );
+  return <Button isLoading={isSending} disabled={isSending} text={buttonText} onClick={handleRaiseDispute} />;
 };
 
 export default RaiseDisputeButton;

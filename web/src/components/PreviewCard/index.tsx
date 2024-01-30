@@ -7,8 +7,9 @@ import Header from "./Header";
 import TransactionInfo from "components/TransactionInfo";
 import Terms from "./Terms";
 import EscrowTimeline from "./EscrowTimeline";
+import Buttons from "./Buttons";
 
-export const StyledCard = styled(Card)`
+export const StyledCard = styled(Card)<{ isPreview?: boolean }>`
   height: auto;
   min-height: 100px;
   width: 86vw;
@@ -17,7 +18,12 @@ export const StyledCard = styled(Card)`
   flex-direction: column;
   gap: 32px;
   padding: ${responsiveSize(24, 32)};
-  padding-bottom: 52px;
+
+  ${({ isPreview }) =>
+    isPreview &&
+    css`
+      padding-bottom: 36px;
+    `}
 
   ${landscapeStyle(
     () => css`
@@ -75,7 +81,7 @@ const PreviewCard: React.FC<IPreviewCard> = ({
   buyer,
   isPreview,
 }) => (
-  <StyledCard>
+  <StyledCard isPreview={isPreview}>
     <Header escrowType={escrowType} escrowTitle={escrowTitle} />
     <TransactionInfoContainer>
       <Divider />
@@ -105,6 +111,7 @@ const PreviewCard: React.FC<IPreviewCard> = ({
     />
     <Divider />
     <EscrowTimeline isPreview={isPreview} />
+    {!isPreview ? <Buttons /> : null}
   </StyledCard>
 );
 

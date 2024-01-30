@@ -1,9 +1,10 @@
 import React from "react";
 import styled from "styled-components";
 import ViewCaseButton from "./ViewCaseButton";
-import RaiseDisputeButton from "../../Overview/WasItFulfilled/Buttons/RaiseDisputeButton";
+import RaiseDisputeButton from "components/RaiseDisputeButton";
 import { useAccount } from "wagmi";
 import { useTransactionDetailsContext } from "context/TransactionDetailsContext";
+import { formatEther } from "viem";
 
 const Container = styled.div`
   display: flex;
@@ -31,10 +32,18 @@ const Buttons: React.FC = () => {
   const shouldDisplayRaiseDisputeButton = shouldPayFee && !disputeRequest;
 
   return (
-    <Container>
-      {shouldDisplayRaiseDisputeButton && <RaiseDisputeButton />}
-      {disputeRequest && <ViewCaseButton />}
-    </Container>
+    <>
+      {shouldDisplayRaiseDisputeButton ? (
+        <Container>
+          <RaiseDisputeButton buttonText={`Deposit the fee: ${formatEther(BigInt("30000000000000"))} ETH`} />
+        </Container>
+      ) : null}
+      {disputeRequest ? (
+        <Container>
+          <ViewCaseButton />
+        </Container>
+      ) : null}
+    </>
   );
 };
 export default Buttons;
