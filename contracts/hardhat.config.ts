@@ -12,6 +12,7 @@ import "hardhat-watcher";
 import "hardhat-docgen";
 // import "hardhat-contract-sizer"; // prevents hardhat-deploy from finding chalk...
 // import "hardhat-tracer"; // prevents hardhat-deploy from finding chalk...
+require("./scripts/setDisputeTemplate");
 
 dotenv.config();
 
