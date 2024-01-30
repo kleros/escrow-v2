@@ -32,6 +32,7 @@ type Escrow @entity {
   buyerFee: BigInt
   sellerFee: BigInt
   lastFeePaymentTime: BigInt
+  feeTimeout: BigInt!
   templateData: String
   templateDataMappings: String
   status: Status
@@ -70,4 +71,9 @@ type TransactionResolved @entity {
   id: ID!
   escrow: Escrow!
   resolution: Resolution!
+}
+
+type EscrowParameters @entity {
+  id: ID!
+  feeTimeout: BigInt!
 }

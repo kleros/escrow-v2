@@ -6,12 +6,14 @@ import {
   TransactionCreated,
   TransactionResolved,
   User,
+  EscrowParameters,
 } from '../generated/schema'
 import {
   Payment as PaymentEvent,
   HasToPayFee as HasToPayFeeEvent,
   TransactionCreated as TransactionCreatedEvent,
   TransactionResolved as TransactionResolvedEvent,
+  FeeTimeoutChanged,
 } from '../generated/Escrow/Escrow'
 import { ZERO, ONE } from './utils'
 
@@ -45,6 +47,22 @@ function getUser(id: string): User {
     user = createUser(id)
   }
   return user as User
+}
+
+function getEscrowParameters(): EscrowParameters {
+  let escrowParameters = EscrowParameters.load('singleton')
+  if (escrowParameters === null) {
+    escrowParameters = new EscrowParameters('singleton')
+    escrowParameters.feeTimeout = ZERO
+    escrowParameters.save()
+  }
+  return escrowParameters;
+}
+
+export function handleFeeTimeoutChanged(event: FeeTimeoutChanged): void {
+  let escrowParameters = getEscrowParameters()
+  escrowParameters.feeTimeout = event.params._feeTimeout
+  escrowParameters.save()
 }
 
 export function handlePayment(event: PaymentEvent): void {
@@ -83,6 +101,7 @@ export function handleTransactionCreated(event: TransactionCreatedEvent): void {
   escrow!.transactionUri = event.params._transactionUri
   escrow!.deadline = event.params._deadline
   escrow!.status = 'NoDispute'
+  escrow!.feeTimeout = getEscrowParameters().feeTimeout;
 
   let buyer = getUser(event.params._buyer.toHex())
   let seller = getUser(event.params._seller.toHex())

@@ -31,3 +31,5 @@ dataSources:
           handler: handleTransactionCreated
         - event: TransactionResolved(indexed uint256,indexed uint8)
           handler: handleTransactionResolved
+        - event: FeeTimeoutChanged(uint256)
+          handler: handleFeeTimeoutChanged

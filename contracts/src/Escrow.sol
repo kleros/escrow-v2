@@ -118,6 +118,10 @@ contract Escrow is IArbitrableV2 {
     /// @param _resolution Short description of what caused the transaction to be solved.
     event TransactionResolved(uint256 indexed _transactionID, Resolution indexed _resolution);
 
+    /// @dev Emitted when the feeTimeout parameter is updated.
+    /// @param _feeTimeout The new feeTimeout value.
+    event FeeTimeoutChanged(uint256 _feeTimeout);
+
     // ************************************* //
     // *        Function Modifiers         * //
     // ************************************* //
@@ -152,8 +156,10 @@ contract Escrow is IArbitrableV2 {
         arbitrator = _arbitrator;
         arbitratorExtraData = _arbitratorExtraData;
         templateRegistry = _templateRegistry;
+
         feeTimeout = _feeTimeout;
         settlementTimeout = _settlementTimeout;
+        emit FeeTimeoutChanged(_feeTimeout);
 
         templateId = templateRegistry.setDisputeTemplate("", _templateData, _templateDataMappings);
     }
@@ -179,6 +185,10 @@ contract Escrow is IArbitrableV2 {
         string memory _templateDataMappings
     ) external onlyByGovernor {
         templateId = templateRegistry.setDisputeTemplate("", _templateData, _templateDataMappings);
+    }
+
+    function changeFeeTimeout(uint256 _feeTimeout) external onlyByGovernor {
+        emit FeeTimeoutChanged(_feeTimeout);
     }
 
     // ************************************* //
