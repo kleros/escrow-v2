@@ -26,6 +26,8 @@ contract Escrow is IArbitrableV2 {
 
     enum Status {
         NoDispute,
+        WaitingSettlementBuyer,
+        WaitingSettlementSeller,
         WaitingBuyer,
         WaitingSeller,
         DisputeCreated,
@@ -36,18 +38,21 @@ contract Escrow is IArbitrableV2 {
         TransactionExecuted,
         TimeoutByBuyer,
         TimeoutBySeller,
-        RulingEnforced
+        RulingEnforced,
+        SettlementReached
     }
 
     struct Transaction {
         address payable buyer;
         address payable seller;
         uint256 amount;
+        uint256 settlementBuyer; // Settlement amount proposed by the buyer.
+        uint256 settlementSeller; // Settlement amount proposed by the seller.
         uint256 deadline; // Timestamp at which the transaction can be automatically executed if not disputed.
         uint256 disputeID; // If dispute exists, the ID of the dispute.
         uint256 buyerFee; // Total fees paid by the buyer.
         uint256 sellerFee; // Total fees paid by the seller.
-        uint256 lastFeePaymentTime; // Last time the dispute fees were paid by either party.
+        uint256 lastFeePaymentTime; // Last time the dispute fees were paid by either party or settlement proposed.
         string templateData;
         string templateDataMappings;
         Status status;
@@ -64,6 +69,8 @@ contract Escrow is IArbitrableV2 {
     IDisputeTemplateRegistry public templateRegistry; // The dispute template registry.
     uint256 public templateId; // The current dispute template identifier.
     uint256 public immutable feeTimeout; // Time in seconds a party can take to pay arbitration fees before being considered unresponsive and lose the dispute.
+    // Time in seconds a party can take to accept or propose a settlement before being considered unresponsive.
+    uint256 public immutable settlementTimeout;
     Transaction[] public transactions; // List of all created transactions.
     mapping(uint256 => uint256) public disputeIDtoTransactionID; // Naps dispute ID to tx ID.
 
@@ -81,6 +88,12 @@ contract Escrow is IArbitrableV2 {
     /// @param _transactionID The index of the transaction.
     /// @param _party The party who has to pay.
     event HasToPayFee(uint256 indexed _transactionID, Party _party);
+
+    /// @dev Emitted when a party proposes a settlement.
+    /// @param _transactionID The index of the transaction.
+    /// @param _party The party that proposed a settlement.
+    /// @param _amount The amount proposed.
+    event SettlementProposed(uint256 indexed _transactionID, Party _party, uint256 _amount);
 
     /// @dev Emitted when a transaction is created.
     /// @param _transactionID The index of the transaction.
@@ -126,19 +139,22 @@ contract Escrow is IArbitrableV2 {
     /// @param _templateDataMappings The dispute template data mappings.
     /// @param _templateRegistry The dispute template registry.
     /// @param _feeTimeout Arbitration fee timeout for the parties.
+    /// @param _settlementTimeout Settlement timeout for the parties.
     constructor(
         IArbitratorV2 _arbitrator,
         bytes memory _arbitratorExtraData,
         string memory _templateData,
         string memory _templateDataMappings,
         IDisputeTemplateRegistry _templateRegistry,
-        uint256 _feeTimeout
+        uint256 _feeTimeout,
+        uint256 _settlementTimeout
     ) {
         governor = msg.sender;
         arbitrator = _arbitrator;
         arbitratorExtraData = _arbitratorExtraData;
         templateRegistry = _templateRegistry;
         feeTimeout = _feeTimeout;
+        settlementTimeout = _settlementTimeout;
 
         templateId = templateRegistry.setDisputeTemplate("", _templateData, _templateDataMappings);
     }
@@ -249,14 +265,95 @@ contract Escrow is IArbitrableV2 {
         emit TransactionResolved(_transactionID, Resolution.TransactionExecuted);
     }
 
+    ///  @dev Propose a settlement as a compromise from the initial terms to the other party.
+    ///  Note that a party can only propose a settlement again after the other party has
+    ///  done so as well to prevent front running/griefing issues.
+    ///  @param _transactionID The index of the transaction.
+    ///  @param _amount The settlement amount.
+    function proposeSettlement(
+        uint256 _transactionID,
+        uint256 _amount
+    ) external {
+        Transaction storage transaction = transactions[_transactionID];
+        if (transaction.status == Status.NoDispute && block.timestamp >= transaction.deadline) revert TransactionExpired();
+        if (transaction.status >= Status.WaitingBuyer) revert TransactionEscalatedForArbitration();
+        if (_amount > transaction.amount) revert MaximumPaymentAmountExceeded();
+
+        Party party;
+
+        if (transaction.status == Status.WaitingSettlementBuyer) {
+            if (msg.sender != transaction.buyer) revert BuyerOnly();
+            transaction.settlementBuyer = _amount;
+            transaction.status = Status.WaitingSettlementSeller;
+            party = Party.Buyer;
+        } else if (transaction.status == Status.WaitingSettlementSeller) {
+            if (msg.sender != transaction.seller) revert SellerOnly();
+            transaction.settlementSeller = _amount;
+            transaction.status = Status.WaitingSettlementBuyer;
+            party = Party.Seller;
+        } else {
+            if (msg.sender == transaction.buyer) {
+                transaction.settlementBuyer = _amount;
+                transaction.status = Status.WaitingSettlementSeller;
+            } else if (msg.sender == transaction.seller) {
+                transaction.settlementSeller = _amount;
+                transaction.status = Status.WaitingSettlementBuyer;
+            } else revert BuyerOrSellerOnly();
+        }
+
+        transaction.lastFeePaymentTime = block.timestamp;
+        emit SettlementProposed(_transactionID, party, _amount);
+    }
+
+    /// @dev Accept a settlement proposed by the other party.																 
+    /// @param _transactionID The index of the transaction.
+    function acceptSettlement(uint256 _transactionID) external {
+        Transaction storage transaction = transactions[_transactionID];
+        uint256 settlementAmount;
+        if (transaction.status == Status.WaitingSettlementBuyer) {
+            if (msg.sender != transaction.buyer) revert BuyerOnly();
+            settlementAmount = transaction.settlementSeller;
+        } else if (transaction.status == Status.WaitingSettlementSeller) {
+            if (msg.sender != transaction.seller) revert SellerOnly();
+            settlementAmount = transaction.settlementBuyer;
+        } else revert NoSettlementProposedOrTransactionMovedOnAcceptSettlement();
+
+        uint256 remainingAmount = transaction.amount - settlementAmount;
+
+        transaction.amount = 0;
+        transaction.settlementBuyer = 0;
+        transaction.settlementSeller = 0;
+
+        transaction.status = Status.TransactionResolved;
+
+        // It is the users' responsibility to accept ETH.
+        transaction.buyer.send(remainingAmount);
+        transaction.seller.send(settlementAmount);
+
+        emit TransactionResolved(_transactionID, Resolution.SettlementReached);
+    }
+
     /// @dev Pay the arbitration fee to raise a dispute. To be called by the buyer.
-    /// Note that the arbitrator can have createDispute throw, which will make
+    /// Note that it can only be called after settlement proposition.
+    /// Also note that the arbitrator can have createDispute throw, which will make
     ///      this function throw and therefore lead to a party being timed-out.
     ///      This is not a vulnerability as the arbitrator can rule in favor of one party anyway.
     /// @param _transactionID The index of the transaction.
     function payArbitrationFeeByBuyer(uint256 _transactionID) external payable {
         Transaction storage transaction = transactions[_transactionID];
-        if (transaction.status >= Status.DisputeCreated) revert DisputeAlreadyCreatedOrTransactionAlreadyExecuted();
+        if (
+            transaction.status != Status.WaitingSettlementBuyer && 
+            transaction.status != Status.WaitingSettlementSeller &&
+            transaction.status != Status.WaitingBuyer
+        ) revert NoSettlementProposedOrTransactionMovedOnPayFeeBuyer();
+
+        // Allow the other party enough time to respond to a settlement before
+        // allowing the proposer to raise a dispute.
+        if (
+            transaction.status == Status.WaitingSettlementSeller && 
+            block.timestamp - transaction.lastFeePaymentTime < settlementTimeout
+        ) revert SettlementPeriodNotOver();
+
         if (msg.sender != transaction.buyer) revert BuyerOnly();
 
         transaction.buyerFee += msg.value;
@@ -280,7 +377,19 @@ contract Escrow is IArbitrableV2 {
     /// @param _transactionID The index of the transaction.
     function payArbitrationFeeBySeller(uint256 _transactionID) external payable {
         Transaction storage transaction = transactions[_transactionID];
-        if (transaction.status >= Status.DisputeCreated) revert DisputeAlreadyCreatedOrTransactionAlreadyExecuted();
+        if(
+            transaction.status != Status.WaitingSettlementBuyer && 
+            transaction.status != Status.WaitingSettlementSeller &&
+            transaction.status != Status.WaitingSeller
+        ) revert NoSettlementProposedOrTransactionMovedOnPayFeeSeller();
+
+        // Allow the other party enough time to respond to a settlement before
+        // allowing the proposer to raise a dispute.
+        if (
+            transaction.status == Status.WaitingSettlementBuyer && 
+            block.timestamp - transaction.lastFeePaymentTime < settlementTimeout
+        ) revert SettlementPeriodNotOver();
+
         if (msg.sender != transaction.seller) revert SellerOnly();
 
         transaction.sellerFee += msg.value;
@@ -384,22 +493,44 @@ contract Escrow is IArbitrableV2 {
     /// @param _ruling Ruling given by the arbitrator. 1 : Reimburse the seller. 2 : Pay the buyer.
     function executeRuling(uint256 _transactionID, uint256 _ruling) internal {
         Transaction storage transaction = transactions[_transactionID];
-        // Give the arbitration fee back.
-        // Note that we use send to prevent a party from blocking the execution.
-        if (_ruling == uint256(Party.Buyer)) {
-            transaction.buyer.send(transaction.buyerFee + transaction.amount);
-        } else if (_ruling == uint256(Party.Seller)) {
-            transaction.seller.send(transaction.sellerFee + transaction.amount);
-        } else {
-            uint256 splitAmount = (transaction.buyerFee + transaction.amount) / 2;
-            transaction.buyer.send(splitAmount);
-            transaction.seller.send(splitAmount);
-        }
-
+        uint256 amount = transaction.amount;
+        uint256 settlementBuyer = transaction.settlementBuyer;
+        uint256 settlementSeller = transaction.settlementSeller;
+        uint256 buyerFee = transaction.buyerFee;
+        uint256 sellerFee = transaction.sellerFee;
+        
         transaction.amount = 0;
+        transaction.settlementBuyer = 0;
+        transaction.settlementSeller = 0;
         transaction.buyerFee = 0;
         transaction.sellerFee = 0;
         transaction.status = Status.TransactionResolved;
+
+        // Give the arbitration fee back.
+        // Note that we use send to prevent a party from blocking the execution.
+        if (_ruling == uint256(Party.Buyer)) {
+            // If there was a settlement amount proposed
+            // we use that to make the partial payment and refund the rest.
+            if (settlementBuyer != 0) {
+                transaction.buyer.send(buyerFee + amount - settlementBuyer);
+                transaction.seller.send(settlementBuyer);
+            } else {
+                transaction.buyer.send(buyerFee + amount);
+            }
+        } else if (_ruling == uint256(Party.Seller)) {
+            // If there was a settlement amount proposed
+            // we use that to make the partial payment and refund the rest to buyer.
+            if (settlementSeller != 0) {
+                transaction.buyer.send(amount - settlementSeller);
+                transaction.seller.send(sellerFee + settlementSeller);
+            } else {
+                transaction.seller.send(sellerFee + amount);
+            }
+        } else {
+            uint256 splitAmount = (buyerFee + amount) / 2;
+            transaction.buyer.send(splitAmount);
+            transaction.seller.send(splitAmount);
+        }
 
         emit TransactionResolved(_transactionID, Resolution.RulingEnforced);
     }
@@ -421,10 +552,10 @@ contract Escrow is IArbitrableV2 {
     error GovernorOnly();
     error BuyerOnly();
     error SellerOnly();
+    error BuyerOrSellerOnly();
     error ArbitratorOnly();
     error TransactionDisputed();
     error MaximumPaymentAmountExceeded();
-    error DisputeAlreadyCreatedOrTransactionAlreadyExecuted();
     error DeadlineNotPassed();
     error BuyerFeeNotCoverArbitrationCosts();
     error SellerFeeNotCoverArbitrationCosts();
@@ -433,4 +564,10 @@ contract Escrow is IArbitrableV2 {
     error TimeoutNotPassed();
     error InvalidRuling();
     error DisputeAlreadyResolved();
+    error TransactionExpired();
+    error TransactionEscalatedForArbitration();
+    error NoSettlementProposedOrTransactionMovedOnAcceptSettlement();
+    error NoSettlementProposedOrTransactionMovedOnPayFeeBuyer();
+    error NoSettlementProposedOrTransactionMovedOnPayFeeSeller();
+    error SettlementPeriodNotOver();
 }
