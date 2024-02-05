@@ -13,7 +13,7 @@ import {
   HasToPayFee as HasToPayFeeEvent,
   TransactionCreated as TransactionCreatedEvent,
   TransactionResolved as TransactionResolvedEvent,
-  FeeTimeoutChanged,
+  ParameterUpdated as ParameterUpdatedEvent,
 } from '../generated/Escrow/Escrow'
 import { ZERO, ONE } from './utils'
 
@@ -54,14 +54,18 @@ function getEscrowParameters(): EscrowParameters {
   if (escrowParameters === null) {
     escrowParameters = new EscrowParameters('singleton')
     escrowParameters.feeTimeout = ZERO
+    escrowParameters.settlementTimeout = ZERO
+    escrowParameters.arbitratorExtraData = Bytes.fromHexString("0x00")
     escrowParameters.save()
   }
   return escrowParameters;
 }
 
-export function handleFeeTimeoutChanged(event: FeeTimeoutChanged): void {
+export function handleParameterUpdated(event: ParameterUpdatedEvent): void {
   let escrowParameters = getEscrowParameters()
   escrowParameters.feeTimeout = event.params._feeTimeout
+  escrowParameters.settlementTimeout = event.params._settlementTimeout
+  escrowParameters.arbitratorExtraData = event.params._arbitratorExtraData
   escrowParameters.save()
 }
 

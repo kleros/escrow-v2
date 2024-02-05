@@ -63,19 +63,22 @@ contract Escrow is IArbitrableV2 {
     // ************************************* //
 
     uint256 public constant AMOUNT_OF_CHOICES = 2;
-    address public immutable governor;
+    address public governor;
     IArbitratorV2 public arbitrator; // Address of the arbitrator contract.
     bytes public arbitratorExtraData; // Extra data to set up the arbitration.
     IDisputeTemplateRegistry public templateRegistry; // The dispute template registry.
     uint256 public templateId; // The current dispute template identifier.
-    uint256 public immutable feeTimeout; // Time in seconds a party can take to pay arbitration fees before being considered unresponsive and lose the dispute.
-    uint256 public immutable settlementTimeout; // Time in seconds a party can take to accept or propose a settlement before being considered unresponsive.
+    uint256 public feeTimeout; // Time in seconds a party can take to pay arbitration fees before being considered unresponsive and lose the dispute.
+    uint256 public settlementTimeout; // Time in seconds a party can take to accept or propose a settlement before being considered unresponsive.
     Transaction[] public transactions; // List of all created transactions.
     mapping(uint256 => uint256) public disputeIDtoTransactionID; // Naps dispute ID to tx ID.
 
     // ************************************* //
     // *              Events               * //
     // ************************************* //
+
+    /// @dev To be emitted when Escrow parameters are updated.
+    event ParameterUpdated(uint256 _feeTimeout, uint256 _settlementTimeout, bytes _arbitratorExtraData);
 
     /// @dev To be emitted when a party pays or reimburses the other.
     /// @param _transactionID The index of the transaction.
@@ -118,10 +121,6 @@ contract Escrow is IArbitrableV2 {
     /// @param _resolution Short description of what caused the transaction to be solved.
     event TransactionResolved(uint256 indexed _transactionID, Resolution indexed _resolution);
 
-    /// @dev Emitted when the feeTimeout parameter is updated.
-    /// @param _feeTimeout The new feeTimeout value.
-    event FeeTimeoutChanged(uint256 _feeTimeout);
-
     // ************************************* //
     // *        Function Modifiers         * //
     // ************************************* //
@@ -156,17 +155,20 @@ contract Escrow is IArbitrableV2 {
         arbitrator = _arbitrator;
         arbitratorExtraData = _arbitratorExtraData;
         templateRegistry = _templateRegistry;
-
         feeTimeout = _feeTimeout;
         settlementTimeout = _settlementTimeout;
-        emit FeeTimeoutChanged(_feeTimeout);
-
         templateId = templateRegistry.setDisputeTemplate("", _templateData, _templateDataMappings);
+
+        emit ParameterUpdated(_feeTimeout, _settlementTimeout, _arbitratorExtraData);
     }
 
     // ************************************* //
     // *             Governance            * //
     // ************************************* //
+
+    function changeGovernor(address _governor) external onlyByGovernor {
+        governor = _governor;
+    }
 
     function changeArbitrator(IArbitratorV2 _arbitrator) external onlyByGovernor {
         arbitrator = _arbitrator;
@@ -174,6 +176,7 @@ contract Escrow is IArbitrableV2 {
 
     function changeArbitratorExtraData(bytes calldata _arbitratorExtraData) external onlyByGovernor {
         arbitratorExtraData = _arbitratorExtraData;
+        emit ParameterUpdated(feeTimeout, settlementTimeout, _arbitratorExtraData);
     }
 
     function changeTemplateRegistry(IDisputeTemplateRegistry _templateRegistry) external onlyByGovernor {
@@ -188,7 +191,13 @@ contract Escrow is IArbitrableV2 {
     }
 
     function changeFeeTimeout(uint256 _feeTimeout) external onlyByGovernor {
-        emit FeeTimeoutChanged(_feeTimeout);
+        feeTimeout = _feeTimeout;
+        emit ParameterUpdated(_feeTimeout, settlementTimeout, arbitratorExtraData);
+    }
+
+    function changeSettlementTimeout(uint256 _settlementTimeout) external onlyByGovernor {
+        settlementTimeout = _settlementTimeout;
+        emit ParameterUpdated(feeTimeout, _settlementTimeout, arbitratorExtraData);
     }
 
     // ************************************* //
