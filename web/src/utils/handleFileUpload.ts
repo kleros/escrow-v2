@@ -17,11 +17,11 @@ export const handleFileUpload = async (
     setExtraDescriptionUri("");
 
     if (deliverableFile) {
-      if (deliverableFile.type !== "application/pdf") {
-        alert("That type of file is not valid. Please upload a PDF file.");
-        setIsFileUploading(false);
-        return;
-      }
+      // if (deliverableFile.type !== "application/pdf") {
+      //   alert("That type of file is not valid. Please upload a PDF file.");
+      //   setIsFileUploading(false);
+      //   return;
+      // }
 
       const fileResponse = await uploadFileToIPFS(deliverableFile);
       const fileData = await fileResponse.json();
