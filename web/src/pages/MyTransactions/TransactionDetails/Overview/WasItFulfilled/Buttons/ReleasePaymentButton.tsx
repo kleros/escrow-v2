@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button } from "@kleros/ui-components-library";
 import { useToggle } from "react-use";
-import PaymentReleased from "components/Popup/PaymentReleased";
+import PaymentReleased from "components/Modal/PaymentReleased";
 import { useEscrowPay, usePrepareEscrowPay } from "hooks/contracts/generated";
 import { isUndefined } from "utils/index";
 import { wrapWithToast } from "utils/wrapWithToast";

@@ -1,7 +1,7 @@
 import React from "react";
-import { Button } from "@kleros/ui-components-library";
 import { useToggle } from "react-use";
-import PaymentReleased from "components/Popup/PaymentReleased";
+import { Button } from "@kleros/ui-components-library";
+import PaymentReleased from "components/Modal/PaymentReleased";
 
 const AcceptButton: React.FC = () => {
   const [isModalOpen, toggleModal] = useToggle(false);
@@ -12,4 +12,5 @@ const AcceptButton: React.FC = () => {
     </>
   );
 };
+
 export default AcceptButton;
