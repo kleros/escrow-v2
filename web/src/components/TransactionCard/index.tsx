@@ -21,10 +21,10 @@ const StyledCard = styled(Card)`
 `;
 
 const StyledListItem = styled(Card)`
-display: flex;
-flex-grow: 1;
-width: 100%;
-height: 82px;
+  display: flex;
+  flex-grow: 1;
+  width: 100%;
+  height: 82px;
 `;
 
 const CardContainer = styled.div`

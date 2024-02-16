@@ -18,7 +18,7 @@ const Container = styled.div<IContainer>`
   align-items: center;
   padding: 0 24px;
   gap: 16px;
-
+  justify-content: ${({ isCard }) => (isCard ? "space-between" : "start")};
   ${({ isCard, frontColor, backgroundColor }) => {
     return `
       ${isCard ? `border-top: 5px solid ${frontColor}` : `border-left: 5px solid ${frontColor}`};

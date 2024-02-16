@@ -45,7 +45,7 @@ const RestOfFieldsContainer = styled.div<{ isList?: boolean; isPreview?: boolean
         () => css`
           display: flex;
           flex-direction: row;
-          justify-content: flex-start;
+          justify-content: space-between;
           align-self: flex-end;
           width: auto;
           max-width: 340px;
@@ -53,6 +53,7 @@ const RestOfFieldsContainer = styled.div<{ isList?: boolean; isPreview?: boolean
           flex-wrap: wrap;
           align-items: center;
           gap: 8px 32px;
+          margin-right: 35px;
         `
       )}
     `};
