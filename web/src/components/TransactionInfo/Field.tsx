@@ -55,13 +55,28 @@ const StyledValue = styled.label<{ isPreview?: boolean }>`
     `}
 `;
 
-const StyledLink = styled(Link)<{ isPreview?: boolean }>`
+const StyledLink = styled(Link)`
   flex-grow: 1;
   text-align: end;
   color: ${({ theme }) => theme.primaryBlue};
   &:hover {
     cursor: pointer;
   }
+`;
+
+const NameLabel = styled.label<{ isList?: boolean; name: string; isPreview?: boolean }>`
+  ${({ isList, name }) =>
+    isList &&
+    css`
+      display: ${name === "Buyer" || name === "Seller" ? "flex" : "none"};
+      margin-right: ${name === "Buyer" || name === "Seller" ? "8px" : "0"};
+    `}
+  ${({ isPreview }) =>
+    isPreview &&
+    css`
+      display: flex;
+      margin-right: 0;
+    `}
 `;
 
 interface IField {
@@ -77,19 +92,13 @@ interface IField {
 const Field: React.FC<IField> = ({ icon: Icon, name, value, link, width, displayAsList, isPreview }) => {
   return (
     <FieldContainer isList={displayAsList} isPreview={isPreview} width={width}>
-      {!displayAsList || isPreview ? (
-        <>
-          <Icon />
-          <label>{name}:</label>
-        </>
-      ) : null}
-      {link ? (
-        <StyledLink isPreview={isPreview} to={link}>
-          {value}
-        </StyledLink>
-      ) : (
-        <StyledValue isPreview={isPreview}>{value}</StyledValue>
-      )}
+      <>
+        <Icon />
+        <NameLabel isList={displayAsList} {...{ name, isPreview }}>
+          {name}:
+        </NameLabel>
+      </>
+      {link ? <StyledLink to={link}>{value}</StyledLink> : <StyledValue isPreview={isPreview}>{value}</StyledValue>}
     </FieldContainer>
   );
 };

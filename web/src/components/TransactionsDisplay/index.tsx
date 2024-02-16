@@ -6,13 +6,6 @@ import TransactionsGrid, { ITransactionsGrid } from "./TransactionsGrid";
 import { responsiveSize } from "styles/responsiveSize";
 import { TransactionDetailsFragment } from "src/graphql/graphql";
 
-const Divider = styled.hr`
-  border: none;
-  height: 1px;
-  background-color: ${({ theme }) => theme.stroke};
-  margin: ${responsiveSize(20, 24)} 0;
-`;
-
 const StyledTitle = styled.h1`
   margin-bottom: ${responsiveSize(32, 48)};
 `;
@@ -41,7 +34,6 @@ const TransactionsDisplay: React.FC<ITransactionsDisplay> = ({
       <StyledTitle>{title}</StyledTitle>
       <Search />
       <StatsAndFilters totalTransactions={totalTransactions ?? 0} resolvedTransactions={resolvedTransactions ?? 0} />
-      <Divider />
 
       {transactions?.length === 0 ? (
         <h1>No transactions found</h1>

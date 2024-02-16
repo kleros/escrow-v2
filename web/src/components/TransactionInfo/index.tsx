@@ -7,14 +7,13 @@ import CalendarIcon from "svgs/icons/calendar.svg";
 import PileCoinsIcon from "svgs/icons/pile-coins.svg";
 import UserIcon from "svgs/icons/user.svg";
 import Field from "./Field";
-import { responsiveSize } from "styles/responsiveSize";
 
 const Container = styled.div<{ isList: boolean; isPreview?: boolean }>`
   display: flex;
   width: 100%;
   gap: 8px;
   flex-direction: column;
-  justify-content: flex-end;
+  justify-content: center;
 
   ${({ isList }) =>
     isList &&
@@ -44,11 +43,16 @@ const RestOfFieldsContainer = styled.div<{ isList?: boolean; isPreview?: boolean
     css`
       ${landscapeStyle(
         () => css`
-          display: grid;
-          grid-template-columns: repeat(4, ${responsiveSize(100, 130, 900)});
-          column-gap: ${responsiveSize(2, 12, 900)};
-          justify-content: space-around;
+          display: flex;
+          flex-direction: row;
+          justify-content: flex-start;
+          align-self: flex-end;
+          width: auto;
+          max-width: 340px;
+          height: auto;
+          flex-wrap: wrap;
           align-items: center;
+          gap: 8px 32px;
         `
       )}
     `};
@@ -95,20 +99,20 @@ const TransactionInfo: React.FC<ITransactionInfo> = ({
             isPreview={isPreview}
           />
         ) : null}
-        {receiverAddress ? (
-          <Field
-            icon={UserIcon}
-            name="Receiver"
-            value={receiverAddress}
-            displayAsList={displayAsList}
-            isPreview={isPreview}
-          />
-        ) : null}
         {deadlineDate ? (
           <Field
             icon={CalendarIcon}
             name="Delivery Deadline"
             value={deadlineDate}
+            displayAsList={displayAsList}
+            isPreview={isPreview}
+          />
+        ) : null}
+        {receiverAddress ? (
+          <Field
+            icon={UserIcon}
+            name="Buyer"
+            value={receiverAddress}
             displayAsList={displayAsList}
             isPreview={isPreview}
           />

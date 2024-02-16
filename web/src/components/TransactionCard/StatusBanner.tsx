@@ -10,14 +10,15 @@ interface IContainer {
 }
 
 const Container = styled.div<IContainer>`
+  display: flex;
   height: ${({ isCard }) => (isCard ? "45px" : "100%")};
   width: ${({ isCard }) => (isCard ? "auto" : responsiveSize(60, 80, 900))};
   border-top-right-radius: 3px;
   border-top-left-radius: 3px;
-  display: flex;
   align-items: center;
-  justify-content: space-between;
   padding: 0 24px;
+  gap: 16px;
+
   ${({ isCard, frontColor, backgroundColor }) => {
     return `
       ${isCard ? `border-top: 5px solid ${frontColor}` : `border-left: 5px solid ${frontColor}`};
@@ -27,18 +28,21 @@ const Container = styled.div<IContainer>`
 `;
 
 const StyledLabel = styled.label<{ frontColor: string; withDot?: boolean }>`
+  display: flex;
+  align-items: center;
   color: ${({ frontColor }) => frontColor};
+
   ${({ withDot, frontColor }) =>
     withDot
       ? css`
           ::before {
             content: "";
-            display: inline-block;
             height: 8px;
             width: 8px;
             border-radius: 50%;
             margin-right: 8px;
             background-color: ${frontColor};
+            flex-shrink: 0;
           }
         `
       : null}
@@ -91,11 +95,9 @@ const StatusBanner: React.FC<IStatusBanner> = ({ id, status, isCard = true }) =>
   const [frontColor, backgroundColor] = useMemo(() => getStatusColors(status, theme), [theme, status]);
   return (
     <Container {...{ isCard, frontColor, backgroundColor }}>
-      {isCard ? (
-        <StyledLabel frontColor={frontColor} withDot>
-          {getStatusLabel(status)}
-        </StyledLabel>
-      ) : null}
+      <StyledLabel frontColor={frontColor} withDot>
+        {getStatusLabel(status)}
+      </StyledLabel>
       <StyledLabel frontColor={frontColor}>#{id}</StyledLabel>
     </Container>
   );

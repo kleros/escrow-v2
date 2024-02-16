@@ -13,7 +13,7 @@ import { isUndefined } from "utils/index";
 import { useNativeTokenSymbol } from "hooks/useNativeTokenSymbol";
 import useFetchIpfsJson from "hooks/useFetchIpfsJson";
 import { TransactionDetailsFragment } from "src/graphql/graphql";
-import { StyledSkeleton } from "../StyledSkeleton";
+import { StyledSkeleton, StyledSkeletonTitle } from "../StyledSkeleton";
 
 const StyledCard = styled(Card)`
   width: 100%;
@@ -21,10 +21,10 @@ const StyledCard = styled(Card)`
 `;
 
 const StyledListItem = styled(Card)`
-  display: flex;
-  flex-grow: 1;
-  width: 100%;
-  height: 64px;
+display: flex;
+flex-grow: 1;
+width: 100%;
+height: 82px;
 `;
 
 const CardContainer = styled.div`
@@ -34,19 +34,15 @@ const CardContainer = styled.div`
   flex-direction: column;
   justify-content: space-between;
 `;
+
 const ListContainer = styled.div`
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   width: 100%;
 `;
 
 const ListTitle = styled.div`
-  display: flex;
-  height: 100%;
-  justify-content: start;
-  align-items: center;
-  width: ${responsiveSize(240, 300, 900)};
+  margin-left: 92px;
 `;
 
 const StyledTitle = styled.h3`
@@ -105,7 +101,7 @@ const TransactionCard: React.FC<ITransactionCard> = ({
                 <TruncatedTitle text={title} maxLength={50} />
               </ListTitle>
             ) : (
-              <StyledSkeleton />
+              <StyledSkeletonTitle />
             )}
             <TransactionInfo
               amount={formatEther(amount)}
