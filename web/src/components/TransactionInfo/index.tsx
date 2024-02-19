@@ -49,7 +49,7 @@ const RestOfFieldsContainer = styled.div<{ isList?: boolean; isPreview?: boolean
           justify-content: space-between;
           align-self: flex-end;
           width: auto;
-          max-width: 340px;
+          max-width: 360px;
           height: auto;
           flex-wrap: wrap;
           align-items: center;
