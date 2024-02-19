@@ -7,7 +7,6 @@ import { useIsList } from "context/IsListProvider";
 import TransactionInfo from "../TransactionInfo";
 import StatusBanner from "./StatusBanner";
 import { responsiveSize } from "styles/responsiveSize";
-import { shortenAddress } from "utils/shortenAddress";
 import { mapStatusToEnum } from "utils/mapStatusToEnum";
 import { isUndefined } from "utils/index";
 import { useNativeTokenSymbol } from "hooks/useNativeTokenSymbol";
@@ -21,10 +20,10 @@ const StyledCard = styled(Card)`
 `;
 
 const StyledListItem = styled(Card)`
-  display: flex;
-  flex-grow: 1;
-  width: 100%;
-  height: 82px;
+display: flex;
+flex-grow: 1;
+width: 100%;
+height: 82px;
 `;
 
 const CardContainer = styled.div`
@@ -64,6 +63,7 @@ const TransactionCard: React.FC<ITransactionCard> = ({
   overrideIsList,
   transactionUri,
   deadline,
+  seller,
   buyer,
   amount,
   asset,
@@ -86,7 +86,8 @@ const TransactionCard: React.FC<ITransactionCard> = ({
             <TransactionInfo
               amount={formatEther(amount)}
               token={asset === "native" ? nativeTokenSymbol : ""}
-              receiverAddress={shortenAddress(buyer)}
+              buyerAddress={buyer}
+              sellerAddress={seller}
               deadlineDate={new Date(deadline * 1000).toLocaleString()}
               isPreview={false}
             />
@@ -106,7 +107,8 @@ const TransactionCard: React.FC<ITransactionCard> = ({
             <TransactionInfo
               amount={formatEther(amount)}
               token={asset === "native" ? nativeTokenSymbol : ""}
-              receiverAddress={shortenAddress(buyer)}
+              buyerAddress={buyer}
+              sellerAddress={seller}
               deadlineDate={new Date(deadline * 1000).toLocaleString()}
               isPreview={false}
             />

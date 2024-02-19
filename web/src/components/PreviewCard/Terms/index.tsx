@@ -15,10 +15,10 @@ interface ITerms {
   deliverableText: string;
   receivingQuantity: string;
   receivingToken: string;
-  receivingRecipientAddress: string;
+  buyerAddress: string;
   sendingQuantity: string;
   sendingToken: string;
-  sendingRecipientAddress: string;
+  sellerAddress: string;
   deadlineDate: Date;
   tokenSymbol: string;
   extraDescriptionUri: string;
@@ -30,27 +30,26 @@ const Terms: React.FC<ITerms> = ({
   deliverableText,
   receivingQuantity,
   receivingToken,
+  buyerAddress,
   sendingQuantity,
   sendingToken,
-  sendingRecipientAddress,
+  sellerAddress,
   deadlineDate,
   tokenSymbol,
   extraDescriptionUri,
-  buyer,
 }) => {
   return (
     <Container>
       <Header />
       <Description
-        buyer={buyer}
         escrowType={escrowType}
         deliverableText={deliverableText}
         receivingQuantity={receivingQuantity}
         receivingToken={receivingToken}
-        receivingRecipientAddress={buyer}
+        buyerAddress={buyerAddress}
         sendingQuantity={sendingQuantity}
         sendingToken={sendingToken}
-        sendingRecipientAddress={sendingRecipientAddress}
+        sellerAddress={sellerAddress}
         deadlineDate={deadlineDate}
         tokenSymbol={tokenSymbol}
       />

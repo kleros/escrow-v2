@@ -21,10 +21,9 @@ const Preview: React.FC = () => {
     deliverableText,
     receivingQuantity,
     receivingToken,
-    receivingRecipientAddress,
+    sellerAddress,
     sendingQuantity,
     sendingToken,
-    sendingRecipientAddress,
     escrowTitle,
     deadline,
     extraDescriptionUri,
@@ -39,11 +38,10 @@ const Preview: React.FC = () => {
       <PreviewCard
         receivingQuantity={receivingQuantity}
         receivingToken={receivingToken}
-        receivingRecipientAddress={receivingRecipientAddress}
-        sendingRecipientAddress={sendingRecipientAddress}
+        sellerAddress={sellerAddress}
         sendingQuantity={sendingQuantity}
         sendingToken={""}
-        buyer={address}
+        buyerAddress={address}
         escrowType={escrowType}
         deliverableText={deliverableText}
         tokenSymbol={escrowType === "general" ? nativeTokenSymbol : sendingToken}

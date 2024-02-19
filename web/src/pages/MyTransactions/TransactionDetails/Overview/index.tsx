@@ -30,12 +30,11 @@ const Overview: React.FC = () => {
         deliverableText={transactionInfo?.description}
         extraDescriptionUri={transactionInfo?.extraDescriptionUri}
         receivingQuantity={""}
-        buyer={buyer}
+        buyerAddress={buyer}
         receivingToken={asset === "native" ? nativeTokenSymbol : asset}
-        receivingRecipientAddress={seller}
+        sellerAddress={seller}
         sendingQuantity={!isUndefined(amount) ? formatEther(amount) : ""}
         sendingToken={asset === "native" ? nativeTokenSymbol : asset}
-        sendingRecipientAddress={seller}
         deadlineDate={new Date(deadline * 1000).toLocaleString()}
         tokenSymbol={asset === "native" ? nativeTokenSymbol : asset}
         overrideIsList={false}

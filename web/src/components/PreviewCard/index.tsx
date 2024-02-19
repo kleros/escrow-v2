@@ -52,15 +52,14 @@ interface IPreviewCard {
   deliverableText: string;
   receivingQuantity: string;
   receivingToken: string;
-  receivingRecipientAddress: string;
+  buyerAddress: string;
   sendingQuantity: string;
   sendingToken: string;
-  sendingRecipientAddress: string;
+  sellerAddress: string;
   deadlineDate: Date;
   tokenSymbol: string;
   overrideIsList: boolean;
   extraDescriptionUri: string;
-  buyer: string;
   isPreview: boolean;
 }
 
@@ -70,15 +69,14 @@ const PreviewCard: React.FC<IPreviewCard> = ({
   deliverableText,
   receivingQuantity,
   receivingToken,
-  receivingRecipientAddress,
+  buyerAddress,
   sendingQuantity,
   sendingToken,
-  sendingRecipientAddress,
+  sellerAddress,
   deadlineDate,
   tokenSymbol,
   overrideIsList,
   extraDescriptionUri,
-  buyer,
   isPreview,
 }) => (
   <StyledCard isPreview={isPreview}>
@@ -88,7 +86,8 @@ const PreviewCard: React.FC<IPreviewCard> = ({
       <TransactionInfo
         amount={sendingQuantity}
         token={tokenSymbol}
-        receiverAddress={buyer}
+        buyerAddress={buyerAddress}
+        sellerAddress={sellerAddress}
         deadlineDate={deadlineDate}
         overrideIsList={overrideIsList}
         isPreview={true}
@@ -96,15 +95,14 @@ const PreviewCard: React.FC<IPreviewCard> = ({
       <Divider />
     </TransactionInfoContainer>
     <Terms
-      buyer={buyer}
       escrowType={escrowType}
       deliverableText={deliverableText}
       receivingQuantity={receivingQuantity}
       receivingToken={receivingToken}
-      receivingRecipientAddress={receivingRecipientAddress}
+      buyerAddress={buyerAddress}
       sendingQuantity={sendingQuantity}
       sendingToken={sendingToken}
-      sendingRecipientAddress={sendingRecipientAddress}
+      sellerAddress={sellerAddress}
       deadlineDate={deadlineDate}
       tokenSymbol={tokenSymbol}
       extraDescriptionUri={extraDescriptionUri}

@@ -7,6 +7,7 @@ import CalendarIcon from "svgs/icons/calendar.svg";
 import PileCoinsIcon from "svgs/icons/pile-coins.svg";
 import UserIcon from "svgs/icons/user.svg";
 import Field from "./Field";
+import { shortenAddress } from "utils/shortenAddress";
 
 const Container = styled.div<{ isList: boolean; isPreview?: boolean }>`
   display: flex;
@@ -74,14 +75,16 @@ export interface ITransactionInfo {
   status?: Statuses;
   overrideIsList?: boolean;
   isPreview?: boolean;
-  receiverAddress?: string;
+  sellerAddress?: string;
+  buyerAddress?: string;
 }
 
 const TransactionInfo: React.FC<ITransactionInfo> = ({
   amount,
   token,
   deadlineDate,
-  receiverAddress,
+  sellerAddress,
+  buyerAddress,
   overrideIsList,
   isPreview,
 }) => {
@@ -109,11 +112,20 @@ const TransactionInfo: React.FC<ITransactionInfo> = ({
             isPreview={isPreview}
           />
         ) : null}
-        {receiverAddress ? (
+        {buyerAddress ? (
           <Field
             icon={UserIcon}
             name="Buyer"
-            value={receiverAddress}
+            value={shortenAddress(buyerAddress)}
+            displayAsList={displayAsList}
+            isPreview={isPreview}
+          />
+        ) : null}
+        {sellerAddress ? (
+          <Field
+            icon={UserIcon}
+            name="Seller"
+            value={shortenAddress(sellerAddress)}
             displayAsList={displayAsList}
             isPreview={isPreview}
           />

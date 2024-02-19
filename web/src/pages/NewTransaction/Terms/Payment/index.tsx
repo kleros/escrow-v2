@@ -10,8 +10,8 @@ const Payment: React.FC = () => {
     setSendingQuantity,
     sendingToken,
     setSendingToken,
-    sendingRecipientAddress,
-    setSendingRecipientAddress,
+    sellerAddress,
+    setSellerAddress,
   } = useNewTransactionContext();
 
   return escrowType === "general" ? (
@@ -25,8 +25,8 @@ const Payment: React.FC = () => {
       setQuantity={setSendingQuantity}
       token={sendingToken}
       setToken={setSendingToken}
-      recipientAddress={sendingRecipientAddress}
-      setRecipientAddress={setSendingRecipientAddress}
+      recipientAddress={sellerAddress}
+      setRecipientAddress={setSellerAddress}
     />
   );
 };

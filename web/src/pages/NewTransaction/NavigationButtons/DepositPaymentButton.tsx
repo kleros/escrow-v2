@@ -20,14 +20,14 @@ const DepositPaymentButton: React.FC = () => {
     transactionUri,
     extraDescriptionUri,
     sendingQuantity,
-    sendingRecipientAddress,
+    sellerAddress,
     deadline,
     resetContext,
   } = useNewTransactionContext();
 
   const [currentTime, setCurrentTime] = useState(Date.now());
-  const [finalRecipientAddress, setFinalRecipientAddress] = useState(sendingRecipientAddress);
-  const ensResult = useEnsAddress({ name: sendingRecipientAddress, chainId: 1 });
+  const [finalRecipientAddress, setFinalRecipientAddress] = useState(sellerAddress);
+  const ensResult = useEnsAddress({ name: sellerAddress, chainId: 1 });
   const publicClient = usePublicClient();
   const navigate = useNavigate();
   const [isSending, setIsSending] = useState<boolean>(false);
@@ -42,9 +42,9 @@ const DepositPaymentButton: React.FC = () => {
     if (ensResult.data) {
       setFinalRecipientAddress(ensResult.data);
     } else {
-      setFinalRecipientAddress(sendingRecipientAddress);
+      setFinalRecipientAddress(sellerAddress);
     }
-  }, [sendingRecipientAddress, ensResult.data]);
+  }, [sellerAddress, ensResult.data]);
 
   const deadlineTimestamp = new Date(deadline).getTime();
   const timeoutPayment = (deadlineTimestamp - currentTime) / 1000;
@@ -76,7 +76,7 @@ const DepositPaymentButton: React.FC = () => {
     arbitratorAddress: "0xA54e7A16d7460e38a8F324eF46782FB520d58CE8",
     metadata: {
       buyer: address,
-      seller: sendingRecipientAddress,
+      seller: sellerAddress,
       amount: sendingQuantity,
       asset: escrowType === "general" ? "native" : "",
       timeoutPayment: timeoutPayment,
@@ -86,7 +86,7 @@ const DepositPaymentButton: React.FC = () => {
     specification: "KIPXXX",
     aliases: {
       Buyer: address,
-      Seller: sendingRecipientAddress,
+      Seller: sellerAddress,
     },
     version: "1.0",
   };

@@ -13,10 +13,10 @@ interface IDescription {
   deliverableText: string;
   receivingQuantity: string;
   receivingToken: string;
-  receivingRecipientAddress: string;
+  buyerAddress: string;
   sendingQuantity: string;
   sendingToken: string;
-  sendingRecipientAddress: string;
+  sellerAddress: string;
   deadlineDate: Date;
   tokenSymbol: string;
   buyer: string;
@@ -27,24 +27,23 @@ const Description: React.FC<IDescription> = ({
   deliverableText,
   receivingQuantity,
   receivingToken,
-  receivingRecipientAddress,
+  buyerAddress,
   sendingQuantity,
   sendingToken,
-  sendingRecipientAddress,
+  sellerAddress,
   deadlineDate,
   tokenSymbol,
-  buyer,
 }) => {
   const generalEscrowSummary =
-    `By Paying ${sendingQuantity + " " + tokenSymbol}, address ${buyer} should receive` +
-    ` ${deliverableText} from address ${sendingRecipientAddress} before the delivery deadline ${new Date(
+    `By Paying ${sendingQuantity + " " + tokenSymbol}, address ${buyerAddress} should receive` +
+    ` ${deliverableText} from address ${sellerAddress} before the delivery deadline ${new Date(
       deadlineDate
     )}.`;
 
   const cryptoSwapSummary =
-    `By Paying ${sendingQuantity + " " + sendingToken}, [Blockchain] address ${buyer} should receive` +
-    ` ${receivingQuantity + " " + receivingToken} at the [Blockchain] address ${receivingRecipientAddress}` +
-    ` from [Blockchain] address ${sendingRecipientAddress} before the delivery deadline ${deadlineDate}.`;
+    `By Paying ${sendingQuantity + " " + sendingToken}, [Blockchain] address ${buyerAddress} should receive` +
+    ` ${receivingQuantity + " " + receivingToken} at the [Blockchain] address ${sellerAddress}` +
+    ` from [Blockchain] address TODO before the delivery deadline ${deadlineDate}.`;
 
   return isUndefined(deliverableText) ? (
     <StyledSkeleton />

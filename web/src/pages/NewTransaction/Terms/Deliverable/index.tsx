@@ -52,8 +52,8 @@ const Deliverable: React.FC = () => {
     setReceivingQuantity,
     receivingToken,
     setReceivingToken,
-    receivingRecipientAddress,
-    setReceivingRecipientAddress,
+    buyerAddress,
+    setBuyerAddress,
   } = useNewTransactionContext();
 
   const handleWrite = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -93,8 +93,8 @@ const Deliverable: React.FC = () => {
           setQuantity={setReceivingQuantity}
           token={receivingToken}
           setToken={setReceivingToken}
-          recipientAddress={receivingRecipientAddress}
-          setRecipientAddress={setReceivingRecipientAddress}
+          recipientAddress={buyerAddress}
+          setRecipientAddress={setBuyerAddress}
         />
       )}
     </Container>
