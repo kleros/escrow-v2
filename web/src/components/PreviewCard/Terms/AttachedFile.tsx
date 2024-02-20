@@ -1,7 +1,6 @@
 import React from "react";
 import styled from "styled-components";
 import { responsiveSize } from "styles/responsiveSize";
-import { useNewTransactionContext } from "context/NewTransactionContext";
 import AttachmentIcon from "svgs/icons/attachment.svg";
 
 const StyledA = styled.a`
@@ -13,17 +12,19 @@ const StyledA = styled.a`
   }
 `;
 
-const AttachedFile: React.FC = () => {
-  const { extraDescriptionUri } = useNewTransactionContext();
+interface IAttachedFile {
+  extraDescriptionUri: string;
+}
 
-  return (
-    extraDescriptionUri ? (
-      <StyledA href={`https://ipfs.kleros.io${extraDescriptionUri}`} target="_blank" rel="noreferrer">
-        <AttachmentIcon />
-        View Attached File
-      </StyledA>
-    ) : null
-  );
+const AttachedFile: React.FC<IAttachedFile> = ({ extraDescriptionUri }) => {
+  const href = extraDescriptionUri?.replace(/^ipfs:\/\//, "https://ipfs.kleros.io/ipfs/");
+
+  return extraDescriptionUri ? (
+    <StyledA href={href} target="_blank" rel="noreferrer">
+      <AttachmentIcon />
+      View Attached File
+    </StyledA>
+  ) : null;
 };
 
 export default AttachedFile;

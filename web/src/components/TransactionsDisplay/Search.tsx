@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import styled, { css } from "styled-components";
 import { landscapeStyle } from "styles/landscapeStyle";
+import { responsiveSize } from "styles/responsiveSize";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDebounce } from "react-use";
 import { Searchbar, DropdownSelect } from "@kleros/ui-components-library";
 import { decodeURIFilter, encodeURIFilter, useRootPath } from "utils/uri";
-import { responsiveSize } from "styles/responsiveSize";
 
 const Container = styled.div`
   display: flex;
@@ -48,6 +48,7 @@ const Search: React.FC = () => {
   const { id: searchValue, ...filterObject } = decodedFilter;
   const [search, setSearch] = useState(searchValue ?? "");
   const navigate = useNavigate();
+
   useDebounce(
     () => {
       const newFilters = search === "" ? { ...filterObject } : { ...filterObject, id: search };
@@ -57,6 +58,12 @@ const Search: React.FC = () => {
     500,
     [search]
   );
+
+  const handleStatusChange = (selectedValue) => {
+    const newFilters = { ...filterObject, status: selectedValue === "all" ? undefined : selectedValue };
+    const encodedFilter = encodeURIFilter(newFilters);
+    navigate(`${location}/${page}/${order}/${encodedFilter}`);
+  };
 
   return (
     <Container>
@@ -70,14 +77,15 @@ const Search: React.FC = () => {
       </SearchBarContainer>
       <DropdownSelect
         items={[
-          { text: "All States", dot: "grey", value: 1 },
-          { text: "In Progress", dot: "blue", value: 2 },
-          { text: "Settlement", dot: "orange", value: 3 },
-          { text: "Disputes", dot: "purple", value: 4 },
-          { text: "Concluded", dot: "green", value: 5 },
+          { text: "All States", dot: "grey", value: "all" },
+          { text: "In Progress", dot: "blue", value: "NoDispute" },
+          { text: "Waiting Buyer", dot: "orange", value: "WaitingBuyer" },
+          { text: "Waiting Seller", dot: "orange", value: "WaitingSeller" },
+          { text: "Disputed", dot: "purple", value: "DisputeCreated" },
+          { text: "Concluded", dot: "green", value: "TransactionResolved" },
         ]}
-        defaultValue={1}
-        callback={() => {}}
+        defaultValue={decodedFilter.status ?? "all"}
+        callback={(value) => handleStatusChange(value)}
       />
     </Container>
   );

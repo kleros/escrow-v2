@@ -27,7 +27,7 @@ const RaiseDisputeModal: React.FC<IRaiseDisputeModal> = ({ toggleModal }) => {
       <ReStyledModal ref={containerRef}>
         <Header />
         <Description />
-        <AmountClaimed />
+        {/* <AmountClaimed /> */}
         <FeeRequired />
         <Buttons toggleModal={toggleModal} />
       </ReStyledModal>

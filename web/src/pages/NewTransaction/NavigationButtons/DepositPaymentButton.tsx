@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@kleros/ui-components-library";
 import { useEscrowCreateTransaction, usePrepareEscrowCreateTransaction } from "hooks/contracts/generated";
 import { useNewTransactionContext } from "context/NewTransactionContext";
-import { useEnsAddress, usePublicClient } from "wagmi";
+import { useAccount, useEnsAddress, usePublicClient } from "wagmi";
 import { parseEther } from "viem";
 import { isUndefined } from "utils/index";
 import { wrapWithToast } from "utils/wrapWithToast";
@@ -18,27 +18,23 @@ const DepositPaymentButton: React.FC = () => {
     escrowTitle,
     deliverableText,
     transactionUri,
-    deliverableFile,
+    extraDescriptionUri,
     sendingQuantity,
-    sendingToken,
-    sendingRecipientAddress,
-    receivingQuantity,
-    receivingToken,
-    receivingRecipientAddress,
+    sellerAddress,
     deadline,
     resetContext,
   } = useNewTransactionContext();
 
   const [currentTime, setCurrentTime] = useState(Date.now());
-  const [finalRecipientAddress, setFinalRecipientAddress] = useState(sendingRecipientAddress);
-  const ensResult = useEnsAddress({ name: sendingRecipientAddress, chainId: 1 });
+  const [finalRecipientAddress, setFinalRecipientAddress] = useState(sellerAddress);
+  const ensResult = useEnsAddress({ name: sellerAddress, chainId: 1 });
   const publicClient = usePublicClient();
   const navigate = useNavigate();
   const [isSending, setIsSending] = useState<boolean>(false);
+  const { address } = useAccount();
 
   useEffect(() => {
     const intervalId = setInterval(() => setCurrentTime(Date.now()), 1000);
-
     return () => clearInterval(intervalId);
   }, []);
 
@@ -46,27 +42,56 @@ const DepositPaymentButton: React.FC = () => {
     if (ensResult.data) {
       setFinalRecipientAddress(ensResult.data);
     } else {
-      setFinalRecipientAddress(sendingRecipientAddress);
+      setFinalRecipientAddress(sellerAddress);
     }
-  }, [sendingRecipientAddress, ensResult.data]);
-
-  let templateData = {
-    type: escrowType,
-    title: escrowTitle,
-    ...(escrowType === "general" && { deliverableText, deliverableFile }),
-    ...(escrowType === "swap" && {
-      receivingQuantity,
-      receivingToken,
-      receivingRecipientAddress,
-      sendingQuantity,
-      sendingToken,
-    }),
-  };
-
-  const stringifiedTemplateData = JSON.stringify(templateData);
+  }, [sellerAddress, ensResult.data]);
 
   const deadlineTimestamp = new Date(deadline).getTime();
   const timeoutPayment = (deadlineTimestamp - currentTime) / 1000;
+
+  const templateData = {
+    $schema: "../NewDisputeTemplate.schema.json",
+    title: escrowTitle,
+    description: deliverableText,
+    question: "Which party abided by the terms of the contract?",
+    answers: [
+      {
+        title: "Refund the Buyer",
+        description: "Select this to return the funds to the Buyer.",
+      },
+      {
+        title: "Pay the Seller",
+        description: "Select this to release the funds to the Seller.",
+      },
+    ],
+    policyURI: "ipfs://TODO",
+    attachment: {
+      label: "Transaction Terms",
+      uri: extraDescriptionUri,
+    },
+    frontendUrl: `https://escrow-v2.kleros.builders/#/myTransactions/%s`,
+    arbitrableChainID: "421614",
+    arbitrableAddress: "0x10f7A6f42Af606553883415bc8862643A6e63fdA",
+    arbitratorChainID: "421614",
+    arbitratorAddress: "0xA54e7A16d7460e38a8F324eF46782FB520d58CE8",
+    metadata: {
+      buyer: address,
+      seller: sellerAddress,
+      amount: sendingQuantity,
+      asset: escrowType === "general" ? "native" : "",
+      timeoutPayment: timeoutPayment,
+      transactionUri: transactionUri,
+    },
+    category: "Escrow",
+    specification: "KIPXXX",
+    aliases: {
+      Buyer: address,
+      Seller: sellerAddress,
+    },
+    version: "1.0",
+  };
+
+  const stringifiedTemplateData = JSON.stringify(templateData);
 
   const { config: createTransactionConfig } = usePrepareEscrowCreateTransaction({
     enabled: !isUndefined(ensResult) && ethAddressPattern.test(finalRecipientAddress),
@@ -75,7 +100,8 @@ const DepositPaymentButton: React.FC = () => {
       transactionUri,
       finalRecipientAddress,
       stringifiedTemplateData,
-      "", // Assuming no template data mappings are needed
+      /* Assuming no template data mappings are needed*/
+      ,
     ],
     value: parseEther(sendingQuantity),
   });
@@ -86,9 +112,11 @@ const DepositPaymentButton: React.FC = () => {
     if (!isUndefined(createTransaction)) {
       setIsSending(true);
       wrapWithToast(async () => await createTransaction().then((response) => response.hash), publicClient)
-        .then(() => {
-          resetContext();
-          navigate("/");
+        .then((wrapResult) => {
+          if (wrapResult.status) {
+            resetContext();
+            navigate("/myTransactions/display/1/desc/all");
+          }
         })
         .catch((error) => {
           console.error("Transaction failed:", error);

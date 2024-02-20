@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import { useClickAway } from "react-use";
-import { StyledModal } from "components/Modal/StyledModal";
+import { StyledModal } from "~src/pages/MyTransactions/Modal/StyledModal";
 import VerifiedLogo from "./VerifiedLogo";
 import Header from "./Header";
 import Description from "./Description";

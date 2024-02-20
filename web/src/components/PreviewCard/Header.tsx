@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
-import { useNewTransactionContext } from "context/NewTransactionContext";
+import { isUndefined } from "utils/index";
+import { StyledSkeleton } from "../StyledSkeleton";
 
 const Container = styled.div`
   display: flex;
@@ -19,13 +20,16 @@ const StyledHeader = styled.h1`
   width: 100%;
 `;
 
-const Header: React.FC = () => {
-  const { escrowType, escrowTitle } = useNewTransactionContext();
+interface IHeader {
+  escrowType: string;
+  escrowTitle?: string;
+}
 
+const Header: React.FC<IHeader> = ({ escrowType, escrowTitle }) => {
   return (
     <Container>
       <StyledLabel>{escrowType === "general" ? "General Escrow" : "Crypto Swap"}</StyledLabel>
-      <StyledHeader>{escrowTitle}</StyledHeader>
+      {isUndefined(escrowTitle) ? <StyledSkeleton /> : <StyledHeader>{escrowTitle}</StyledHeader>}
     </Container>
   );
 };

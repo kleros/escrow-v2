@@ -7,14 +7,14 @@ import CalendarIcon from "svgs/icons/calendar.svg";
 import PileCoinsIcon from "svgs/icons/pile-coins.svg";
 import UserIcon from "svgs/icons/user.svg";
 import Field from "./Field";
-import { responsiveSize } from "styles/responsiveSize";
+import { shortenAddress } from "utils/shortenAddress";
 
 const Container = styled.div<{ isList: boolean; isPreview?: boolean }>`
   display: flex;
   width: 100%;
   gap: 8px;
   flex-direction: column;
-  justify-content: flex-end;
+  justify-content: center;
 
   ${({ isList }) =>
     isList &&
@@ -23,6 +23,7 @@ const Container = styled.div<{ isList: boolean; isPreview?: boolean }>`
         () => css`
           gap: 0;
           height: 100%;
+          flex: 1;
         `
       )}
     `};
@@ -37,14 +38,23 @@ const RestOfFieldsContainer = styled.div<{ isList?: boolean; isPreview?: boolean
   width: 100%;
   height: 100%;
 
-  ${({ isList }) =>
+  ${({ isList, isPreview }) =>
     isList &&
+    !isPreview &&
     css`
       ${landscapeStyle(
         () => css`
+          display: flex;
           flex-direction: row;
-          gap: ${responsiveSize(4, 24, 300, 900)};
-          justify-content: space-around;
+          justify-content: space-between;
+          align-self: flex-end;
+          width: auto;
+          max-width: 360px;
+          height: auto;
+          flex-wrap: wrap;
+          align-items: center;
+          gap: 8px 32px;
+          margin-right: 35px;
         `
       )}
     `};
@@ -60,20 +70,21 @@ const RestOfFieldsContainer = styled.div<{ isList?: boolean; isPreview?: boolean
 
 export interface ITransactionInfo {
   amount?: string;
-  deadline?: Date;
+  deadlineDate: Date;
   token?: string;
   status?: Statuses;
   overrideIsList?: boolean;
   isPreview?: boolean;
-  receiver?: string;
+  sellerAddress?: string;
+  buyerAddress?: string;
 }
 
 const TransactionInfo: React.FC<ITransactionInfo> = ({
   amount,
   token,
-  deadline,
-  status,
-  receiver,
+  deadlineDate,
+  sellerAddress,
+  buyerAddress,
   overrideIsList,
   isPreview,
 }) => {
@@ -92,14 +103,29 @@ const TransactionInfo: React.FC<ITransactionInfo> = ({
             isPreview={isPreview}
           />
         ) : null}
-        {receiver ? (
-          <Field icon={UserIcon} name="Receiver" value={receiver} displayAsList={displayAsList} isPreview={isPreview} />
-        ) : null}
-        {deadline ? (
+        {deadlineDate ? (
           <Field
             icon={CalendarIcon}
             name="Delivery Deadline"
-            value={new Date(deadline).toLocaleString()}
+            value={deadlineDate}
+            displayAsList={displayAsList}
+            isPreview={isPreview}
+          />
+        ) : null}
+        {buyerAddress ? (
+          <Field
+            icon={UserIcon}
+            name="Buyer"
+            value={shortenAddress(buyerAddress)}
+            displayAsList={displayAsList}
+            isPreview={isPreview}
+          />
+        ) : null}
+        {sellerAddress ? (
+          <Field
+            icon={UserIcon}
+            name="Seller"
+            value={shortenAddress(sellerAddress)}
             displayAsList={displayAsList}
             isPreview={isPreview}
           />

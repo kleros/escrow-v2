@@ -1,40 +1,53 @@
 import React from "react";
 import styled from "styled-components";
-import { useNewTransactionContext } from "context/NewTransactionContext";
-import { useAccount } from "wagmi";
-import { useNativeTokenSymbol } from "hooks/useNativeTokenSymbol";
+import { StyledSkeleton } from "components/StyledSkeleton";
+import { isUndefined } from "utils/index";
 
 const StyledP = styled.p`
   margin: 0;
   word-break: break-word;
 `;
 
-const Description: React.FC = () => {
-  const {
-    escrowType,
-    deliverableText,
-    receivingQuantity,
-    receivingToken,
-    receivingRecipientAddress,
-    sendingQuantity,
-    sendingToken,
-    sendingRecipientAddress,
-    deadline,
-  } = useNewTransactionContext();
-  const nativeTokenSymbol = useNativeTokenSymbol();
+interface IDescription {
+  escrowType: string;
+  deliverableText: string;
+  receivingQuantity: string;
+  receivingToken: string;
+  buyerAddress: string;
+  sendingQuantity: string;
+  sendingToken: string;
+  sellerAddress: string;
+  deadlineDate: Date;
+  tokenSymbol: string;
+  buyer: string;
+}
 
-  const { address } = useAccount();
-
+const Description: React.FC<IDescription> = ({
+  escrowType,
+  deliverableText,
+  receivingQuantity,
+  receivingToken,
+  buyerAddress,
+  sendingQuantity,
+  sendingToken,
+  sellerAddress,
+  deadlineDate,
+  tokenSymbol,
+}) => {
   const generalEscrowSummary =
-    `By Paying ${sendingQuantity + " " + nativeTokenSymbol}, address ${address} should receive` +
-    ` ${deliverableText} from address ${sendingRecipientAddress} before the delivery deadline ${deadline}.`;
+    `By Paying ${sendingQuantity + " " + tokenSymbol}, address ${buyerAddress} should receive` +
+    ` ${deliverableText} from address ${sellerAddress} before the delivery deadline ${new Date(
+      deadlineDate
+    )}.`;
 
   const cryptoSwapSummary =
-    `By Paying ${sendingQuantity + " " + sendingToken}, [Blockchain] address ${address} should receive` +
-    ` ${receivingQuantity + " " + receivingToken} at the [Blockchain] address ${receivingRecipientAddress}` +
-    ` from [Blockchain] address ${sendingRecipientAddress} before the delivery deadline ${deadline}.`;
+    `By Paying ${sendingQuantity + " " + sendingToken}, [Blockchain] address ${buyerAddress} should receive` +
+    ` ${receivingQuantity + " " + receivingToken} at the [Blockchain] address ${sellerAddress}` +
+    ` from [Blockchain] address TODO before the delivery deadline ${deadlineDate}.`;
 
-  return (
+  return isUndefined(deliverableText) ? (
+    <StyledSkeleton />
+  ) : (
     <div>
       <StyledP>{escrowType === "general" ? generalEscrowSummary : cryptoSwapSummary}</StyledP>
       <br />

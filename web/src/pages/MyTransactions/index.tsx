@@ -6,6 +6,7 @@ import { DEFAULT_CHAIN } from "consts/chains";
 import ConnectWallet from "components/ConnectWallet";
 import TransactionsFetcher from "./TransactionsFetcher";
 import TransactionDetails from "./TransactionDetails";
+import { TransactionDetailsProvider } from "context/TransactionDetailsContext"
 
 const Container = styled.div`
   width: 100%;
@@ -31,20 +32,22 @@ const Dashboard: React.FC = () => {
   const isOnSupportedChain = chain?.id === DEFAULT_CHAIN;
 
   return (
-    <Container>
-      {isConnected && isOnSupportedChain ? (
-        <Routes>
-          <Route path="/display/:page/:order/:filter" element={<TransactionsFetcher />} />
-          <Route path="/:id/*" element={<TransactionDetails />} />
-        </Routes>
-      ) : (
-        <ConnectWalletContainer>
-          To see your transactions, connect first and switch to the supported chain
-          <hr />
-          <ConnectWallet />
-        </ConnectWalletContainer>
-      )}
-    </Container>
+    <TransactionDetailsProvider>
+      <Container>
+        {isConnected && isOnSupportedChain ? (
+          <Routes>
+            <Route path="/display/:page/:order/:filter" element={<TransactionsFetcher />} />
+            <Route path="/:id/*" element={<TransactionDetails />} />
+          </Routes>
+        ) : (
+          <ConnectWalletContainer>
+            To see your transactions, connect first and switch to the supported chain
+            <hr />
+            <ConnectWallet />
+          </ConnectWalletContainer>
+        )}
+      </Container>
+    </TransactionDetailsProvider>
   );
 };
 

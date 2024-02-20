@@ -1,5 +1,7 @@
 import React from "react";
 import styled from "styled-components";
+import { shortenAddress } from "utils/shortenAddress";
+import { useTransactionDetailsContext } from "context/TransactionDetailsContext";
 
 const Container = styled.div`
   flex-direction: column;
@@ -18,9 +20,13 @@ const StyledThanks = styled.p`
 `;
 
 const Description: React.FC = () => {
+  const { seller } = useTransactionDetailsContext();
+
   return (
     <Container>
-      <StyledEscrowConcluded>Escrow concluded. The funds were released to John.eth.</StyledEscrowConcluded>
+      <StyledEscrowConcluded>
+        Escrow concluded. The funds were released to {shortenAddress(seller)}.
+      </StyledEscrowConcluded>
       <StyledThanks>Thanks for using Kleros Escrow.</StyledThanks>
     </Container>
   );

@@ -8,9 +8,8 @@ import { BREAKPOINT_LANDSCAPE } from "styles/landscapeStyle";
 import { useIsList } from "context/IsListProvider";
 import { isUndefined } from "utils/index";
 import { decodeURIFilter } from "utils/uri";
-// import { TransactionDetailsFragment } from "queries/useCasesQuery";
 import TransactionCard from "components/TransactionCard";
-import TransactionsListHeader from "./TransactionsListHeader";
+import { TransactionDetailsFragment } from "src/graphql/graphql";
 
 const GridContainer = styled.div`
   --gap: 24px;
@@ -34,7 +33,7 @@ const StyledPagination = styled(StandardPagination)`
 `;
 
 export interface ITransactionsGrid {
-  transactions?: [];
+  transactions?: TransactionDetailsFragment[];
   currentPage: number;
   setCurrentPage: (newPage: number) => void;
   transactionsPerPage: number;
@@ -59,7 +58,6 @@ const TransactionsGrid: React.FC<ITransactionsGrid> = ({
     <>
       {isList && screenIsBig ? (
         <ListContainer>
-          <TransactionsListHeader />
           {isUndefined(transactions)
             ? [...Array(transactionsPerPage)].map((_, i) => <SkeletonTransactionListItem key={i} />)
             : transactions.map((transaction) => {

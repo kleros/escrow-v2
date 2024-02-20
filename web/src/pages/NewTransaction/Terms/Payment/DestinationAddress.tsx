@@ -5,10 +5,18 @@ import { Field } from "@kleros/ui-components-library";
 import { responsiveSize } from "styles/responsiveSize";
 import { useEnsAddress } from "wagmi";
 import { useNewTransactionContext } from "context/NewTransactionContext";
+import { useDebounce } from "react-use";
 
 const StyledField = styled(Field)`
   width: 84vw;
   margin-bottom: ${responsiveSize(68, 40)};
+
+  small {
+    margin-top: 6px;
+    svg {
+      margin-top: 8px;
+    }
+  }
 
   input {
     font-size: 16px;
@@ -35,25 +43,22 @@ interface IDestinationAddress {
 
 const DestinationAddress: React.FC<IDestinationAddress> = ({ recipientAddress, setRecipientAddress }) => {
   const [isValid, setIsValid] = useState(true);
-  const ensResult = useEnsAddress({ name: recipientAddress, chainId: 1 });
+  const [debouncedRecipientAddress, setDebouncedRecipientAddress] = useState(recipientAddress);
+  const ensResult = useEnsAddress({ name: debouncedRecipientAddress, chainId: 1 });
   const { setIsRecipientAddressResolved } = useNewTransactionContext();
 
+  useDebounce(() => setDebouncedRecipientAddress(recipientAddress), 350, [recipientAddress]);
+
   useEffect(() => {
-    if (recipientAddress === "") {
-      setIsValid(true);
-      setIsRecipientAddressResolved(false);
-    } else if (ethAddressPattern.test(recipientAddress)) {
-      setIsValid(true);
-      setIsRecipientAddressResolved(true);
-    } else if (ensDomainPattern.test(recipientAddress)) {
-      const isResolved = !!ensResult.data;
-      setIsValid(isResolved);
-      setIsRecipientAddressResolved(isResolved);
-    } else {
-      setIsValid(false);
-      setIsRecipientAddressResolved(false);
+    const isAddressValid = validateAddress(debouncedRecipientAddress);
+    setIsValid(isAddressValid);
+    setIsRecipientAddressResolved(isAddressValid);
+
+    if (ensDomainPattern.test(debouncedRecipientAddress)) {
+      setIsValid(!!ensResult.data);
+      setIsRecipientAddressResolved(!!ensResult.data);
     }
-  }, [recipientAddress, ensResult.data, setIsRecipientAddressResolved]);
+  }, [debouncedRecipientAddress, ensResult.data, setIsRecipientAddressResolved]);
 
   const handleWrite = (event: React.ChangeEvent<HTMLInputElement>) => {
     const input = event.target.value;
@@ -61,16 +66,18 @@ const DestinationAddress: React.FC<IDestinationAddress> = ({ recipientAddress, s
   };
 
   const message = useMemo(() => {
-    return recipientAddress === "" || isValid
-      ? "The ETH address or ENS of the person/entity that will receive the funds."
-      : "The ETH address or ENS of the person/entity is not correct.";
-  }, [recipientAddress, isValid]);
+    if (debouncedRecipientAddress === "" || isValid) {
+      return "The ETH address or ENS of the person/entity that will receive the funds.";
+    } else {
+      return "The ETH address or ENS of the person/entity is not correct.";
+    }
+  }, [debouncedRecipientAddress, isValid]);
 
   const variant = useMemo(() => {
-    if (recipientAddress === "") return "info";
+    if (debouncedRecipientAddress === "") return "info";
     else if (isValid) return "success";
     else return "error";
-  }, [recipientAddress, isValid]);
+  }, [debouncedRecipientAddress, isValid]);
 
   return (
     <StyledField

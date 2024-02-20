@@ -16,12 +16,22 @@ const StyledSkeletonTransactionCard = styled(Skeleton)`
 `;
 
 const StyledSkeletonTransactionListItem = styled(Skeleton)`
-  height: 62px;
+  height: 80px;
 `;
 
 const StyledSkeletonEvidenceCard = styled(Skeleton)`
   height: 146px;
   width: 76vw;
+`;
+
+const StyledSkeletonButton = styled(Skeleton)`
+  width: 168px;
+  height: 45px;
+`;
+
+export const StyledSkeletonTitle = styled(Skeleton)`
+  margin-left: 92px;
+  width: 200px;
 `;
 
 export const SkeletonTransactionCard = () => (
@@ -33,3 +43,5 @@ export const SkeletonTransactionCard = () => (
 export const SkeletonTransactionListItem = () => <StyledSkeletonTransactionListItem />;
 
 export const SkeletonEvidenceCard = () => <StyledSkeletonEvidenceCard />;
+
+export const SkeletonButton = () => <StyledSkeletonButton />;

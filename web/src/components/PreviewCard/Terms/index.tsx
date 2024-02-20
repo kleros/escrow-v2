@@ -10,12 +10,50 @@ const Container = styled.div`
   gap: 24px;
 `;
 
-const Terms: React.FC = () => {
+interface ITerms {
+  escrowType: string;
+  deliverableText: string;
+  receivingQuantity: string;
+  receivingToken: string;
+  buyerAddress: string;
+  sendingQuantity: string;
+  sendingToken: string;
+  sellerAddress: string;
+  deadlineDate: Date;
+  tokenSymbol: string;
+  extraDescriptionUri: string;
+  buyer: string;
+}
+
+const Terms: React.FC<ITerms> = ({
+  escrowType,
+  deliverableText,
+  receivingQuantity,
+  receivingToken,
+  buyerAddress,
+  sendingQuantity,
+  sendingToken,
+  sellerAddress,
+  deadlineDate,
+  tokenSymbol,
+  extraDescriptionUri,
+}) => {
   return (
     <Container>
       <Header />
-      <Description />
-      <AttachedFile />
+      <Description
+        escrowType={escrowType}
+        deliverableText={deliverableText}
+        receivingQuantity={receivingQuantity}
+        receivingToken={receivingToken}
+        buyerAddress={buyerAddress}
+        sendingQuantity={sendingQuantity}
+        sendingToken={sendingToken}
+        sellerAddress={sellerAddress}
+        deadlineDate={deadlineDate}
+        tokenSymbol={tokenSymbol}
+      />
+      <AttachedFile extraDescriptionUri={extraDescriptionUri} />
     </Container>
   );
 };

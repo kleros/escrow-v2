@@ -48,7 +48,7 @@ const StyledLink = styled(Link)<{ isActive: boolean }>`
 `;
 
 const links = [
-  { to: "/", text: "New Transaction" },
+  { to: "/newTransaction", text: "New Transaction" },
   { to: "/myTransactions/display/1/desc/all", text: "My Transactions" },
 ];
 

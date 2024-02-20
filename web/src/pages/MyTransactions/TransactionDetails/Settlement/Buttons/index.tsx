@@ -2,7 +2,9 @@ import React from "react";
 import styled from "styled-components";
 import AcceptButton from "./AcceptButton";
 import CounterProposeButton from "./CounterProposeButton";
-import RaiseDisputeButton from "../../Overview/WasItFulfilled/Buttons/RaiseDisputeButton";
+import RaiseDisputeButton from "../../../../../components/OpenModalRaiseDisputeButton";
+import { useAccount } from "wagmi";
+import { useTransactionDetailsContext } from "context/TransactionDetailsContext";
 
 const Container = styled.div`
   display: flex;
@@ -12,12 +14,22 @@ const Container = styled.div`
 `;
 
 const Buttons: React.FC = () => {
+  const { address } = useAccount();
+  const { status, buyer, seller } = useTransactionDetailsContext();
+  const isBuyer = address?.toLowerCase() === buyer?.toLowerCase();
+  const isSeller = address?.toLowerCase() === seller?.toLowerCase();
+
+  const showAcceptButton = status === "WaitingBuyer" && isBuyer;
+  const showCounterProposeButton = status === "WaitingSeller" && isSeller;
+  const showRaiseDisputeButton = status && ["WaitingBuyer", "WaitingSeller"].includes(status);
+
   return (
     <Container>
-      <AcceptButton />
-      <CounterProposeButton />
-      <RaiseDisputeButton />
+      {showAcceptButton && <AcceptButton />}
+      {showCounterProposeButton && <CounterProposeButton />}
+      {showRaiseDisputeButton && <RaiseDisputeButton />}
     </Container>
   );
 };
+
 export default Buttons;

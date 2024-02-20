@@ -17,8 +17,8 @@ const GeneralTransaction: React.FC = () => {
   const {
     sendingQuantity,
     setSendingQuantity,
-    sendingRecipientAddress,
-    setSendingRecipientAddress,
+    sellerAddress,
+    setSellerAddress,
   } = useNewTransactionContext();
 
   return (
@@ -26,7 +26,7 @@ const GeneralTransaction: React.FC = () => {
       <Header text="I am paying" />
       <TokenAndAmount quantity={sendingQuantity} setQuantity={setSendingQuantity} />
       <ToDivider />
-      <DestinationAddress recipientAddress={sendingRecipientAddress} setRecipientAddress={setSendingRecipientAddress} />
+      <DestinationAddress recipientAddress={sellerAddress} setRecipientAddress={setSellerAddress} />
       <NavigationButtons prevRoute="/newTransaction/deliverable" nextRoute="/newTransaction/deadline" />
     </Container>
   );

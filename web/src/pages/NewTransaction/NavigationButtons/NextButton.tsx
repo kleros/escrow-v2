@@ -22,10 +22,10 @@ const NextButton: React.FC<INextButton> = ({ nextRoute }) => {
     setIsFileUploading,
     setExtraDescriptionUri,
     setTransactionUri,
-    receivingRecipientAddress,
+    buyerAddress,
     receivingQuantity,
     receivingToken,
-    sendingRecipientAddress,
+    sellerAddress,
     sendingQuantity,
     sendingToken,
     deadline,
@@ -34,21 +34,21 @@ const NextButton: React.FC<INextButton> = ({ nextRoute }) => {
     isRecipientAddressResolved,
   } = useNewTransactionContext();
 
-  const isReceivingAddressValid = validateAddress(receivingRecipientAddress);
-  const areReceivingFieldsEmpty = !receivingQuantity || !receivingToken || !receivingRecipientAddress;
+  const isBuyerAddressValid = validateAddress(buyerAddress);
+  const areReceivingFieldsEmpty = !receivingQuantity || !receivingToken || !buyerAddress;
 
-  const isSendingAddressValid = validateAddress(sendingRecipientAddress);
+  const isSellerAddressValid = validateAddress(sellerAddress);
   const areSendingFieldsEmpty =
     escrowType === "swap"
-      ? !sendingQuantity || !sendingToken || !sendingRecipientAddress
-      : !sendingQuantity || !sendingRecipientAddress;
+      ? !sendingQuantity || !sendingToken || !sellerAddress
+      : !sendingQuantity || !sellerAddress;
 
   const isEmailValid = notificationEmail === "" || EMAIL_REGEX.test(notificationEmail);
 
   const isDeliverableValid =
     escrowType === "general"
       ? !!deliverableText && !isFileUploading
-      : !(areReceivingFieldsEmpty || !isReceivingAddressValid);
+      : !(areReceivingFieldsEmpty || !isBuyerAddressValid);
 
   const deadlineTimestamp = deadline ? new Date(deadline).getTime() : 0;
   const currentTime = Date.now();
@@ -60,7 +60,7 @@ const NextButton: React.FC<INextButton> = ({ nextRoute }) => {
     (location.pathname.includes("/newTransaction/deliverable") && !isDeliverableValid) ||
     (location.pathname.includes("/newTransaction/payment") &&
       (areSendingFieldsEmpty ||
-        !isSendingAddressValid ||
+        !isSellerAddressValid ||
         !isRecipientAddressResolved ||
         !hasSufficientNativeBalance)) ||
     (location.pathname.includes("/newTransaction/deadline") && (!deadline || isDeadlineInPast)) ||
@@ -78,7 +78,6 @@ const NextButton: React.FC<INextButton> = ({ nextRoute }) => {
         );
 
         if (transactionUri) {
-          console.log("transactionUri", transactionUri);
           setTransactionUri(transactionUri);
           navigate(nextRoute);
         }

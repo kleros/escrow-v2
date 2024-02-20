@@ -7,8 +7,37 @@ const StyledTimeline = styled(CustomTimeline)`
   width: 100%;
 `;
 
-const EscrowTimeline: React.FC = () => {
-  const items = useEscrowTimelineItems(new Date());
+interface IEscrowTimeline {
+  isPreview: boolean;
+  status: boolean;
+  transactionCreationTimestamp: number;
+  buyerAddress: string;
+  sellerAddress: string;
+  hasToPayFees: [];
+  disputeRequest: [];
+  resolvedEvents: [];
+}
+
+const EscrowTimeline: React.FC<IEscrowTimeline> = ({
+  isPreview,
+  transactionCreationTimestamp,
+  status,
+  buyerAddress,
+  sellerAddress,
+  hasToPayFees,
+  disputeRequest,
+  resolvedEvents,
+}) => {
+  const items = useEscrowTimelineItems(
+    isPreview,
+    transactionCreationTimestamp,
+    status,
+    buyerAddress,
+    sellerAddress,
+    hasToPayFees,
+    disputeRequest,
+    resolvedEvents
+  );
 
   return <StyledTimeline items={items} />;
 };
