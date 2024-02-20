@@ -8,6 +8,7 @@ import {
   User,
   DisputeRequest,
   EscrowParameters,
+  SettlementProposal
 } from "../generated/schema";
 import {
   Payment as PaymentEvent,
@@ -16,6 +17,7 @@ import {
   TransactionResolved as TransactionResolvedEvent,
   DisputeRequest as DisputeRequestEvent,
   ParameterUpdated as ParameterUpdatedEvent,
+  SettlementProposed as SettlementProposedEvent,
 } from "../generated/Escrow/Escrow";
 import { ZERO, ONE } from "./utils";
 
@@ -239,4 +241,16 @@ export function handleDisputeRequest(event: DisputeRequestEvent): void {
   seller.save();
   escrow.status = "DisputeCreated";
   escrow.save();
+}
+
+export function handleSettlementProposed(event: SettlementProposedEvent): void {
+  let id = event.transaction.hash.toHex() + "-" + event.logIndex.toString();
+  let proposal = new SettlementProposal(id);
+
+  proposal.escrow = event.params._transactionID.toString();
+  proposal.party = event.params._party == 1 ? "Buyer" : "Seller";
+  proposal.amount = event.params._amount;
+  proposal.timestamp = event.block.timestamp;
+
+  proposal.save();
 }

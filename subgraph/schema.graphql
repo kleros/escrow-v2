@@ -42,6 +42,7 @@ type Escrow @entity {
   hasToPayFees: [HasToPayFee!]! @derivedFrom(field: "escrow")
   createdEvents: [TransactionCreated!]! @derivedFrom(field: "escrow")
   resolvedEvents: [TransactionResolved!]! @derivedFrom(field: "escrow")
+  settlementProposals: [SettlementProposal!]! @derivedFrom(field: "escrow")
   disputeRequest: DisputeRequest @derivedFrom(field: "escrow")
 }
 
@@ -95,4 +96,12 @@ type EscrowParameters @entity {
   feeTimeout: BigInt!
   settlementTimeout: BigInt!
   arbitratorExtraData: Bytes!
+}
+
+type SettlementProposal @entity {
+  id: ID!
+  escrow: Escrow!
+  party: Party!
+  amount: BigInt!
+  timestamp: BigInt!
 }
