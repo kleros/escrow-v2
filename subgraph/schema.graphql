@@ -31,9 +31,9 @@ type Escrow @entity {
   buyerFee: BigInt
   sellerFee: BigInt
   lastFeePaymentTime: BigInt
-  feeTimeout: BigInt!
-  settlementTimeout: BigInt!
-  arbitratorExtraData: Bytes!
+  feeTimeout: BigInt
+  settlementTimeout: BigInt
+  arbitratorExtraData: Bytes
   templateData: String
   templateDataMappings: String
   status: Status

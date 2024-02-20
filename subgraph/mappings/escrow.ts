@@ -17,6 +17,7 @@ import {
   DisputeRequest as DisputeRequestEvent,
   ParameterUpdated as ParameterUpdatedEvent,
 } from "../generated/Escrow/Escrow";
+import { ZERO, ONE } from "./utils";
 
 function createEscrow(id: string): Escrow {
   let escrow = new Escrow(id);
