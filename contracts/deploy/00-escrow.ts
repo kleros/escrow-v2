@@ -3,29 +3,48 @@ import { DeployFunction } from "hardhat-deploy/types";
 import { HomeChains, isSkipped } from "./utils";
 
 const disputeTemplate = `{
-  "$schema": "../NewDisputeTemplate.schema.json",
-  "title": "Let's do this",
-  "description": "We want to do this: %s",
-  "question": "Does it comply with the policy?",
+  "title": "{{escrowTitle}}",
+  "description": "{{deliverableText}}",
+  "question": "Which party abided by the terms of the contract?",
   "answers": [
-    {
-      "title": "Yes",
-      "description": "Select this if you agree that it must be done."
-    },
-    {
-      "title": "No",
-      "description": "Select this if you do not agree that it must be done."
-    }
+      {
+          "title": "Refund the Buyer",
+          "description": "Select this to return the funds to the Buyer."
+      },
+      {
+          "title": "Pay the Seller",
+          "description": "Select this to release the funds to the Seller."
+      }
   ],
-  "policyURI": "/ipfs/Qmdvk...rSD6cE/policy.pdf",
-  "frontendUrl": "https://kleros-v2.netlify.app/#/cases/%s/overview",
+  "policyURI": "ipfs://TODO",
+  "attachment": {
+      "label": "Transaction Terms",
+      "uri": "{{extraDescriptionUri}}"
+  },
+  "frontendUrl": "https://escrow-v2.kleros.builders/#/myTransactions/%s",
+  "arbitrableChainID": "421614",
+  "arbitrableAddress": "0x10f7A6f42Af606553883415bc8862643A6e63fdA",
   "arbitratorChainID": "421614",
-  "arbitratorAddress": "0xD08Ab99480d02bf9C092828043f611BcDFEA917b",
-  "category": "Others",
-  "specification": "KIP001",
-  "lang": "en_US"
+  "arbitratorAddress": "0xA54e7A16d7460e38a8F324eF46782FB520d58CE8",
+  "metadata": {
+      "buyer": "{{address}}",
+      "seller": "{{sendingRecipientAddress}}",
+      "amount": "{{sendingQuantity}}",
+      "asset": "{{escrowType}}",
+      "timeoutPayment": "{{timeoutPayment}}",
+      "transactionUri": "{{transactionUri}}"
+  },
+  "category": "Escrow",
+  "specification": "KIPXXX",
+  "aliases": {
+      "Buyer": "{{address}}",
+      "Seller": "{{sendingRecipientAddress}}"
+  },
+  "version": "1.0"
 }
 `;
+
+const mapping = `{}`;
 
 // General court, 3 jurors
 const extraData =
@@ -42,16 +61,19 @@ const deploy: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
 
   const klerosCore = await deployments.get("KlerosCore");
   const disputeTemplateRegistry = await deployments.get("DisputeTemplateRegistry");
+  const feeTimeout = 600; // 10 minutes
+  const settlementTimeout = 600; // 10 minutes
   
   await deploy("Escrow", {
     from: deployer,
     args: [
       klerosCore.address,
       extraData,
-      disputeTemplate, // TODO: use an Escrow-specific dispute template
-      "disputeTemplateMapping: TODO",
+      disputeTemplate,
+      mapping,
       disputeTemplateRegistry.address,
-      600, // feeTimeout: 10 minutes
+      feeTimeout,
+      settlementTimeout,
     ],
     log: true,
   });
