@@ -7,6 +7,7 @@ import {
   TransactionResolved,
   User,
   DisputeRequest,
+  EscrowParameters,
 } from "../generated/schema";
 import {
   Payment as PaymentEvent,
@@ -14,8 +15,8 @@ import {
   TransactionCreated as TransactionCreatedEvent,
   TransactionResolved as TransactionResolvedEvent,
   DisputeRequest as DisputeRequestEvent,
+  ParameterUpdated as ParameterUpdatedEvent,
 } from "../generated/Escrow/Escrow";
-import { ZERO, ONE } from "./utils";
 
 function createEscrow(id: string): Escrow {
   let escrow = new Escrow(id);
@@ -50,6 +51,26 @@ function getUser(id: string): User {
     user = createUser(id);
   }
   return user as User;
+}
+
+function getEscrowParameters(): EscrowParameters {
+  let escrowParameters = EscrowParameters.load('singleton')
+  if (escrowParameters === null) {
+    escrowParameters = new EscrowParameters('singleton')
+    escrowParameters.feeTimeout = ZERO
+    escrowParameters.settlementTimeout = ZERO
+    escrowParameters.arbitratorExtraData = Bytes.fromHexString("0x00")
+    escrowParameters.save()
+  }
+  return escrowParameters;
+}
+
+export function handleParameterUpdated(event: ParameterUpdatedEvent): void {
+  let escrowParameters = getEscrowParameters()
+  escrowParameters.feeTimeout = event.params._feeTimeout
+  escrowParameters.settlementTimeout = event.params._settlementTimeout
+  escrowParameters.arbitratorExtraData = event.params._arbitratorExtraData
+  escrowParameters.save()
 }
 
 export function handlePayment(event: PaymentEvent): void {

@@ -33,3 +33,5 @@ dataSources:
           handler: handleTransactionResolved
         - event: DisputeRequest(indexed address,indexed uint256,uint256,uint256,string)
           handler: handleDisputeRequest
+        - event: ParameterUpdated(uint256,uint256,bytes)
+          handler: handleParameterUpdated
