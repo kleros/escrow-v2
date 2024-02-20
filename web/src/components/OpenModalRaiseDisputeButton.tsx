@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { Button } from "@kleros/ui-components-library";
 import { useToggle } from "react-use";
-import RaiseDisputeModal from "components/Modal/RaiseDisputeModal";
+import RaiseDisputeModal from "pages/MyTransactions/Modal/RaiseDisputeModal";
 
 const StyledButton = styled(Button)`
   margin-bottom: 32px;

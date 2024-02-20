@@ -7,20 +7,20 @@ import LawBalanceIcon from "components/StyledIcons/LawBalanceIcon";
 
 const useEscrowTimelineItems = (
   isPreview: boolean,
-  timestamp: number,
+  transactionCreationTimestamp: number,
   status: string,
-  resolvedEvents: [],
   buyer: string,
   seller: string,
   hasToPayFees: [],
-  disputeRequest: []
+  disputeRequest: [],
+  resolvedEvents: []
 ) => {
   const theme = useTheme();
 
   return useMemo(() => {
     let timelineItems = [];
 
-    const formattedCreationDate = getFormattedDate(new Date(timestamp * 1000).toLocaleString());
+    const formattedCreationDate = getFormattedDate(new Date(transactionCreationTimestamp * 1000).toLocaleString());
     timelineItems.push({
       title: "Escrow created",
       subtitle: isPreview ? getFormattedDate(new Date().toLocaleString()) : formattedCreationDate,
@@ -74,9 +74,18 @@ const useEscrowTimelineItems = (
         }
       }
     }
-
     return timelineItems;
-  }, [timestamp, status, resolvedEvents, buyer, seller, hasToPayFees, disputeRequest, isPreview, theme]);
+  }, [
+    transactionCreationTimestamp,
+    status,
+    resolvedEvents,
+    buyer,
+    seller,
+    hasToPayFees,
+    disputeRequest,
+    isPreview,
+    theme,
+  ]);
 };
 
 export default useEscrowTimelineItems;

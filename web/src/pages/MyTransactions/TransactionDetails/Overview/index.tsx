@@ -18,8 +18,19 @@ const Container = styled.div`
 
 const Overview: React.FC = () => {
   const nativeTokenSymbol = useNativeTokenSymbol();
-  const { transactionUri, amount, deadline, asset, seller, buyer, status, hasToPayFees } =
-    useTransactionDetailsContext();
+  const {
+    timestamp,
+    transactionUri,
+    amount,
+    deadline,
+    asset,
+    seller,
+    buyer,
+    status,
+    disputeRequest,
+    hasToPayFees,
+    resolvedEvents,
+  } = useTransactionDetailsContext();
   const transactionInfo = useFetchIpfsJson(transactionUri);
 
   return (
@@ -33,6 +44,8 @@ const Overview: React.FC = () => {
         buyerAddress={buyer}
         receivingToken={asset === "native" ? nativeTokenSymbol : asset}
         sellerAddress={seller}
+        transactionCreationTimestamp={timestamp}
+        status={status}
         sendingQuantity={!isUndefined(amount) ? formatEther(amount) : ""}
         sendingToken={asset === "native" ? nativeTokenSymbol : asset}
         deadlineDate={new Date(deadline * 1000).toLocaleString()}
@@ -40,6 +53,9 @@ const Overview: React.FC = () => {
         overrideIsList={false}
         amount={!isUndefined(amount) ? formatEther(amount) : ""}
         isPreview={false}
+        disputeRequest={disputeRequest}
+        hasToPayFees={hasToPayFees}
+        resolvedEvents={resolvedEvents}
       />
       {status !== "TransactionResolved" && hasToPayFees?.length === 0 ? <WasItFulfilled /> : null}
       {status === "WaitingSeller" ? <WaitingPartyInfo pendingParty="seller" /> : null}

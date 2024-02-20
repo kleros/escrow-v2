@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "@kleros/ui-components-library";
 import { useToggle } from "react-use";
-import ProposeSettlementModal from "components/Modal/ProposeSettlementModal";
+import ProposeSettlementModal from "pages/MyTransactions/Modal/ProposeSettlementModal";
 
 const CounterProposeButton: React.FC = () => {
   const [isModalOpen, toggleModal] = useToggle(false);

@@ -1,7 +1,6 @@
 import React, { useMemo } from "react";
 import styled from "styled-components";
 import { SkeletonButton } from "components/StyledSkeleton";
-import { useTransactionDetailsContext } from "context/TransactionDetailsContext";
 import ArrowIcon from "assets/svgs/icons/arrow.svg";
 import LightButton from "src/components/LightButton";
 
@@ -19,10 +18,12 @@ const StyledButton = styled(LightButton)`
   padding-top: 0px;
 `;
 
-const ViewCaseButton: React.FC = () => {
-  const { disputeRequest, resolvedEvents } = useTransactionDetailsContext();
-  console.log(disputeRequest, resolvedEvents);
+interface IViewCaseButton {
+  disputeRequest: [];
+  resolvedEvents: [];
+}
 
+const ViewCaseButton: React.FC<IViewCaseButton> = ({ disputeRequest, resolvedEvents }) => {
   const buttonText = useMemo(() => {
     if (disputeRequest?.id && resolvedEvents?.length > 0) return "Check how the jury voted on Kleros Court";
     return "Follow the case on Kleros Court";

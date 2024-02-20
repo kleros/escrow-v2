@@ -1,9 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 import ViewCaseButton from "./ViewCaseButton";
-import RaiseDisputeButton from "components/RaiseDisputeButton";
+import RaiseDisputeButton from "./RaiseDisputeButton"
 import { useAccount } from "wagmi";
-import { useTransactionDetailsContext } from "context/TransactionDetailsContext";
 import { formatEther } from "viem";
 
 const Container = styled.div`
@@ -13,17 +12,24 @@ const Container = styled.div`
   gap: 24px;
 `;
 
-const Buttons: React.FC = () => {
+interface IButtons {
+  buyerAddress: string;
+  sellerAddress: string;
+  disputeRequest: [];
+  hasToPayFees: [];
+  resolvedEvents: [];
+}
+
+const Buttons: React.FC<IButtons> = ({ buyerAddress, sellerAddress, disputeRequest, hasToPayFees, resolvedEvents }) => {
   const { address } = useAccount();
   const connectedAddress = address?.toLowerCase();
-  const { buyer, seller, disputeRequest, hasToPayFees } = useTransactionDetailsContext();
 
   const shouldPayFee = hasToPayFees?.some((fee) => {
     const partyRequiredToPay = fee.party;
-    if (partyRequiredToPay === "1" && connectedAddress === buyer.toLowerCase()) {
+    if (partyRequiredToPay === "1" && connectedAddress === buyerAddress.toLowerCase()) {
       return true;
     }
-    if (partyRequiredToPay === "2" && connectedAddress === seller.toLowerCase()) {
+    if (partyRequiredToPay === "2" && connectedAddress === sellerAddress.toLowerCase()) {
       return true;
     }
     return false;
@@ -40,7 +46,7 @@ const Buttons: React.FC = () => {
       ) : null}
       {disputeRequest ? (
         <Container>
-          <ViewCaseButton />
+          <ViewCaseButton disputeRequest={disputeRequest} resolvedEvents={resolvedEvents} />
         </Container>
       ) : null}
     </>

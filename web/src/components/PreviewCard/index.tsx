@@ -7,7 +7,7 @@ import Header from "./Header";
 import TransactionInfo from "components/TransactionInfo";
 import Terms from "./Terms";
 import EscrowTimeline from "./EscrowTimeline";
-import Buttons from "./Buttons";
+import Buttons from "pages/MyTransactions/TransactionDetails/Overview/PreviewCardButtons";
 
 export const StyledCard = styled(Card)<{ isPreview?: boolean }>`
   height: auto;
@@ -52,6 +52,8 @@ interface IPreviewCard {
   deliverableText: string;
   receivingQuantity: string;
   receivingToken: string;
+  transactionCreationTimestamp: string;
+  status: string;
   buyerAddress: string;
   sendingQuantity: string;
   sendingToken: string;
@@ -61,6 +63,9 @@ interface IPreviewCard {
   overrideIsList: boolean;
   extraDescriptionUri: string;
   isPreview: boolean;
+  disputeRequest?: [];
+  hasToPayFees?: [];
+  resolvedEvents?: [];
 }
 
 const PreviewCard: React.FC<IPreviewCard> = ({
@@ -69,6 +74,8 @@ const PreviewCard: React.FC<IPreviewCard> = ({
   deliverableText,
   receivingQuantity,
   receivingToken,
+  transactionCreationTimestamp,
+  status,
   buyerAddress,
   sendingQuantity,
   sendingToken,
@@ -78,6 +85,9 @@ const PreviewCard: React.FC<IPreviewCard> = ({
   overrideIsList,
   extraDescriptionUri,
   isPreview,
+  disputeRequest,
+  hasToPayFees,
+  resolvedEvents,
 }) => (
   <StyledCard isPreview={isPreview}>
     <Header escrowType={escrowType} escrowTitle={escrowTitle} />
@@ -108,8 +118,25 @@ const PreviewCard: React.FC<IPreviewCard> = ({
       extraDescriptionUri={extraDescriptionUri}
     />
     <Divider />
-    <EscrowTimeline isPreview={isPreview} />
-    {!isPreview ? <Buttons /> : null}
+    <EscrowTimeline
+      isPreview={isPreview}
+      status={status}
+      transactionCreationTimestamp={transactionCreationTimestamp}
+      buyerAddress={buyerAddress}
+      sellerAddress={sellerAddress}
+      hasToPayFees={hasToPayFees}
+      disputeRequest={disputeRequest}
+      resolvedEvents={resolvedEvents}
+    />
+    {!isPreview ? (
+      <Buttons
+        buyerAddress={buyerAddress}
+        sellerAddress={sellerAddress}
+        disputeRequest={disputeRequest}
+        hasToPayFees={hasToPayFees}
+        resolvedEvents={resolvedEvents}
+      />
+    ) : null}
   </StyledCard>
 );
 
