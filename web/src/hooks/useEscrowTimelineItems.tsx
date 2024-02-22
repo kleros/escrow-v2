@@ -50,12 +50,28 @@ const useEscrowTimelineItems = (
         });
       });
 
-      settlementProposals?.forEach((proposal) => {
+      settlementProposals?.forEach((proposal, index) => {
         const formattedDate = getFormattedDate(new Date(proposal.timestamp * 1000).toLocaleString());
+        let subtitle;
+
+        const isLatestProposal = index === settlementProposals.length - 1;
+        const hasBeenAccepted =
+          isLatestProposal &&
+          hasToPayFees.length === 0 &&
+          status !== "WaitingSettlementSeller" &&
+          status !== "WaitingSettlementBuyer";
+
+        if (hasBeenAccepted) {
+          subtitle = "Proposal accepted";
+        } else if (hasToPayFees.length > 0 || !isLatestProposal) {
+          subtitle = "Proposal refused";
+        } else {
+          subtitle = proposal.party === "1" ? "Waiting Seller's answer" : "Waiting Buyer's answer";
+        }
+
         let title = `The ${proposal.party === "1" ? "buyer" : "seller"} proposed: Pay ${formatEther(proposal.amount)} ${
           asset === "native" ? nativeTokenSymbol : asset
         }`;
-        let subtitle = proposal.party === "1" ? `Waiting Seller's answer` : "Waiting Buyer's answer";
 
         timelineItems.push({
           title,

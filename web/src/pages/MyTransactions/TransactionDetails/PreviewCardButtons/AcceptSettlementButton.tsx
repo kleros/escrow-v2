@@ -6,11 +6,11 @@ import { wrapWithToast } from "utils/wrapWithToast";
 import { useTransactionDetailsContext } from "context/TransactionDetailsContext";
 import { useEscrowAcceptSettlement, usePrepareEscrowAcceptSettlement } from "hooks/contracts/generated";
 
-interface IAcceptButon {
+interface IAcceptButton {
   toggleModal?: () => void;
 }
 
-const AcceptButon: React.FC<IAcceptButon> = ({ toggleModal }) => {
+const AcceptButton: React.FC<IAcceptButton> = ({ toggleModal }) => {
   const [isSending, setIsSending] = useState<boolean>(false);
   const publicClient = usePublicClient();
   const { id } = useTransactionDetailsContext();
@@ -28,6 +28,8 @@ const AcceptButon: React.FC<IAcceptButon> = ({ toggleModal }) => {
         .then((wrapResult) => {
           if (wrapResult.status && toggleModal) {
             toggleModal();
+          } else {
+            setIsSending(false);
           }
         })
         .catch((error) => {
@@ -40,4 +42,4 @@ const AcceptButon: React.FC<IAcceptButon> = ({ toggleModal }) => {
   return <Button isLoading={isSending} disabled={isSending} text="Accept" onClick={handleAcceptSettlement} />;
 };
 
-export default AcceptButon;
+export default AcceptButton;

@@ -32,6 +32,8 @@ const ProposeSettlementButton: React.FC<IProposeSettlementButton> = ({ toggleMod
         .then((wrapResult) => {
           if (wrapResult.status && toggleModal) {
             toggleModal();
+          } else {
+            setIsSending(false);
           }
         })
         .catch((error) => {
