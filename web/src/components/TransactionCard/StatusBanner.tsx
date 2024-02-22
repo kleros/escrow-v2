@@ -58,16 +58,18 @@ const getStatusColors = (status: Statuses, theme: Theme): [string, string] => {
   switch (status) {
     case Statuses.inProgress:
       return [theme.primaryBlue, theme.mediumBlue];
+    case Statuses.settlementWaitingBuyer:
+      return [theme.warning, theme.warningLight];
+    case Statuses.settlementWaitingSeller:
+      return [theme.warning, theme.warningLight];
+    case Statuses.raisingDisputeWaitingBuyer:
+      return [theme.primaryPurple, theme.lightPurple];
+    case Statuses.raisingDisputeWaitingSeller:
+      return [theme.primaryPurple, theme.lightPurple];
     case Statuses.disputed:
       return [theme.secondaryPurple, theme.mediumPurple];
     case Statuses.concluded:
       return [theme.success, theme.successLight];
-    case Statuses.waitingBuyer:
-      return [theme.warning, theme.warningLight];
-    case Statuses.waitingSeller:
-      return [theme.warning, theme.warningLight];
-    // case Statuses.settlement:
-    //   return [theme.warning, theme.warningLight];
     default:
       return [theme.primaryBlue, theme.mediumBlue];
   }
@@ -77,14 +79,18 @@ const getStatusLabel = (status: Statuses): string => {
   switch (status) {
     case Statuses.inProgress:
       return "In Progress";
+    case Statuses.settlementWaitingBuyer:
+      return "Settlement - Waiting Buyer";
+    case Statuses.settlementWaitingSeller:
+      return "Settlement - Waiting Seller";
+    case Statuses.raisingDisputeWaitingBuyer:
+      return "Raising a Dispute - Waiting Buyer";
+    case Statuses.raisingDisputeWaitingSeller:
+      return "Raising a Dispute - Waiting Seller";
     case Statuses.disputed:
       return "Disputed";
     case Statuses.concluded:
       return "Concluded";
-    case Statuses.waitingBuyer:
-      return "Waiting Buyer";
-    case Statuses.waitingSeller:
-      return "Waiting Seller";
     default:
       return "In Progress";
   }

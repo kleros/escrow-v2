@@ -7,7 +7,21 @@ const StyledField = styled(Field)`
   margin-bottom: 32px;
 `;
 
-const AmountField: React.FC = () => {
-  return <StyledField placeholder="0" />;
+interface IAmountField {
+  amountProposed: string;
+  setAmountProposed: () => void;
+}
+
+const AmountField: React.FC<IAmountField> = ({ amountProposed, setAmountProposed }) => {
+  return (
+    <StyledField
+      value={amountProposed}
+      onChange={(e) => setAmountProposed(e.target.value)}
+      type="number"
+      placeholder="0"
+      // variant={error ? "error" : undefined}
+      // message={error}
+    />
+  );
 };
 export default AmountField;

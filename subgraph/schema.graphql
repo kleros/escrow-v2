@@ -1,5 +1,7 @@
 enum Status {
   NoDispute
+  WaitingSettlementBuyer
+  WaitingSettlementSeller
   WaitingBuyer
   WaitingSeller
   DisputeCreated
@@ -17,6 +19,7 @@ enum Resolution {
   TimeoutByBuyer
   TimeoutBySeller
   RulingEnforced
+  SettlementReached
 }
 
 type Escrow @entity {
@@ -101,7 +104,7 @@ type EscrowParameters @entity {
 type SettlementProposal @entity {
   id: ID!
   escrow: Escrow!
-  party: Party!
+  party: String
   amount: BigInt!
   timestamp: BigInt!
 }

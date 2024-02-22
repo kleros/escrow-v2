@@ -1,7 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import ProposeSettlementButton from "./ProposeSettlementButton";
-import RaiseDisputeButton from "components/OpenModalRaiseDisputeButton";
+import OpenModalProposeSettlementButton from "./OpenModalProposeSettlementButton";
 import ReleasePaymentButton from "./ReleasePaymentButton";
 import { useAccount } from "wagmi";
 import { useTransactionDetailsContext } from "context/TransactionDetailsContext";
@@ -12,18 +11,18 @@ const Container = styled.div`
   flex-wrap: wrap;
   gap: 16px 24px;
   justify-content: center;
+  margin-bottom: 32px;
 `;
 
 const Buttons: React.FC = () => {
   const { address } = useAccount();
-  const { buyer } = useTransactionDetailsContext();
+  const { buyer, payments } = useTransactionDetailsContext();
   const isBuyer = address?.toLowerCase() === buyer?.toLowerCase();
 
   return (
     <Container>
-      {isBuyer ? <ReleasePaymentButton /> : null}
-      {/* <ProposeSettlementButton /> */}
-      <RaiseDisputeButton />
+      {isBuyer && payments?.length === 0 ? <ReleasePaymentButton /> : null}
+      <OpenModalProposeSettlementButton buttonText="Propose a settlement" />
     </Container>
   );
 };

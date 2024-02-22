@@ -4,18 +4,24 @@ import { getFormattedDate } from "utils/getFormattedDate";
 import { resolutionToString } from "utils/resolutionToString";
 import CheckCircleOutlineIcon from "components/StyledIcons/CheckCircleOutlineIcon";
 import LawBalanceIcon from "components/StyledIcons/LawBalanceIcon";
+import { formatEther } from "viem";
+import { useNativeTokenSymbol } from "./useNativeTokenSymbol";
 
 const useEscrowTimelineItems = (
   isPreview: boolean,
   transactionCreationTimestamp: number,
   status: string,
+  asset: string,
   buyer: string,
   seller: string,
+  payments: [],
+  settlementProposals: [],
   hasToPayFees: [],
   disputeRequest: [],
   resolvedEvents: []
 ) => {
   const theme = useTheme();
+  const nativeTokenSymbol = useNativeTokenSymbol();
 
   return useMemo(() => {
     let timelineItems = [];
@@ -29,6 +35,37 @@ const useEscrowTimelineItems = (
     });
 
     if (!isPreview) {
+      payments?.map((payment) => {
+        const isBuyer = payment.party.toLowerCase() === buyer;
+        const formattedDate = getFormattedDate(new Date(payment.timestamp * 1000).toLocaleString());
+        const title = `The ${isBuyer ? "buyer" : "seller"} paid ${formatEther(payment.amount)} ${
+          asset === "native" ? nativeTokenSymbol : asset
+        } to ${isBuyer ? "Seller" : "Buyer"}`;
+
+        timelineItems.push({
+          title,
+          subtitle: `${formattedDate}`,
+          rightSided: true,
+          variant: theme.secondaryBlue,
+        });
+      });
+
+      settlementProposals?.forEach((proposal) => {
+        const formattedDate = getFormattedDate(new Date(proposal.timestamp * 1000).toLocaleString());
+        let title = `The ${proposal.party === "1" ? "buyer" : "seller"} proposed: Pay ${formatEther(proposal.amount)} ${
+          asset === "native" ? nativeTokenSymbol : asset
+        }`;
+        let subtitle = proposal.party === "1" ? `Waiting Seller's answer` : "Waiting Buyer's answer";
+
+        timelineItems.push({
+          title,
+          subtitle: `${formattedDate}`,
+          party: subtitle,
+          rightSided: true,
+          variant: theme.warning,
+        });
+      });
+
       hasToPayFees?.forEach((fee) => {
         const formattedDate = getFormattedDate(new Date(fee.timestamp * 1000));
         let title = fee.party === "2" ? "The buyer raised a dispute" : "The seller raised a dispute";
@@ -83,6 +120,7 @@ const useEscrowTimelineItems = (
     seller,
     hasToPayFees,
     disputeRequest,
+    settlementProposals,
     isPreview,
     theme,
   ]);

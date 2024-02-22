@@ -7,7 +7,7 @@ import Header from "./Header";
 import TransactionInfo from "components/TransactionInfo";
 import Terms from "./Terms";
 import EscrowTimeline from "./EscrowTimeline";
-import Buttons from "pages/MyTransactions/TransactionDetails/Overview/PreviewCardButtons";
+import Buttons from "pages/MyTransactions/TransactionDetails/PreviewCardButtons";
 
 export const StyledCard = styled(Card)<{ isPreview?: boolean }>`
   height: auto;
@@ -54,6 +54,7 @@ interface IPreviewCard {
   receivingToken: string;
   transactionCreationTimestamp: string;
   status: string;
+  asset: string;
   buyerAddress: string;
   sendingQuantity: string;
   sendingToken: string;
@@ -63,8 +64,10 @@ interface IPreviewCard {
   overrideIsList: boolean;
   extraDescriptionUri: string;
   isPreview: boolean;
-  disputeRequest?: [];
+  payments: [];
+  settlementProposals?: [];
   hasToPayFees?: [];
+  disputeRequest?: [];
   resolvedEvents?: [];
 }
 
@@ -76,6 +79,7 @@ const PreviewCard: React.FC<IPreviewCard> = ({
   receivingToken,
   transactionCreationTimestamp,
   status,
+  asset,
   buyerAddress,
   sendingQuantity,
   sendingToken,
@@ -85,8 +89,10 @@ const PreviewCard: React.FC<IPreviewCard> = ({
   overrideIsList,
   extraDescriptionUri,
   isPreview,
-  disputeRequest,
+  payments,
+  settlementProposals,
   hasToPayFees,
+  disputeRequest,
   resolvedEvents,
 }) => (
   <StyledCard isPreview={isPreview}>
@@ -121,9 +127,12 @@ const PreviewCard: React.FC<IPreviewCard> = ({
     <EscrowTimeline
       isPreview={isPreview}
       status={status}
+      asset={asset}
       transactionCreationTimestamp={transactionCreationTimestamp}
       buyerAddress={buyerAddress}
       sellerAddress={sellerAddress}
+      payments={payments}
+      settlementProposals={settlementProposals}
       hasToPayFees={hasToPayFees}
       disputeRequest={disputeRequest}
       resolvedEvents={resolvedEvents}

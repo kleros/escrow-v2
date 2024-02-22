@@ -39,6 +39,12 @@ export const transactionFragment = graphql(`
       resolution
       timestamp
     }
+    settlementProposals(orderBy: timestamp, orderDirection: asc) {
+      id
+      amount
+      party
+      timestamp
+    }
     disputeRequest {
       id
       from
@@ -103,7 +109,7 @@ export const useMyTransactionsQuery = (
   orderDirection?: OrderDirection
 ) => {
   return useQuery({
-    queryKey: ["useMyTransactionsQuery", userAddress, first, skip, where, orderDirection],
+    queryKey: ["refetchOnBlock", "useMyTransactionsQuery", userAddress, first, skip, where, orderDirection],
     queryFn: async () => {
       try {
         const data = await graphqlQueryFnHelper(myTransactionsQuery, {

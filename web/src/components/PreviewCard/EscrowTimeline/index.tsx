@@ -9,10 +9,13 @@ const StyledTimeline = styled(CustomTimeline)`
 
 interface IEscrowTimeline {
   isPreview: boolean;
-  status: boolean;
   transactionCreationTimestamp: number;
+  status: boolean;
+  asset: string;
   buyerAddress: string;
   sellerAddress: string;
+  payments: [];
+  settlementProposals: [];
   hasToPayFees: [];
   disputeRequest: [];
   resolvedEvents: [];
@@ -22,8 +25,11 @@ const EscrowTimeline: React.FC<IEscrowTimeline> = ({
   isPreview,
   transactionCreationTimestamp,
   status,
+  asset,
   buyerAddress,
   sellerAddress,
+  payments,
+  settlementProposals,
   hasToPayFees,
   disputeRequest,
   resolvedEvents,
@@ -32,8 +38,11 @@ const EscrowTimeline: React.FC<IEscrowTimeline> = ({
     isPreview,
     transactionCreationTimestamp,
     status,
+    asset,
     buyerAddress,
     sellerAddress,
+    payments,
+    settlementProposals,
     hasToPayFees,
     disputeRequest,
     resolvedEvents
