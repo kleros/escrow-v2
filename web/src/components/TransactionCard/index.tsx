@@ -41,7 +41,6 @@ const ListContainer = styled.div`
 `;
 
 const ListTitle = styled.div`
-  margin-left: 92px;
 `;
 
 const StyledTitle = styled.h3`

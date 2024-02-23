@@ -1,7 +1,6 @@
 import React, { useMemo } from "react";
 import styled, { Theme, useTheme, css } from "styled-components";
 import { Statuses } from "consts/statuses";
-import { responsiveSize } from "styles/responsiveSize";
 
 interface IContainer {
   isCard: boolean;
@@ -12,12 +11,10 @@ interface IContainer {
 const Container = styled.div<IContainer>`
   display: flex;
   height: ${({ isCard }) => (isCard ? "45px" : "100%")};
-  width: ${({ isCard }) => (isCard ? "auto" : responsiveSize(60, 80, 900))};
   border-top-right-radius: 3px;
   border-top-left-radius: 3px;
   align-items: center;
   padding: 0 24px;
-  gap: 16px;
   justify-content: ${({ isCard }) => (isCard ? "space-between" : "start")};
   ${({ isCard, frontColor, backgroundColor }) => {
     return `
@@ -27,7 +24,7 @@ const Container = styled.div<IContainer>`
   }};
 `;
 
-const StyledLabel = styled.label<{ frontColor: string; withDot?: boolean }>`
+const StyledLabel = styled.label<{ frontColor: string; withDot?: boolean; isCard?: boolean }>`
   display: flex;
   align-items: center;
   color: ${({ frontColor }) => frontColor};
@@ -42,8 +39,27 @@ const StyledLabel = styled.label<{ frontColor: string; withDot?: boolean }>`
             border-radius: 50%;
             margin-right: 8px;
             background-color: ${frontColor};
-            flex-shrink: 0;
           }
+        `
+      : null}
+
+  ${({ isCard }) =>
+    !isCard
+      ? css`
+          width: 104px;
+        `
+      : null}
+`;
+
+const StyledNumberLabel = styled.label<{ frontColor: string; withDot?: boolean; isCard?: boolean }>`
+  display: flex;
+  align-items: center;
+  color: ${({ frontColor }) => frontColor};
+
+  ${({ isCard }) =>
+    !isCard
+      ? css`
+          width: 32px;
         `
       : null}
 `;
@@ -101,10 +117,10 @@ const StatusBanner: React.FC<IStatusBanner> = ({ id, status, isCard = true }) =>
   const [frontColor, backgroundColor] = useMemo(() => getStatusColors(status, theme), [theme, status]);
   return (
     <Container {...{ isCard, frontColor, backgroundColor }}>
-      <StyledLabel frontColor={frontColor} withDot>
+      <StyledLabel withDot {...{ isCard, frontColor }}>
         {getStatusLabel(status)}
       </StyledLabel>
-      <StyledLabel frontColor={frontColor}>#{id}</StyledLabel>
+      <StyledNumberLabel {...{ isCard, frontColor }}>#{id}</StyledNumberLabel>
     </Container>
   );
 };
