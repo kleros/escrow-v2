@@ -94,17 +94,17 @@ type TransactionResolved @entity {
   timestamp: BigInt
 }
 
-type EscrowParameters @entity {
-  id: ID!
-  feeTimeout: BigInt!
-  settlementTimeout: BigInt!
-  arbitratorExtraData: Bytes!
-}
-
 type SettlementProposal @entity {
   id: ID!
   escrow: Escrow!
   party: String
   amount: BigInt!
   timestamp: BigInt!
+}
+
+type EscrowParameters @entity {
+  id: ID!
+  feeTimeout: BigInt!
+  settlementTimeout: BigInt!
+  arbitratorExtraData: Bytes!
 }

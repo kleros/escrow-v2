@@ -63,9 +63,9 @@ const getStatusColors = (status: Statuses, theme: Theme): [string, string] => {
     case Statuses.settlementWaitingSeller:
       return [theme.warning, theme.warningLight];
     case Statuses.raisingDisputeWaitingBuyer:
-      return [theme.primaryPurple, theme.lightPurple];
+      return [theme.warning, theme.warningLight];
     case Statuses.raisingDisputeWaitingSeller:
-      return [theme.primaryPurple, theme.lightPurple];
+      return [theme.warning, theme.warningLight];
     case Statuses.disputed:
       return [theme.secondaryPurple, theme.mediumPurple];
     case Statuses.concluded:

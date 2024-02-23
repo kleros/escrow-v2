@@ -1,10 +1,11 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useTheme } from "styled-components";
+import { formatEther } from "viem";
 import { getFormattedDate } from "utils/getFormattedDate";
 import { resolutionToString } from "utils/resolutionToString";
+import { formatTimeoutDuration } from "utils/formatTimeoutDuration";
 import CheckCircleOutlineIcon from "components/StyledIcons/CheckCircleOutlineIcon";
 import LawBalanceIcon from "components/StyledIcons/LawBalanceIcon";
-import { formatEther } from "viem";
 import { useNativeTokenSymbol } from "./useNativeTokenSymbol";
 
 const useEscrowTimelineItems = (
@@ -18,10 +19,20 @@ const useEscrowTimelineItems = (
   settlementProposals: [],
   hasToPayFees: [],
   disputeRequest: [],
-  resolvedEvents: []
+  resolvedEvents: [],
+  feeTimeout: number,
+  settlementTimeout: number
 ) => {
   const theme = useTheme();
   const nativeTokenSymbol = useNativeTokenSymbol();
+  const [currentTime, setCurrentTime] = useState(Math.floor(Date.now() / 1000));
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTime(Math.floor(Date.now() / 1000));
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   return useMemo(() => {
     let timelineItems = [];
@@ -61,12 +72,15 @@ const useEscrowTimelineItems = (
           status !== "WaitingSettlementSeller" &&
           status !== "WaitingSettlementBuyer";
 
+        const timeLeft = Math.max(settlementTimeout - (currentTime - proposal.timestamp), 0);
+
         if (hasBeenAccepted) {
           subtitle = "Proposal accepted";
         } else if (hasToPayFees.length > 0 || !isLatestProposal) {
           subtitle = "Proposal refused";
         } else {
-          subtitle = proposal.party === "1" ? "Waiting Seller's answer" : "Waiting Buyer's answer";
+          const waitingFor = proposal.party === "1" ? "Seller's" : "Buyer's";
+          subtitle = `Waiting ${waitingFor} answer [Timeout: ${formatTimeoutDuration(timeLeft)}]`;
         }
 
         let title = `The ${proposal.party === "1" ? "buyer" : "seller"} proposed: Pay ${formatEther(proposal.amount)} ${
@@ -83,17 +97,20 @@ const useEscrowTimelineItems = (
       });
 
       hasToPayFees?.forEach((fee) => {
+        const timeLeft = Math.max(feeTimeout - (currentTime - fee.timestamp), 0);
         const formattedDate = getFormattedDate(new Date(fee.timestamp * 1000));
-        let title = fee.party === "2" ? "The buyer raised a dispute" : "The seller raised a dispute";
+        let title = `The ${fee.party === "2" ? "buyer" : "seller"} raised a dispute`;
+        let timeoutCountdownMessage =
+          timeLeft > 0
+            ? `'s ` + `Arbitration fee required [Timeout: ${formatTimeoutDuration(timeLeft)}]`
+            : " failed to deposit the arbitration fee";
         let party = disputeRequest
           ? "Arbitration fees deposited"
-          : fee.party === "2"
-          ? "Seller's Arbitration fee required [Timeout: 12h 32m TODO]"
-          : "Buyer's Arbitration fee required [Timeout: 12h 32m TODO]";
+          : `${fee.party === "2" ? "Seller" : "Buyer"}${timeoutCountdownMessage}`;
 
         timelineItems.push({
-          title: title,
-          party: party,
+          title,
+          party,
           subtitle: `${formattedDate}`,
           rightSided: true,
           variant: theme.secondaryPurple,
@@ -113,7 +130,7 @@ const useEscrowTimelineItems = (
       }
 
       if (status === "TransactionResolved") {
-        const resolutionEvent = resolvedEvents[0];
+        const resolutionEvent = resolvedEvents?.[resolvedEvents.length - 1];
         if (resolutionEvent) {
           const formattedResolutionDate = getFormattedDate(new Date(resolutionEvent.timestamp * 1000).toLocaleString());
           timelineItems.push({
@@ -129,6 +146,7 @@ const useEscrowTimelineItems = (
     }
     return timelineItems;
   }, [
+    currentTime,
     transactionCreationTimestamp,
     status,
     resolvedEvents,
@@ -139,6 +157,7 @@ const useEscrowTimelineItems = (
     settlementProposals,
     isPreview,
     theme,
+    feeTimeout,
   ]);
 };
 

@@ -1,13 +1,14 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useAccount } from "wagmi";
 import { formatEther } from "viem";
 import { useTransactionDetailsContext } from "context/TransactionDetailsContext";
-import AcceptButton from "./AcceptSettlementButton";
+import OpenModalProposeSettlementButton from "../WasItFulfilled/Buttons/OpenModalProposeSettlementButton";
 import OpenModalRaiseDisputeButton from "components/OpenModalRaiseDisputeButton";
+import AcceptButton from "./AcceptSettlementButton";
 import ViewCaseButton from "./ViewCaseButton";
 import RaiseDisputeButton from "./RaiseDisputeButton";
-import OpenModalProposeSettlementButton from "../WasItFulfilled/Buttons/OpenModalProposeSettlementButton";
+import TimeoutButton from "./TimeoutButton";
 
 const Container = styled.div`
   display: flex;
@@ -16,13 +17,24 @@ const Container = styled.div`
   gap: 24px;
 `;
 
-const Buttons: React.FC = () => {
+interface IButtons {
+  feeTimeout: number;
+  settlementTimeout: number;
+}
+
+const Buttons: React.FC<IButtons> = ({ feeTimeout, settlementTimeout }) => {
   const { address } = useAccount();
-  const { seller, buyer, status, settlementProposals, disputeRequest, hasToPayFees, lastFeePaymentTime } =
+  const { seller, buyer, status, settlementProposals, disputeRequest, hasToPayFees, resolvedEvents } =
     useTransactionDetailsContext();
   const connectedAddress = address?.toLowerCase();
-  const currentTimeUnixSeconds = Math.floor(Date.now() / 1000);
-  const settlementTimeout = 600; //hardcoded for now, make it dynamic from subgraph
+  const [currentTime, setCurrentTime] = useState(Math.floor(Date.now() / 1000));
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTime(Math.floor(Date.now() / 1000));
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   const shouldPayFee = hasToPayFees?.some((fee) => {
     const partyRequiredToPay = fee.party;
@@ -49,7 +61,7 @@ const Buttons: React.FC = () => {
       })()
     : false;
 
-  const shouldDisplayRaiseDisputeButton = shouldPayFee && !disputeRequest;
+  const shouldDisplayRaiseDisputeButton = shouldPayFee && !disputeRequest && resolvedEvents?.length === 0;
 
   const shouldDisplaySettlementButtons =
     hasToPayFees?.length === 0 &&
@@ -59,7 +71,10 @@ const Buttons: React.FC = () => {
     status !== "WaitingBuyer" &&
     status !== "WaitingSeller";
 
-  console.log(currentTimeUnixSeconds - lastFeePaymentTime);
+  const settlementTimeLeft =
+    settlementTimeout - (currentTime - settlementProposals?.[settlementProposals.length - 1]?.timestamp);
+  const feeTimeLeft = feeTimeout - (currentTime - hasToPayFees?.[0]?.timestamp);
+  const isBuyer = address?.toLowerCase() === buyer?.toLowerCase();
 
   return (
     <>
@@ -69,8 +84,7 @@ const Buttons: React.FC = () => {
           <OpenModalProposeSettlementButton buttonText="Counter-propose" />
           <OpenModalRaiseDisputeButton />
         </Container>
-      ) : (status === "WaitingSettlementBuyer" || status === "WaitingSettlementSeller") &&
-        currentTimeUnixSeconds - lastFeePaymentTime > settlementTimeout ? (
+      ) : (status === "WaitingSettlementBuyer" || status === "WaitingSettlementSeller") && settlementTimeLeft <= 0 ? (
         <OpenModalRaiseDisputeButton />
       ) : null}
 
@@ -82,6 +96,11 @@ const Buttons: React.FC = () => {
       {disputeRequest ? (
         <Container>
           <ViewCaseButton />
+        </Container>
+      ) : null}
+      {feeTimeLeft <= 0 && ((status === "WaitingSeller" && isBuyer) || (status === "WaitingBuyer" && !isBuyer)) ? (
+        <Container>
+          <TimeoutButton />
         </Container>
       ) : null}
     </>

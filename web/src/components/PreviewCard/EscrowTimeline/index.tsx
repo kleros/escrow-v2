@@ -33,6 +33,8 @@ const EscrowTimeline: React.FC<IEscrowTimeline> = ({
   hasToPayFees,
   disputeRequest,
   resolvedEvents,
+  feeTimeout,
+  settlementTimeout,
 }) => {
   const items = useEscrowTimelineItems(
     isPreview,
@@ -45,7 +47,9 @@ const EscrowTimeline: React.FC<IEscrowTimeline> = ({
     settlementProposals,
     hasToPayFees,
     disputeRequest,
-    resolvedEvents
+    resolvedEvents,
+    feeTimeout,
+    settlementTimeout
   );
 
   return <StyledTimeline items={items} />;
