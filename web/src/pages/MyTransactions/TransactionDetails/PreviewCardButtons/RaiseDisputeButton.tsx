@@ -47,6 +47,7 @@ const RaiseDisputeButton: React.FC<IRaiseDisputeButton> = ({ toggleModal, button
         .then((wrapResult) => {
           if (wrapResult.status && toggleModal) {
             toggleModal();
+          } else if (wrapResult.status) {
           } else {
             setIsSending(false);
           }
@@ -61,6 +62,7 @@ const RaiseDisputeButton: React.FC<IRaiseDisputeButton> = ({ toggleModal, button
         .then((wrapResult) => {
           if (wrapResult.status && toggleModal) {
             toggleModal();
+          } else if (wrapResult.status) {
           } else {
             setIsSending(false);
           }

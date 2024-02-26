@@ -60,7 +60,7 @@ interface IPreviewCard {
   sendingQuantity: string;
   sendingToken: string;
   sellerAddress: string;
-  deadlineDate: Date;
+  deadlineDate: string;
   tokenSymbol: string;
   overrideIsList: boolean;
   extraDescriptionUri: string;

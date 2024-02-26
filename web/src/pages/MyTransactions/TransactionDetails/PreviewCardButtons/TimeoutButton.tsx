@@ -57,14 +57,7 @@ const TimeOutButton: React.FC = () => {
     }
   };
 
-  return (
-    <Button
-      isLoading={isSending}
-      disabled={isSending}
-      text="Claim full payment + arbitration fee back"
-      onClick={handleTimeout}
-    />
-  );
+  return <Button isLoading={isSending} disabled={isSending} text="Claim full payment back" onClick={handleTimeout} />;
 };
 
 export default TimeOutButton;

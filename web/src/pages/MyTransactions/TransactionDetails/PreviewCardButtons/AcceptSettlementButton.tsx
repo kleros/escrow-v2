@@ -26,9 +26,7 @@ const AcceptButton: React.FC<IAcceptButton> = ({ toggleModal }) => {
       setIsSending(true);
       wrapWithToast(async () => await acceptSettlement().then((response) => response.hash), publicClient)
         .then((wrapResult) => {
-          if (wrapResult.status && toggleModal) {
-            toggleModal();
-          } else {
+          if (!wrapResult.status) {
             setIsSending(false);
           }
         })

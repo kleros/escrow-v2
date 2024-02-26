@@ -66,13 +66,13 @@ const useEscrowTimelineItems = (
   return useMemo(() => {
     let timelineItems: TimelineItem[] = [];
 
-    const formattedCreationDate = getFormattedDate(new Date(transactionCreationTimestamp * 1000).toLocaleString());
+    const formattedCreationDate = getFormattedDate(new Date(transactionCreationTimestamp * 1000));
     timelineItems.push(createTimelineItem(formattedCreationDate, "Escrow created", "", theme.primaryBlue));
 
     if (!isPreview) {
       payments?.forEach((payment) => {
         const isBuyer = payment.party.toLowerCase() === buyer.toLowerCase();
-        const formattedDate = getFormattedDate(new Date(payment.timestamp * 1000).toLocaleString());
+        const formattedDate = getFormattedDate(new Date(payment.timestamp * 1000));
         const title = `The ${isBuyer ? "buyer" : "seller"} paid ${formatEther(payment.amount)} ${
           asset === "native" ? nativeTokenSymbol : asset
         }`;
@@ -81,7 +81,7 @@ const useEscrowTimelineItems = (
       });
 
       settlementProposals?.forEach((proposal, index) => {
-        const formattedDate = getFormattedDate(new Date(proposal.timestamp * 1000).toLocaleString());
+        const formattedDate = getFormattedDate(new Date(proposal.timestamp * 1000));
         let subtitle;
         const isLatestProposal = index === settlementProposals.length - 1;
         const timeLeft = calculateTimeLeft(proposal.timestamp, settlementTimeout, currentTime);
@@ -138,7 +138,7 @@ const useEscrowTimelineItems = (
       if (status === "TransactionResolved") {
         const resolutionEvent = resolvedEvents?.[resolvedEvents.length - 1];
         if (resolutionEvent) {
-          const formattedDate = getFormattedDate(new Date(resolutionEvent.timestamp * 1000).toLocaleString());
+          const formattedDate = getFormattedDate(new Date(resolutionEvent.timestamp * 1000));
           timelineItems.push(
             createTimelineItem(
               formattedDate,

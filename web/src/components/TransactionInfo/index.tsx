@@ -70,7 +70,7 @@ const RestOfFieldsContainer = styled.div<{ isList?: boolean; isPreview?: boolean
 
 export interface ITransactionInfo {
   amount?: string;
-  deadlineDate: Date;
+  deadlineDate: string;
   token?: string;
   status?: Statuses;
   overrideIsList?: boolean;
