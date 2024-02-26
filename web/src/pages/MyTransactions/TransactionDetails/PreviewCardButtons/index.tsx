@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import styled from "styled-components";
 import { useAccount } from "wagmi";
 import { formatEther } from "viem";
@@ -8,7 +8,7 @@ import OpenModalRaiseDisputeButton from "components/OpenModalRaiseDisputeButton"
 import AcceptButton from "./AcceptSettlementButton";
 import ViewCaseButton from "./ViewCaseButton";
 import RaiseDisputeButton from "./RaiseDisputeButton";
-import TimeoutButton from "./TimeoutButton";
+import TimeOutButton from "./TimeOutButton";
 
 const Container = styled.div`
   display: flex;
@@ -36,45 +36,57 @@ const Buttons: React.FC<IButtons> = ({ feeTimeout, settlementTimeout }) => {
     return () => clearInterval(interval);
   }, []);
 
-  const shouldPayFee = hasToPayFees?.some((fee) => {
-    const partyRequiredToPay = fee.party;
-    if (partyRequiredToPay === "1" && connectedAddress === buyer.toLowerCase()) {
-      return true;
-    }
-    if (partyRequiredToPay === "2" && connectedAddress === seller.toLowerCase()) {
-      return true;
-    }
-    return false;
-  });
+  const isBuyer = useMemo(() => address?.toLowerCase() === buyer?.toLowerCase(), [address, buyer]);
 
-  const lastSettlementProposal = settlementProposals?.[settlementProposals.length - 1];
-  const isYourSettlementTurn = lastSettlementProposal
-    ? (() => {
-        const partyThatProposed = lastSettlementProposal.party;
-        if (partyThatProposed === "1" && connectedAddress === seller.toLowerCase()) {
+  const shouldPayFee = useMemo(
+    () =>
+      hasToPayFees?.some((fee) => {
+        const partyRequiredToPay = fee.party;
+        if (partyRequiredToPay === "1" && connectedAddress === buyer.toLowerCase()) {
           return true;
         }
-        if (partyThatProposed === "2" && connectedAddress === buyer.toLowerCase()) {
+        if (partyRequiredToPay === "2" && connectedAddress === seller.toLowerCase()) {
           return true;
         }
         return false;
-      })()
-    : false;
+      }),
+    [hasToPayFees, connectedAddress, buyer, seller]
+  );
 
-  const shouldDisplayRaiseDisputeButton = shouldPayFee && !disputeRequest && resolvedEvents?.length === 0;
+  const lastSettlementProposal = useMemo(
+    () => settlementProposals?.[settlementProposals.length - 1],
+    [settlementProposals]
+  );
+  const isYourSettlementTurn = useMemo(
+    () =>
+      lastSettlementProposal
+        ? (lastSettlementProposal.party === "1" && connectedAddress === seller.toLowerCase()) ||
+          (lastSettlementProposal.party === "2" && connectedAddress === buyer.toLowerCase())
+        : false,
+    [lastSettlementProposal, connectedAddress, buyer, seller]
+  );
 
-  const shouldDisplaySettlementButtons =
-    hasToPayFees?.length === 0 &&
-    isYourSettlementTurn &&
-    status !== "Disputed" &&
-    status !== "TransactionResolved" &&
-    status !== "WaitingBuyer" &&
-    status !== "WaitingSeller";
+  const shouldDisplayRaiseDisputeButton = useMemo(
+    () => shouldPayFee && !disputeRequest && resolvedEvents?.length === 0,
+    [shouldPayFee, disputeRequest, resolvedEvents]
+  );
 
-  const settlementTimeLeft =
-    settlementTimeout - (currentTime - settlementProposals?.[settlementProposals.length - 1]?.timestamp);
-  const feeTimeLeft = feeTimeout - (currentTime - hasToPayFees?.[0]?.timestamp);
-  const isBuyer = address?.toLowerCase() === buyer?.toLowerCase();
+  const shouldDisplaySettlementButtons = useMemo(
+    () =>
+      hasToPayFees?.length === 0 &&
+      isYourSettlementTurn &&
+      !["Disputed", "TransactionResolved", "WaitingBuyer", "WaitingSeller"].includes(status),
+    [hasToPayFees, isYourSettlementTurn, status]
+  );
+
+  const settlementTimeLeft = useMemo(
+    () => settlementTimeout - (currentTime - lastSettlementProposal?.timestamp),
+    [settlementTimeout, currentTime, lastSettlementProposal]
+  );
+  const feeTimeLeft = useMemo(
+    () => feeTimeout - (currentTime - hasToPayFees?.[0]?.timestamp),
+    [feeTimeout, currentTime, hasToPayFees]
+  );
 
   return (
     <>
@@ -84,8 +96,6 @@ const Buttons: React.FC<IButtons> = ({ feeTimeout, settlementTimeout }) => {
           <OpenModalProposeSettlementButton buttonText="Counter-propose" />
           <OpenModalRaiseDisputeButton />
         </Container>
-      ) : (status === "WaitingSettlementBuyer" || status === "WaitingSettlementSeller") && settlementTimeLeft <= 0 ? (
-        <OpenModalRaiseDisputeButton />
       ) : null}
 
       {shouldDisplayRaiseDisputeButton ? (
@@ -93,14 +103,21 @@ const Buttons: React.FC<IButtons> = ({ feeTimeout, settlementTimeout }) => {
           <RaiseDisputeButton buttonText={`Deposit the fee: ${formatEther(BigInt("30000000000000"))} ETH`} />
         </Container>
       ) : null}
+
       {disputeRequest ? (
         <Container>
           <ViewCaseButton />
         </Container>
       ) : null}
+
+      {settlementTimeLeft <= 0 &&
+      ((status === "WaitingSettlementSeller" && isBuyer) || (status === "WaitingSettlementBuyer" && !isBuyer)) ? (
+        <OpenModalRaiseDisputeButton />
+      ) : null}
+
       {feeTimeLeft <= 0 && ((status === "WaitingSeller" && isBuyer) || (status === "WaitingBuyer" && !isBuyer)) ? (
         <Container>
-          <TimeoutButton />
+          <TimeOutButton />
         </Container>
       ) : null}
     </>

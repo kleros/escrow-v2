@@ -8,6 +8,7 @@ import TransactionInfo from "components/TransactionInfo";
 import Terms from "./Terms";
 import EscrowTimeline from "./EscrowTimeline";
 import Buttons from "pages/MyTransactions/TransactionDetails/PreviewCardButtons";
+import { DisputeRequest, HasToPayFee, Payment, SettlementProposal, TransactionResolved } from "src/graphql/graphql";
 
 export const StyledCard = styled(Card)<{ isPreview?: boolean }>`
   height: auto;
@@ -64,11 +65,11 @@ interface IPreviewCard {
   overrideIsList: boolean;
   extraDescriptionUri: string;
   isPreview: boolean;
-  payments: [];
-  settlementProposals?: [];
-  hasToPayFees?: [];
-  disputeRequest?: [];
-  resolvedEvents?: [];
+  payments: Payment[];
+  settlementProposals?: SettlementProposal[];
+  hasToPayFees?: HasToPayFee[];
+  disputeRequest?: DisputeRequest;
+  resolvedEvents?: TransactionResolved[];
   feeTimeout: number;
   settlementTimeout: number;
 }

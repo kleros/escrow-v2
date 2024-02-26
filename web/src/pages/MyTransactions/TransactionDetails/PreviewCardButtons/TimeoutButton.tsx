@@ -11,7 +11,7 @@ import { isUndefined } from "utils/index";
 import { wrapWithToast } from "utils/wrapWithToast";
 import { useTransactionDetailsContext } from "context/TransactionDetailsContext";
 
-const TimeoutButton: React.FC = () => {
+const TimeOutButton: React.FC = () => {
   const { address } = useAccount();
   const [isSending, setIsSending] = useState<boolean>(false);
   const publicClient = usePublicClient();
@@ -67,4 +67,4 @@ const TimeoutButton: React.FC = () => {
   );
 };
 
-export default TimeoutButton;
+export default TimeOutButton;
