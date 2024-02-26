@@ -16,6 +16,7 @@ const ProposeSettlementModal: React.FC<IProposeSettlementModal> = ({ toggleModal
   const containerRef = useRef(null);
   useClickAway(containerRef, () => toggleModal());
   const [amountProposed, setAmountProposed] = useState("0");
+  const [isAmountValid, setIsAmountValid] = useState(true);
 
   return (
     <>
@@ -23,8 +24,8 @@ const ProposeSettlementModal: React.FC<IProposeSettlementModal> = ({ toggleModal
       <StyledModal ref={containerRef}>
         <Header text={text} />
         <Description />
-        <AmountField amountProposed={amountProposed} setAmountProposed={setAmountProposed} />
-        <Buttons toggleModal={toggleModal} amountProposed={amountProposed} />
+        <AmountField {...{ amountProposed, setAmountProposed, setIsAmountValid }} />
+        <Buttons {...{ toggleModal, amountProposed, isAmountValid }} />
       </StyledModal>
     </>
   );

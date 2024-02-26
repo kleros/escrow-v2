@@ -14,13 +14,14 @@ const Container = styled.div`
 interface IButtons {
   toggleModal: () => void;
   amountProposed: string;
+  isAmountValid: boolean;
 }
 
-const Buttons: React.FC<IButtons> = ({ toggleModal, amountProposed }) => {
+const Buttons: React.FC<IButtons> = ({ toggleModal, amountProposed, isAmountValid }) => {
   return (
     <Container>
       <Button variant="secondary" text="Return" onClick={toggleModal} />
-      <ProposeSettlementButton buttonText="Propose" {...{ toggleModal, amountProposed }} />
+      <ProposeSettlementButton buttonText="Propose" {...{ toggleModal, amountProposed, isAmountValid }} />
     </Container>
   );
 };

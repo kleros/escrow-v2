@@ -11,13 +11,18 @@ interface IProposeSettlementButton {
   toggleModal?: () => void;
   buttonText: string;
   amountProposed: string;
+  isAmountValid: boolean;
 }
 
-const ProposeSettlementButton: React.FC<IProposeSettlementButton> = ({ toggleModal, buttonText, amountProposed }) => {
+const ProposeSettlementButton: React.FC<IProposeSettlementButton> = ({
+  toggleModal,
+  buttonText,
+  amountProposed,
+  isAmountValid,
+}) => {
   const [isSending, setIsSending] = useState<boolean>(false);
   const publicClient = usePublicClient();
   const { id } = useTransactionDetailsContext();
-  console.log(amountProposed);
 
   const { config: proposeSettlementConfig } = usePrepareEscrowProposeSettlement({
     args: [BigInt(id), parseEther(amountProposed)],
@@ -44,7 +49,14 @@ const ProposeSettlementButton: React.FC<IProposeSettlementButton> = ({ toggleMod
     }
   };
 
-  return <Button isLoading={isSending} disabled={isSending} text={buttonText} onClick={handleProposeSettlement} />;
+  return (
+    <Button
+      isLoading={isSending}
+      disabled={isSending || !isAmountValid}
+      text={buttonText}
+      onClick={handleProposeSettlement}
+    />
+  );
 };
 
 export default ProposeSettlementButton;
