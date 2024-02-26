@@ -1,8 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { Address } from "viem";
 import { graphql } from "src/graphql";
-import { graphqlQueryFnHelper } from "utils/graphqlQueryFnHelper";
 import { Escrow_Filter, OrderDirection } from "src/graphql/graphql";
+import { useGraphqlBatcher } from "context/GraphqlBatcher";
 
 export const transactionFragment = graphql(`
   fragment TransactionDetails on Escrow {
@@ -85,19 +85,17 @@ const transactionDetailsQuery = graphql(`
 `);
 
 export const useTransactionDetailsQuery = (transactionId) => {
+  const { graphqlBatcher } = useGraphqlBatcher();
   return useQuery({
     queryKey: ["refetchOnBlock", `useTransactionDetailsQuery`, transactionId],
-    queryFn: async () => {
-      try {
-        const data = await graphqlQueryFnHelper(transactionDetailsQuery, {
+    queryFn: async () =>
+      await graphqlBatcher.fetch({
+        id: crypto.randomUUID(),
+        document: transactionDetailsQuery,
+        variables: {
           id: transactionId,
-        });
-        return data;
-      } catch (error) {
-        console.error("Error fetching transaction details:", error);
-        throw new Error("Error fetching transaction details");
-      }
-    },
+        },
+      }),
   });
 };
 
@@ -108,22 +106,20 @@ export const useMyTransactionsQuery = (
   where?: Escrow_Filter,
   orderDirection?: OrderDirection
 ) => {
+  const { graphqlBatcher } = useGraphqlBatcher();
   return useQuery({
     queryKey: ["refetchOnBlock", "useMyTransactionsQuery", userAddress, first, skip, where, orderDirection],
-    queryFn: async () => {
-      try {
-        const data = await graphqlQueryFnHelper(myTransactionsQuery, {
+    queryFn: async () =>
+      await graphqlBatcher.fetch({
+        id: crypto.randomUUID(),
+        document: myTransactionsQuery,
+        variables: {
           userAddress: userAddress.toLowerCase(),
           first,
           skip,
           where: where,
           orderDirection,
-        });
-        return data;
-      } catch (error) {
-        console.error("Error fetching transactions:", error);
-        throw new Error("Error fetching transactions");
-      }
-    },
+        },
+      }),
   });
 };

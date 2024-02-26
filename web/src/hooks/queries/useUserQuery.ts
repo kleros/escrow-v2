@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { Address } from "viem";
 import { graphql } from "src/graphql";
-import { graphqlQueryFnHelper } from "utils/graphqlQueryFnHelper";
+import { useGraphqlBatcher } from "context/GraphqlBatcher";
 
 const userQuery = graphql(`
   query User($userId: ID!) {
@@ -17,18 +17,16 @@ const userQuery = graphql(`
 `);
 
 export const useUserQuery = (userId: Address) => {
+  const { graphqlBatcher } = useGraphqlBatcher();
   return useQuery({
     queryKey: [`useUserQuery`, userId],
-    queryFn: async () => {
-      try {
-        const data = await graphqlQueryFnHelper(userQuery, {
+    queryFn: async () =>
+      await graphqlBatcher.fetch({
+        id: crypto.randomUUID(),
+        document: userQuery,
+        variables: {
           userId: userId.toLowerCase(),
-        });
-        return data;
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-        throw new Error("Error fetching user data");
-      }
-    },
+        },
+      }),
   });
 };
