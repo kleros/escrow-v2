@@ -72,9 +72,9 @@ const ItemsDiv = styled.div`
 
 const ITEMS = [
   {
-    text: "Court v1",
+    text: "Court V2",
     Icon: Court,
-    url: "https://court.kleros.io/",
+    url: "https://v2.kleros.builders/",
   },
   {
     text: "Vea",
@@ -82,29 +82,44 @@ const ITEMS = [
     url: "https://veascan.io",
   },
   {
-    text: "Escrow",
+    text: "Resolver V2",
+    Icon: Resolver,
+    url: "https://v2.kleros.builders/#/resolver",
+  },
+  {
+    text: "Escrow V2",
+    Icon: Escrow,
+    url: "https://escrow-v2.kleros.builders/",
+  },
+  {
+    text: "Curate V2",
+    Icon: Curate,
+    url: "https://curate-v2.netlify.app/",
+  },
+  {
+    text: "Court V1",
+    Icon: Court,
+    url: "https://court.kleros.io/",
+  },
+  {
+    text: "Resolver V1",
+    Icon: Resolver,
+    url: "https://resolve.kleros.io",
+  },
+  {
+    text: "Escrow V1",
     Icon: Escrow,
     url: "https://escrow.kleros.io",
   },
   {
-    text: "POH",
-    Icon: POH,
-    url: "https://app.proofofhumanity.id",
-  },
-  {
-    text: "Curate",
+    text: "Curate V1",
     Icon: Curate,
     url: "https://curate.kleros.io",
   },
   {
-    text: "Tokens",
-    Icon: Tokens,
-    url: "https://tokens.kleros.io",
-  },
-  {
-    text: "Resolver",
-    Icon: Resolver,
-    url: "https://resolve.kleros.io",
+    text: "POH V1",
+    Icon: POH,
+    url: "https://app.proofofhumanity.id",
   },
   {
     text: "Linguo",
