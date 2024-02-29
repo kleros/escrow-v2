@@ -101,7 +101,7 @@ const PreviewCard: React.FC<IPreviewCard> = ({
   settlementTimeout,
 }) => (
   <StyledCard {...{ isPreview }}>
-    <Header {...{ escrowType, escrowTitle }} />
+    <Header {...{ escrowType, escrowTitle, status, isCard: false }} />
     <TransactionInfoContainer>
       <Divider />
       <TransactionInfo

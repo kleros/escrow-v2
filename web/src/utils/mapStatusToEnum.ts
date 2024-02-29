@@ -16,7 +16,5 @@ export const mapStatusToEnum = (status: string) => {
       return Statuses.disputed;
     case "TransactionResolved":
       return Statuses.concluded;
-    default:
-      return Statuses.inProgress;
   }
 };
