@@ -77,9 +77,9 @@ const ITEMS = [
     url: "https://v2.kleros.builders/",
   },
   {
-    text: "Vea",
-    Icon: Vea,
-    url: "https://veascan.io",
+    text: "Curate V2",
+    Icon: Curate,
+    url: "https://curate-v2.netlify.app/",
   },
   {
     text: "Resolver V2",
@@ -92,14 +92,14 @@ const ITEMS = [
     url: "https://escrow-v2.kleros.builders/",
   },
   {
-    text: "Curate V2",
-    Icon: Curate,
-    url: "https://curate-v2.netlify.app/",
-  },
-  {
     text: "Court V1",
     Icon: Court,
     url: "https://court.kleros.io/",
+  },
+  {
+    text: "Curate V1",
+    Icon: Curate,
+    url: "https://curate.kleros.io",
   },
   {
     text: "Resolver V1",
@@ -112,9 +112,9 @@ const ITEMS = [
     url: "https://escrow.kleros.io",
   },
   {
-    text: "Curate V1",
-    Icon: Curate,
-    url: "https://curate.kleros.io",
+    text: "Vea",
+    Icon: Vea,
+    url: "https://veascan.io",
   },
   {
     text: "POH V1",
