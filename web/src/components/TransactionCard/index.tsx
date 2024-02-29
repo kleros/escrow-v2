@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
 import { formatEther } from "viem";
 import { Card } from "@kleros/ui-components-library";
 import { useIsList } from "context/IsListProvider";
@@ -11,6 +10,7 @@ import { mapStatusToEnum } from "utils/mapStatusToEnum";
 import { isUndefined } from "utils/index";
 import { useNativeTokenSymbol } from "hooks/useNativeTokenSymbol";
 import useFetchIpfsJson from "hooks/useFetchIpfsJson";
+import { useNavigateAndScrollTop } from "hooks/useNavigateAndScrollTop";
 import { TransactionDetailsFragment } from "src/graphql/graphql";
 import { StyledSkeleton, StyledSkeletonTitle } from "../StyledSkeleton";
 
@@ -20,10 +20,10 @@ const StyledCard = styled(Card)`
 `;
 
 const StyledListItem = styled(Card)`
-display: flex;
-flex-grow: 1;
-width: 100%;
-height: 82px;
+  display: flex;
+  flex-grow: 1;
+  width: 100%;
+  height: 82px;
 `;
 
 const CardContainer = styled.div`
@@ -40,8 +40,7 @@ const ListContainer = styled.div`
   width: 100%;
 `;
 
-const ListTitle = styled.div`
-`;
+const ListTitle = styled.div``;
 
 const StyledTitle = styled.h3`
   margin: 0;
@@ -71,14 +70,14 @@ const TransactionCard: React.FC<ITransactionCard> = ({
   const { isList } = useIsList();
   const nativeTokenSymbol = useNativeTokenSymbol();
   const title = transactionInfo?.title;
-  const navigate = useNavigate();
+  const navigateAndScrollTop = useNavigateAndScrollTop();
 
   const currentStatusEnum = mapStatusToEnum(status);
 
   return (
     <>
       {!isList || overrideIsList ? (
-        <StyledCard hover onClick={() => navigate(`/myTransactions/${id.toString()}`)}>
+        <StyledCard hover onClick={() => navigateAndScrollTop(`/myTransactions/${id.toString()}`)}>
           <StatusBanner id={parseInt(id)} status={currentStatusEnum} />
           <CardContainer>
             {!isUndefined(title) ? <StyledTitle>{title}</StyledTitle> : <StyledSkeleton />}
@@ -93,7 +92,7 @@ const TransactionCard: React.FC<ITransactionCard> = ({
           </CardContainer>
         </StyledCard>
       ) : (
-        <StyledListItem hover onClick={() => navigate(`/myTransactions/${id.toString()}`)}>
+        <StyledListItem hover onClick={() => navigateAndScrollTop(`/myTransactions/${id.toString()}`)}>
           <StatusBanner isCard={false} id={parseInt(id)} status={currentStatusEnum} />
           <ListContainer>
             {!isUndefined(title) ? (
