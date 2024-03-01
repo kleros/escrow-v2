@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Button } from "@kleros/ui-components-library";
 import { useAccount, usePublicClient } from "wagmi";
 import {
@@ -16,7 +16,7 @@ const TimeOutButton: React.FC = () => {
   const [isSending, setIsSending] = useState<boolean>(false);
   const publicClient = usePublicClient();
   const { buyer, id } = useTransactionDetailsContext();
-  const isBuyer = address?.toLowerCase() === buyer?.toLowerCase();
+  const isBuyer = useMemo(() => address?.toLowerCase() === buyer?.toLowerCase(), [address, buyer]);
 
   const { config: timeOutByBuyerConfig } = usePrepareEscrowTimeOutByBuyer({
     args: [BigInt(id)],

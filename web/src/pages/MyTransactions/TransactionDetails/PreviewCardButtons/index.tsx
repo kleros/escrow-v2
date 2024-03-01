@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { useAccount } from "wagmi";
 import { formatEther } from "viem";
 import { useTransactionDetailsContext } from "context/TransactionDetailsContext";
+import { isUndefined } from "utils/index";
 import OpenModalProposeSettlementButton from "../WasItFulfilled/Buttons/OpenModalProposeSettlementButton";
 import OpenModalRaiseDisputeButton from "components/OpenModalRaiseDisputeButton";
 import AcceptButton from "./AcceptSettlementButton";
@@ -20,9 +21,10 @@ const Container = styled.div`
 interface IButtons {
   feeTimeout: number;
   settlementTimeout: number;
+  arbitrationCost: bigint;
 }
 
-const Buttons: React.FC<IButtons> = ({ feeTimeout, settlementTimeout }) => {
+const Buttons: React.FC<IButtons> = ({ feeTimeout, settlementTimeout, arbitrationCost }) => {
   const { address } = useAccount();
   const { seller, buyer, status, settlementProposals, disputeRequest, hasToPayFees, resolvedEvents } =
     useTransactionDetailsContext();
@@ -94,27 +96,27 @@ const Buttons: React.FC<IButtons> = ({ feeTimeout, settlementTimeout }) => {
         <Container>
           <AcceptButton />
           <OpenModalProposeSettlementButton buttonText="Counter-propose" />
-          <OpenModalRaiseDisputeButton />
+          <OpenModalRaiseDisputeButton {...{ arbitrationCost }} />
         </Container>
       ) : null}
 
-      {shouldDisplayRaiseDisputeButton ? (
+      {shouldDisplayRaiseDisputeButton && !isUndefined(arbitrationCost) ? (
         <Container>
-          <RaiseDisputeButton buttonText={`Deposit the fee: ${formatEther(BigInt("30000000000000"))} ETH`} />
+          <RaiseDisputeButton
+            buttonText={`Deposit the fee: ${formatEther(arbitrationCost)} ETH`}
+            {...{ arbitrationCost }}
+          />
         </Container>
       ) : null}
-
       {disputeRequest ? (
         <Container>
           <ViewCaseButton />
         </Container>
       ) : null}
-
       {settlementTimeLeft <= 0 &&
       ((status === "WaitingSettlementSeller" && isBuyer) || (status === "WaitingSettlementBuyer" && !isBuyer)) ? (
-        <OpenModalRaiseDisputeButton />
+        <OpenModalRaiseDisputeButton {...{ arbitrationCost }} />
       ) : null}
-
       {feeTimeLeft <= 0 && ((status === "WaitingSeller" && isBuyer) || (status === "WaitingBuyer" && !isBuyer)) ? (
         <Container>
           <TimeOutButton />

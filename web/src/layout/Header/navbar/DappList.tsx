@@ -10,7 +10,6 @@ import Court from "svgs/icons/kleros.svg";
 import Linguo from "svgs/icons/linguo.svg";
 import POH from "svgs/icons/poh-image.png";
 import Vea from "svgs/icons/vea.svg";
-import Tokens from "svgs/icons/tokens.svg";
 import Product from "./Product";
 
 const Header = styled.h1`
@@ -117,14 +116,14 @@ const ITEMS = [
     url: "https://veascan.io",
   },
   {
+    text: "Perma Curate",
+    Icon: Curate,
+    url: "https://perma-curate.netlify.app/",
+  },
+  {
     text: "POH V1",
     Icon: POH,
     url: "https://app.proofofhumanity.id",
-  },
-  {
-    text: "Linguo",
-    Icon: Linguo,
-    url: "https://linguo.kleros.io",
   },
   {
     text: "Governor",

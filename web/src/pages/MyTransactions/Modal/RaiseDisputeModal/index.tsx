@@ -3,7 +3,6 @@ import Description from "./Description";
 import { Overlay } from "components/Overlay";
 import Header from "./Header";
 import { useClickAway } from "react-use";
-import AmountClaimed from "./AmountClaimed";
 import Buttons from "./Buttons";
 import FeeRequired from "./FeeRequired";
 import { StyledModal } from "../StyledModal";
@@ -15,9 +14,10 @@ const ReStyledModal = styled(StyledModal)`
 
 interface IRaiseDisputeModal {
   toggleModal: () => void;
+  arbitrationCost: bigint;
 }
 
-const RaiseDisputeModal: React.FC<IRaiseDisputeModal> = ({ toggleModal }) => {
+const RaiseDisputeModal: React.FC<IRaiseDisputeModal> = ({ toggleModal, arbitrationCost }) => {
   const containerRef = useRef(null);
   useClickAway(containerRef, () => toggleModal());
 
@@ -27,9 +27,8 @@ const RaiseDisputeModal: React.FC<IRaiseDisputeModal> = ({ toggleModal }) => {
       <ReStyledModal ref={containerRef}>
         <Header />
         <Description />
-        {/* <AmountClaimed /> */}
-        <FeeRequired />
-        <Buttons toggleModal={toggleModal} />
+        <FeeRequired {...{ arbitrationCost }} />
+        <Buttons {...{ toggleModal, arbitrationCost }} />
       </ReStyledModal>
     </>
   );

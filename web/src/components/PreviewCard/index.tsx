@@ -72,6 +72,7 @@ interface IPreviewCard {
   resolvedEvents?: TransactionResolved[];
   feeTimeout: number;
   settlementTimeout: number;
+  arbitrationCost: bigint;
 }
 
 const PreviewCard: React.FC<IPreviewCard> = ({
@@ -99,6 +100,7 @@ const PreviewCard: React.FC<IPreviewCard> = ({
   resolvedEvents,
   feeTimeout,
   settlementTimeout,
+  arbitrationCost,
 }) => (
   <StyledCard {...{ isPreview }}>
     <Header {...{ escrowType, escrowTitle, status, isCard: false }} />
@@ -145,7 +147,7 @@ const PreviewCard: React.FC<IPreviewCard> = ({
         settlementTimeout,
       }}
     />
-    {!isPreview ? <Buttons {...{ feeTimeout, settlementTimeout }} /> : null}
+    {!isPreview ? <Buttons {...{ feeTimeout, settlementTimeout, arbitrationCost }} /> : null}
   </StyledCard>
 );
 

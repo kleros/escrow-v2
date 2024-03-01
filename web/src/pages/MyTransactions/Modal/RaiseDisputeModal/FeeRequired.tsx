@@ -1,6 +1,7 @@
 import React from "react";
 import { Card } from "@kleros/ui-components-library";
 import styled from "styled-components";
+import { formatEther } from "viem";
 
 const StyledCard = styled(Card)`
   display: flex;
@@ -28,11 +29,15 @@ const StyledQuantity = styled.p`
   font-weight: 600;
 `;
 
-const FeeRequired: React.FC = () => {
+interface IFeeRequired {
+  arbitrationCost: bigint;
+}
+
+const FeeRequired: React.FC<IFeeRequired> = ({ arbitrationCost }) => {
   return (
     <StyledCard>
       <StyledHeader>Arbitration fee required</StyledHeader>
-      <StyledQuantity>0.00003 ETH</StyledQuantity>
+      <StyledQuantity>{formatEther(arbitrationCost)} ETH</StyledQuantity>
     </StyledCard>
   );
 };

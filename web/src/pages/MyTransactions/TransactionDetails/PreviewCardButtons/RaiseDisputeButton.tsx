@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Button } from "@kleros/ui-components-library";
 import { useAccount, usePublicClient } from "wagmi";
 import {
@@ -14,18 +14,15 @@ import { useTransactionDetailsContext } from "context/TransactionDetailsContext"
 interface IRaiseDisputeButton {
   toggleModal?: () => void;
   buttonText: string;
+  arbitrationCost: bigint;
 }
 
-const RaiseDisputeButton: React.FC<IRaiseDisputeButton> = ({ toggleModal, buttonText }) => {
+const RaiseDisputeButton: React.FC<IRaiseDisputeButton> = ({ toggleModal, buttonText, arbitrationCost }) => {
   const { address } = useAccount();
   const [isSending, setIsSending] = useState<boolean>(false);
   const publicClient = usePublicClient();
   const { buyer, id } = useTransactionDetailsContext();
-  const isBuyer = address?.toLowerCase() === buyer?.toLowerCase();
-
-  /* IMPORTANT: arbitration cost is hardcoded for now. need to figure out a way to dynamically fetch
-  the actual arbitrationCost from the KlerosCore contract */
-  const arbitrationCost = BigInt("30000000000000");
+  const isBuyer = useMemo(() => address?.toLowerCase() === buyer?.toLowerCase(), [address, buyer]);
 
   const { config: payArbitrationFeeByBuyerConfig } = usePrepareEscrowPayArbitrationFeeByBuyer({
     args: [BigInt(id)],

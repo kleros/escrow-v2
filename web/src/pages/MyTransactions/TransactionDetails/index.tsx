@@ -12,6 +12,7 @@ import useFetchIpfsJson from "hooks/useFetchIpfsJson";
 import { useEscrowParametersQuery } from "hooks/queries/useEscrowParametersQuery";
 import { useNativeTokenSymbol } from "hooks/useNativeTokenSymbol";
 import { useTransactionDetailsQuery } from "hooks/queries/useTransactionsQuery";
+import { useArbitrationCost } from "hooks/queries/useArbitrationCostFromKlerosCore";
 
 const Container = styled.div``;
 
@@ -29,6 +30,7 @@ const TransactionDetails: React.FC = () => {
   const { id } = useParams();
   const { data: transactionDetails } = useTransactionDetailsQuery(id);
   const { data: escrowParameters } = useEscrowParametersQuery();
+  const { arbitrationCost } = useArbitrationCost(escrowParameters?.escrowParameters?.arbitratorExtraData);
   const nativeTokenSymbol = useNativeTokenSymbol();
   const {
     timestamp,
@@ -46,6 +48,7 @@ const TransactionDetails: React.FC = () => {
     resolvedEvents,
     setTransactionDetails,
   } = useTransactionDetailsContext();
+
   const transactionInfo = useFetchIpfsJson(transactionUri);
 
   useEffect(() => {
@@ -77,7 +80,16 @@ const TransactionDetails: React.FC = () => {
           isPreview={false}
           feeTimeout={escrowParameters?.escrowParameters.feeTimeout}
           settlementTimeout={escrowParameters?.escrowParameters.settlementTimeout}
-          {...{ status, asset, payments, settlementProposals, hasToPayFees, disputeRequest, resolvedEvents }}
+          {...{
+            status,
+            asset,
+            payments,
+            settlementProposals,
+            hasToPayFees,
+            disputeRequest,
+            resolvedEvents,
+            arbitrationCost,
+          }}
         />
         {status === "NoDispute" && payments?.length === 0 ? <WasItFulfilled /> : null}
         <InfoCards />
