@@ -66,7 +66,9 @@ const useEscrowTimelineItems = (
   return useMemo(() => {
     let timelineItems: TimelineItem[] = [];
 
-    const formattedCreationDate = getFormattedDate(new Date(transactionCreationTimestamp * 1000));
+    const formattedCreationDate = isPreview
+      ? getFormattedDate(new Date())
+      : getFormattedDate(new Date(transactionCreationTimestamp * 1000));
     timelineItems.push(createTimelineItem(formattedCreationDate, "Escrow created", "", theme.primaryBlue));
 
     if (!isPreview) {
