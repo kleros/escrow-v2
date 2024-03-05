@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { Button } from "@kleros/ui-components-library";
+import ProposeSettlementButton from "pages/MyTransactions/TransactionDetails/PreviewCardButtons/ProposeSettlementButton";
 
 const Container = styled.div`
   display: flex;
@@ -12,13 +13,15 @@ const Container = styled.div`
 
 interface IButtons {
   toggleModal: () => void;
+  amountProposed: string;
+  isAmountValid: boolean;
 }
 
-const Buttons: React.FC<IButtons> = ({ toggleModal }) => {
+const Buttons: React.FC<IButtons> = ({ toggleModal, amountProposed, isAmountValid }) => {
   return (
     <Container>
       <Button variant="secondary" text="Return" onClick={toggleModal} />
-      <Button text="Propose" />
+      <ProposeSettlementButton buttonText="Propose" {...{ toggleModal, amountProposed, isAmountValid }} />
     </Container>
   );
 };

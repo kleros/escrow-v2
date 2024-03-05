@@ -7,7 +7,8 @@ import Header from "./Header";
 import TransactionInfo from "components/TransactionInfo";
 import Terms from "./Terms";
 import EscrowTimeline from "./EscrowTimeline";
-import Buttons from "pages/MyTransactions/TransactionDetails/Overview/PreviewCardButtons";
+import Buttons from "pages/MyTransactions/TransactionDetails/PreviewCardButtons";
+import { DisputeRequest, HasToPayFee, Payment, SettlementProposal, TransactionResolved } from "src/graphql/graphql";
 
 export const StyledCard = styled(Card)<{ isPreview?: boolean }>`
   height: auto;
@@ -54,18 +55,24 @@ interface IPreviewCard {
   receivingToken: string;
   transactionCreationTimestamp: string;
   status: string;
+  asset: string;
   buyerAddress: string;
   sendingQuantity: string;
   sendingToken: string;
   sellerAddress: string;
-  deadlineDate: Date;
+  deadlineDate: string;
   tokenSymbol: string;
   overrideIsList: boolean;
   extraDescriptionUri: string;
   isPreview: boolean;
-  disputeRequest?: [];
-  hasToPayFees?: [];
-  resolvedEvents?: [];
+  payments: Payment[];
+  settlementProposals?: SettlementProposal[];
+  hasToPayFees?: HasToPayFee[];
+  disputeRequest?: DisputeRequest;
+  resolvedEvents?: TransactionResolved[];
+  feeTimeout: number;
+  settlementTimeout: number;
+  arbitrationCost: bigint;
 }
 
 const PreviewCard: React.FC<IPreviewCard> = ({
@@ -76,6 +83,7 @@ const PreviewCard: React.FC<IPreviewCard> = ({
   receivingToken,
   transactionCreationTimestamp,
   status,
+  asset,
   buyerAddress,
   sendingQuantity,
   sendingToken,
@@ -85,58 +93,61 @@ const PreviewCard: React.FC<IPreviewCard> = ({
   overrideIsList,
   extraDescriptionUri,
   isPreview,
-  disputeRequest,
+  payments,
+  settlementProposals,
   hasToPayFees,
+  disputeRequest,
   resolvedEvents,
+  feeTimeout,
+  settlementTimeout,
+  arbitrationCost,
 }) => (
-  <StyledCard isPreview={isPreview}>
-    <Header escrowType={escrowType} escrowTitle={escrowTitle} />
+  <StyledCard {...{ isPreview }}>
+    <Header {...{ escrowType, escrowTitle, status, isCard: false }} />
     <TransactionInfoContainer>
       <Divider />
       <TransactionInfo
         amount={sendingQuantity}
         token={tokenSymbol}
-        buyerAddress={buyerAddress}
-        sellerAddress={sellerAddress}
-        deadlineDate={deadlineDate}
-        overrideIsList={overrideIsList}
         isPreview={true}
+        {...{ overrideIsList, deadlineDate, sellerAddress, buyerAddress }}
       />
       <Divider />
     </TransactionInfoContainer>
     <Terms
-      escrowType={escrowType}
-      deliverableText={deliverableText}
-      receivingQuantity={receivingQuantity}
-      receivingToken={receivingToken}
-      buyerAddress={buyerAddress}
-      sendingQuantity={sendingQuantity}
-      sendingToken={sendingToken}
-      sellerAddress={sellerAddress}
-      deadlineDate={deadlineDate}
-      tokenSymbol={tokenSymbol}
-      extraDescriptionUri={extraDescriptionUri}
+      {...{
+        escrowType,
+        deliverableText,
+        receivingQuantity,
+        receivingToken,
+        buyerAddress,
+        sendingQuantity,
+        sendingToken,
+        sellerAddress,
+        deadlineDate,
+        tokenSymbol,
+        extraDescriptionUri,
+      }}
     />
     <Divider />
     <EscrowTimeline
-      isPreview={isPreview}
-      status={status}
-      transactionCreationTimestamp={transactionCreationTimestamp}
-      buyerAddress={buyerAddress}
-      sellerAddress={sellerAddress}
-      hasToPayFees={hasToPayFees}
-      disputeRequest={disputeRequest}
-      resolvedEvents={resolvedEvents}
+      {...{
+        isPreview,
+        status,
+        asset,
+        transactionCreationTimestamp,
+        buyerAddress,
+        sellerAddress,
+        payments,
+        settlementProposals,
+        hasToPayFees,
+        disputeRequest,
+        resolvedEvents,
+        feeTimeout,
+        settlementTimeout,
+      }}
     />
-    {!isPreview ? (
-      <Buttons
-        buyerAddress={buyerAddress}
-        sellerAddress={sellerAddress}
-        disputeRequest={disputeRequest}
-        hasToPayFees={hasToPayFees}
-        resolvedEvents={resolvedEvents}
-      />
-    ) : null}
+    {!isPreview ? <Buttons {...{ feeTimeout, settlementTimeout, arbitrationCost }} /> : null}
   </StyledCard>
 );
 

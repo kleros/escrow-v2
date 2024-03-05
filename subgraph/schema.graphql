@@ -1,5 +1,7 @@
 enum Status {
   NoDispute
+  WaitingSettlementBuyer
+  WaitingSettlementSeller
   WaitingBuyer
   WaitingSeller
   DisputeCreated
@@ -17,6 +19,7 @@ enum Resolution {
   TimeoutByBuyer
   TimeoutBySeller
   RulingEnforced
+  SettlementReached
 }
 
 type Escrow @entity {
@@ -42,6 +45,7 @@ type Escrow @entity {
   hasToPayFees: [HasToPayFee!]! @derivedFrom(field: "escrow")
   createdEvents: [TransactionCreated!]! @derivedFrom(field: "escrow")
   resolvedEvents: [TransactionResolved!]! @derivedFrom(field: "escrow")
+  settlementProposals: [SettlementProposal!]! @derivedFrom(field: "escrow")
   disputeRequest: DisputeRequest @derivedFrom(field: "escrow")
 }
 
@@ -88,6 +92,14 @@ type TransactionResolved @entity {
   escrow: Escrow!
   resolution: Int!
   timestamp: BigInt
+}
+
+type SettlementProposal @entity {
+  id: ID!
+  escrow: Escrow!
+  party: String
+  amount: BigInt!
+  timestamp: BigInt!
 }
 
 type EscrowParameters @entity {

@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { useClickAway } from "react-use";
 import Description from "./Description";
 import { Overlay } from "components/Overlay";
@@ -15,6 +15,8 @@ interface IProposeSettlementModal {
 const ProposeSettlementModal: React.FC<IProposeSettlementModal> = ({ toggleModal, text }) => {
   const containerRef = useRef(null);
   useClickAway(containerRef, () => toggleModal());
+  const [amountProposed, setAmountProposed] = useState("0");
+  const [isAmountValid, setIsAmountValid] = useState(true);
 
   return (
     <>
@@ -22,8 +24,8 @@ const ProposeSettlementModal: React.FC<IProposeSettlementModal> = ({ toggleModal
       <StyledModal ref={containerRef}>
         <Header text={text} />
         <Description />
-        <AmountField />
-        <Buttons toggleModal={toggleModal} />
+        <AmountField {...{ amountProposed, setAmountProposed, setIsAmountValid }} />
+        <Buttons {...{ toggleModal, amountProposed, isAmountValid }} />
       </StyledModal>
     </>
   );

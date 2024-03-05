@@ -10,7 +10,6 @@ import Court from "svgs/icons/kleros.svg";
 import Linguo from "svgs/icons/linguo.svg";
 import POH from "svgs/icons/poh-image.png";
 import Vea from "svgs/icons/vea.svg";
-import Tokens from "svgs/icons/tokens.svg";
 import Product from "./Product";
 
 const Header = styled.h1`
@@ -72,9 +71,44 @@ const ItemsDiv = styled.div`
 
 const ITEMS = [
   {
-    text: "Court v1",
+    text: "Court V2",
+    Icon: Court,
+    url: "https://v2.kleros.builders/",
+  },
+  {
+    text: "Curate V2",
+    Icon: Curate,
+    url: "https://curate-v2.netlify.app/",
+  },
+  {
+    text: "Resolver V2",
+    Icon: Resolver,
+    url: "https://v2.kleros.builders/#/resolver",
+  },
+  {
+    text: "Escrow V2",
+    Icon: Escrow,
+    url: "https://escrow-v2.kleros.builders/",
+  },
+  {
+    text: "Court V1",
     Icon: Court,
     url: "https://court.kleros.io/",
+  },
+  {
+    text: "Curate V1",
+    Icon: Curate,
+    url: "https://curate.kleros.io",
+  },
+  {
+    text: "Resolver V1",
+    Icon: Resolver,
+    url: "https://resolve.kleros.io",
+  },
+  {
+    text: "Escrow V1",
+    Icon: Escrow,
+    url: "https://escrow.kleros.io",
   },
   {
     text: "Vea",
@@ -82,34 +116,14 @@ const ITEMS = [
     url: "https://veascan.io",
   },
   {
-    text: "Escrow",
-    Icon: Escrow,
-    url: "https://escrow.kleros.io",
+    text: "Perma Curate",
+    Icon: Curate,
+    url: "https://perma-curate.netlify.app/",
   },
   {
-    text: "POH",
+    text: "POH V1",
     Icon: POH,
     url: "https://app.proofofhumanity.id",
-  },
-  {
-    text: "Curate",
-    Icon: Curate,
-    url: "https://curate.kleros.io",
-  },
-  {
-    text: "Tokens",
-    Icon: Tokens,
-    url: "https://tokens.kleros.io",
-  },
-  {
-    text: "Resolver",
-    Icon: Resolver,
-    url: "https://resolve.kleros.io",
-  },
-  {
-    text: "Linguo",
-    Icon: Linguo,
-    url: "https://linguo.kleros.io",
   },
   {
     text: "Governor",

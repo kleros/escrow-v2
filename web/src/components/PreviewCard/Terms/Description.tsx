@@ -36,7 +36,7 @@ const Description: React.FC<IDescription> = ({
 }) => {
   const generalEscrowSummary =
     `By Paying ${sendingQuantity + " " + tokenSymbol}, address ${buyerAddress} should receive` +
-    ` ${deliverableText} from address ${sellerAddress} before the delivery deadline ${new Date(
+    ` "${deliverableText}" from address ${sellerAddress} before the delivery deadline ${new Date(
       deadlineDate
     )}.`;
 

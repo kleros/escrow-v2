@@ -79,8 +79,10 @@ const Search: React.FC = () => {
         items={[
           { text: "All States", dot: "grey", value: "all" },
           { text: "In Progress", dot: "blue", value: "NoDispute" },
-          { text: "Waiting Buyer", dot: "orange", value: "WaitingBuyer" },
-          { text: "Waiting Seller", dot: "orange", value: "WaitingSeller" },
+          { text: "Settlement - Waiting Buyer", dot: "orange", value: "WaitingSettlementBuyer" },
+          { text: "Settlement - Waiting Seller", dot: "orange", value: "WaitingSettlementSeller" },
+          { text: "Raising a Dispute - Waiting Buyer", dot: "blue", value: "WaitingBuyer" },
+          { text: "Raising a Dispute - Waiting Seller", dot: "blue", value: "WaitingSeller" },
           { text: "Disputed", dot: "purple", value: "DisputeCreated" },
           { text: "Concluded", dot: "green", value: "TransactionResolved" },
         ]}

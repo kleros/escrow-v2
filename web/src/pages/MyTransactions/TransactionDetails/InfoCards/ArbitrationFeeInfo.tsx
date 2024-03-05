@@ -3,11 +3,11 @@ import { AlertMessage } from "@kleros/ui-components-library";
 import { useAccount } from "wagmi";
 import { useTransactionDetailsContext } from "context/TransactionDetailsContext";
 
-interface IWaitingPartyInfo {
+interface IArbitrationFeeInfo {
   pendingParty: string;
 }
 
-const WaitingPartyInfo: React.FC<IWaitingPartyInfo> = ({ pendingParty }) => {
+const ArbitrationFeeInfo: React.FC<IArbitrationFeeInfo> = ({ pendingParty }) => {
   const { address } = useAccount();
   const { seller, buyer } = useTransactionDetailsContext();
 
@@ -21,11 +21,9 @@ const WaitingPartyInfo: React.FC<IWaitingPartyInfo> = ({ pendingParty }) => {
   return (
     <AlertMessage
       variant={variant}
-      title={
-        pendingParty === "buyer"
-          ? "The Buyer needs to deposit the fee in time not to lose the escrow"
-          : "The Seller needs to deposit the fee in time not to lose the escrow"
-      }
+      title={`The ${
+        pendingParty === "buyer" ? "Buyer" : "Seller"
+      } needs to deposit the fee in time not to lose the escrow`}
       msg={
         pendingParty === "buyer"
           ? "In case the buyer fails to deposit the arbitration fee in time, " +
@@ -37,4 +35,4 @@ const WaitingPartyInfo: React.FC<IWaitingPartyInfo> = ({ pendingParty }) => {
   );
 };
 
-export default WaitingPartyInfo;
+export default ArbitrationFeeInfo;

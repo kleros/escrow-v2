@@ -6,9 +6,9 @@ dataSources:
     name: Escrow
     network: arbitrum-sepolia
     source:
-      address: '0x10f7A6f42Af606553883415bc8862643A6e63fdA'
+      address: '0x250AB0477346aDFC010585b58FbF61cff1d8f3ea'
       abi: Escrow
-      startBlock: 6159752
+      startBlock: 15929877
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -19,6 +19,7 @@ dataSources:
         - HasToPayFee
         - TransactionCreated
         - TransactionResolved
+        - SettlementProposal
       abis:
         - name: Escrow
           file: ../contracts/deployments/arbitrumSepoliaDevnet/Escrow.json
@@ -35,3 +36,5 @@ dataSources:
           handler: handleDisputeRequest
         - event: ParameterUpdated(uint256,uint256,bytes)
           handler: handleParameterUpdated
+        - event: SettlementProposed(indexed uint256,uint8,uint256)
+          handler: handleSettlementProposed

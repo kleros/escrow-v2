@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { Button } from "@kleros/ui-components-library";
-import RaiseDisputeButton from "pages/MyTransactions/TransactionDetails/Overview/PreviewCardButtons/RaiseDisputeButton"
+import RaiseDisputeButton from "pages/MyTransactions/TransactionDetails/PreviewCardButtons/RaiseDisputeButton";
 
 const Container = styled.div`
   display: flex;
@@ -13,13 +13,14 @@ const Container = styled.div`
 
 interface IButtons {
   toggleModal: () => void;
+  arbitrationCost: bigint;
 }
 
-const Buttons: React.FC<IButtons> = ({ toggleModal }) => {
+const Buttons: React.FC<IButtons> = ({ toggleModal, arbitrationCost }) => {
   return (
     <Container>
       <Button variant="secondary" text="Return" onClick={toggleModal} />
-      <RaiseDisputeButton buttonText="Raise a dispute" toggleModal={toggleModal} />
+      <RaiseDisputeButton buttonText="Raise a dispute" {...{ toggleModal, arbitrationCost }} />
     </Container>
   );
 };

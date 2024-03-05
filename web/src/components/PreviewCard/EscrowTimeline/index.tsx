@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { CustomTimeline } from "@kleros/ui-components-library";
 import useEscrowTimelineItems from "hooks/useEscrowTimelineItems";
+import { DisputeRequest, HasToPayFee, Payment, SettlementProposal, TransactionResolved } from "src/graphql/graphql";
 
 const StyledTimeline = styled(CustomTimeline)`
   width: 100%;
@@ -9,34 +10,47 @@ const StyledTimeline = styled(CustomTimeline)`
 
 interface IEscrowTimeline {
   isPreview: boolean;
-  status: boolean;
   transactionCreationTimestamp: number;
+  status: boolean;
+  asset: string;
   buyerAddress: string;
   sellerAddress: string;
-  hasToPayFees: [];
-  disputeRequest: [];
-  resolvedEvents: [];
+  payments: Payment[];
+  settlementProposals: SettlementProposal[];
+  hasToPayFees: HasToPayFee[];
+  disputeRequest: DisputeRequest;
+  resolvedEvents: TransactionResolved[];
 }
 
 const EscrowTimeline: React.FC<IEscrowTimeline> = ({
   isPreview,
   transactionCreationTimestamp,
   status,
+  asset,
   buyerAddress,
   sellerAddress,
+  payments,
+  settlementProposals,
   hasToPayFees,
   disputeRequest,
   resolvedEvents,
+  feeTimeout,
+  settlementTimeout,
 }) => {
   const items = useEscrowTimelineItems(
     isPreview,
     transactionCreationTimestamp,
     status,
+    asset,
     buyerAddress,
     sellerAddress,
+    payments,
+    settlementProposals,
     hasToPayFees,
     disputeRequest,
-    resolvedEvents
+    resolvedEvents,
+    feeTimeout,
+    settlementTimeout
   );
 
   return <StyledTimeline items={items} />;

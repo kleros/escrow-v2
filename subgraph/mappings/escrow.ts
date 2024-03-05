@@ -8,6 +8,7 @@ import {
   User,
   DisputeRequest,
   EscrowParameters,
+  SettlementProposal,
 } from "../generated/schema";
 import {
   Payment as PaymentEvent,
@@ -16,6 +17,7 @@ import {
   TransactionResolved as TransactionResolvedEvent,
   DisputeRequest as DisputeRequestEvent,
   ParameterUpdated as ParameterUpdatedEvent,
+  SettlementProposed as SettlementProposedEvent,
 } from "../generated/Escrow/Escrow";
 import { ZERO, ONE } from "./utils";
 
@@ -55,23 +57,23 @@ function getUser(id: string): User {
 }
 
 function getEscrowParameters(): EscrowParameters {
-  let escrowParameters = EscrowParameters.load('singleton')
+  let escrowParameters = EscrowParameters.load("singleton");
   if (escrowParameters === null) {
-    escrowParameters = new EscrowParameters('singleton')
-    escrowParameters.feeTimeout = ZERO
-    escrowParameters.settlementTimeout = ZERO
-    escrowParameters.arbitratorExtraData = Bytes.fromHexString("0x00")
-    escrowParameters.save()
+    escrowParameters = new EscrowParameters("singleton");
+    escrowParameters.feeTimeout = ZERO;
+    escrowParameters.settlementTimeout = ZERO;
+    escrowParameters.arbitratorExtraData = Bytes.fromHexString("0x00");
+    escrowParameters.save();
   }
   return escrowParameters;
 }
 
 export function handleParameterUpdated(event: ParameterUpdatedEvent): void {
-  let escrowParameters = getEscrowParameters()
-  escrowParameters.feeTimeout = event.params._feeTimeout
-  escrowParameters.settlementTimeout = event.params._settlementTimeout
-  escrowParameters.arbitratorExtraData = event.params._arbitratorExtraData
-  escrowParameters.save()
+  let escrowParameters = getEscrowParameters();
+  escrowParameters.feeTimeout = event.params._feeTimeout;
+  escrowParameters.settlementTimeout = event.params._settlementTimeout;
+  escrowParameters.arbitratorExtraData = event.params._arbitratorExtraData;
+  escrowParameters.save();
 }
 
 export function handlePayment(event: PaymentEvent): void {
@@ -100,6 +102,7 @@ export function handleHasToPayFee(event: HasToPayFeeEvent): void {
 
   buyer.totalNoDisputedEscrows = buyer.totalNoDisputedEscrows.minus(ONE);
   seller.totalNoDisputedEscrows = seller.totalNoDisputedEscrows.minus(ONE);
+  escrow.lastFeePaymentTime = event.block.timestamp;
 
   let partyValue = event.params._party.toString();
   if (partyValue == "2") {
@@ -238,5 +241,33 @@ export function handleDisputeRequest(event: DisputeRequestEvent): void {
   buyer.save();
   seller.save();
   escrow.status = "DisputeCreated";
+  escrow.save();
+}
+
+export function handleSettlementProposed(event: SettlementProposedEvent): void {
+  let id = event.transaction.hash.toHex() + "-" + event.logIndex.toString();
+  let transactionID = event.params._transactionID.toString();
+  let proposal = new SettlementProposal(id);
+
+  let escrow = Escrow.load(transactionID);
+  if (!escrow) {
+    escrow = createEscrow(transactionID);
+  }
+  escrow.lastFeePaymentTime = event.block.timestamp;
+
+  let partyValue = event.params._party.toString();
+  if (partyValue == "1") {
+    escrow.status = "WaitingSettlementSeller";
+  }
+  if (partyValue == "2") {
+    escrow.status = "WaitingSettlementBuyer";
+  }
+
+  proposal.escrow = transactionID;
+  proposal.party = partyValue;
+  proposal.amount = event.params._amount;
+  proposal.timestamp = event.block.timestamp;
+
+  proposal.save();
   escrow.save();
 }
