@@ -3,7 +3,6 @@ import styled from "styled-components";
 import { useAccount } from "wagmi";
 import { formatEther } from "viem";
 import { useTransactionDetailsContext } from "context/TransactionDetailsContext";
-import { isUndefined } from "utils/index";
 import OpenModalProposeSettlementButton from "../WasItFulfilled/Buttons/OpenModalProposeSettlementButton";
 import OpenModalRaiseDisputeButton from "components/OpenModalRaiseDisputeButton";
 import AcceptButton from "./AcceptSettlementButton";
@@ -100,7 +99,7 @@ const Buttons: React.FC<IButtons> = ({ feeTimeout, settlementTimeout, arbitratio
         </Container>
       ) : null}
 
-      {shouldDisplayRaiseDisputeButton && !isUndefined(arbitrationCost) ? (
+      {shouldDisplayRaiseDisputeButton && arbitrationCost ? (
         <Container>
           <RaiseDisputeButton
             buttonText={`Deposit the fee: ${formatEther(arbitrationCost)} ETH`}
