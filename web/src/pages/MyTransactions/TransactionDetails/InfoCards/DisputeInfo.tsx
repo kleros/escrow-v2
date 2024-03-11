@@ -1,11 +1,7 @@
 import React from "react";
 import { AlertMessage } from "@kleros/ui-components-library";
 
-interface IDisputeInfo {
-  pendingParty: string;
-}
-
-const DisputeInfo: React.FC<IDisputeInfo> = ({ pendingParty }) => {
+const DisputeInfo: React.FC = () => {
   return (
     <AlertMessage
       variant="info"
