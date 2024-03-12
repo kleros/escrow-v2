@@ -1,13 +1,13 @@
 import React, { useRef } from "react";
 import styled, { css } from "styled-components";
-import { useClickAway } from "react-use";
 import { landscapeStyle } from "styles/landscapeStyle";
+import { responsiveSize } from "styles/responsiveSize";
+import { useClickAway } from "react-use";
 import Curate from "svgs/icons/curate-image.png";
 import Resolver from "svgs/icons/dispute-resolver.svg";
 import Escrow from "svgs/icons/escrow.svg";
 import Governor from "svgs/icons/governor.svg";
 import Court from "svgs/icons/kleros.svg";
-import Linguo from "svgs/icons/linguo.svg";
 import POH from "svgs/icons/poh-image.png";
 import Vea from "svgs/icons/vea.svg";
 import Product from "./Product";
@@ -50,7 +50,7 @@ const Container = styled.div`
       left: 0;
       right: auto;
       transform: none;
-      width: calc(300px + (480 - 300) * (100vw - 375px) / (1250 - 375));
+      width: ${responsiveSize(300, 480)};
       max-height: 80vh;
     `
   )}
@@ -59,13 +59,13 @@ const Container = styled.div`
 const ItemsDiv = styled.div`
   display: grid;
   overflow-y: auto;
-  padding: 16px calc(8px + (24 - 8) * ((100vw - 480px) / (1250 - 480)));
+  padding: 16px ${responsiveSize(8, 24, 480)};
   row-gap: 8px;
   column-gap: 2px;
   justify-items: center;
   max-width: 480px;
   min-width: 300px;
-  width: calc(300px + (480 - 300) * (100vw - 375px) / (1250 - 375));
+  width: ${responsiveSize(300, 480)};
   grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
 `;
 
@@ -118,7 +118,7 @@ const ITEMS = [
   {
     text: "Perma Curate",
     Icon: Curate,
-    url: "https://perma-curate.netlify.app/",
+    url: "https://perma-curate.eth.limo/",
   },
   {
     text: "POH V1",
