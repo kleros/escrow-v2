@@ -15,7 +15,7 @@ const Title: React.FC = () => {
     <Container>
       <Header text="Title" />
       <TextField />
-      <NavigationButtons prevRoute="/newTransaction/typeOfEscrow" nextRoute="/newTransaction/deliverable" />
+      <NavigationButtons prevRoute="/new-transaction/escrow-type" nextRoute="/new-transaction/deliverable" />
     </Container>
   );
 };

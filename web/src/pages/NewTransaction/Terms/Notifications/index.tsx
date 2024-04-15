@@ -15,7 +15,7 @@ const Notifications: React.FC = () => {
     <Container>
       <Header text="Subscribe for Email Notifications" />
       <EmailField />
-      <NavigationButtons prevRoute="/newTransaction/deadline" nextRoute="/newTransaction/preview" />
+      <NavigationButtons prevRoute="/new-transaction/deadline" nextRoute="/new-transaction/preview" />
     </Container>
   );
 };

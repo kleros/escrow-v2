@@ -69,7 +69,7 @@ const DepositPaymentButton: React.FC = () => {
       label: "Transaction Terms",
       uri: extraDescriptionUri,
     },
-    frontendUrl: `https://escrow-v2.kleros.builders/#/myTransactions/%s`,
+    frontendUrl: `https://escrow-v2.kleros.builders/#/my-transactions/%s`,
     arbitrableChainID: "421614",
     arbitrableAddress: "0x250AB0477346aDFC010585b58FbF61cff1d8f3ea",
     arbitratorChainID: "421614",
@@ -115,7 +115,7 @@ const DepositPaymentButton: React.FC = () => {
         .then((wrapResult) => {
           if (wrapResult.status) {
             resetContext();
-            navigate("/myTransactions/display/1/desc/all");
+            navigate("/my-transactions/display/1/desc/all");
           }
         })
         .catch((error) => {

@@ -27,7 +27,7 @@ const GeneralTransaction: React.FC = () => {
       <TokenAndAmount quantity={sendingQuantity} setQuantity={setSendingQuantity} />
       <ToDivider />
       <DestinationAddress recipientAddress={sellerAddress} setRecipientAddress={setSellerAddress} />
-      <NavigationButtons prevRoute="/newTransaction/deliverable" nextRoute="/newTransaction/deadline" />
+      <NavigationButtons prevRoute="/new-transaction/deliverable" nextRoute="/new-transaction/deadline" />
     </Container>
   );
 };

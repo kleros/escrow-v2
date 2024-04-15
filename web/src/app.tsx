@@ -25,9 +25,9 @@ const App: React.FC = () => {
               <NewTransactionProvider>
                 <SentryRoutes>
                   <Route path="/" element={<Layout />}>
-                    <Route index element={<Navigate to="newTransaction" replace />} />
-                    <Route path="newTransaction/*" element={<NewTransaction />} />
-                    <Route path="myTransactions/*" element={<MyTransactions />} />
+                    <Route index element={<Navigate to="new-transaction" replace />} />
+                    <Route path="new-transaction/*" element={<NewTransaction />} />
+                    <Route path="my-transactions/*" element={<MyTransactions />} />
                     <Route path="*" element={<h1>404 not found</h1>} />
                   </Route>
                 </SentryRoutes>

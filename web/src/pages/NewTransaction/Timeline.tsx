@@ -27,13 +27,13 @@ const Timeline: React.FC = () => {
   const location = useLocation();
 
   const routeToIndexMap = {
-    "/newTransaction/typeOfEscrow": 0,
-    "/newTransaction/title": 0,
-    "/newTransaction/deliverable": 1,
-    "/newTransaction/payment": 1,
-    "/newTransaction/deadline": 1,
-    "/newTransaction/notifications": 1,
-    "/newTransaction/preview": 2,
+    "/new-transaction/escrow-type": 0,
+    "/new-transaction/title": 0,
+    "/new-transaction/deliverable": 1,
+    "/new-transaction/payment": 1,
+    "/new-transaction/deadline": 1,
+    "/new-transaction/notifications": 1,
+    "/new-transaction/preview": 2,
   };
 
   const currentItemIndex = Object.entries(routeToIndexMap).reduce(

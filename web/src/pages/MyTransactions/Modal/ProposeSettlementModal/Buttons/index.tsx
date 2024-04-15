@@ -25,4 +25,5 @@ const Buttons: React.FC<IButtons> = ({ toggleModal, amountProposed, isAmountVali
     </Container>
   );
 };
+
 export default Buttons;

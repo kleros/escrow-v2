@@ -82,13 +82,13 @@ const Deliverable: React.FC = () => {
             placeholder="eg. I should receive a website created in React with the following specification: x,y,z."
           />
           <StyledFileUploader callback={handleAttachFile} variant="info" msg={fileFootMessage} />
-          <NavigationButtons prevRoute="/newTransaction/title" nextRoute="/newTransaction/payment" />
+          <NavigationButtons prevRoute="/new-transaction/title" nextRoute="/new-transaction/payment" />
         </>
       ) : (
         <TokenTransaction
           headerText="I should receive"
-          prevRoute="/newTransaction/title"
-          nextRoute="/newTransaction/payment"
+          prevRoute="/new-transaction/title"
+          nextRoute="/new-transaction/payment"
           quantity={receivingQuantity}
           setQuantity={setReceivingQuantity}
           token={receivingToken}
