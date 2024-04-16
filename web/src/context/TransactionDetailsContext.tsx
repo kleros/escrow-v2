@@ -2,14 +2,11 @@ import React, { createContext, useContext, useState, ReactNode } from "react";
 import { TransactionDetailsFragment } from "src/graphql/graphql";
 
 interface TransactionDetailsContextType {
-  transactionDetails: TransactionDetailsFragment | null;
-  setTransactionDetails: (details: TransactionDetailsFragment | null) => void;
+  transactionDetails: TransactionDetailsFragment | undefined;
+  setTransactionDetails: (details: TransactionDetailsFragment | undefined) => void;
 }
 
-const TransactionDetailsContext = createContext<TransactionDetailsContextType>({
-  transactionDetails: null,
-  setTransactionDetails: () => {},
-});
+const TransactionDetailsContext = createContext<TransactionDetailsContextType | undefined>(undefined);
 
 export const useTransactionDetailsContext = () => {
   const context = useContext(TransactionDetailsContext);
@@ -22,7 +19,7 @@ export const useTransactionDetailsContext = () => {
 };
 
 export const TransactionDetailsProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [transactionDetails, setTransactionDetails] = useState<TransactionDetailsFragment | null>(null);
+  const [transactionDetails, setTransactionDetails] = useState<TransactionDetailsFragment | undefined>(undefined);
 
   return (
     <TransactionDetailsContext.Provider value={{ transactionDetails, setTransactionDetails }}>

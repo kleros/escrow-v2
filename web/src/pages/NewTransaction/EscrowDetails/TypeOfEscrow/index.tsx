@@ -17,7 +17,7 @@ const TypeOfEscrow: React.FC = () => {
       <Header text="What kind of escrow do you want to create?" />
       <EscrowOptions />
       <Info />
-      <NavigationButtons prevRoute="" nextRoute="/newTransaction/title" />
+      <NavigationButtons prevRoute="" nextRoute="/new-transaction/title" />
     </Container>
   );
 };

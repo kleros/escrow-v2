@@ -77,7 +77,7 @@ const TransactionCard: React.FC<ITransactionCard> = ({
   return (
     <>
       {!isList || overrideIsList ? (
-        <StyledCard hover onClick={() => navigateAndScrollTop(`/myTransactions/${id.toString()}`)}>
+        <StyledCard hover onClick={() => navigateAndScrollTop(`/my-transactions/${id.toString()}`)}>
           <StatusBanner id={parseInt(id)} status={currentStatusEnum} />
           <CardContainer>
             {!isUndefined(title) ? <StyledTitle>{title}</StyledTitle> : <StyledSkeleton />}
@@ -92,7 +92,7 @@ const TransactionCard: React.FC<ITransactionCard> = ({
           </CardContainer>
         </StyledCard>
       ) : (
-        <StyledListItem hover onClick={() => navigateAndScrollTop(`/myTransactions/${id.toString()}`)}>
+        <StyledListItem hover onClick={() => navigateAndScrollTop(`/my-transactions/${id.toString()}`)}>
           <StatusBanner isCard={false} id={parseInt(id)} status={currentStatusEnum} />
           <ListContainer>
             {!isUndefined(title) ? (

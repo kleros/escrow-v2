@@ -52,8 +52,8 @@ const NewTransaction: React.FC = () => {
         {isConnected && isOnSupportedChain ? (
           <MiddleContentContainer>
             <Routes>
-              <Route index element={<Navigate to="typeOfEscrow" replace />} />
-              <Route path="/typeOfEscrow/*" element={<TypeOfEscrow />} />
+              <Route index element={<Navigate to="escrow-type" replace />} />
+              <Route path="/escrow-type/*" element={<TypeOfEscrow />} />
               <Route path="/title/*" element={<Title />} />
               <Route path="/deliverable/*" element={<Deliverable />} />
               <Route path="/payment/*" element={<Payment />} />

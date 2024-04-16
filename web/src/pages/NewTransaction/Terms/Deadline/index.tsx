@@ -24,7 +24,7 @@ const Deadline: React.FC = () => {
     <Container>
       <Header text="Delivery Deadline" />
       <StyledDatepicker time onSelect={handleDateSelect} />
-      <NavigationButtons prevRoute="/newTransaction/payment" nextRoute="/newTransaction/notifications" />
+      <NavigationButtons prevRoute="/new-transaction/payment" nextRoute="/new-transaction/notifications" />
     </Container>
   );
 };

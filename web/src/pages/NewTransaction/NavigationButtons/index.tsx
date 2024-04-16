@@ -21,7 +21,7 @@ const NavigationButtons: React.FC<NavigationButtonsProps> = ({ prevRoute, nextRo
   return (
     <Container>
       <PreviousButton prevRoute={prevRoute} />
-      {prevRoute === "/newTransaction/notifications" ? <DepositPaymentButton /> : <NextButton nextRoute={nextRoute} />}
+      {prevRoute === "/new-transaction/notifications" ? <DepositPaymentButton /> : <NextButton nextRoute={nextRoute} />}
     </Container>
   );
 };

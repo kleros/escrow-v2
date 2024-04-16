@@ -19,8 +19,8 @@ const Payment: React.FC = () => {
   ) : (
     <TokenTransaction
       headerText="I am paying"
-      prevRoute="/newTransaction/deliverable"
-      nextRoute="/newTransaction/deadline"
+      prevRoute="/new-transaction/deliverable"
+      nextRoute="/new-transaction/deadline"
       quantity={sendingQuantity}
       setQuantity={setSendingQuantity}
       token={sendingToken}

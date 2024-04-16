@@ -48,8 +48,8 @@ const StyledLink = styled(Link)<{ isActive: boolean }>`
 `;
 
 const links = [
-  { to: "/newTransaction", text: "New Transaction" },
-  { to: "/myTransactions/display/1/desc/all", text: "My Transactions" },
+  { to: "/new-transaction", text: "New Transaction" },
+  { to: "/my-transactions/display/1/desc/all", text: "My Transactions" },
 ];
 
 const Explore: React.FC = () => {

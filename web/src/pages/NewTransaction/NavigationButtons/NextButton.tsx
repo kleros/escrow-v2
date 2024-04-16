@@ -56,19 +56,19 @@ const NextButton: React.FC<INextButton> = ({ nextRoute }) => {
 
   const isButtonDisabled =
     escrowType === "swap" ||
-    (location.pathname.includes("/newTransaction/title") && !escrowTitle) ||
-    (location.pathname.includes("/newTransaction/deliverable") && !isDeliverableValid) ||
-    (location.pathname.includes("/newTransaction/payment") &&
+    (location.pathname.includes("/new-transaction/title") && !escrowTitle) ||
+    (location.pathname.includes("/new-transaction/deliverable") && !isDeliverableValid) ||
+    (location.pathname.includes("/new-transaction/payment") &&
       (areSendingFieldsEmpty ||
         !isSellerAddressValid ||
         !isRecipientAddressResolved ||
         !hasSufficientNativeBalance)) ||
-    (location.pathname.includes("/newTransaction/deadline") && (!deadline || isDeadlineInPast)) ||
-    (location.pathname.includes("/newTransaction/notifications") && !isEmailValid);
+    (location.pathname.includes("/new-transaction/deadline") && (!deadline || isDeadlineInPast)) ||
+    (location.pathname.includes("/new-transaction/notifications") && !isEmailValid);
 
   const handleNextClick = async () => {
     try {
-      if (location.pathname.includes("/newTransaction/deliverable") && escrowType === "general") {
+      if (location.pathname.includes("/new-transaction/deliverable") && escrowType === "general") {
         const transactionUri = await handleFileUpload(
           escrowTitle,
           deliverableText,

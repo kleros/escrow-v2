@@ -51,7 +51,7 @@ const Preview: React.FC = () => {
         extraDescriptionUri={extraDescriptionUri}
         isPreview={true}
       />
-      <NavigationButtons prevRoute="/newTransaction/notifications" nextRoute="/newTransaction/deliverable" />
+      <NavigationButtons prevRoute="/new-transaction/notifications" nextRoute="/new-transaction/deliverable" />
     </Container>
   );
 };

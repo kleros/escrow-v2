@@ -52,9 +52,7 @@ const TransactionDetails: React.FC = () => {
   const transactionInfo = useFetchIpfsJson(transactionUri);
 
   useEffect(() => {
-    if (transactionDetails) {
-      setTransactionDetails(transactionDetails.escrow);
-    } else setTransactionDetails({});
+    setTransactionDetails(transactionDetails?.escrow);
   }, [transactionDetails, setTransactionDetails]);
 
   return (
