@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-/// @authors: [@unknownunknown1]
+/// @authors: [@unknownunknown1, @jaybuidl]
 /// @reviewers: []
 /// @auditors: []
 /// @bounties: []
@@ -10,62 +10,17 @@ pragma solidity 0.8.18;
 import {IArbitrableV2, IArbitratorV2} from "@kleros/kleros-v2-contracts/arbitration/interfaces/IArbitrableV2.sol";
 import "@kleros/kleros-v2-contracts/arbitration/interfaces/IDisputeTemplateRegistry.sol";
 import {SafeERC20, IERC20} from "./libraries/SafeERC20.sol";
+import "./interfaces/IEscrow.sol";
 
 /// @title EscrowToken for a sale paid in ERC20 tokens without platform fees.
-/// @dev MultipleArbitrableTokenTransaction contract that is compatible with V2.
-///     Adapted from https://github.com/kleros/kleros-interaction/blob/master/contracts/standard/arbitration/MultipleArbitrableTokenTransaction.sol
+/// @dev Adapted from MultipleArbitrableTokenTransaction contract: https://github.com/kleros/kleros-interaction/blob/master/contracts/standard/arbitration/MultipleArbitrableTokenTransaction.sol
 /// Note that the contract expects the tokens to have standard ERC20 behaviour.
 /// The tokens that don't conform to this type of behaviour should be filtered by the UI.
 /// Tokens should not reenter or allow recipients to refuse the transfer.
 /// Also note that arbitration fees are still paid in ETH.
-contract EscrowToken is IArbitrableV2 {
+contract EscrowToken is IEscrow, IArbitrableV2 {
     // Use safe transfers when both parties are paid simultaneously (save for acceptSettlement) to prevent griefing.
     using SafeERC20 for IERC20;
-
-    // ************************************* //
-    // *         Enums / Structs           * //
-    // ************************************* //
-
-    enum Party {
-        None,
-        Buyer, // Makes a purchase in ERC20 token.
-        Seller // Provides a good or service in exchange for ERC20 token.
-    }
-
-    enum Status {
-        NoDispute,
-        WaitingSettlementBuyer,
-        WaitingSettlementSeller,
-        WaitingBuyer,
-        WaitingSeller,
-        DisputeCreated,
-        TransactionResolved
-    }
-
-    enum Resolution {
-        TransactionExecuted,
-        TimeoutByBuyer,
-        TimeoutBySeller,
-        RulingEnforced,
-        SettlementReached
-    }
-
-    struct Transaction {
-        address payable buyer;
-        address payable seller;
-        uint256 amount;
-        uint256 settlementBuyer; // Settlement amount proposed by the buyer.
-        uint256 settlementSeller; // Settlement amount proposed by the seller.
-        uint256 deadline; // Timestamp at which the transaction can be automatically executed if not disputed.
-        uint256 disputeID; // If dispute exists, the ID of the dispute.
-        uint256 buyerFee; // Total fees paid by the buyer.
-        uint256 sellerFee; // Total fees paid by the seller.
-        uint256 lastFeePaymentTime; // Last time the dispute fees were paid by either party or settlement proposed.
-        string templateData;
-        string templateDataMappings;
-        Status status;
-        IERC20 token; // Token to pay the seller with.
-    }
 
     // ************************************* //
     // *             Storage               * //
@@ -81,56 +36,6 @@ contract EscrowToken is IArbitrableV2 {
     uint256 public settlementTimeout; // Time in seconds a party can take to accept or propose a settlement before being considered unresponsive.
     Transaction[] public transactions; // List of all created transactions.
     mapping(uint256 => uint256) public disputeIDtoTransactionID; // Naps dispute ID to tx ID.
-
-    // ************************************* //
-    // *              Events               * //
-    // ************************************* //
-
-    /// @dev To be emitted when Escrow parameters are updated.
-    event ParameterUpdated(uint256 _feeTimeout, uint256 _settlementTimeout, bytes _arbitratorExtraData);
-
-    /// @dev To be emitted when a party pays or reimburses the other.
-    /// @param _transactionID The index of the transaction.
-    /// @param _amount The amount paid.
-    /// @param _party The party that paid.
-    event Payment(uint256 indexed _transactionID, uint256 _amount, address _party);
-
-    /// @dev Indicate that a party has to pay a fee or would otherwise be considered as losing.
-    /// @param _transactionID The index of the transaction.
-    /// @param _party The party who has to pay.
-    event HasToPayFee(uint256 indexed _transactionID, Party _party);
-
-    /// @dev Emitted when a party proposes a settlement.
-    /// @param _transactionID The index of the transaction.
-    /// @param _party The party that proposed a settlement.
-    /// @param _amount The amount proposed.
-    event SettlementProposed(uint256 indexed _transactionID, Party _party, uint256 _amount);
-
-    /// @dev Emitted when a transaction is created.
-    /// @param _transactionID The index of the transaction.
-    /// @param _transactionUri The IPFS Uri Hash of the transaction.
-    /// @param _buyer The address of the buyer.
-    /// @param _seller The address of the seller.
-    /// @param _token The token address.
-    /// @param _amount The initial amount in the transaction.
-    /// @param _asset The asset used ("ERC20" for ERC20 token).
-    /// @param _deadline The deadline of the transaction.
-    event TransactionCreated(
-        uint256 indexed _transactionID,
-        string _transactionUri,
-        address indexed _buyer,
-        address indexed _seller,
-        IERC20 _token,
-        uint256 _amount,
-        string _asset,
-        uint256 _deadline
-    );
-
-    /// @dev To be emitted when a transaction is resolved, either by its
-    ///      execution, a timeout or because a ruling was enforced.
-    /// @param _transactionID The ID of the respective transaction.
-    /// @param _resolution Short description of what caused the transaction to be solved.
-    event TransactionResolved(uint256 indexed _transactionID, Resolution indexed _resolution);
 
     // ************************************* //
     // *        Function Modifiers         * //
@@ -215,16 +120,19 @@ contract EscrowToken is IArbitrableV2 {
     // *         State Modifiers           * //
     // ************************************* //
 
-    /// @dev Create a transaction. UNTRUSTED.
-    /// @param _amount The amount of tokens in this transaction.
-    /// @param _token The ERC20 token contract.
-    /// @param _timeoutPayment Time after which a party can automatically execute the arbitrable transaction.
-    /// @param _transactionUri The IPFS Uri Hash of the transaction.
-    /// @param _seller The recipient of the transaction.
-    /// @param _templateData The dispute template data.
-    /// @param _templateDataMappings The dispute template data mappings.
-    /// @return transactionID The index of the transaction.
-    function createTransaction(
+    /// @inheritdoc IEscrow
+    function createNativeTransaction(
+        uint256,
+        string memory,
+        address payable,
+        string memory,
+        string memory
+    ) external payable override returns (uint256) {
+        revert NotSupported();
+    }
+
+    /// @inheritdoc IEscrow
+    function createERC20Transaction(
         uint256 _amount,
         IERC20 _token,
         uint256 _timeoutPayment,
@@ -232,36 +140,34 @@ contract EscrowToken is IArbitrableV2 {
         address payable _seller,
         string memory _templateData,
         string memory _templateDataMappings
-    ) external returns (uint256 transactionID) {
+    ) external override returns (uint256 transactionID) {
         // Transfers token from sender wallet to contract.
-        if(!_token.safeTransferFrom(msg.sender, address(this), _amount)) revert TokenTransferFailed();
+        if (!_token.safeTransferFrom(msg.sender, address(this), _amount)) revert TokenTransferFailed();
         Transaction storage transaction = transactions.push();
         transaction.buyer = payable(msg.sender);
         transaction.seller = _seller;
         transaction.amount = _amount;
         transaction.token = _token;
+        // transaction.paymentType = PaymentType.ERC20;
         transaction.deadline = block.timestamp + _timeoutPayment;
         transaction.templateData = _templateData;
         transaction.templateDataMappings = _templateDataMappings;
 
         transactionID = transactions.length - 1;
 
-        emit TransactionCreated(
+        emit ERC20TransactionCreated(
             transactionID,
             _transactionUri,
             msg.sender,
             _seller,
             _token,
             _amount,
-            "ERC20",
             transaction.deadline
         );
     }
 
-    /// @dev Pay seller. To be called if the good or service is provided. UNTRUSTED.
-    /// @param _transactionID The index of the transaction.
-    /// @param _amount Amount to pay in wei.
-    function pay(uint256 _transactionID, uint256 _amount) external {
+    /// @inheritdoc IEscrow
+    function pay(uint256 _transactionID, uint256 _amount) external override {
         Transaction storage transaction = transactions[_transactionID];
         if (transaction.buyer != msg.sender) revert BuyerOnly();
         if (transaction.status != Status.NoDispute) revert TransactionDisputed();
@@ -269,15 +175,13 @@ contract EscrowToken is IArbitrableV2 {
 
         transaction.amount -= _amount;
 
-        if(!transaction.token.safeTransfer(transaction.seller, _amount)) revert TokenTransferFailed();
+        if (!transaction.token.safeTransfer(transaction.seller, _amount)) revert TokenTransferFailed();
 
         emit Payment(_transactionID, _amount, msg.sender);
     }
 
-    /// @dev Reimburse buyer. To be called if the good or service can't be fully provided. UNTRUSTED.
-    /// @param _transactionID The index of the transaction.
-    /// @param _amountReimbursed Amount to reimburse in wei.
-    function reimburse(uint256 _transactionID, uint256 _amountReimbursed) external {
+    /// @inheritdoc IEscrow
+    function reimburse(uint256 _transactionID, uint256 _amountReimbursed) external override {
         Transaction storage transaction = transactions[_transactionID];
         if (transaction.seller != msg.sender) revert SellerOnly();
         if (transaction.status != Status.NoDispute) revert TransactionDisputed();
@@ -285,34 +189,29 @@ contract EscrowToken is IArbitrableV2 {
 
         transaction.amount -= _amountReimbursed;
 
-        if(!transaction.token.safeTransfer(transaction.buyer, _amountReimbursed)) revert TokenTransferFailed();
+        if (!transaction.token.safeTransfer(transaction.buyer, _amountReimbursed)) revert TokenTransferFailed();
 
         emit Payment(_transactionID, _amountReimbursed, msg.sender);
     }
 
-    /// @dev Transfer the transaction's amount to the seller if the timeout has passed. UNTRUSTED.
-    /// @param _transactionID The index of the transaction.
-    function executeTransaction(uint256 _transactionID) external {
+    /// @inheritdoc IEscrow
+    function executeTransaction(uint256 _transactionID) external override {
         Transaction storage transaction = transactions[_transactionID];
         if (block.timestamp < transaction.deadline) revert DeadlineNotPassed();
         if (transaction.status != Status.NoDispute) revert TransactionDisputed();
 
         uint256 amount = transaction.amount;
         transaction.amount = 0;
-    
-        if(!transaction.token.safeTransfer(transaction.seller, amount)) revert TokenTransferFailed();
-    
+
+        if (!transaction.token.safeTransfer(transaction.seller, amount)) revert TokenTransferFailed();
+
         transaction.status = Status.TransactionResolved;
 
         emit TransactionResolved(_transactionID, Resolution.TransactionExecuted);
     }
 
-    ///  @dev Propose a settlement as a compromise from the initial terms to the other party.
-    ///  Note that a party can only propose a settlement again after the other party has
-    ///  done so as well to prevent front running/griefing issues.
-    ///  @param _transactionID The index of the transaction.
-    ///  @param _amount The settlement amount.
-    function proposeSettlement(uint256 _transactionID, uint256 _amount) external {
+    /// @inheritdoc IEscrow
+    function proposeSettlement(uint256 _transactionID, uint256 _amount) external override {
         Transaction storage transaction = transactions[_transactionID];
         if (transaction.status == Status.NoDispute && block.timestamp >= transaction.deadline)
             revert TransactionExpired();
@@ -345,9 +244,8 @@ contract EscrowToken is IArbitrableV2 {
         emit SettlementProposed(_transactionID, party, _amount);
     }
 
-    /// @dev Accept a settlement proposed by the other party. UNTRUSTED.
-    /// @param _transactionID The index of the transaction.
-    function acceptSettlement(uint256 _transactionID) external {
+    /// @inheritdoc IEscrow
+    function acceptSettlement(uint256 _transactionID) external override {
         Transaction storage transaction = transactions[_transactionID];
         uint256 settlementAmount;
         if (transaction.status == Status.WaitingSettlementBuyer) {
@@ -365,19 +263,14 @@ contract EscrowToken is IArbitrableV2 {
         transaction.settlementSeller = 0;
         transaction.status = Status.TransactionResolved;
 
-        if(!transaction.token.safeTransfer(transaction.buyer, remainingAmount)) revert TokenTransferFailed();
-        if(!transaction.token.safeTransfer(transaction.seller, settlementAmount)) revert TokenTransferFailed();
+        if (!transaction.token.safeTransfer(transaction.buyer, remainingAmount)) revert TokenTransferFailed();
+        if (!transaction.token.safeTransfer(transaction.seller, settlementAmount)) revert TokenTransferFailed();
 
         emit TransactionResolved(_transactionID, Resolution.SettlementReached);
     }
 
-    /// @dev Pay the arbitration fee to raise a dispute. To be called by the buyer.
-    /// Note that it can only be called after settlement proposition.
-    /// Also note that the arbitrator can have createDispute throw, which will make
-    ///      this function throw and therefore lead to a party being timed-out.
-    ///      This is not a vulnerability as the arbitrator can rule in favor of one party anyway.
-    /// @param _transactionID The index of the transaction.
-    function payArbitrationFeeByBuyer(uint256 _transactionID) external payable {
+    /// @inheritdoc IEscrow
+    function payArbitrationFeeByBuyer(uint256 _transactionID) external payable override {
         Transaction storage transaction = transactions[_transactionID];
         if (
             transaction.status != Status.WaitingSettlementBuyer &&
@@ -409,10 +302,8 @@ contract EscrowToken is IArbitrableV2 {
         }
     }
 
-    /// @dev Pay the arbitration fee to raise a dispute. To be called by the seller.
-    /// Note that this function mirrors payArbitrationFeeByBuyer.
-    /// @param _transactionID The index of the transaction.
-    function payArbitrationFeeBySeller(uint256 _transactionID) external payable {
+    /// @inheritdoc IEscrow
+    function payArbitrationFeeBySeller(uint256 _transactionID) external payable override {
         Transaction storage transaction = transactions[_transactionID];
         if (
             transaction.status != Status.WaitingSettlementBuyer &&
@@ -444,9 +335,8 @@ contract EscrowToken is IArbitrableV2 {
         }
     }
 
-    /// @dev Reimburse buyer if seller fails to pay the fee.
-    /// @param _transactionID The index of the transaction.
-    function timeOutByBuyer(uint256 _transactionID) external {
+    /// @inheritdoc IEscrow
+    function timeOutByBuyer(uint256 _transactionID) external override {
         Transaction storage transaction = transactions[_transactionID];
         if (transaction.status != Status.WaitingSeller) revert NotWaitingForSellerFees();
         if (block.timestamp - transaction.lastFeePaymentTime < feeTimeout) revert TimeoutNotPassed();
@@ -463,9 +353,8 @@ contract EscrowToken is IArbitrableV2 {
         emit TransactionResolved(_transactionID, Resolution.TimeoutByBuyer);
     }
 
-    /// @dev Pay seller if buyer fails to pay the fee.
-    /// @param _transactionID The index of the transaction.
-    function timeOutBySeller(uint256 _transactionID) external {
+    /// @inheritdoc IEscrow
+    function timeOutBySeller(uint256 _transactionID) external override {
         Transaction storage transaction = transactions[_transactionID];
         if (transaction.status != Status.WaitingBuyer) revert NotWaitingForBuyerFees();
         if (block.timestamp - transaction.lastFeePaymentTime < feeTimeout) revert TimeoutNotPassed();
@@ -478,15 +367,11 @@ contract EscrowToken is IArbitrableV2 {
         if (amount != 0) {
             transaction.buyer.send(amount); // It is the user responsibility to accept ETH.
         }
-        
+
         emit TransactionResolved(_transactionID, Resolution.TimeoutBySeller);
     }
 
-    /// @dev Give a ruling for a dispute. Must be called by the arbitrator to enforce the final ruling.
-    ///      The purpose of this function is to ensure that the address calling it has the right to rule on the contract.
-    /// @param _disputeID ID of the dispute in the Arbitrator contract.
-    /// @param _ruling Ruling given by the arbitrator. Note that 0 is reserved
-    /// for "Refuse to arbitrate".
+    /// @inheritdoc IArbitrableV2
     function rule(uint256 _disputeID, uint256 _ruling) external override {
         if (msg.sender != address(arbitrator)) revert ArbitratorOnly();
         if (_ruling > AMOUNT_OF_CHOICES) revert InvalidRuling();
@@ -559,7 +444,7 @@ contract EscrowToken is IArbitrableV2 {
                 transaction.token.safeTransfer(transaction.buyer, amount - settlementBuyer);
                 transaction.token.safeTransfer(transaction.seller, settlementBuyer);
             } else {
-                if(!transaction.token.safeTransfer(transaction.buyer, amount)) revert TokenTransferFailed();
+                if (!transaction.token.safeTransfer(transaction.buyer, amount)) revert TokenTransferFailed();
             }
         } else if (_ruling == uint256(Party.Seller)) {
             transaction.seller.send(sellerFee);
@@ -569,7 +454,7 @@ contract EscrowToken is IArbitrableV2 {
                 transaction.token.safeTransfer(transaction.buyer, amount - settlementSeller);
                 transaction.token.safeTransfer(transaction.seller, settlementSeller);
             } else {
-                if(!transaction.token.safeTransfer(transaction.seller, amount)) revert TokenTransferFailed();
+                if (!transaction.token.safeTransfer(transaction.seller, amount)) revert TokenTransferFailed();
             }
         } else {
             uint256 splitArbitrationFee = buyerFee / 2;
@@ -590,36 +475,8 @@ contract EscrowToken is IArbitrableV2 {
     // *           Public Views            * //
     // ************************************* //
 
-    /// @dev Getter to know the count of transactions.
-    /// @return The count of transactions.
-    function getCountTransactions() external view returns (uint256) {
+    /// @inheritdoc IEscrow
+    function getTransactionCount() external view override returns (uint256) {
         return transactions.length;
     }
-
-    // ************************************* //
-    // *              Errors               * //
-    // ************************************* //
-
-    error GovernorOnly();
-    error BuyerOnly();
-    error SellerOnly();
-    error BuyerOrSellerOnly();
-    error ArbitratorOnly();
-    error TransactionDisputed();
-    error MaximumPaymentAmountExceeded();
-    error DeadlineNotPassed();
-    error BuyerFeeNotCoverArbitrationCosts();
-    error SellerFeeNotCoverArbitrationCosts();
-    error NotWaitingForSellerFees();
-    error NotWaitingForBuyerFees();
-    error TimeoutNotPassed();
-    error InvalidRuling();
-    error DisputeAlreadyResolved();
-    error TransactionExpired();
-    error TransactionEscalatedForArbitration();
-    error NoSettlementProposedOrTransactionMovedOnAcceptSettlement();
-    error NoSettlementProposedOrTransactionMovedOnPayFeeBuyer();
-    error NoSettlementProposedOrTransactionMovedOnPayFeeSeller();
-    error SettlementPeriodNotOver();
-    error TokenTransferFailed();
 }
