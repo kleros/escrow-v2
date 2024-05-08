@@ -9,7 +9,7 @@ pragma solidity 0.8.18;
 
 import {IArbitrableV2, IArbitratorV2} from "@kleros/kleros-v2-contracts/arbitration/interfaces/IArbitrableV2.sol";
 import "@kleros/kleros-v2-contracts/arbitration/interfaces/IDisputeTemplateRegistry.sol";
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {SafeERC20, IERC20} from "./libraries/SafeERC20.sol";
 
 /// @title EscrowToken for a sale paid in ERC20 tokens without platform fees.
 /// @dev MultipleArbitrableTokenTransaction contract that is compatible with V2.
@@ -19,6 +19,9 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 /// Tokens should not reenter or allow recipients to refuse the transfer.
 /// Also note that arbitration fees are still paid in ETH.
 contract EscrowToken is IArbitrableV2 {
+    // Use safe transfers when both parties are paid simultaneously (save for acceptSettlement) to prevent griefing.
+    using SafeERC20 for IERC20;
+
     // ************************************* //
     // *         Enums / Structs           * //
     // ************************************* //
@@ -231,7 +234,7 @@ contract EscrowToken is IArbitrableV2 {
         string memory _templateDataMappings
     ) external returns (uint256 transactionID) {
         // Transfers token from sender wallet to contract.
-        if(!_token.transferFrom(msg.sender, address(this), _amount)) revert TokenTransferFailed();
+        if(!_token.safeTransferFrom(msg.sender, address(this), _amount)) revert TokenTransferFailed();
         Transaction storage transaction = transactions.push();
         transaction.buyer = payable(msg.sender);
         transaction.seller = _seller;
@@ -266,7 +269,7 @@ contract EscrowToken is IArbitrableV2 {
 
         transaction.amount -= _amount;
 
-        if(!transaction.token.transfer(transaction.seller, _amount)) revert TokenTransferFailed();
+        if(!transaction.token.safeTransfer(transaction.seller, _amount)) revert TokenTransferFailed();
 
         emit Payment(_transactionID, _amount, msg.sender);
     }
@@ -282,7 +285,7 @@ contract EscrowToken is IArbitrableV2 {
 
         transaction.amount -= _amountReimbursed;
 
-        if(!transaction.token.transfer(transaction.buyer, _amountReimbursed)) revert TokenTransferFailed();
+        if(!transaction.token.safeTransfer(transaction.buyer, _amountReimbursed)) revert TokenTransferFailed();
 
         emit Payment(_transactionID, _amountReimbursed, msg.sender);
     }
@@ -297,7 +300,7 @@ contract EscrowToken is IArbitrableV2 {
         uint256 amount = transaction.amount;
         transaction.amount = 0;
     
-        if(!transaction.token.transfer(transaction.seller, amount)) revert TokenTransferFailed();
+        if(!transaction.token.safeTransfer(transaction.seller, amount)) revert TokenTransferFailed();
     
         transaction.status = Status.TransactionResolved;
 
@@ -362,8 +365,8 @@ contract EscrowToken is IArbitrableV2 {
         transaction.settlementSeller = 0;
         transaction.status = Status.TransactionResolved;
 
-        if(!transaction.token.transfer(transaction.buyer, remainingAmount)) revert TokenTransferFailed();
-        if(!transaction.token.transfer(transaction.seller, settlementAmount)) revert TokenTransferFailed();
+        if(!transaction.token.safeTransfer(transaction.buyer, remainingAmount)) revert TokenTransferFailed();
+        if(!transaction.token.safeTransfer(transaction.seller, settlementAmount)) revert TokenTransferFailed();
 
         emit TransactionResolved(_transactionID, Resolution.SettlementReached);
     }
@@ -553,20 +556,20 @@ contract EscrowToken is IArbitrableV2 {
             // If there was a settlement amount proposed
             // we use that to make the partial payment and refund the rest.
             if (settlementBuyer != 0) {
-                if(!transaction.token.transfer(transaction.buyer, amount - settlementBuyer)) revert TokenTransferFailed();
-                if(!transaction.token.transfer(transaction.seller, settlementBuyer)) revert TokenTransferFailed();
+                transaction.token.safeTransfer(transaction.buyer, amount - settlementBuyer);
+                transaction.token.safeTransfer(transaction.seller, settlementBuyer);
             } else {
-                if(!transaction.token.transfer(transaction.buyer, amount)) revert TokenTransferFailed();
+                if(!transaction.token.safeTransfer(transaction.buyer, amount)) revert TokenTransferFailed();
             }
         } else if (_ruling == uint256(Party.Seller)) {
             transaction.seller.send(sellerFee);
             // If there was a settlement amount proposed
             // we use that to make the partial payment and refund the rest to buyer.
             if (settlementSeller != 0) {
-                if(!transaction.token.transfer(transaction.buyer, amount - settlementSeller)) revert TokenTransferFailed();
-                if(!transaction.token.transfer(transaction.seller, settlementSeller)) revert TokenTransferFailed();
+                transaction.token.safeTransfer(transaction.buyer, amount - settlementSeller);
+                transaction.token.safeTransfer(transaction.seller, settlementSeller);
             } else {
-                if(!transaction.token.transfer(transaction.seller, amount)) revert TokenTransferFailed();
+                if(!transaction.token.safeTransfer(transaction.seller, amount)) revert TokenTransferFailed();
             }
         } else {
             uint256 splitArbitrationFee = buyerFee / 2;
@@ -576,8 +579,8 @@ contract EscrowToken is IArbitrableV2 {
             // Tokens should not reenter or allow recipients to refuse the transfer.
             // In case of an uneven token amount, one basic token unit can be burnt.
             uint256 splitAmount = amount / 2;
-            if(!transaction.token.transfer(transaction.buyer, splitAmount)) revert TokenTransferFailed();
-            if(!transaction.token.transfer(transaction.seller, splitAmount)) revert TokenTransferFailed();
+            transaction.token.safeTransfer(transaction.buyer, splitAmount);
+            transaction.token.safeTransfer(transaction.seller, splitAmount);
         }
 
         emit TransactionResolved(_transactionID, Resolution.RulingEnforced);
