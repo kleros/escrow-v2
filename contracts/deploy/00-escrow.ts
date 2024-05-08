@@ -77,6 +77,20 @@ const deploy: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
     ],
     log: true,
   });
+  
+  await deploy("EscrowToken", {
+    from: deployer,
+    args: [
+      klerosCore.address,
+      extraData,
+      disputeTemplate,
+      mapping,
+      disputeTemplateRegistry.address,
+      feeTimeout,
+      settlementTimeout,
+    ],
+    log: true,
+  });
 };
 
 deploy.tags = ["Escrow"];
