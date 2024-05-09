@@ -3,6 +3,8 @@ pragma solidity 0.8.18;
 
 import {IERC20} from "../libraries/SafeERC20.sol";
 
+IERC20 constant NATIVE = IERC20(address(type(uint160).max));
+
 enum Party {
     None,
     Buyer, // Makes a purchase in native currency or ERC20 token.
@@ -25,11 +27,6 @@ enum Resolution {
     TimeoutBySeller,
     RulingEnforced,
     SettlementReached
-}
-
-enum PaymentType {
-    Native,
-    ERC20
 }
 
 struct Transaction {
