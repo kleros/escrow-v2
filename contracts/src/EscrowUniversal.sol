@@ -12,13 +12,14 @@ import "@kleros/kleros-v2-contracts/arbitration/interfaces/IDisputeTemplateRegis
 import {SafeERC20, IERC20} from "./libraries/SafeERC20.sol";
 import "./interfaces/IEscrow.sol";
 
-/// @title EscrowToken for a sale paid in native currency or ERC20 tokens without platform fees.
+/// @title EscrowUniversal for a sale paid in native currency or ERC20 tokens without platform fees.
 /// @dev Adapted from MultipleArbitrableTokenTransaction contract: https://github.com/kleros/kleros-interaction/blob/master/contracts/standard/arbitration/MultipleArbitrableTokenTransaction.sol
+/// and from MultipleArbitrableTransaction contract: https://github.com/kleros/kleros-interaction/blob/master/contracts/standard/arbitration/MultipleArbitrableTransaction.sol
 /// Note that the contract expects the tokens to have standard ERC20 behaviour.
 /// The tokens that don't conform to this type of behaviour should be filtered by the UI.
 /// Tokens should not reenter or allow recipients to refuse the transfer.
 /// Also note that arbitration fees are still paid in ETH.
-contract EscrowToken is IEscrow, IArbitrableV2 {
+contract EscrowUniversal is IEscrow, IArbitrableV2 {
     // Use safe transfers when both parties are paid simultaneously (save for acceptSettlement) to prevent griefing.
     using SafeERC20 for IERC20;
 

@@ -3,7 +3,7 @@ pragma solidity 0.8.18;
 
 import {IERC20} from "../libraries/SafeERC20.sol";
 
-IERC20 constant NATIVE = IERC20(address(type(uint160).max));
+IERC20 constant NATIVE = IERC20(address(0));
 
 enum Party {
     None,

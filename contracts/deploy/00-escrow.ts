@@ -64,21 +64,7 @@ const deploy: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
   const feeTimeout = 600; // 10 minutes
   const settlementTimeout = 600; // 10 minutes
   
-  await deploy("Escrow", {
-    from: deployer,
-    args: [
-      klerosCore.address,
-      extraData,
-      disputeTemplate,
-      mapping,
-      disputeTemplateRegistry.address,
-      feeTimeout,
-      settlementTimeout,
-    ],
-    log: true,
-  });
-  
-  await deploy("EscrowToken", {
+  await deploy("EscrowUniversal", {
     from: deployer,
     args: [
       klerosCore.address,
