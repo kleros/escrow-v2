@@ -80,7 +80,7 @@ const TransactionDetails: React.FC = () => {
           settlementTimeout={escrowParameters?.escrowParameters.settlementTimeout}
           {...{
             status,
-            generalEscrowToken,
+            token,
             payments,
             settlementProposals,
             hasToPayFees,

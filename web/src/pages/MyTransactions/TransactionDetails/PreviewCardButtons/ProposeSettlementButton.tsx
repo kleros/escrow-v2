@@ -5,7 +5,10 @@ import { parseEther } from "viem";
 import { isUndefined } from "utils/index";
 import { wrapWithToast } from "utils/wrapWithToast";
 import { useTransactionDetailsContext } from "context/TransactionDetailsContext";
-import { usePrepareEscrowProposeSettlement, useEscrowProposeSettlement } from "hooks/contracts/generated";
+import {
+  usePrepareEscrowUniversalProposeSettlement,
+  useEscrowUniversalProposeSettlement,
+} from "hooks/contracts/generated";
 
 interface IProposeSettlementButton {
   toggleModal?: () => void;
@@ -24,11 +27,11 @@ const ProposeSettlementButton: React.FC<IProposeSettlementButton> = ({
   const publicClient = usePublicClient();
   const { id } = useTransactionDetailsContext();
 
-  const { config: proposeSettlementConfig } = usePrepareEscrowProposeSettlement({
+  const { config: proposeSettlementConfig } = usePrepareEscrowUniversalProposeSettlement({
     args: [BigInt(id), parseEther(amountProposed)],
   });
 
-  const { writeAsync: proposeSettlement } = useEscrowProposeSettlement(proposeSettlementConfig);
+  const { writeAsync: proposeSettlement } = useEscrowUniversalProposeSettlement(proposeSettlementConfig);
 
   const handleProposeSettlement = () => {
     if (!isUndefined(proposeSettlement)) {

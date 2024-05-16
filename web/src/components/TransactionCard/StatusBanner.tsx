@@ -1,6 +1,7 @@
 import React, { useMemo } from "react";
 import styled, { Theme, useTheme, css } from "styled-components";
 import { Statuses } from "consts/statuses";
+import { isUndefined } from "utils/index";
 
 interface IContainer {
   isCard: boolean;
@@ -131,7 +132,7 @@ const StatusBanner: React.FC<IStatusBanner> = ({ id, status, isCard = true, isPr
       <StyledLabel withDot {...{ isCard, frontColor }}>
         {getStatusLabel(status)}
       </StyledLabel>
-      {id ? <StyledNumberLabel {...{ isCard, frontColor }}>#{id}</StyledNumberLabel> : null}
+      {!isUndefined(id) ? <StyledNumberLabel {...{ isCard, frontColor }}>#{id}</StyledNumberLabel> : null}
     </Container>
   );
 };
