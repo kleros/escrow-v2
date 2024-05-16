@@ -44,7 +44,7 @@ const Preview: React.FC = () => {
         buyerAddress={address}
         escrowType={escrowType}
         deliverableText={deliverableText}
-        tokenSymbol={escrowType === "general" ? nativeTokenSymbol : sendingToken}
+        assetSymbol={escrowType === "general" ? nativeTokenSymbol : sendingToken}
         deadlineDate={new Date(deadline).toLocaleString()}
         overrideIsList={false}
         escrowTitle={escrowTitle}

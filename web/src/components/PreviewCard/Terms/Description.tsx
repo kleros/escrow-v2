@@ -18,7 +18,7 @@ interface IDescription {
   sendingToken: string;
   sellerAddress: string;
   deadlineDate: Date;
-  tokenSymbol: string;
+  assetSymbol: string;
   buyer: string;
 }
 
@@ -32,10 +32,10 @@ const Description: React.FC<IDescription> = ({
   sendingToken,
   sellerAddress,
   deadlineDate,
-  tokenSymbol,
+  assetSymbol,
 }) => {
   const generalEscrowSummary =
-    `By Paying ${sendingQuantity + " " + tokenSymbol}, address ${buyerAddress} should receive` +
+    `By Paying ${sendingQuantity + " " + assetSymbol}, address ${buyerAddress} should receive` +
     ` "${deliverableText}" from address ${sellerAddress} before the delivery deadline ${new Date(
       deadlineDate
     )}.`;

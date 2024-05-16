@@ -12,7 +12,7 @@ export const transactionFragment = graphql(`
     transactionUri
     timestamp
     amount
-    asset
+    token
     deadline
     buyerFee
     sellerFee

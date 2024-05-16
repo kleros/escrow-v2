@@ -11,12 +11,12 @@ const StyledHeader = styled.h1`
 `;
 
 const Header: React.FC = () => {
-  const { amount, asset } = useTransactionDetailsContext();
+  const { amount, token } = useTransactionDetailsContext();
   const nativeTokenSymbol = useNativeTokenSymbol();
 
   return (
     <StyledHeader>
-      Full payment released: {formatEther(amount)} {asset === "native" ? nativeTokenSymbol : asset}
+      Full payment released: {formatEther(amount)} {!token ? nativeTokenSymbol : token}
     </StyledHeader>
   );
 };

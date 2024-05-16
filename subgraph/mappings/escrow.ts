@@ -13,12 +13,13 @@ import {
 import {
   Payment as PaymentEvent,
   HasToPayFee as HasToPayFeeEvent,
-  TransactionCreated as TransactionCreatedEvent,
+  NativeTransactionCreated as NativeTransactionCreatedEvent,
+  ERC20TransactionCreated as ERC20TransactionCreatedEvent,
   TransactionResolved as TransactionResolvedEvent,
   DisputeRequest as DisputeRequestEvent,
   ParameterUpdated as ParameterUpdatedEvent,
   SettlementProposed as SettlementProposedEvent,
-} from "../generated/Escrow/Escrow";
+} from "../generated/EscrowUniversal/EscrowUniversal";
 import { ZERO, ONE } from "./utils";
 
 function createEscrow(id: string): Escrow {
@@ -128,14 +129,46 @@ export function handleHasToPayFee(event: HasToPayFeeEvent): void {
   escrow.save();
 }
 
-export function handleTransactionCreated(event: TransactionCreatedEvent): void {
+export function handleNativeTransactionCreated(event: NativeTransactionCreatedEvent): void {
   let escrowId = event.params._transactionID.toString();
   let escrow = Escrow.load(escrowId) || createEscrow(escrowId);
 
   escrow!.buyer = event.params._buyer;
   escrow!.seller = event.params._seller;
   escrow!.amount = event.params._amount;
-  escrow!.asset = event.params._asset;
+  escrow!.transactionUri = event.params._transactionUri;
+  escrow!.deadline = event.params._deadline;
+  escrow!.timestamp = event.block.timestamp;
+  escrow!.status = "NoDispute";
+
+  let buyer = getUser(event.params._buyer.toHex());
+  let seller = getUser(event.params._seller.toHex());
+
+  escrow!.users = [buyer.id, seller.id];
+  escrow!.save();
+
+  buyer.totalEscrows = buyer.totalEscrows.plus(ONE);
+  buyer.totalNoDisputedEscrows = buyer.totalNoDisputedEscrows.plus(ONE);
+  buyer.save();
+  seller.totalEscrows = seller.totalEscrows.plus(ONE);
+  seller.totalNoDisputedEscrows = seller.totalNoDisputedEscrows.plus(ONE);
+  seller.save();
+
+  let transactionCreatedId = event.transaction.hash.toHex() + "-" + event.logIndex.toString();
+  let transactionCreated = new TransactionCreated(transactionCreatedId);
+  transactionCreated.escrow = escrowId;
+
+  transactionCreated.save();
+}
+
+export function handleERC20TransactionCreated(event: ERC20TransactionCreatedEvent): void {
+  let escrowId = event.params._transactionID.toString();
+  let escrow = Escrow.load(escrowId) || createEscrow(escrowId);
+
+  escrow!.buyer = event.params._buyer;
+  escrow!.seller = event.params._seller;
+  escrow!.amount = event.params._amount;
+  escrow!.token = Bytes.fromHexString(event.params._token.toHex());
   escrow!.transactionUri = event.params._transactionUri;
   escrow!.deadline = event.params._deadline;
   escrow!.timestamp = event.block.timestamp;

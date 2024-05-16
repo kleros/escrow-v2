@@ -55,13 +55,13 @@ interface IPreviewCard {
   receivingToken: string;
   transactionCreationTimestamp: string;
   status: string;
-  asset: string;
+  token: string;
   buyerAddress: string;
   sendingQuantity: string;
   sendingToken: string;
   sellerAddress: string;
   deadlineDate: string;
-  tokenSymbol: string;
+  assetSymbol: string;
   overrideIsList: boolean;
   extraDescriptionUri: string;
   isPreview: boolean;
@@ -83,13 +83,13 @@ const PreviewCard: React.FC<IPreviewCard> = ({
   receivingToken,
   transactionCreationTimestamp,
   status,
-  asset,
+  token,
   buyerAddress,
   sendingQuantity,
   sendingToken,
   sellerAddress,
   deadlineDate,
-  tokenSymbol,
+  assetSymbol,
   overrideIsList,
   extraDescriptionUri,
   isPreview,
@@ -108,7 +108,7 @@ const PreviewCard: React.FC<IPreviewCard> = ({
       <Divider />
       <TransactionInfo
         amount={sendingQuantity}
-        token={tokenSymbol}
+        assetSymbol={assetSymbol}
         isPreview={true}
         {...{ overrideIsList, deadlineDate, sellerAddress, buyerAddress }}
       />
@@ -125,7 +125,7 @@ const PreviewCard: React.FC<IPreviewCard> = ({
         sendingToken,
         sellerAddress,
         deadlineDate,
-        tokenSymbol,
+        assetSymbol,
         extraDescriptionUri,
       }}
     />
@@ -134,7 +134,7 @@ const PreviewCard: React.FC<IPreviewCard> = ({
       {...{
         isPreview,
         status,
-        asset,
+        token,
         transactionCreationTimestamp,
         buyerAddress,
         sellerAddress,
