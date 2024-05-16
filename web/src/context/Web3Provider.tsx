@@ -9,7 +9,7 @@ import { useToggleTheme } from "hooks/useToggleThemeContext";
 import { useTheme } from "styled-components";
 
 const chains = [arbitrumSepolia, mainnet, gnosisChiado];
-const projectId = process.env.WALLETCONNECT_PROJECT_ID ?? "6efaa26765fa742153baf9281e218217";
+const projectId = process.env.WALLETCONNECT_PROJECT_ID ?? "";
 
 const { publicClient, webSocketPublicClient } = configureChains(chains, [
   alchemyProvider({ apiKey: process.env.ALCHEMY_API_KEY ?? "" }),
