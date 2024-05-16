@@ -2,10 +2,10 @@ import React, { useMemo, useState } from "react";
 import { Button } from "@kleros/ui-components-library";
 import { useAccount, usePublicClient } from "wagmi";
 import {
-  useEscrowTimeOutByBuyer,
-  useEscrowTimeOutBySeller,
-  usePrepareEscrowTimeOutByBuyer,
-  usePrepareEscrowTimeOutBySeller,
+  useEscrowUniversalTimeOutByBuyer,
+  useEscrowUniversalTimeOutBySeller,
+  usePrepareEscrowUniversalTimeOutByBuyer,
+  usePrepareEscrowUniversalTimeOutBySeller,
 } from "hooks/contracts/generated";
 import { isUndefined } from "utils/index";
 import { wrapWithToast } from "utils/wrapWithToast";
@@ -18,16 +18,16 @@ const TimeOutButton: React.FC = () => {
   const { buyer, id } = useTransactionDetailsContext();
   const isBuyer = useMemo(() => address?.toLowerCase() === buyer?.toLowerCase(), [address, buyer]);
 
-  const { config: timeOutByBuyerConfig } = usePrepareEscrowTimeOutByBuyer({
+  const { config: timeOutByBuyerConfig } = usePrepareEscrowUniversalTimeOutByBuyer({
     args: [BigInt(id)],
   });
 
-  const { config: timeOutBySellerConfig } = usePrepareEscrowTimeOutBySeller({
+  const { config: timeOutBySellerConfig } = usePrepareEscrowUniversalTimeOutBySeller({
     args: [BigInt(id)],
   });
 
-  const { writeAsync: timeOutByBuyer } = useEscrowTimeOutByBuyer(timeOutByBuyerConfig);
-  const { writeAsync: timeOutBySeller } = useEscrowTimeOutBySeller(timeOutBySellerConfig);
+  const { writeAsync: timeOutByBuyer } = useEscrowUniversalTimeOutByBuyer(timeOutByBuyerConfig);
+  const { writeAsync: timeOutBySeller } = useEscrowUniversalTimeOutBySeller(timeOutBySellerConfig);
 
   const handleTimeout = () => {
     if (isBuyer && !isUndefined(timeOutByBuyer)) {

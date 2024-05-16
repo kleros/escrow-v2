@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Button } from "@kleros/ui-components-library";
 import { useToggle } from "react-use";
 import PaymentReleased from "pages/MyTransactions/Modal/PaymentReleased";
-import { useEscrowPay, usePrepareEscrowPay } from "hooks/contracts/generated";
+import { useEscrowUniversalPay, usePrepareEscrowUniversalPay } from "hooks/contracts/generated";
 import { isUndefined } from "utils/index";
 import { wrapWithToast } from "utils/wrapWithToast";
 import { usePublicClient } from "wagmi";
@@ -14,11 +14,11 @@ const ReleasePaymentButton: React.FC = () => {
   const publicClient = usePublicClient();
   const { id, amount } = useTransactionDetailsContext();
 
-  const { config: releaseFullPaymentConfig } = usePrepareEscrowPay({
+  const { config: releaseFullPaymentConfig } = usePrepareEscrowUniversalPay({
     args: [id, amount],
   });
 
-  const { writeAsync: releaseFullPayment } = useEscrowPay(releaseFullPaymentConfig);
+  const { writeAsync: releaseFullPayment } = useEscrowUniversalPay(releaseFullPaymentConfig);
 
   const handleReleasePayment = () => {
     if (!isUndefined(releaseFullPayment)) {

@@ -9,7 +9,7 @@ const useFetchIpfsJson = (ipfsUri: string) => {
       if (!ipfsUri) return;
 
       try {
-        const formattedUri = ipfsUri.replace(/^ipfs:\/\//, "https://ipfs.io/ipfs/");
+        const formattedUri = ipfsUri.replace(/^ipfs:\/\//, "https://cdn.kleros.link/ipfs/");
 
         const response = await fetch(formattedUri);
         if (!response.ok) {
