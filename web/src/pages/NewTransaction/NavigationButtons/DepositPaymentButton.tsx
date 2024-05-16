@@ -2,7 +2,10 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@kleros/ui-components-library";
-import { useEscrowCreateTransaction, usePrepareEscrowCreateTransaction } from "hooks/contracts/generated";
+import {
+  useEscrowUniversalCreateNativeTransaction,
+  usePrepareEscrowUniversalCreateNativeTransaction,
+} from "hooks/contracts/generated";
 import { useNewTransactionContext } from "context/NewTransactionContext";
 import { useAccount, useEnsAddress, usePublicClient } from "wagmi";
 import { parseEther } from "viem";
@@ -22,6 +25,7 @@ const DepositPaymentButton: React.FC = () => {
     sendingQuantity,
     sellerAddress,
     deadline,
+    token,
     resetContext,
   } = useNewTransactionContext();
 
@@ -78,7 +82,7 @@ const DepositPaymentButton: React.FC = () => {
       buyer: address,
       seller: sellerAddress,
       amount: sendingQuantity,
-      asset: escrowType === "general" ? "native" : "",
+      token: escrowType === "general" ? "native" : token,
       timeoutPayment: timeoutPayment,
       transactionUri: transactionUri,
     },
@@ -93,7 +97,7 @@ const DepositPaymentButton: React.FC = () => {
 
   const stringifiedTemplateData = JSON.stringify(templateData);
 
-  const { config: createTransactionConfig } = usePrepareEscrowCreateTransaction({
+  const { config: createTransactionConfig } = usePrepareEscrowUniversalCreateNativeTransaction({
     enabled: !isUndefined(ensResult) && ethAddressPattern.test(finalRecipientAddress),
     args: [
       BigInt(Math.floor(timeoutPayment)),
@@ -106,7 +110,7 @@ const DepositPaymentButton: React.FC = () => {
     value: parseEther(sendingQuantity),
   });
 
-  const { writeAsync: createTransaction } = useEscrowCreateTransaction(createTransactionConfig);
+  const { writeAsync: createTransaction } = useEscrowUniversalCreateNativeTransaction(createTransactionConfig);
 
   const handleCreateTransaction = () => {
     if (!isUndefined(createTransaction)) {

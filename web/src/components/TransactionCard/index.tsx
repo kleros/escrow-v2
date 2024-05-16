@@ -64,7 +64,7 @@ const TransactionCard: React.FC<ITransactionCard> = ({
   seller,
   buyer,
   amount,
-  asset,
+  token,
 }) => {
   const transactionInfo = useFetchIpfsJson(transactionUri);
   const { isList } = useIsList();
@@ -83,7 +83,7 @@ const TransactionCard: React.FC<ITransactionCard> = ({
             {!isUndefined(title) ? <StyledTitle>{title}</StyledTitle> : <StyledSkeleton />}
             <TransactionInfo
               amount={formatEther(amount)}
-              token={asset === "native" ? nativeTokenSymbol : ""}
+              token={!token ? nativeTokenSymbol : ""}
               buyerAddress={buyer}
               sellerAddress={seller}
               deadlineDate={new Date(deadline * 1000).toLocaleString()}
@@ -104,7 +104,7 @@ const TransactionCard: React.FC<ITransactionCard> = ({
             )}
             <TransactionInfo
               amount={formatEther(amount)}
-              token={asset === "native" ? nativeTokenSymbol : ""}
+              token={!token ? nativeTokenSymbol : ""}
               buyerAddress={buyer}
               sellerAddress={seller}
               deadlineDate={new Date(deadline * 1000).toLocaleString()}

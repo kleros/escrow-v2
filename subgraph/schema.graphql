@@ -29,7 +29,6 @@ type Escrow @entity {
   seller: Bytes!
   users: [User!]!
   amount: BigInt!
-  asset: String!
   deadline: BigInt!
   buyerFee: BigInt
   sellerFee: BigInt
@@ -39,6 +38,7 @@ type Escrow @entity {
   arbitratorExtraData: Bytes
   templateData: String
   templateDataMappings: String
+  token: Bytes
   status: Status
   timestamp: BigInt
   payments: [Payment!]! @derivedFrom(field: "escrow")

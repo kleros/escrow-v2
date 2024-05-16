@@ -43,7 +43,7 @@ const useEscrowTimelineItems = (
   isPreview: boolean,
   transactionCreationTimestamp: number,
   status: string,
-  asset: string,
+  token: string,
   buyer: string,
   seller: string,
   payments: Payment[],
@@ -76,7 +76,7 @@ const useEscrowTimelineItems = (
         const isBuyer = payment.party.toLowerCase() === buyer.toLowerCase();
         const formattedDate = getFormattedDate(new Date(payment.timestamp * 1000));
         const title = `The ${isBuyer ? "buyer" : "seller"} paid ${formatEther(payment.amount)} ${
-          asset === "native" ? nativeTokenSymbol : asset
+          !token ? nativeTokenSymbol : token
         }`;
 
         timelineItems.push(createTimelineItem(formattedDate, title, "", theme.secondaryBlue));
@@ -105,7 +105,7 @@ const useEscrowTimelineItems = (
 
         const title = `The ${proposal.party === "1" ? "buyer" : "seller"} proposed: Pay ${formatEther(
           proposal.amount
-        )} ${asset === "native" ? nativeTokenSymbol : asset}`;
+        )} ${!token ? nativeTokenSymbol : token}`;
         timelineItems.push(createTimelineItem(formattedDate, title, subtitle, theme.warning));
       });
 
@@ -168,7 +168,7 @@ const useEscrowTimelineItems = (
     settlementTimeout,
     currentTime,
     theme,
-    asset,
+    token,
     buyer,
     seller,
     nativeTokenSymbol,
