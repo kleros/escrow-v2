@@ -5,10 +5,12 @@ import { Button } from "@kleros/ui-components-library";
 import {
   useEscrowUniversalCreateNativeTransaction,
   usePrepareEscrowUniversalCreateNativeTransaction,
+  useEscrowUniversalCreateErc20Transaction,
+  usePrepareEscrowUniversalCreateErc20Transaction,
 } from "hooks/contracts/generated";
 import { useNewTransactionContext } from "context/NewTransactionContext";
 import { useAccount, useEnsAddress, usePublicClient } from "wagmi";
-import { parseEther } from "viem";
+import { parseEther, parseUnits } from "viem";
 import { isUndefined } from "utils/index";
 import { wrapWithToast } from "utils/wrapWithToast";
 import { ethAddressPattern } from "../Terms/Payment/DestinationAddress";
@@ -25,7 +27,7 @@ const DepositPaymentButton: React.FC = () => {
     sendingQuantity,
     sellerAddress,
     deadline,
-    token,
+    sendingToken,
     resetContext,
   } = useNewTransactionContext();
 
@@ -52,6 +54,7 @@ const DepositPaymentButton: React.FC = () => {
 
   const deadlineTimestamp = new Date(deadline).getTime();
   const timeoutPayment = (deadlineTimestamp - currentTime) / 1000;
+  const isNativeTransaction = sendingToken === "native";
 
   const templateData = {
     $schema: "../NewDisputeTemplate.schema.json",
@@ -82,7 +85,7 @@ const DepositPaymentButton: React.FC = () => {
       buyer: address,
       seller: sellerAddress,
       amount: sendingQuantity,
-      token: escrowType === "general" ? "native" : token,
+      token: isNativeTransaction ? "native" : sendingToken,
       timeoutPayment: timeoutPayment,
       transactionUri: transactionUri,
     },
@@ -97,22 +100,33 @@ const DepositPaymentButton: React.FC = () => {
 
   const stringifiedTemplateData = JSON.stringify(templateData);
 
-  const { config: createTransactionConfig } = usePrepareEscrowUniversalCreateNativeTransaction({
-    enabled: !isUndefined(ensResult) && ethAddressPattern.test(finalRecipientAddress),
+  const transactionValue = isNativeTransaction ? parseEther(sendingQuantity) : parseUnits(sendingQuantity, 18);
+
+  const { config: createNativeTransactionConfig } = usePrepareEscrowUniversalCreateNativeTransaction({
+    enabled: !isUndefined(ensResult) && ethAddressPattern.test(finalRecipientAddress) && isNativeTransaction,
+    args: [BigInt(Math.floor(timeoutPayment)), transactionUri, finalRecipientAddress, stringifiedTemplateData, ""], // Add empty string for _templateDataMappings
+    value: transactionValue,
+  });
+
+  const { config: createERC20TransactionConfig } = usePrepareEscrowUniversalCreateErc20Transaction({
+    enabled: !isUndefined(ensResult) && ethAddressPattern.test(finalRecipientAddress) && !isNativeTransaction,
     args: [
+      transactionValue,
+      sendingToken,
       BigInt(Math.floor(timeoutPayment)),
       transactionUri,
       finalRecipientAddress,
       stringifiedTemplateData,
-      /* Assuming no template data mappings are needed*/
-      ,
+      "", // Add empty string for _templateDataMappings
     ],
-    value: parseEther(sendingQuantity),
   });
 
-  const { writeAsync: createTransaction } = useEscrowUniversalCreateNativeTransaction(createTransactionConfig);
+  const { writeAsync: createNativeTransaction } =
+    useEscrowUniversalCreateNativeTransaction(createNativeTransactionConfig);
+  const { writeAsync: createERC20Transaction } = useEscrowUniversalCreateErc20Transaction(createERC20TransactionConfig);
 
   const handleCreateTransaction = () => {
+    const createTransaction = isNativeTransaction ? createNativeTransaction : createERC20Transaction;
     if (!isUndefined(createTransaction)) {
       setIsSending(true);
       wrapWithToast(async () => await createTransaction().then((response) => response.hash), publicClient)

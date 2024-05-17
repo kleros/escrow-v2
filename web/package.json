@@ -79,6 +79,7 @@
     "@web3modal/ethereum": "^2.7.1",
     "@web3modal/react": "^2.2.2",
     "@yornaath/batshit": "^0.9.0",
+    "alchemy-sdk": "^3.3.1",
     "amqplib": "^0.10.3",
     "chart.js": "^3.9.1",
     "chartjs-adapter-moment": "^1.0.1",
