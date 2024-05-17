@@ -7,9 +7,11 @@ import {
   usePrepareEscrowUniversalCreateNativeTransaction,
   useEscrowUniversalCreateErc20Transaction,
   usePrepareEscrowUniversalCreateErc20Transaction,
+  escrowUniversalAddress,
 } from "hooks/contracts/generated";
+import { erc20ABI, useNetwork } from "wagmi";
 import { useNewTransactionContext } from "context/NewTransactionContext";
-import { useAccount, useEnsAddress, usePublicClient } from "wagmi";
+import { useAccount, useEnsAddress, usePublicClient, useContractWrite, usePrepareContractWrite } from "wagmi";
 import { parseEther, parseUnits } from "viem";
 import { isUndefined } from "utils/index";
 import { wrapWithToast } from "utils/wrapWithToast";
@@ -37,7 +39,9 @@ const DepositPaymentButton: React.FC = () => {
   const publicClient = usePublicClient();
   const navigate = useNavigate();
   const [isSending, setIsSending] = useState<boolean>(false);
+  const [isApproved, setIsApproved] = useState<boolean>(false);
   const { address } = useAccount();
+  const { chain } = useNetwork();
 
   useEffect(() => {
     const intervalId = setInterval(() => setCurrentTime(Date.now()), 1000);
@@ -104,7 +108,7 @@ const DepositPaymentButton: React.FC = () => {
 
   const { config: createNativeTransactionConfig } = usePrepareEscrowUniversalCreateNativeTransaction({
     enabled: !isUndefined(ensResult) && ethAddressPattern.test(finalRecipientAddress) && isNativeTransaction,
-    args: [BigInt(Math.floor(timeoutPayment)), transactionUri, finalRecipientAddress, stringifiedTemplateData, ""], // Add empty string for _templateDataMappings
+    args: [BigInt(Math.floor(timeoutPayment)), transactionUri, finalRecipientAddress, stringifiedTemplateData, ""],
     value: transactionValue,
   });
 
@@ -117,7 +121,7 @@ const DepositPaymentButton: React.FC = () => {
       transactionUri,
       finalRecipientAddress,
       stringifiedTemplateData,
-      "", // Add empty string for _templateDataMappings
+      "",
     ],
   });
 
@@ -125,7 +129,30 @@ const DepositPaymentButton: React.FC = () => {
     useEscrowUniversalCreateNativeTransaction(createNativeTransactionConfig);
   const { writeAsync: createERC20Transaction } = useEscrowUniversalCreateErc20Transaction(createERC20TransactionConfig);
 
-  const handleCreateTransaction = () => {
+  const { config: approveConfig } = usePrepareContractWrite({
+    address: sendingToken,
+    abi: erc20ABI,
+    functionName: "approve",
+    args: [escrowUniversalAddress?.[chain?.id], transactionValue],
+  });
+
+  const { writeAsync: approve } = useContractWrite(approveConfig);
+
+  const handleApproveToken = async () => {
+    if (!isUndefined(approve)) {
+      setIsSending(true);
+      try {
+        await wrapWithToast(async () => await approve().then((response) => response.hash), publicClient);
+        setIsApproved(true);
+      } catch (error) {
+        console.error("Approval failed:", error);
+      } finally {
+        setIsSending(false);
+      }
+    }
+  };
+
+  const handleCreateTransaction = async () => {
     const createTransaction = isNativeTransaction ? createNativeTransaction : createERC20Transaction;
     if (!isUndefined(createTransaction)) {
       setIsSending(true);
@@ -149,8 +176,8 @@ const DepositPaymentButton: React.FC = () => {
     <StyledButton
       isLoading={isSending}
       disabled={isSending}
-      text="Deposit the Payment"
-      onClick={handleCreateTransaction}
+      text={isNativeTransaction ? "Deposit the Payment" : isApproved ? "Deposit the Payment" : "Approve Token"}
+      onClick={isNativeTransaction || isApproved ? handleCreateTransaction : handleApproveToken}
     />
   );
 };

@@ -1,8 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import styled from "styled-components";
 import { Field } from "@kleros/ui-components-library";
-import { useAccount, useBalance } from "wagmi";
-import { useNewTransactionContext } from "context/NewTransactionContext";
 
 const StyledField = styled(Field)`
   width: 132px;
@@ -20,33 +18,13 @@ const StyledField = styled(Field)`
   }
 `;
 
-interface IAmount {
+interface IAmountField {
   quantity: string;
   setQuantity: (value: string) => void;
+  error: string;
 }
 
-const Amount: React.FC<IAmount> = ({ quantity, setQuantity }) => {
-  const { setHasSufficientNativeBalance } = useNewTransactionContext();
-  const { address } = useAccount();
-  const { data: balanceData } = useBalance({ address: address });
-  const [error, setError] = useState("");
-
-  useEffect(() => {
-    const balanceAmount = balanceData ? parseFloat(balanceData.formatted) : 0;
-    const enteredAmount = parseFloat(quantity);
-
-    if (quantity && balanceAmount < enteredAmount) {
-      setError("Insufficient balance");
-      setHasSufficientNativeBalance(false);
-    } else if (enteredAmount === 0) {
-      setError("Amount is zero");
-      setHasSufficientNativeBalance(false);
-    } else {
-      setError("");
-      setHasSufficientNativeBalance(true);
-    }
-  }, [balanceData, quantity, setHasSufficientNativeBalance]);
-
+const AmountField: React.FC<IAmountField> = ({ quantity, setQuantity, error }) => {
   const handleWrite = (event: React.ChangeEvent<HTMLInputElement>) => {
     setQuantity(event.target.value);
   };
@@ -63,4 +41,4 @@ const Amount: React.FC<IAmount> = ({ quantity, setQuantity }) => {
   );
 };
 
-export default Amount;
+export default AmountField;

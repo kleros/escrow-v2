@@ -10,8 +10,6 @@ export function mapWagmiNetworkToAlchemyNetwork(chainId: number) {
       return Network.OPT_MAINNET;
     case 137:
       return Network.MATIC_MAINNET;
-    case 80001:
-      return Network.MATIC_MUMBAI;
     case 42161:
       return Network.ARB_MAINNET;
     case 421614:
