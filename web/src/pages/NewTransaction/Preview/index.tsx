@@ -7,6 +7,7 @@ import { responsiveSize } from "styles/responsiveSize";
 import { useNewTransactionContext } from "context/NewTransactionContext";
 import { useNativeTokenSymbol } from "hooks/useNativeTokenSymbol";
 import { useAccount } from "wagmi";
+import { useERC20TokenSymbol } from "hooks/useERC20TokenSymbol";
 
 const Container = styled.div`
   display: flex;
@@ -20,7 +21,6 @@ const Preview: React.FC = () => {
     escrowType,
     deliverableText,
     receivingQuantity,
-    receivingToken,
     sellerAddress,
     sendingQuantity,
     sendingToken,
@@ -29,6 +29,7 @@ const Preview: React.FC = () => {
     extraDescriptionUri,
   } = useNewTransactionContext();
   const nativeTokenSymbol = useNativeTokenSymbol();
+  const { erc20TokenSymbol } = useERC20TokenSymbol(sendingToken);
 
   const { address } = useAccount();
 
@@ -37,14 +38,12 @@ const Preview: React.FC = () => {
       <Header />
       <PreviewCard
         receivingQuantity={receivingQuantity}
-        receivingToken={receivingToken}
         sellerAddress={sellerAddress}
         sendingQuantity={sendingQuantity}
-        sendingToken={""}
         buyerAddress={address}
         escrowType={escrowType}
         deliverableText={deliverableText}
-        assetSymbol={escrowType === "general" ? nativeTokenSymbol : sendingToken}
+        assetSymbol={sendingToken === "native" ? nativeTokenSymbol : erc20TokenSymbol}
         deadlineDate={new Date(deadline).toLocaleString()}
         overrideIsList={false}
         escrowTitle={escrowTitle}

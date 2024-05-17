@@ -6,7 +6,7 @@ import { useClickAway } from "react-use";
 import { Tabs } from "@kleros/ui-components-library";
 import { useAccount, useNetwork } from "wagmi";
 import { Alchemy } from "alchemy-sdk";
-import alchemyConfig from "./alchemyConfig";
+import alchemyConfig from "utils/alchemyConfig";
 import { useNewTransactionContext } from "context/NewTransactionContext";
 import { fetchNativeToken } from "utils/fetchNativeToken";
 import { fetchOwnedTokensFromAlchemy } from "utils/fetchOwnedTokensFromAlchemy";

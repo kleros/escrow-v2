@@ -8,6 +8,10 @@ const StyledP = styled.p`
   word-break: break-word;
 `;
 
+const InlineBlockSpan = styled.span`
+  display: inline-block;
+`;
+
 interface IDescription {
   escrowType: string;
   deliverableText: string;
@@ -34,16 +38,22 @@ const Description: React.FC<IDescription> = ({
   deadlineDate,
   assetSymbol,
 }) => {
-  const generalEscrowSummary =
-    `By Paying ${sendingQuantity + " " + assetSymbol}, address ${buyerAddress} should receive` +
-    ` "${deliverableText}" from address ${sellerAddress} before the delivery deadline ${new Date(
-      deadlineDate
-    )}.`;
+  const generalEscrowSummary = (
+    <>
+      By Paying {sendingQuantity}{" "}
+      <InlineBlockSpan>{assetSymbol ? assetSymbol : <StyledSkeleton width={30} />}</InlineBlockSpan>, address{" "}
+      {buyerAddress} should receive "{deliverableText}" from address {sellerAddress} before the delivery deadline{" "}
+      {new Date(deadlineDate).toLocaleString()}.
+    </>
+  );
 
-  const cryptoSwapSummary =
-    `By Paying ${sendingQuantity + " " + sendingToken}, [Blockchain] address ${buyerAddress} should receive` +
-    ` ${receivingQuantity + " " + receivingToken} at the [Blockchain] address ${sellerAddress}` +
-    ` from [Blockchain] address TODO before the delivery deadline ${deadlineDate}.`;
+  const cryptoSwapSummary = (
+    <>
+      By Paying {sendingQuantity} {sendingToken}, [Blockchain] address {buyerAddress} should receive {receivingQuantity}{" "}
+      {receivingToken} at the [Blockchain] address {sellerAddress} from [Blockchain] address TODO before the delivery
+      deadline {new Date(deadlineDate).toLocaleString()}.
+    </>
+  );
 
   return isUndefined(deliverableText) ? (
     <StyledSkeleton />
@@ -58,4 +68,5 @@ const Description: React.FC<IDescription> = ({
     </div>
   );
 };
+
 export default Description;

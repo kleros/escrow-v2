@@ -6,8 +6,8 @@ import { resolutionToString } from "utils/resolutionToString";
 import { formatTimeoutDuration } from "utils/formatTimeoutDuration";
 import CheckCircleOutlineIcon from "components/StyledIcons/CheckCircleOutlineIcon";
 import LawBalanceIcon from "components/StyledIcons/LawBalanceIcon";
-import { useNativeTokenSymbol } from "./useNativeTokenSymbol";
 import { DisputeRequest, HasToPayFee, Payment, SettlementProposal, TransactionResolved } from "src/graphql/graphql";
+import { StyledSkeleton } from "components/StyledSkeleton";
 
 interface TimelineItem {
   title: string;
@@ -43,7 +43,7 @@ const useEscrowTimelineItems = (
   isPreview: boolean,
   transactionCreationTimestamp: number,
   status: string,
-  token: string,
+  assetSymbol: string,
   buyer: string,
   seller: string,
   payments: Payment[],
@@ -55,7 +55,6 @@ const useEscrowTimelineItems = (
   settlementTimeout: number
 ): TimelineItem[] => {
   const theme = useTheme();
-  const nativeTokenSymbol = useNativeTokenSymbol();
   const [currentTime, setCurrentTime] = useState<number>(Math.floor(Date.now() / 1000));
 
   useEffect(() => {
@@ -75,9 +74,12 @@ const useEscrowTimelineItems = (
       payments?.forEach((payment) => {
         const isBuyer = payment.party.toLowerCase() === buyer.toLowerCase();
         const formattedDate = getFormattedDate(new Date(payment.timestamp * 1000));
-        const title = `The ${isBuyer ? "buyer" : "seller"} paid ${formatEther(payment.amount)} ${
-          !token ? nativeTokenSymbol : token
-        }`;
+        const title = (
+          <>
+            The {isBuyer ? "buyer" : "seller"} paid {formatEther(payment.amount)}{" "}
+            {assetSymbol ? assetSymbol : <StyledSkeleton width={30} />}
+          </>
+        );
 
         timelineItems.push(createTimelineItem(formattedDate, title, "", theme.secondaryBlue));
       });
@@ -103,9 +105,12 @@ const useEscrowTimelineItems = (
           } answer [Timeout: ${formatTimeoutDuration(timeLeft)}]`;
         }
 
-        const title = `The ${proposal.party === "1" ? "buyer" : "seller"} proposed: Pay ${formatEther(
-          proposal.amount
-        )} ${!token ? nativeTokenSymbol : token}`;
+        const title = (
+          <>
+            The {proposal.party === "1" ? "buyer" : "seller"} proposed: Pay {formatEther(proposal.amount)}{" "}
+            {assetSymbol ? assetSymbol : <StyledSkeleton width={30} />}
+          </>
+        );
         timelineItems.push(createTimelineItem(formattedDate, title, subtitle, theme.warning));
       });
 
@@ -168,10 +173,9 @@ const useEscrowTimelineItems = (
     settlementTimeout,
     currentTime,
     theme,
-    token,
+    assetSymbol,
     buyer,
     seller,
-    nativeTokenSymbol,
   ]);
 };
 

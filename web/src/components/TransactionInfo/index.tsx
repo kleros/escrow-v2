@@ -1,5 +1,6 @@
 import React from "react";
 import styled, { css } from "styled-components";
+import Skeleton from "react-loading-skeleton";
 import { landscapeStyle } from "styles/landscapeStyle";
 import { Statuses } from "consts/statuses";
 import { useIsList } from "context/IsListProvider";
@@ -94,11 +95,15 @@ const TransactionInfo: React.FC<ITransactionInfo> = ({
   return (
     <Container isList={displayAsList} isPreview={isPreview}>
       <RestOfFieldsContainer isPreview={isPreview} isList={displayAsList}>
-        {amount && assetSymbol ? (
+        {amount ? (
           <Field
             icon={PileCoinsIcon}
             name="Amount"
-            value={`${amount} ${assetSymbol}`}
+            value={
+              <>
+                {amount} {!assetSymbol ? <Skeleton width={30} /> : assetSymbol}
+              </>
+            }
             displayAsList={displayAsList}
             isPreview={isPreview}
           />
@@ -134,4 +139,5 @@ const TransactionInfo: React.FC<ITransactionInfo> = ({
     </Container>
   );
 };
+
 export default TransactionInfo;

@@ -52,13 +52,11 @@ interface IPreviewCard {
   escrowTitle: string;
   deliverableText: string;
   receivingQuantity: string;
-  receivingToken: string;
   transactionCreationTimestamp: string;
   status: string;
   token: string;
   buyerAddress: string;
   sendingQuantity: string;
-  sendingToken: string;
   sellerAddress: string;
   deadlineDate: string;
   assetSymbol: string;
@@ -80,13 +78,11 @@ const PreviewCard: React.FC<IPreviewCard> = ({
   escrowTitle,
   deliverableText,
   receivingQuantity,
-  receivingToken,
   transactionCreationTimestamp,
   status,
   token,
   buyerAddress,
   sendingQuantity,
-  sendingToken,
   sellerAddress,
   deadlineDate,
   assetSymbol,
@@ -119,10 +115,8 @@ const PreviewCard: React.FC<IPreviewCard> = ({
         escrowType,
         deliverableText,
         receivingQuantity,
-        receivingToken,
         buyerAddress,
         sendingQuantity,
-        sendingToken,
         sellerAddress,
         deadlineDate,
         assetSymbol,
@@ -134,7 +128,7 @@ const PreviewCard: React.FC<IPreviewCard> = ({
       {...{
         isPreview,
         status,
-        token,
+        assetSymbol,
         transactionCreationTimestamp,
         buyerAddress,
         sellerAddress,

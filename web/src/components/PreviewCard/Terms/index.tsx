@@ -29,10 +29,8 @@ const Terms: React.FC<ITerms> = ({
   escrowType,
   deliverableText,
   receivingQuantity,
-  receivingToken,
   buyerAddress,
   sendingQuantity,
-  sendingToken,
   sellerAddress,
   deadlineDate,
   assetSymbol,
@@ -45,10 +43,8 @@ const Terms: React.FC<ITerms> = ({
         escrowType={escrowType}
         deliverableText={deliverableText}
         receivingQuantity={receivingQuantity}
-        receivingToken={receivingToken}
         buyerAddress={buyerAddress}
         sendingQuantity={sendingQuantity}
-        sendingToken={sendingToken}
         sellerAddress={sellerAddress}
         deadlineDate={deadlineDate}
         assetSymbol={assetSymbol}
