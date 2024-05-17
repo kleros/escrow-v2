@@ -71,7 +71,7 @@ const RestOfFieldsContainer = styled.div<{ isList?: boolean; isPreview?: boolean
 export interface ITransactionInfo {
   amount?: string;
   deadlineDate: string;
-  token?: string;
+  assetSymbol?: string;
   status?: Statuses;
   overrideIsList?: boolean;
   isPreview?: boolean;
@@ -81,7 +81,7 @@ export interface ITransactionInfo {
 
 const TransactionInfo: React.FC<ITransactionInfo> = ({
   amount,
-  token,
+  assetSymbol,
   deadlineDate,
   sellerAddress,
   buyerAddress,
@@ -94,11 +94,11 @@ const TransactionInfo: React.FC<ITransactionInfo> = ({
   return (
     <Container isList={displayAsList} isPreview={isPreview}>
       <RestOfFieldsContainer isPreview={isPreview} isList={displayAsList}>
-        {amount && token ? (
+        {amount && assetSymbol ? (
           <Field
             icon={PileCoinsIcon}
             name="Amount"
-            value={`${amount} ${token}`}
+            value={`${amount} ${assetSymbol}`}
             displayAsList={displayAsList}
             isPreview={isPreview}
           />

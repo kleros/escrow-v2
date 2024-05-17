@@ -9,11 +9,20 @@ pragma solidity 0.8.18;
 
 import {IArbitrableV2, IArbitratorV2} from "@kleros/kleros-v2-contracts/arbitration/interfaces/IArbitrableV2.sol";
 import "@kleros/kleros-v2-contracts/arbitration/interfaces/IDisputeTemplateRegistry.sol";
+import {SafeERC20, IERC20} from "./libraries/SafeERC20.sol";
 import "./interfaces/IEscrow.sol";
 
-/// @title Escrow for a sale paid in ETH and without platform fees.
-/// @dev Adapted from MultipleArbitrableTransaction contract: https://github.com/kleros/kleros-interaction/blob/master/contracts/standard/arbitration/MultipleArbitrableTransaction.sol
-contract Escrow is IEscrow, IArbitrableV2 {
+/// @title EscrowUniversal for a sale paid in native currency or ERC20 tokens without platform fees.
+/// @dev Adapted from MultipleArbitrableTokenTransaction contract: https://github.com/kleros/kleros-interaction/blob/master/contracts/standard/arbitration/MultipleArbitrableTokenTransaction.sol
+/// and from MultipleArbitrableTransaction contract: https://github.com/kleros/kleros-interaction/blob/master/contracts/standard/arbitration/MultipleArbitrableTransaction.sol
+/// Note that the contract expects the tokens to have standard ERC20 behaviour.
+/// The tokens that don't conform to this type of behaviour should be filtered by the UI.
+/// Tokens should not reenter or allow recipients to refuse the transfer.
+/// Also note that arbitration fees are still paid in ETH.
+contract EscrowUniversal is IEscrow, IArbitrableV2 {
+    // Use safe transfers when both parties are paid simultaneously (save for acceptSettlement) to prevent griefing.
+    using SafeERC20 for IERC20;
+
     // ************************************* //
     // *             Storage               * //
     // ************************************* //
@@ -124,6 +133,7 @@ contract Escrow is IEscrow, IArbitrableV2 {
         transaction.buyer = payable(msg.sender);
         transaction.seller = _seller;
         transaction.amount = msg.value;
+        transaction.token = NATIVE;
         transaction.deadline = block.timestamp + _timeoutPayment;
         transaction.templateData = _templateData;
         transaction.templateDataMappings = _templateDataMappings;
@@ -142,15 +152,36 @@ contract Escrow is IEscrow, IArbitrableV2 {
 
     /// @inheritdoc IEscrow
     function createERC20Transaction(
-        uint256,
-        IERC20,
-        uint256,
-        string memory,
-        address payable,
-        string memory,
-        string memory
-    ) external pure override returns (uint256) {
-        revert NotSupported();
+        uint256 _amount,
+        IERC20 _token,
+        uint256 _timeoutPayment,
+        string memory _transactionUri,
+        address payable _seller,
+        string memory _templateData,
+        string memory _templateDataMappings
+    ) external override returns (uint256 transactionID) {
+        // Transfers token from sender wallet to contract.
+        if (!_token.safeTransferFrom(msg.sender, address(this), _amount)) revert TokenTransferFailed();
+        Transaction storage transaction = transactions.push();
+        transaction.buyer = payable(msg.sender);
+        transaction.seller = _seller;
+        transaction.amount = _amount;
+        transaction.token = _token;
+        transaction.deadline = block.timestamp + _timeoutPayment;
+        transaction.templateData = _templateData;
+        transaction.templateDataMappings = _templateDataMappings;
+
+        transactionID = transactions.length - 1;
+
+        emit ERC20TransactionCreated(
+            transactionID,
+            _transactionUri,
+            msg.sender,
+            _seller,
+            _token,
+            _amount,
+            transaction.deadline
+        );
     }
 
     /// @inheritdoc IEscrow
@@ -160,8 +191,13 @@ contract Escrow is IEscrow, IArbitrableV2 {
         if (transaction.status != Status.NoDispute) revert TransactionDisputed();
         if (_amount > transaction.amount) revert MaximumPaymentAmountExceeded();
 
-        transaction.seller.send(_amount); // It is the user responsibility to accept ETH.
         transaction.amount -= _amount;
+
+        if (transaction.token == NATIVE) {
+            transaction.seller.send(_amount); // It is the user responsibility to accept ETH.
+        } else {
+            if (!transaction.token.safeTransfer(transaction.seller, _amount)) revert TokenTransferFailed();
+        }
 
         emit Payment(_transactionID, _amount, msg.sender);
     }
@@ -173,8 +209,13 @@ contract Escrow is IEscrow, IArbitrableV2 {
         if (transaction.status != Status.NoDispute) revert TransactionDisputed();
         if (_amountReimbursed > transaction.amount) revert MaximumPaymentAmountExceeded();
 
-        transaction.buyer.send(_amountReimbursed); // It is the user responsibility to accept ETH.
         transaction.amount -= _amountReimbursed;
+
+        if (transaction.token == NATIVE) {
+            transaction.buyer.send(_amountReimbursed); // It is the user responsibility to accept ETH.
+        } else {
+            if (!transaction.token.safeTransfer(transaction.buyer, _amountReimbursed)) revert TokenTransferFailed();
+        }
 
         emit Payment(_transactionID, _amountReimbursed, msg.sender);
     }
@@ -185,8 +226,15 @@ contract Escrow is IEscrow, IArbitrableV2 {
         if (block.timestamp < transaction.deadline) revert DeadlineNotPassed();
         if (transaction.status != Status.NoDispute) revert TransactionDisputed();
 
-        transaction.seller.send(transaction.amount); // It is the user responsibility to accept ETH.
+        uint256 amount = transaction.amount;
         transaction.amount = 0;
+
+        if (transaction.token == NATIVE) {
+            transaction.seller.send(amount); // It is the user responsibility to accept ETH.
+        } else {
+            if (!transaction.token.safeTransfer(transaction.seller, amount)) revert TokenTransferFailed();
+        }
+
         transaction.status = Status.TransactionResolved;
 
         emit TransactionResolved(_transactionID, Resolution.TransactionExecuted);
@@ -245,9 +293,14 @@ contract Escrow is IEscrow, IArbitrableV2 {
         transaction.settlementSeller = 0;
         transaction.status = Status.TransactionResolved;
 
-        // It is the users' responsibility to accept ETH.
-        transaction.buyer.send(remainingAmount);
-        transaction.seller.send(settlementAmount);
+        if (transaction.token == NATIVE) {
+            // It is the users' responsibility to accept ETH.
+            transaction.buyer.send(remainingAmount);
+            transaction.seller.send(settlementAmount);
+        } else {
+            if (!transaction.token.safeTransfer(transaction.buyer, remainingAmount)) revert TokenTransferFailed();
+            if (!transaction.token.safeTransfer(transaction.seller, settlementAmount)) revert TokenTransferFailed();
+        }
 
         emit TransactionResolved(_transactionID, Resolution.SettlementReached);
     }
@@ -409,6 +462,7 @@ contract Escrow is IEscrow, IArbitrableV2 {
         uint256 settlementSeller = transaction.settlementSeller;
         uint256 buyerFee = transaction.buyerFee;
         uint256 sellerFee = transaction.sellerFee;
+        bool nativePayment = transaction.token == NATIVE;
 
         transaction.amount = 0;
         transaction.settlementBuyer = 0;
@@ -418,29 +472,57 @@ contract Escrow is IEscrow, IArbitrableV2 {
         transaction.status = Status.TransactionResolved;
 
         // Give the arbitration fee back.
-        // Note that we use send to prevent a party from blocking the execution.
         if (_ruling == uint256(Party.Buyer)) {
-            // If there was a settlement amount proposed
-            // we use that to make the partial payment and refund the rest.
+            transaction.buyer.send(buyerFee);
+            // If there was a settlement amount proposed, we use that to make the partial payment and refund the rest.
             if (settlementBuyer != 0) {
-                transaction.buyer.send(buyerFee + amount - settlementBuyer);
-                transaction.seller.send(settlementBuyer);
+                if (nativePayment) {
+                    transaction.buyer.send(amount - settlementBuyer); // It is the user responsibility to accept ETH.
+                    transaction.seller.send(settlementBuyer);
+                } else {
+                    transaction.token.safeTransfer(transaction.buyer, amount - settlementBuyer);
+                    transaction.token.safeTransfer(transaction.seller, settlementBuyer);
+                }
             } else {
-                transaction.buyer.send(buyerFee + amount);
+                if (nativePayment) {
+                    transaction.buyer.send(amount); // It is the user responsibility to accept ETH.
+                } else {
+                    if (!transaction.token.safeTransfer(transaction.buyer, amount)) revert TokenTransferFailed();
+                }
             }
         } else if (_ruling == uint256(Party.Seller)) {
-            // If there was a settlement amount proposed
-            // we use that to make the partial payment and refund the rest to buyer.
+            transaction.seller.send(sellerFee);
+            // If there was a settlement amount proposed, we use that to make the partial payment and refund the rest to buyer.
             if (settlementSeller != 0) {
-                transaction.buyer.send(amount - settlementSeller);
-                transaction.seller.send(sellerFee + settlementSeller);
+                if (nativePayment) {
+                    transaction.buyer.send(amount - settlementSeller); // It is the user responsibility to accept ETH.
+                    transaction.seller.send(settlementSeller);
+                } else {
+                    transaction.token.safeTransfer(transaction.buyer, amount - settlementSeller);
+                    transaction.token.safeTransfer(transaction.seller, settlementSeller);
+                }
             } else {
-                transaction.seller.send(sellerFee + amount);
+                if (nativePayment) {
+                    transaction.seller.send(amount); // It is the user responsibility to accept ETH.
+                } else {
+                    if (!transaction.token.safeTransfer(transaction.seller, amount)) revert TokenTransferFailed();
+                }
             }
         } else {
-            uint256 splitAmount = (buyerFee + amount) / 2;
-            transaction.buyer.send(splitAmount);
-            transaction.seller.send(splitAmount);
+            uint256 splitArbitrationFee = buyerFee / 2;
+            transaction.buyer.send(splitArbitrationFee);
+            transaction.seller.send(splitArbitrationFee);
+
+            // Tokens should not reenter or allow recipients to refuse the transfer.
+            // In case of an uneven token amount, one basic token unit can be burnt.
+            uint256 splitAmount = amount / 2;
+            if (nativePayment) {
+                transaction.buyer.send(splitAmount); // It is the user responsibility to accept ETH.
+                transaction.seller.send(splitAmount);
+            } else {
+                transaction.token.safeTransfer(transaction.buyer, splitAmount);
+                transaction.token.safeTransfer(transaction.seller, splitAmount);
+            }
         }
 
         emit TransactionResolved(_transactionID, Resolution.RulingEnforced);

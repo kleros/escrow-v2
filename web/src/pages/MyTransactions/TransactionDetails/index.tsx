@@ -37,7 +37,7 @@ const TransactionDetails: React.FC = () => {
     transactionUri,
     amount,
     deadline,
-    asset,
+    token,
     seller,
     buyer,
     status,
@@ -66,13 +66,13 @@ const TransactionDetails: React.FC = () => {
           extraDescriptionUri={transactionInfo?.extraDescriptionUri}
           receivingQuantity={""}
           buyerAddress={buyer}
-          receivingToken={asset === "native" ? nativeTokenSymbol : asset}
+          receivingToken={!token ? nativeTokenSymbol : token}
           sellerAddress={seller}
           transactionCreationTimestamp={timestamp}
           sendingQuantity={!isUndefined(amount) ? formatEther(amount) : ""}
-          sendingToken={asset === "native" ? nativeTokenSymbol : asset}
+          sendingToken={!token ? nativeTokenSymbol : token}
           deadlineDate={new Date(deadline * 1000).toLocaleString()}
-          tokenSymbol={asset === "native" ? nativeTokenSymbol : asset}
+          assetSymbol={!token ? nativeTokenSymbol : token}
           overrideIsList={false}
           amount={!isUndefined(amount) ? formatEther(amount) : ""}
           isPreview={false}
@@ -80,7 +80,7 @@ const TransactionDetails: React.FC = () => {
           settlementTimeout={escrowParameters?.escrowParameters.settlementTimeout}
           {...{
             status,
-            asset,
+            token,
             payments,
             settlementProposals,
             hasToPayFees,

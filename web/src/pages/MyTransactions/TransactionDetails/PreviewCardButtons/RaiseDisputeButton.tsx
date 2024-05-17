@@ -2,10 +2,10 @@ import React, { useMemo, useState } from "react";
 import { Button } from "@kleros/ui-components-library";
 import { useAccount, usePublicClient } from "wagmi";
 import {
-  useEscrowPayArbitrationFeeByBuyer,
-  useEscrowPayArbitrationFeeBySeller,
-  usePrepareEscrowPayArbitrationFeeByBuyer,
-  usePrepareEscrowPayArbitrationFeeBySeller,
+  useEscrowUniversalPayArbitrationFeeByBuyer,
+  useEscrowUniversalPayArbitrationFeeBySeller,
+  usePrepareEscrowUniversalPayArbitrationFeeByBuyer,
+  usePrepareEscrowUniversalPayArbitrationFeeBySeller,
 } from "hooks/contracts/generated";
 import { isUndefined } from "utils/index";
 import { wrapWithToast } from "utils/wrapWithToast";
@@ -24,18 +24,18 @@ const RaiseDisputeButton: React.FC<IRaiseDisputeButton> = ({ toggleModal, button
   const { buyer, id } = useTransactionDetailsContext();
   const isBuyer = useMemo(() => address?.toLowerCase() === buyer?.toLowerCase(), [address, buyer]);
 
-  const { config: payArbitrationFeeByBuyerConfig } = usePrepareEscrowPayArbitrationFeeByBuyer({
+  const { config: payArbitrationFeeByBuyerConfig } = usePrepareEscrowUniversalPayArbitrationFeeByBuyer({
     args: [BigInt(id)],
     value: arbitrationCost,
   });
 
-  const { config: payArbitrationFeeBySellerConfig } = usePrepareEscrowPayArbitrationFeeBySeller({
+  const { config: payArbitrationFeeBySellerConfig } = usePrepareEscrowUniversalPayArbitrationFeeBySeller({
     args: [BigInt(id)],
     value: arbitrationCost,
   });
 
-  const { writeAsync: payArbitrationFeeByBuyer } = useEscrowPayArbitrationFeeByBuyer(payArbitrationFeeByBuyerConfig);
-  const { writeAsync: payArbitrationFeeBySeller } = useEscrowPayArbitrationFeeBySeller(payArbitrationFeeBySellerConfig);
+  const { writeAsync: payArbitrationFeeByBuyer } = useEscrowUniversalPayArbitrationFeeByBuyer(payArbitrationFeeByBuyerConfig);
+  const { writeAsync: payArbitrationFeeBySeller } = useEscrowUniversalPayArbitrationFeeBySeller(payArbitrationFeeBySellerConfig);
 
   const handleRaiseDispute = () => {
     if (isBuyer && !isUndefined(payArbitrationFeeByBuyer)) {

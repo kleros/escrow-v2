@@ -12,7 +12,7 @@ interface IEscrowTimeline {
   isPreview: boolean;
   transactionCreationTimestamp: number;
   status: boolean;
-  asset: string;
+  token: string;
   buyerAddress: string;
   sellerAddress: string;
   payments: Payment[];
@@ -26,7 +26,7 @@ const EscrowTimeline: React.FC<IEscrowTimeline> = ({
   isPreview,
   transactionCreationTimestamp,
   status,
-  asset,
+  token,
   buyerAddress,
   sellerAddress,
   payments,
@@ -41,7 +41,7 @@ const EscrowTimeline: React.FC<IEscrowTimeline> = ({
     isPreview,
     transactionCreationTimestamp,
     status,
-    asset,
+    token,
     buyerAddress,
     sellerAddress,
     payments,

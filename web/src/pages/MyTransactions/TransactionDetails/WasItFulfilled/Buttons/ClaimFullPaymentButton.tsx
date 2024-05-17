@@ -2,7 +2,10 @@ import React, { useState } from "react";
 import { Button } from "@kleros/ui-components-library";
 import { useToggle } from "react-use";
 import PaymentReleased from "pages/MyTransactions/Modal/PaymentReleased";
-import { useEscrowExecuteTransaction, usePrepareEscrowExecuteTransaction } from "hooks/contracts/generated";
+import {
+  useEscrowUniversalExecuteTransaction,
+  usePrepareEscrowUniversalExecuteTransaction,
+} from "hooks/contracts/generated";
 import { isUndefined } from "utils/index";
 import { wrapWithToast } from "utils/wrapWithToast";
 import { usePublicClient } from "wagmi";
@@ -14,11 +17,11 @@ const ClaimFullPaymentButton: React.FC = () => {
   const publicClient = usePublicClient();
   const { id } = useTransactionDetailsContext();
 
-  const { config: executeTransactionConfig } = usePrepareEscrowExecuteTransaction({
+  const { config: executeTransactionConfig } = usePrepareEscrowUniversalExecuteTransaction({
     args: [id],
   });
 
-  const { writeAsync: executeTransaction } = useEscrowExecuteTransaction(executeTransactionConfig);
+  const { writeAsync: executeTransaction } = useEscrowUniversalExecuteTransaction(executeTransactionConfig);
 
   const handleExecuteTransaction = () => {
     if (!isUndefined(executeTransaction)) {

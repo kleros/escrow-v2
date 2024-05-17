@@ -20,7 +20,7 @@ interface ITerms {
   sendingToken: string;
   sellerAddress: string;
   deadlineDate: Date;
-  tokenSymbol: string;
+  assetSymbol: string;
   extraDescriptionUri: string;
   buyer: string;
 }
@@ -35,7 +35,7 @@ const Terms: React.FC<ITerms> = ({
   sendingToken,
   sellerAddress,
   deadlineDate,
-  tokenSymbol,
+  assetSymbol,
   extraDescriptionUri,
 }) => {
   return (
@@ -51,7 +51,7 @@ const Terms: React.FC<ITerms> = ({
         sendingToken={sendingToken}
         sellerAddress={sellerAddress}
         deadlineDate={deadlineDate}
-        tokenSymbol={tokenSymbol}
+        assetSymbol={assetSymbol}
       />
       <AttachedFile extraDescriptionUri={extraDescriptionUri} />
     </Container>

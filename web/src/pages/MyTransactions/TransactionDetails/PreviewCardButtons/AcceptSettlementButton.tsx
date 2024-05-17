@@ -4,7 +4,10 @@ import { usePublicClient } from "wagmi";
 import { isUndefined } from "utils/index";
 import { wrapWithToast } from "utils/wrapWithToast";
 import { useTransactionDetailsContext } from "context/TransactionDetailsContext";
-import { useEscrowAcceptSettlement, usePrepareEscrowAcceptSettlement } from "hooks/contracts/generated";
+import {
+  usePrepareEscrowUniversalAcceptSettlement,
+  useEscrowUniversalAcceptSettlement,
+} from "hooks/contracts/generated";
 
 interface IAcceptButton {
   toggleModal?: () => void;
@@ -15,11 +18,11 @@ const AcceptButton: React.FC<IAcceptButton> = ({ toggleModal }) => {
   const publicClient = usePublicClient();
   const { id } = useTransactionDetailsContext();
 
-  const { config: acceptSettlementConfig } = usePrepareEscrowAcceptSettlement({
+  const { config: acceptSettlementConfig } = usePrepareEscrowUniversalAcceptSettlement({
     args: [BigInt(id)],
   });
 
-  const { writeAsync: acceptSettlement } = useEscrowAcceptSettlement(acceptSettlementConfig);
+  const { writeAsync: acceptSettlement } = useEscrowUniversalAcceptSettlement(acceptSettlementConfig);
 
   const handleAcceptSettlement = () => {
     if (!isUndefined(acceptSettlement)) {
