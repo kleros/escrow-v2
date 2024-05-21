@@ -3,7 +3,6 @@ import styled from "styled-components";
 import Header from "./Header";
 import NavigationButtons from "../NavigationButtons";
 import PreviewCard from "components/PreviewCard";
-import { responsiveSize } from "styles/responsiveSize";
 import { useNewTransactionContext } from "context/NewTransactionContext";
 import { useNativeTokenSymbol } from "hooks/useNativeTokenSymbol";
 import { useAccount } from "wagmi";
@@ -13,7 +12,6 @@ const Container = styled.div`
   display: flex;
   align-items: center;
   flex-direction: column;
-  padding: 0 ${responsiveSize(24, 136)};
 `;
 
 const Preview: React.FC = () => {
