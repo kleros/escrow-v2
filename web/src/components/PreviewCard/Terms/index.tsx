@@ -19,7 +19,7 @@ interface ITerms {
   sendingQuantity: string;
   sendingToken: string;
   sellerAddress: string;
-  deadlineDate: Date;
+  deadline: number;
   assetSymbol: string;
   extraDescriptionUri: string;
   buyer: string;
@@ -32,7 +32,7 @@ const Terms: React.FC<ITerms> = ({
   buyerAddress,
   sendingQuantity,
   sellerAddress,
-  deadlineDate,
+  deadline,
   assetSymbol,
   extraDescriptionUri,
 }) => {
@@ -40,16 +40,18 @@ const Terms: React.FC<ITerms> = ({
     <Container>
       <Header />
       <Description
-        escrowType={escrowType}
-        deliverableText={deliverableText}
-        receivingQuantity={receivingQuantity}
-        buyerAddress={buyerAddress}
-        sendingQuantity={sendingQuantity}
-        sellerAddress={sellerAddress}
-        deadlineDate={deadlineDate}
-        assetSymbol={assetSymbol}
+        {...{
+          escrowType,
+          deliverableText,
+          receivingQuantity,
+          buyerAddress,
+          sendingQuantity,
+          sellerAddress,
+          deadline,
+          assetSymbol,
+        }}
       />
-      <AttachedFile extraDescriptionUri={extraDescriptionUri} />
+      <AttachedFile {...{ extraDescriptionUri }} />
     </Container>
   );
 };

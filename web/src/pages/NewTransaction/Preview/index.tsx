@@ -37,18 +37,20 @@ const Preview: React.FC = () => {
     <Container>
       <Header />
       <PreviewCard
-        receivingQuantity={receivingQuantity}
-        sellerAddress={sellerAddress}
-        sendingQuantity={sendingQuantity}
         buyerAddress={address}
-        escrowType={escrowType}
-        deliverableText={deliverableText}
         assetSymbol={sendingToken === "native" ? nativeTokenSymbol : erc20TokenSymbol}
-        deadlineDate={new Date(deadline).toLocaleString()}
         overrideIsList={false}
-        escrowTitle={escrowTitle}
-        extraDescriptionUri={extraDescriptionUri}
         isPreview={true}
+        deadline={new Date(deadline).getTime()}
+        {...{
+          receivingQuantity,
+          sellerAddress,
+          sendingQuantity,
+          escrowType,
+          deliverableText,
+          escrowTitle,
+          extraDescriptionUri,
+        }}
       />
       <NavigationButtons prevRoute="/new-transaction/notifications" nextRoute="/new-transaction/deliverable" />
     </Container>

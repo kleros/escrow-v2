@@ -21,7 +21,7 @@ interface IDescription {
   sendingQuantity: string;
   sendingToken: string;
   sellerAddress: string;
-  deadlineDate: Date;
+  deadline: number;
   assetSymbol: string;
   buyer: string;
 }
@@ -35,7 +35,7 @@ const Description: React.FC<IDescription> = ({
   sendingQuantity,
   sendingToken,
   sellerAddress,
-  deadlineDate,
+  deadline,
   assetSymbol,
 }) => {
   const generalEscrowSummary = (
@@ -43,7 +43,7 @@ const Description: React.FC<IDescription> = ({
       By Paying {sendingQuantity}{" "}
       <InlineBlockSpan>{assetSymbol ? assetSymbol : <StyledSkeleton width={30} />}</InlineBlockSpan>, address{" "}
       {buyerAddress} should receive "{deliverableText}" from address {sellerAddress} before the delivery deadline{" "}
-      {new Date(deadlineDate).toString()}.
+      {new Date(deadline).toString()}.
     </>
   );
 
@@ -51,7 +51,7 @@ const Description: React.FC<IDescription> = ({
     <>
       By Paying {sendingQuantity} {sendingToken}, [Blockchain] address {buyerAddress} should receive {receivingQuantity}{" "}
       {receivingToken} at the [Blockchain] address {sellerAddress} from [Blockchain] address TODO before the delivery
-      deadline {new Date(deadlineDate).toString()}.
+      deadline {new Date(deadline).toString()}.
     </>
   );
 

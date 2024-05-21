@@ -78,7 +78,7 @@ const TransactionDetails: React.FC = () => {
           sellerAddress={seller}
           transactionCreationTimestamp={timestamp}
           sendingQuantity={!isUndefined(amount) ? formatEther(amount) : ""}
-          deadlineDate={new Date(deadline * 1000).toLocaleString()}
+          deadline={deadline * 1000}
           assetSymbol={!token ? nativeTokenSymbol : erc20TokenSymbol}
           overrideIsList={false}
           amount={!isUndefined(amount) ? formatEther(amount) : ""}
