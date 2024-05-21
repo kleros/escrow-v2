@@ -43,7 +43,7 @@ const Description: React.FC<IDescription> = ({
       By Paying {sendingQuantity}{" "}
       <InlineBlockSpan>{assetSymbol ? assetSymbol : <StyledSkeleton width={30} />}</InlineBlockSpan>, address{" "}
       {buyerAddress} should receive "{deliverableText}" from address {sellerAddress} before the delivery deadline{" "}
-      {new Date(deadlineDate).toLocaleString()}.
+      {new Date(deadlineDate).toString()}.
     </>
   );
 
@@ -51,7 +51,7 @@ const Description: React.FC<IDescription> = ({
     <>
       By Paying {sendingQuantity} {sendingToken}, [Blockchain] address {buyerAddress} should receive {receivingQuantity}{" "}
       {receivingToken} at the [Blockchain] address {sellerAddress} from [Blockchain] address TODO before the delivery
-      deadline {new Date(deadlineDate).toLocaleString()}.
+      deadline {new Date(deadlineDate).toString()}.
     </>
   );
 

@@ -11,11 +11,18 @@ import {
 } from "hooks/contracts/generated";
 import { erc20ABI, useNetwork } from "wagmi";
 import { useNewTransactionContext } from "context/NewTransactionContext";
-import { useAccount, useEnsAddress, usePublicClient, useContractWrite, usePrepareContractWrite } from "wagmi";
+import {
+  useAccount,
+  useEnsAddress,
+  usePublicClient,
+  useContractRead,
+  useContractWrite,
+  usePrepareContractWrite,
+} from "wagmi";
 import { parseEther, parseUnits } from "viem";
 import { isUndefined } from "utils/index";
 import { wrapWithToast } from "utils/wrapWithToast";
-import { ethAddressPattern } from "../Terms/Payment/DestinationAddress";
+import { ethAddressPattern } from "utils/validateAddress";
 
 const StyledButton = styled(Button)``;
 
@@ -35,6 +42,7 @@ const DepositPaymentButton: React.FC = () => {
 
   const [currentTime, setCurrentTime] = useState(Date.now());
   const [finalRecipientAddress, setFinalRecipientAddress] = useState(sellerAddress);
+  const [checkedAllowance, setCheckedAllowance] = useState(false);
   const ensResult = useEnsAddress({ name: sellerAddress, chainId: 1 });
   const publicClient = usePublicClient();
   const navigate = useNavigate();
@@ -138,14 +146,36 @@ const DepositPaymentButton: React.FC = () => {
 
   const { writeAsync: approve } = useContractWrite(approveConfig);
 
+  const { data: allowance } = useContractRead({
+    address: sendingToken,
+    abi: erc20ABI,
+    functionName: "allowance",
+    args: [address, escrowUniversalAddress?.[chain?.id]],
+  });
+
+  useEffect(() => {
+    if (allowance !== undefined && !checkedAllowance) {
+      setCheckedAllowance(true);
+      setIsApproved(allowance >= transactionValue);
+    }
+  }, [allowance, transactionValue, checkedAllowance]);
+
   const handleApproveToken = async () => {
     if (!isUndefined(approve)) {
       setIsSending(true);
       try {
-        await wrapWithToast(async () => await approve().then((response) => response.hash), publicClient);
-        setIsApproved(true);
+        const wrapResult = await wrapWithToast(
+          async () => await approve().then((response) => response.hash),
+          publicClient
+        );
+        if (wrapResult.status) {
+          setIsApproved(true);
+        } else {
+          setIsApproved(false);
+        }
       } catch (error) {
         console.error("Approval failed:", error);
+        setIsApproved(false);
       } finally {
         setIsSending(false);
       }
@@ -176,7 +206,7 @@ const DepositPaymentButton: React.FC = () => {
     <StyledButton
       isLoading={isSending}
       disabled={isSending}
-      text={isNativeTransaction ? "Deposit the Payment" : isApproved ? "Deposit the Payment" : "Approve Token"}
+      text={isNativeTransaction || isApproved ? "Deposit the Payment" : "Approve Token"}
       onClick={isNativeTransaction || isApproved ? handleCreateTransaction : handleApproveToken}
     />
   );

@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import Skeleton from "react-loading-skeleton";
-import "react-loading-skeleton/dist/skeleton.css";
 import { useClickAway } from "react-use";
 import { Tabs } from "@kleros/ui-components-library";
 import { useAccount, useNetwork } from "wagmi";
@@ -10,12 +9,11 @@ import alchemyConfig from "utils/alchemyConfig";
 import { useNewTransactionContext } from "context/NewTransactionContext";
 import { fetchNativeToken } from "utils/fetchNativeToken";
 import { fetchOwnedTokensFromAlchemy } from "utils/fetchOwnedTokensFromAlchemy";
-import { fetchTokenInfo } from "utils/fetchTokenInfo";
-import { validateAddress } from "../../../DestinationAddress";
+import { Overlay } from "components/Overlay";
 import TokensTab from "./TokensTab";
 import AddCustomTokenTab from "./AddCustomTokenTab";
 import { StyledModal } from "pages/MyTransactions/Modal/StyledModal";
-import { Overlay } from "components/Overlay";
+import { useLocalStorage } from "hooks/useLocalStorage";
 
 const Container = styled.div`
   position: relative;
@@ -75,8 +73,7 @@ const TokenSelector: React.FC = () => {
   const { address } = useAccount();
   const { chain } = useNetwork();
   const { sendingToken, setSendingToken } = useNewTransactionContext();
-  const [ownedTokens, setOwnedTokens] = useState([]);
-  const [customToken, setCustomToken] = useState("");
+  const [ownedTokens, setOwnedTokens] = useLocalStorage<any[]>("ownedTokens", []);
   const [isOpen, setIsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("tokens");
   const [searchQuery, setSearchQuery] = useState("");
@@ -90,17 +87,7 @@ const TokenSelector: React.FC = () => {
       fetchOwnedTokensFromAlchemy(alchemy, address, setOwnedTokens, setLoading, chain);
       setSendingToken(fetchNativeToken(chain).value);
     }
-  }, [address, chain, setSendingToken]);
-
-  const handleAddCustomToken = async () => {
-    if (!validateAddress(customToken)) {
-      alert("Invalid address");
-      return;
-    }
-    const tokenInfo = await fetchTokenInfo(alchemy, customToken);
-    setOwnedTokens([...ownedTokens, { label: tokenInfo.symbol, value: customToken, logo: tokenInfo.logo }]);
-    setCustomToken("");
-  };
+  }, [address, chain]);
 
   const handleSelectToken = (value: string) => {
     setSendingToken(value);
@@ -157,12 +144,7 @@ const TokenSelector: React.FC = () => {
                 />
               )}
               {activeTab === "addCustomToken" && (
-                <AddCustomTokenTab
-                  customToken={customToken}
-                  setCustomToken={setCustomToken}
-                  handleAddCustomToken={handleAddCustomToken}
-                  validateAddress={validateAddress}
-                />
+                <AddCustomTokenTab setOwnedTokens={setOwnedTokens} setActiveTab={setActiveTab} alchemy={alchemy} />
               )}
             </StyledModal>
           </>

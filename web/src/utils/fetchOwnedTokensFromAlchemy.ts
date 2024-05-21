@@ -16,6 +16,7 @@ export const fetchOwnedTokensFromAlchemy = async (alchemy, address: string, setO
     });
     const allTokens = [nativeToken, ...(await Promise.all(tokenList))];
     setOwnedTokens(allTokens);
+    localStorage.setItem("ownedTokens", JSON.stringify(allTokens));
     setLoading(false);
   } catch (error) {
     console.error("Error fetching owned tokens:", error);

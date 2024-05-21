@@ -1,6 +1,6 @@
 import React from "react";
 import { Field } from "@kleros/ui-components-library";
-import { Item, TokenLabel, TokenLogo } from ".";
+import { Item, TokenLabel, TokenLogo } from "../TokenSelector";
 
 interface ITokensTab {
   searchQuery: string;

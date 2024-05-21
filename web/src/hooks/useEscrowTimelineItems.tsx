@@ -6,8 +6,8 @@ import { resolutionToString } from "utils/resolutionToString";
 import { formatTimeoutDuration } from "utils/formatTimeoutDuration";
 import CheckCircleOutlineIcon from "components/StyledIcons/CheckCircleOutlineIcon";
 import LawBalanceIcon from "components/StyledIcons/LawBalanceIcon";
-import { DisputeRequest, HasToPayFee, Payment, SettlementProposal, TransactionResolved } from "src/graphql/graphql";
 import { StyledSkeleton } from "components/StyledSkeleton";
+import { DisputeRequest, HasToPayFee, Payment, SettlementProposal, TransactionResolved } from "src/graphql/graphql";
 
 interface TimelineItem {
   title: string;
