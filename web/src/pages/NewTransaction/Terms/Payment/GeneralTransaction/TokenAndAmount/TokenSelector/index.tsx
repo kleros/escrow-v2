@@ -69,6 +69,19 @@ export const TokenLabel = styled.span`
   color: ${({ theme }) => theme.primaryText};
 `;
 
+const DropdownContent = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+`;
+
+const StyledLogoSkeleton = styled(Skeleton)`
+  width: 22.5px;
+  height: 22.5px;
+  margin-left: 2px;
+  border-radius: 50%;
+`;
+
 const TokenSelector: React.FC = () => {
   const { address } = useAccount();
   const { chain } = useNetwork();
@@ -102,9 +115,9 @@ const TokenSelector: React.FC = () => {
     <TokenSelectorWrapper>
       <Container ref={containerRef}>
         <DropdownButton onClick={() => setIsOpen(!isOpen)}>
-          <div style={{ display: "flex", alignItems: "center" }}>
+          <DropdownContent>
             {loading ? (
-              <Skeleton circle width={24} height={24} />
+              <StyledLogoSkeleton />
             ) : (
               sendingToken && (
                 <TokenLogo
@@ -114,13 +127,13 @@ const TokenSelector: React.FC = () => {
               )
             )}
             {loading ? (
-              <Skeleton width={80} height={20} style={{ marginLeft: 8 }} />
+              <Skeleton width={40} height={16} />
             ) : sendingToken ? (
               ownedTokens.find((token) => token.value === sendingToken)?.label
             ) : (
               "Select a token"
             )}
-          </div>
+          </DropdownContent>
           <DropdownArrow />
         </DropdownButton>
         {isOpen && (

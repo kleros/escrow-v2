@@ -9,7 +9,7 @@ export const useERC20TokenSymbol = (tokenAddress: string) => {
 
   useEffect(() => {
     const fetchTokenSymbol = async () => {
-      if (!tokenAddress) return;
+      if (!tokenAddress || tokenAddress === "native") return;
       const alchemy = new Alchemy(alchemyConfig(chain?.id));
       try {
         const metadata = await alchemy.core.getTokenMetadata(tokenAddress);

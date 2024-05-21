@@ -125,7 +125,11 @@ const DepositPaymentButton: React.FC = () => {
   });
 
   const { config: createERC20TransactionConfig } = usePrepareEscrowUniversalCreateErc20Transaction({
-    enabled: !isNativeTransaction && ethAddressPattern.test(finalRecipientAddress),
+    enabled:
+      !isNativeTransaction &&
+      !isUndefined(allowance) &&
+      allowance >= transactionValue &&
+      ethAddressPattern.test(finalRecipientAddress),
     args: [
       transactionValue,
       sendingToken,

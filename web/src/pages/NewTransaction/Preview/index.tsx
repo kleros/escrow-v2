@@ -1,11 +1,11 @@
 import React from "react";
 import styled from "styled-components";
+import { useAccount } from "wagmi";
+import { useNewTransactionContext } from "context/NewTransactionContext";
+import PreviewCard from "components/PreviewCard";
 import Header from "./Header";
 import NavigationButtons from "../NavigationButtons";
-import PreviewCard from "components/PreviewCard";
-import { useNewTransactionContext } from "context/NewTransactionContext";
 import { useNativeTokenSymbol } from "hooks/useNativeTokenSymbol";
-import { useAccount } from "wagmi";
 import { useERC20TokenSymbol } from "hooks/useERC20TokenSymbol";
 
 const Container = styled.div`
@@ -26,6 +26,7 @@ const Preview: React.FC = () => {
     deadline,
     extraDescriptionUri,
   } = useNewTransactionContext();
+  const isNativeTransaction = sendingToken === "native";
   const nativeTokenSymbol = useNativeTokenSymbol();
   const { erc20TokenSymbol } = useERC20TokenSymbol(sendingToken);
 
@@ -36,7 +37,7 @@ const Preview: React.FC = () => {
       <Header />
       <PreviewCard
         buyerAddress={address}
-        assetSymbol={sendingToken === "native" ? nativeTokenSymbol : erc20TokenSymbol}
+        assetSymbol={isNativeTransaction ? nativeTokenSymbol : erc20TokenSymbol}
         overrideIsList={false}
         isPreview={true}
         deadline={new Date(deadline).getTime()}
