@@ -25,7 +25,7 @@ const TokenAndAmount: React.FC<ITokenAndAmount> = ({ quantity, setQuantity }) =>
   const { sendingToken, setHasSufficientNativeBalance } = useNewTransactionContext();
   const { data: balanceData } = useBalance({
     address: address,
-    token: sendingToken === "native" ? undefined : sendingToken,
+    token: sendingToken?.address === "native" ? undefined : sendingToken?.address,
   });
   const [error, setError] = useState("");
 

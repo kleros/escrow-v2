@@ -10,8 +10,8 @@ export const initializeTokens = async (address: string, setTokens, setLoading, c
     const tokenList = balances.tokenBalances.map(async (token) => {
       const tokenInfo = await fetchTokenInfo(token.contractAddress, alchemyInstance);
       return {
-        label: tokenInfo.symbol,
-        value: token.contractAddress,
+        symbol: tokenInfo.symbol,
+        address: token.contractAddress,
         logo: tokenInfo.logo,
       };
     });
@@ -19,7 +19,7 @@ export const initializeTokens = async (address: string, setTokens, setLoading, c
     const customTokens = JSON.parse(localStorage.getItem("tokens")) || [];
     const combinedTokens = [
       ...allTokens,
-      ...customTokens.filter((ct) => !allTokens.some((token) => token.value === ct.value)),
+      ...customTokens.filter((customToken) => !allTokens.some((token) => token.address === customToken.address)),
     ];
     setTokens(combinedTokens);
     localStorage.setItem("tokens", JSON.stringify(combinedTokens));

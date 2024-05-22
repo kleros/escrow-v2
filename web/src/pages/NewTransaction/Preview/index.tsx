@@ -6,7 +6,6 @@ import PreviewCard from "components/PreviewCard";
 import Header from "./Header";
 import NavigationButtons from "../NavigationButtons";
 import { useNativeTokenSymbol } from "hooks/useNativeTokenSymbol";
-import { useERC20TokenSymbol } from "hooks/useERC20TokenSymbol";
 
 const Container = styled.div`
   display: flex;
@@ -26,9 +25,8 @@ const Preview: React.FC = () => {
     deadline,
     extraDescriptionUri,
   } = useNewTransactionContext();
-  const isNativeTransaction = sendingToken === "native";
+  const isNativeTransaction = sendingToken.address === "native";
   const nativeTokenSymbol = useNativeTokenSymbol();
-  const { erc20TokenSymbol } = useERC20TokenSymbol(sendingToken);
 
   const { address } = useAccount();
 
@@ -37,7 +35,7 @@ const Preview: React.FC = () => {
       <Header />
       <PreviewCard
         buyerAddress={address}
-        assetSymbol={isNativeTransaction ? nativeTokenSymbol : erc20TokenSymbol}
+        assetSymbol={isNativeTransaction ? nativeTokenSymbol : sendingToken.symbol}
         overrideIsList={false}
         isPreview={true}
         deadline={new Date(deadline).getTime()}

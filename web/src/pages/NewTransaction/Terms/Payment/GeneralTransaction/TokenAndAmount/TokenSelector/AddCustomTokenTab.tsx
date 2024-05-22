@@ -29,7 +29,7 @@ const AddCustomTokenTab: React.FC<IAddCustomTokenTab> = ({ setTokens, setActiveT
       }
 
       setTokens((prevTokens) => {
-        const newTokens = [...prevTokens, { label: info.symbol, value: customToken, logo: info.logo }];
+        const newTokens = [...prevTokens, { symbol: info.symbol, address: customToken, logo: info.logo }];
         localStorage.setItem("tokens", JSON.stringify(newTokens));
         return newTokens;
       });

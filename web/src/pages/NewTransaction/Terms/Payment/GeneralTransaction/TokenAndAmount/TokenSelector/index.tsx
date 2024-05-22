@@ -102,19 +102,19 @@ const TokenSelector: React.FC = () => {
 
   useEffect(() => {
     if (tokens.length > 0) {
-      const nativeToken = tokens.find((token) => token.value === "native");
-      setSendingToken(localStorage.getItem("selectedToken") || nativeToken.value);
+      const nativeToken = tokens.find((token) => token.address === "native");
+      setSendingToken(JSON.parse(localStorage.getItem("selectedToken")) || nativeToken);
     }
   }, [tokens]);
 
-  const handleSelectToken = (value: string) => {
-    setSendingToken(value);
-    localStorage.setItem("selectedToken", value);
+  const handleSelectToken = (token) => {
+    setSendingToken(token);
+    localStorage.setItem("selectedToken", JSON.stringify(token));
     setIsOpen(false);
   };
 
   const filteredTokens =
-    tokens && tokens.filter((token) => token?.label?.toLowerCase().includes(searchQuery?.toLowerCase()));
+    tokens && tokens.filter((token) => token?.symbol?.toLowerCase().includes(searchQuery?.toLowerCase()));
 
   return (
     <TokenSelectorWrapper>
@@ -124,20 +124,9 @@ const TokenSelector: React.FC = () => {
             {loading ? (
               <StyledLogoSkeleton />
             ) : (
-              sendingToken && (
-                <TokenLogo
-                  src={tokens.find((token) => token.value === sendingToken)?.logo}
-                  alt={`${sendingToken} logo`}
-                />
-              )
+              sendingToken && <TokenLogo src={sendingToken.logo} alt={`${sendingToken.symbol} logo`} />
             )}
-            {loading ? (
-              <Skeleton width={40} height={16} />
-            ) : sendingToken ? (
-              tokens.find((token) => token.value === sendingToken)?.label
-            ) : (
-              "Select a token"
-            )}
+            {loading ? <Skeleton width={40} height={16} /> : sendingToken ? sendingToken.symbol : "Select a token"}
           </DropdownContent>
           <DropdownArrow />
         </DropdownButton>

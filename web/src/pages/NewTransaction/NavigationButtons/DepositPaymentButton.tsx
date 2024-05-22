@@ -50,7 +50,7 @@ const DepositPaymentButton: React.FC = () => {
   const ensResult = useEnsAddress({ name: sellerAddress, chainId: 1 });
   const deadlineTimestamp = new Date(deadline).getTime();
   const timeoutPayment = (deadlineTimestamp - currentTime) / 1000;
-  const isNativeTransaction = sendingToken === "native";
+  const isNativeTransaction = sendingToken?.address === "native";
   const transactionValue = isNativeTransaction ? parseEther(sendingQuantity) : parseUnits(sendingQuantity, 18);
 
   useEffect(() => {
@@ -64,7 +64,7 @@ const DepositPaymentButton: React.FC = () => {
 
   const { data: allowance } = useContractRead({
     enabled: !isNativeTransaction,
-    address: sendingToken,
+    address: sendingToken?.address,
     abi: erc20ABI,
     functionName: "allowance",
     args: [address, escrowUniversalAddress?.[chain?.id]],
@@ -105,7 +105,7 @@ const DepositPaymentButton: React.FC = () => {
       buyer: address,
       seller: sellerAddress,
       amount: sendingQuantity,
-      token: isNativeTransaction ? "native" : sendingToken,
+      token: isNativeTransaction ? "native" : sendingToken?.address,
       timeoutPayment: timeoutPayment,
       transactionUri: transactionUri,
     },
@@ -132,7 +132,7 @@ const DepositPaymentButton: React.FC = () => {
       ethAddressPattern.test(finalRecipientAddress),
     args: [
       transactionValue,
-      sendingToken,
+      sendingToken?.address,
       BigInt(Math.floor(timeoutPayment)),
       transactionUri,
       finalRecipientAddress,
@@ -147,7 +147,7 @@ const DepositPaymentButton: React.FC = () => {
 
   const { config: approveConfig } = usePrepareContractWrite({
     enabled: !isNativeTransaction,
-    address: sendingToken,
+    address: sendingToken?.address,
     abi: erc20ABI,
     functionName: "approve",
     args: [escrowUniversalAddress?.[chain?.id], transactionValue],

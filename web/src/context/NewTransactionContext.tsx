@@ -23,8 +23,8 @@ interface INewTransactionContext {
   setSellerAddress: (address: string) => void;
   sendingQuantity: string;
   setSendingQuantity: (quantity: string) => void;
-  sendingToken: string;
-  setSendingToken: (token: string) => void;
+  sendingToken: { address: string; symbol: string };
+  setSendingToken: (token: { address: string; symbol: string }) => void;
   buyerAddress: string;
   setBuyerAddress: (address: string) => void;
   deadline: string;
@@ -61,7 +61,7 @@ const NewTransactionContext = createContext<INewTransactionContext>({
   setSellerAddress: () => {},
   sendingQuantity: "",
   setSendingQuantity: () => {},
-  sendingToken: "",
+  sendingToken: { address: "", symbol: "" },
   setSendingToken: () => {},
   buyerAddress: "",
   setBuyerAddress: () => {},
@@ -93,7 +93,9 @@ export const NewTransactionProvider: React.FC<{ children: React.ReactNode }> = (
   const [receivingToken, setReceivingToken] = useState<string>(localStorage.getItem("receivingToken") || "");
   const [sellerAddress, setSellerAddress] = useState<string>(localStorage.getItem("sellerAddress") || "");
   const [sendingQuantity, setSendingQuantity] = useState<string>(localStorage.getItem("sendingQuantity") || "");
-  const [sendingToken, setSendingToken] = useState<string>(localStorage.getItem("sendingToken") || "");
+  const [sendingToken, setSendingToken] = useState<{ address: string; symbol: string }>(
+    JSON.parse(localStorage.getItem("sendingToken")) || { address: "", symbol: "" }
+  );
   const [buyerAddress, setBuyerAddress] = useState<string>(localStorage.getItem("buyerAddress") || "");
   const [isRecipientAddressResolved, setIsRecipientAddressResolved] = useState(false);
   const [deadline, setDeadline] = useState<string>(localStorage.getItem("deadline") || "");
@@ -111,7 +113,7 @@ export const NewTransactionProvider: React.FC<{ children: React.ReactNode }> = (
     setReceivingToken("");
     setSellerAddress("");
     setSendingQuantity("");
-    setSendingToken("");
+    setSendingToken({ address: "", symbol: "" });
     setBuyerAddress("");
     setDeadline("");
     setNotificationEmail("");
@@ -128,7 +130,7 @@ export const NewTransactionProvider: React.FC<{ children: React.ReactNode }> = (
     localStorage.setItem("receivingToken", receivingToken);
     localStorage.setItem("buyerAddress", buyerAddress);
     localStorage.setItem("sendingQuantity", sendingQuantity);
-    localStorage.setItem("sendingToken", sendingToken);
+    localStorage.setItem("sendingToken", JSON.stringify(sendingToken));
     localStorage.setItem("sellerAddress", sellerAddress);
     localStorage.setItem("deadline", deadline);
     localStorage.setItem("notificationEmail", notificationEmail);

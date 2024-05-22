@@ -1,7 +1,7 @@
 export const fetchNativeToken = (chain) => {
   return {
-    label: chain?.nativeCurrency?.symbol || "Native Token",
-    value: "native",
+    symbol: chain?.nativeCurrency?.symbol || "Native Token",
+    address: "native",
     logo: "https://assets.coingecko.com/coins/images/279/thumb/ethereum.png",
   };
 };
