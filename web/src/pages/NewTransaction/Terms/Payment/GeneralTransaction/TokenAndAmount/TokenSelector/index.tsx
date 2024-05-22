@@ -3,12 +3,11 @@ import styled from "styled-components";
 import Skeleton from "react-loading-skeleton";
 import { useClickAway } from "react-use";
 import { Tabs } from "@kleros/ui-components-library";
-import { useAccount, useNetwork } from "wagmi";
 import { Alchemy } from "alchemy-sdk";
-import alchemyConfig from "utils/alchemyConfig";
+import { useAccount, useNetwork } from "wagmi";
 import { useNewTransactionContext } from "context/NewTransactionContext";
-import { fetchNativeToken } from "utils/fetchNativeToken";
-import { fetchOwnedTokensFromAlchemy } from "utils/fetchOwnedTokensFromAlchemy";
+import { initializeTokens } from "utils/initializeTokens";
+import { alchemyConfig } from "utils/alchemyConfig";
 import { Overlay } from "components/Overlay";
 import TokensTab from "./TokensTab";
 import AddCustomTokenTab from "./AddCustomTokenTab";
@@ -86,30 +85,36 @@ const TokenSelector: React.FC = () => {
   const { address } = useAccount();
   const { chain } = useNetwork();
   const { sendingToken, setSendingToken } = useNewTransactionContext();
-  const [ownedTokens, setOwnedTokens] = useLocalStorage<any[]>("ownedTokens", []);
+  const [tokens, setTokens] = useLocalStorage<any[]>("tokens", []);
   const [isOpen, setIsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("tokens");
   const [searchQuery, setSearchQuery] = useState("");
   const containerRef = useRef(null);
   const [loading, setLoading] = useState(true);
-  const alchemy = new Alchemy(alchemyConfig(chain?.id));
+  const alchemyInstance = new Alchemy(alchemyConfig(chain?.id));
   useClickAway(containerRef, () => setIsOpen(false));
 
   useEffect(() => {
     if (address && chain) {
-      fetchOwnedTokensFromAlchemy(alchemy, address, setOwnedTokens, setLoading, chain);
-      setSendingToken(fetchNativeToken(chain).value);
+      initializeTokens(address, setTokens, setLoading, chain, alchemyInstance);
     }
   }, [address, chain]);
 
+  useEffect(() => {
+    if (tokens.length > 0) {
+      const nativeToken = tokens.find((token) => token.value === "native");
+      setSendingToken(localStorage.getItem("selectedToken") || nativeToken.value);
+    }
+  }, [tokens]);
+
   const handleSelectToken = (value: string) => {
     setSendingToken(value);
+    localStorage.setItem("selectedToken", value);
     setIsOpen(false);
   };
 
-  const filteredTokens = ownedTokens.filter((token) =>
-    token?.label?.toLowerCase().includes(searchQuery?.toLowerCase())
-  );
+  const filteredTokens =
+    tokens && tokens.filter((token) => token?.label?.toLowerCase().includes(searchQuery?.toLowerCase()));
 
   return (
     <TokenSelectorWrapper>
@@ -121,7 +126,7 @@ const TokenSelector: React.FC = () => {
             ) : (
               sendingToken && (
                 <TokenLogo
-                  src={ownedTokens.find((token) => token.value === sendingToken)?.logo}
+                  src={tokens.find((token) => token.value === sendingToken)?.logo}
                   alt={`${sendingToken} logo`}
                 />
               )
@@ -129,7 +134,7 @@ const TokenSelector: React.FC = () => {
             {loading ? (
               <Skeleton width={40} height={16} />
             ) : sendingToken ? (
-              ownedTokens.find((token) => token.value === sendingToken)?.label
+              tokens.find((token) => token.value === sendingToken)?.label
             ) : (
               "Select a token"
             )}
@@ -157,7 +162,11 @@ const TokenSelector: React.FC = () => {
                 />
               )}
               {activeTab === "addCustomToken" && (
-                <AddCustomTokenTab setOwnedTokens={setOwnedTokens} setActiveTab={setActiveTab} alchemy={alchemy} />
+                <AddCustomTokenTab
+                  setTokens={setTokens}
+                  setActiveTab={setActiveTab}
+                  alchemyInstance={alchemyInstance}
+                />
               )}
             </StyledModal>
           </>

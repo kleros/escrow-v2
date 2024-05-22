@@ -1,15 +1,16 @@
 import React, { useState } from "react";
 import { Button, Field } from "@kleros/ui-components-library";
+import { Alchemy } from "alchemy-sdk";
 import { fetchTokenInfo } from "utils/fetchTokenInfo";
 import { validateAddress } from "utils/validateAddress";
 
 interface IAddCustomTokenTab {
-  setOwnedTokens: (tokens: any[]) => void;
+  setTokens: (tokens: any[]) => void;
   setActiveTab: (tab: string) => void;
-  alchemy: any;
+  alchemyInstance: Alchemy;
 }
 
-const AddCustomTokenTab: React.FC<IAddCustomTokenTab> = ({ setOwnedTokens, setActiveTab, alchemy }) => {
+const AddCustomTokenTab: React.FC<IAddCustomTokenTab> = ({ setTokens, setActiveTab, alchemyInstance }) => {
   const [customToken, setCustomToken] = useState<string>("");
   const [customTokenError, setCustomTokenError] = useState<string>("");
 
@@ -22,14 +23,14 @@ const AddCustomTokenTab: React.FC<IAddCustomTokenTab> = ({ setOwnedTokens, setAc
 
   const handleAddCustomToken = async () => {
     try {
-      const info = await fetchTokenInfo(alchemy, customToken);
+      const info = await fetchTokenInfo(customToken, alchemyInstance);
       if (info.symbol === "Unknown") {
         throw new Error("Token information not found");
       }
 
-      setOwnedTokens((prevTokens) => {
+      setTokens((prevTokens) => {
         const newTokens = [...prevTokens, { label: info.symbol, value: customToken, logo: info.logo }];
-        localStorage.setItem("ownedTokens", JSON.stringify(newTokens));
+        localStorage.setItem("tokens", JSON.stringify(newTokens));
         return newTokens;
       });
       setCustomToken("");

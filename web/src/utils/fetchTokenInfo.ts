@@ -1,6 +1,8 @@
-export const fetchTokenInfo = async (alchemy, address: string) => {
+import { Alchemy } from "alchemy-sdk";
+
+export const fetchTokenInfo = async (address: string, alchemyInstance: Alchemy) => {
   try {
-    const metadata = await alchemy.core.getTokenMetadata(address);
+    const metadata = await alchemyInstance.core.getTokenMetadata(address);
     return {
       symbol: metadata.symbol?.toUpperCase() || "Unknown",
       logo: metadata.logo || "https://via.placeholder.com/24",

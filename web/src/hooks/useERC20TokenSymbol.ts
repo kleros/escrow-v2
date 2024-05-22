@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Alchemy } from "alchemy-sdk";
 import { useNetwork } from "wagmi";
-import alchemyConfig from "utils/alchemyConfig";
+import { alchemyConfig } from "utils/alchemyConfig";
 
 export const useERC20TokenSymbol = (tokenAddress: string) => {
   const { chain } = useNetwork();
