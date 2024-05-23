@@ -2,15 +2,13 @@ import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import Skeleton from "react-loading-skeleton";
 import { useClickAway } from "react-use";
-import { Tabs } from "@kleros/ui-components-library";
+import { Searchbar } from "@kleros/ui-components-library";
 import { Alchemy } from "alchemy-sdk";
 import { useAccount, useNetwork } from "wagmi";
 import { useNewTransactionContext } from "context/NewTransactionContext";
 import { initializeTokens } from "utils/initializeTokens";
 import { alchemyConfig } from "utils/alchemyConfig";
 import { Overlay } from "components/Overlay";
-import TokensTab from "./TokensTab";
-import AddCustomTokenTab from "./AddCustomTokenTab";
 import { StyledModal } from "pages/MyTransactions/Modal/StyledModal";
 import { useLocalStorage } from "hooks/useLocalStorage";
 
@@ -48,15 +46,25 @@ const DropdownArrow = styled.span`
   margin-left: 8px;
 `;
 
-export const Item = styled.div`
+export const Item = styled.div<{ selected: boolean }>`
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 8px;
+  padding: 10px 16px;
   cursor: pointer;
   &:hover {
-    background: ${({ theme }) => theme.mediumBlue};
+    background: ${({ theme }) => theme.lightBlue};
   }
+  ${({ selected, theme }) =>
+    selected &&
+    `
+    background: ${theme.mediumBlue};
+    border-left: 3px solid ${theme.primaryBlue};
+    padding-left: 13px;
+    &:hover {
+      background: ${theme.mediumBlue};
+    }
+  `}
 `;
 
 export const TokenLogo = styled.img`
@@ -81,13 +89,40 @@ const StyledLogoSkeleton = styled(Skeleton)`
   border-radius: 50%;
 `;
 
-const TokenSelector: React.FC = () => {
+const ReStyledModal = styled(StyledModal)`
+  display: flex;
+  width: 500px;
+`;
+
+const StyledSearchbar = styled(Searchbar)`
+  width: 100%;
+  input {
+    font-size: 16px;
+  }
+`;
+
+const ItemsContainer = styled.div`
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  margin-top: 24px;
+`;
+
+const StyledP = styled.p`
+  display: flex;
+  align-self: flex-start;
+  font-weight: 600;
+  margin: 0;
+  margin-bottom: 28px;
+`;
+
+const TokenSelector = () => {
   const { address } = useAccount();
   const { chain } = useNetwork();
   const { sendingToken, setSendingToken } = useNewTransactionContext();
-  const [tokens, setTokens] = useLocalStorage<any[]>("tokens", []);
+  const [tokens, setTokens] = useLocalStorage("tokens", []);
+  const [filteredTokens, setFilteredTokens] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState("tokens");
   const [searchQuery, setSearchQuery] = useState("");
   const containerRef = useRef(null);
   const [loading, setLoading] = useState(true);
@@ -101,11 +136,11 @@ const TokenSelector: React.FC = () => {
   }, [address, chain]);
 
   useEffect(() => {
-    if (tokens.length > 0) {
+    if (tokens?.length > 0) {
       const nativeToken = tokens.find((token) => token.address === "native");
       setSendingToken(JSON.parse(localStorage.getItem("selectedToken")) || nativeToken);
     }
-  }, [tokens]);
+  }, [tokens, setSendingToken]);
 
   const handleSelectToken = (token) => {
     setSendingToken(token);
@@ -113,8 +148,44 @@ const TokenSelector: React.FC = () => {
     setIsOpen(false);
   };
 
-  const filteredTokens =
-    tokens && tokens.filter((token) => token?.symbol?.toLowerCase().includes(searchQuery?.toLowerCase()));
+  const handleSearch = async (query) => {
+    setSearchQuery(query);
+
+    if (!query) {
+      setFilteredTokens(tokens);
+      return;
+    }
+
+    const isAddress = query.startsWith("0x") && query.length === 42;
+    if (isAddress) {
+      try {
+        const metadata = await alchemyInstance.core.getTokenMetadata(query.toLowerCase());
+        const resultToken = {
+          symbol: metadata.symbol,
+          address: query.toLowerCase(),
+          logo: metadata.logo || "https://via.placeholder.com/24",
+        };
+
+        const updatedTokens = [...tokens, resultToken];
+        const uniqueTokens = Array.from(new Set(updatedTokens.map((a) => a.address))).map((address) => {
+          return updatedTokens.find((a) => a.address === address);
+        });
+
+        setFilteredTokens([resultToken]);
+        setTokens(uniqueTokens);
+        localStorage.setItem("tokens", JSON.stringify(uniqueTokens));
+      } catch (error) {
+        console.error("Error fetching token info:", error);
+      }
+    } else {
+      const filteredTokens = tokens.filter((token) => token.symbol.toLowerCase().includes(query.toLowerCase()));
+      setFilteredTokens(filteredTokens);
+    }
+  };
+
+  const tokensToDisplay = searchQuery
+    ? filteredTokens
+    : [sendingToken, ...tokens.filter((token) => token.address !== sendingToken?.address)];
 
   return (
     <TokenSelectorWrapper>
@@ -126,38 +197,33 @@ const TokenSelector: React.FC = () => {
             ) : (
               sendingToken && <TokenLogo src={sendingToken.logo} alt={`${sendingToken.symbol} logo`} />
             )}
-            {loading ? <Skeleton width={40} height={16} /> : sendingToken ? sendingToken.symbol : "Select a token"}
+            {loading ? <Skeleton width={40} height={16} /> : sendingToken?.symbol}
           </DropdownContent>
           <DropdownArrow />
         </DropdownButton>
         {isOpen && (
           <>
             <Overlay />
-            <StyledModal ref={containerRef}>
-              <Tabs
-                items={[
-                  { text: "Tokens", value: "tokens" },
-                  { text: "Add Custom Token", value: "addCustomToken" },
-                ]}
-                callback={setActiveTab}
-                currentValue={activeTab}
+            <ReStyledModal ref={containerRef}>
+              <StyledP>Select a token</StyledP>
+              <StyledSearchbar
+                placeholder="Search by name or paste address"
+                value={searchQuery}
+                onChange={(e) => handleSearch(e.target.value)}
               />
-              {activeTab === "tokens" && (
-                <TokensTab
-                  searchQuery={searchQuery}
-                  setSearchQuery={setSearchQuery}
-                  filteredTokens={filteredTokens}
-                  handleSelectToken={handleSelectToken}
-                />
-              )}
-              {activeTab === "addCustomToken" && (
-                <AddCustomTokenTab
-                  setTokens={setTokens}
-                  setActiveTab={setActiveTab}
-                  alchemyInstance={alchemyInstance}
-                />
-              )}
-            </StyledModal>
+              <ItemsContainer>
+                {tokensToDisplay?.map((token) => (
+                  <Item
+                    key={token.address}
+                    onClick={() => handleSelectToken(token)}
+                    selected={sendingToken?.address === token.address}
+                  >
+                    <TokenLogo src={token.logo} alt={`${token?.symbol} logo`} />
+                    <TokenLabel>{token.symbol}</TokenLabel>
+                  </Item>
+                ))}
+              </ItemsContainer>
+            </ReStyledModal>
           </>
         )}
       </Container>
