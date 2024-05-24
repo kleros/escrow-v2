@@ -28,7 +28,7 @@ const TokenSelectorWrapper = styled.div`
 const DropdownButton = styled.div`
   border: 1px solid ${({ theme }) => theme.stroke};
   border-radius: 3px;
-  padding: 8px;
+  padding: 9.5px 8px;
   cursor: pointer;
   background: ${({ theme }) => theme.whiteBackground};
   color: ${({ theme }) => theme.primaryText};
