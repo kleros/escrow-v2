@@ -23,6 +23,7 @@ import { parseEther, parseUnits } from "viem";
 import { isUndefined } from "utils/index";
 import { wrapWithToast } from "utils/wrapWithToast";
 import { ethAddressPattern } from "utils/validateAddress";
+import { useQueryRefetch } from "hooks/useQueryRefetch";
 
 const StyledButton = styled(Button)``;
 
@@ -43,6 +44,7 @@ const DepositPaymentButton: React.FC = () => {
   const [finalRecipientAddress, setFinalRecipientAddress] = useState(sellerAddress);
   const publicClient = usePublicClient();
   const navigate = useNavigate();
+  const refetchQuery = useQueryRefetch();
   const [isSending, setIsSending] = useState(false);
   const [isApproved, setIsApproved] = useState(false);
   const { address } = useAccount();
@@ -183,6 +185,7 @@ const DepositPaymentButton: React.FC = () => {
           publicClient
         );
         if (wrapResult.status) {
+          refetchQuery([["refetchOnBlock", "useMyTransactionsQuery"], ["useUserQuery"]]);
           resetContext();
           navigate("/my-transactions/display/1/desc/all");
         }

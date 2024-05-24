@@ -7,12 +7,14 @@ import { isUndefined } from "utils/index";
 import { wrapWithToast } from "utils/wrapWithToast";
 import { usePublicClient } from "wagmi";
 import { useTransactionDetailsContext } from "context/TransactionDetailsContext";
+import { useQueryRefetch } from "hooks/useQueryRefetch";
 
 const ReleasePaymentButton: React.FC = () => {
   const [isModalOpen, toggleModal] = useToggle(false);
   const [isSending, setIsSending] = useState<boolean>(false);
   const publicClient = usePublicClient();
   const { id, amount } = useTransactionDetailsContext();
+  const refetchQuery = useQueryRefetch();
 
   const { config: releaseFullPaymentConfig } = usePrepareEscrowUniversalPay({
     args: [id, amount],
@@ -27,6 +29,7 @@ const ReleasePaymentButton: React.FC = () => {
         .then((wrapResult) => {
           if (wrapResult.status) {
             toggleModal();
+            refetchQuery([["refetchOnBlock", "useTransactionDetailsQuery"]]);
           }
         })
         .catch((error) => {

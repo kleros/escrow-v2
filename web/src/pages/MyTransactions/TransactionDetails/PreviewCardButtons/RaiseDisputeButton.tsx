@@ -10,6 +10,7 @@ import {
 import { isUndefined } from "utils/index";
 import { wrapWithToast } from "utils/wrapWithToast";
 import { useTransactionDetailsContext } from "context/TransactionDetailsContext";
+import { useQueryRefetch } from "hooks/useQueryRefetch";
 
 interface IRaiseDisputeButton {
   toggleModal?: () => void;
@@ -23,6 +24,7 @@ const RaiseDisputeButton: React.FC<IRaiseDisputeButton> = ({ toggleModal, button
   const publicClient = usePublicClient();
   const { buyer, id } = useTransactionDetailsContext();
   const isBuyer = useMemo(() => address?.toLowerCase() === buyer?.toLowerCase(), [address, buyer]);
+  const refetchQuery = useQueryRefetch();
 
   const { config: payArbitrationFeeByBuyerConfig } = usePrepareEscrowUniversalPayArbitrationFeeByBuyer({
     args: [BigInt(id)],
@@ -34,17 +36,20 @@ const RaiseDisputeButton: React.FC<IRaiseDisputeButton> = ({ toggleModal, button
     value: arbitrationCost,
   });
 
-  const { writeAsync: payArbitrationFeeByBuyer } = useEscrowUniversalPayArbitrationFeeByBuyer(payArbitrationFeeByBuyerConfig);
-  const { writeAsync: payArbitrationFeeBySeller } = useEscrowUniversalPayArbitrationFeeBySeller(payArbitrationFeeBySellerConfig);
+  const { writeAsync: payArbitrationFeeByBuyer } =
+    useEscrowUniversalPayArbitrationFeeByBuyer(payArbitrationFeeByBuyerConfig);
+  const { writeAsync: payArbitrationFeeBySeller } = useEscrowUniversalPayArbitrationFeeBySeller(
+    payArbitrationFeeBySellerConfig
+  );
 
   const handleRaiseDispute = () => {
     if (isBuyer && !isUndefined(payArbitrationFeeByBuyer)) {
       setIsSending(true);
       wrapWithToast(async () => await payArbitrationFeeByBuyer().then((response) => response.hash), publicClient)
         .then((wrapResult) => {
-          if (wrapResult.status && toggleModal) {
-            toggleModal();
-          } else if (wrapResult.status) {
+          if (wrapResult.status) {
+            toggleModal && toggleModal();
+            refetchQuery([["refetchOnBlock", "useTransactionDetailsQuery"]]);
           } else {
             setIsSending(false);
           }
@@ -57,9 +62,9 @@ const RaiseDisputeButton: React.FC<IRaiseDisputeButton> = ({ toggleModal, button
       setIsSending(true);
       wrapWithToast(async () => await payArbitrationFeeBySeller().then((response) => response.hash), publicClient)
         .then((wrapResult) => {
-          if (wrapResult.status && toggleModal) {
-            toggleModal();
-          } else if (wrapResult.status) {
+          if (wrapResult.status) {
+            toggleModal && toggleModal();
+            refetchQuery([["refetchOnBlock", "useTransactionDetailsQuery"]]);
           } else {
             setIsSending(false);
           }
