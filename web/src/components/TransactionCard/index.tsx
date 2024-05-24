@@ -11,8 +11,8 @@ import TransactionInfo from "../TransactionInfo";
 import StatusBanner from "./StatusBanner";
 import { useNavigateAndScrollTop } from "hooks/useNavigateAndScrollTop";
 import { useNativeTokenSymbol } from "hooks/useNativeTokenSymbol";
-import { useERC20TokenSymbol } from "hooks/useERC20TokenSymbol";
 import useFetchIpfsJson from "hooks/useFetchIpfsJson";
+import { useTokenMetadata } from "hooks/useTokenMetadata";
 import { TransactionDetailsFragment } from "src/graphql/graphql";
 
 const StyledCard = styled(Card)`
@@ -70,7 +70,8 @@ const TransactionCard: React.FC<ITransactionCard> = ({
   const transactionInfo = useFetchIpfsJson(transactionUri);
   const { isList } = useIsList();
   const nativeTokenSymbol = useNativeTokenSymbol();
-  const { erc20TokenSymbol } = useERC20TokenSymbol(token);
+  const { tokenMetadata } = useTokenMetadata(token);
+  const erc20TokenSymbol = tokenMetadata?.symbol;
   const title = transactionInfo?.title;
   const navigateAndScrollTop = useNavigateAndScrollTop();
 

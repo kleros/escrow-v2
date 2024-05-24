@@ -1,7 +1,9 @@
+import EthTokenIcon from "svgs/icons/eth-token-icon.png";
+
 export const fetchNativeToken = (chain) => {
   return {
-    symbol: chain?.nativeCurrency?.symbol || "Native Token",
+    symbol: chain?.nativeCurrency?.symbol,
     address: "native",
-    logo: "https://assets.coingecko.com/coins/images/279/thumb/ethereum.png",
+    logo: EthTokenIcon,
   };
 };

@@ -12,8 +12,8 @@ import { useEscrowParametersQuery } from "queries/useEscrowParametersQuery";
 import { useTransactionDetailsQuery } from "queries/useTransactionsQuery";
 import { useArbitrationCost } from "queries/useArbitrationCostFromKlerosCore";
 import { useNativeTokenSymbol } from "hooks/useNativeTokenSymbol";
-import { useERC20TokenSymbol } from "hooks/useERC20TokenSymbol";
 import useFetchIpfsJson from "hooks/useFetchIpfsJson";
+import { useTokenMetadata } from "hooks/useTokenMetadata";
 
 const Container = styled.div``;
 
@@ -33,7 +33,8 @@ const TransactionDetails: React.FC = () => {
   const { data: escrowParameters } = useEscrowParametersQuery();
   const { arbitrationCost } = useArbitrationCost(escrowParameters?.escrowParameters?.arbitratorExtraData);
   const nativeTokenSymbol = useNativeTokenSymbol();
-  const { erc20TokenSymbol } = useERC20TokenSymbol(transactionDetails?.escrow?.token);
+  const { tokenMetadata } = useTokenMetadata(transactionDetails?.escrow?.token);
+  const erc20TokenSymbol = tokenMetadata?.symbol;
   const { setTransactionDetails } = useTransactionDetailsContext();
 
   const {
