@@ -1,4 +1,5 @@
 import { Alchemy } from "alchemy-sdk";
+import { IToken } from "context/NewTransactionContext";
 import { fetchNativeToken } from "./fetchNativeToken";
 import { fetchTokenInfo } from "./fetchTokenInfo";
 
@@ -12,9 +13,9 @@ export const initializeTokens = async (address: string, setTokens, setLoading, c
         const tokenInfo = await fetchTokenInfo(token.contractAddress, alchemyInstance);
         return {
           symbol: tokenInfo.symbol,
-          address: token.contractAddress,
+          address: tokenInfo.address,
           logo: tokenInfo.logo,
-        };
+        } as IToken;
       })
     );
     const allTokens = [nativeToken, ...tokenList];

@@ -1,18 +1,33 @@
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
+import React, { useMemo, useState, useEffect } from "react";
+import styled, { css } from "styled-components";
+import { landscapeStyle } from "styles/landscapeStyle";
+import { responsiveSize } from "styles/responsiveSize";
 import { useBalance, useAccount } from "wagmi";
 import { useNewTransactionContext } from "context/NewTransactionContext";
-import { responsiveSize } from "styles/responsiveSize";
+import { getFormattedBalance } from "utils/getFormattedBalance";
 import AmountField from "./AmountField";
 import TokenSelector from "./TokenSelector";
+import MaxBalance from "./MaxBalance";
 
 const Container = styled.div`
   display: flex;
   flex-direction: row;
+  justify-content: center;
   gap: 24px;
-  align-items: center;
-  margin-bottom: ${responsiveSize(24, 18)};
-  margin-left: 36px;
+  margin-bottom: ${responsiveSize(16, 0)};
+  flex-wrap: wrap;
+
+  ${landscapeStyle(
+    () => css`
+      margin-left: 24px;
+    `
+  )}
+`;
+
+const TokenSelectorAndMaxBalance = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 `;
 
 interface ITokenAndAmount {
@@ -45,10 +60,19 @@ const TokenAndAmount: React.FC<ITokenAndAmount> = ({ quantity, setQuantity }) =>
     }
   }, [balanceData, quantity, setHasSufficientNativeBalance]);
 
+  const formattedBalance = useMemo(() => getFormattedBalance(balanceData, sendingToken), [balanceData, sendingToken]);
+
   return (
     <Container>
       <AmountField quantity={quantity} setQuantity={setQuantity} error={error} />
-      <TokenSelector />
+      <TokenSelectorAndMaxBalance>
+        <TokenSelector />
+        <MaxBalance
+          formattedBalance={formattedBalance}
+          rawBalance={parseFloat(balanceData?.formatted)}
+          setQuantity={setQuantity}
+        />
+      </TokenSelectorAndMaxBalance>
     </Container>
   );
 };

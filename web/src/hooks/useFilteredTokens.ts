@@ -1,8 +1,14 @@
 import { useEffect, useState } from "react";
 import { useTokenMetadata } from "./useTokenMetadata";
+import { IToken } from "context/NewTransactionContext";
 import EthTokenIcon from "svgs/icons/eth-token-icon.png";
 
-export const useFilteredTokens = (searchQuery: string, tokens, setTokens, sendingToken) => {
+export const useFilteredTokens = (
+  searchQuery: string,
+  tokens: IToken[],
+  setTokens: (tokens: IToken) => void,
+  sendingToken: IToken
+) => {
   const { tokenMetadata } = useTokenMetadata(
     searchQuery.startsWith("0x") && searchQuery.length === 42 ? searchQuery : null
   );

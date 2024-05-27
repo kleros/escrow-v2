@@ -1,5 +1,11 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
 
+export interface IToken {
+  symbol: string;
+  address: string;
+  logo: string;
+}
+
 interface INewTransactionContext {
   escrowType: string;
   setEscrowType: (type: string) => void;
@@ -23,8 +29,8 @@ interface INewTransactionContext {
   setSellerAddress: (address: string) => void;
   sendingQuantity: string;
   setSendingQuantity: (quantity: string) => void;
-  sendingToken: { address: string; symbol: string };
-  setSendingToken: (token: { address: string; symbol: string }) => void;
+  sendingToken: IToken;
+  setSendingToken: (token: IToken) => void;
   buyerAddress: string;
   setBuyerAddress: (address: string) => void;
   deadline: string;
@@ -61,7 +67,7 @@ const NewTransactionContext = createContext<INewTransactionContext>({
   setSellerAddress: () => {},
   sendingQuantity: "",
   setSendingQuantity: () => {},
-  sendingToken: { address: "", symbol: "" },
+  sendingToken: { address: "native", symbol: "", logo: "" },
   setSendingToken: () => {},
   buyerAddress: "",
   setBuyerAddress: () => {},
@@ -93,8 +99,8 @@ export const NewTransactionProvider: React.FC<{ children: React.ReactNode }> = (
   const [receivingToken, setReceivingToken] = useState<string>(localStorage.getItem("receivingToken") || "");
   const [sellerAddress, setSellerAddress] = useState<string>(localStorage.getItem("sellerAddress") || "");
   const [sendingQuantity, setSendingQuantity] = useState<string>(localStorage.getItem("sendingQuantity") || "");
-  const [sendingToken, setSendingToken] = useState<{ address: string; symbol: string }>(
-    JSON.parse(localStorage.getItem("sendingToken")) || { address: "", symbol: "" }
+  const [sendingToken, setSendingToken] = useState<IToken>(
+    JSON.parse(localStorage.getItem("sendingToken")) || { address: "native", symbol: "", logo: "" }
   );
   const [buyerAddress, setBuyerAddress] = useState<string>(localStorage.getItem("buyerAddress") || "");
   const [isRecipientAddressResolved, setIsRecipientAddressResolved] = useState(false);
@@ -113,7 +119,7 @@ export const NewTransactionProvider: React.FC<{ children: React.ReactNode }> = (
     setReceivingToken("");
     setSellerAddress("");
     setSendingQuantity("");
-    setSendingToken({ address: "", symbol: "" });
+    setSendingToken({ address: "native", symbol: "", logo: "" });
     setBuyerAddress("");
     setDeadline("");
     setNotificationEmail("");

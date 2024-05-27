@@ -34,7 +34,7 @@ const AmountField: React.FC<IAmountField> = ({ quantity, setQuantity, error }) =
       value={quantity}
       onChange={handleWrite}
       type="number"
-      placeholder="eg. 3.6"
+      placeholder="Amount"
       variant={error ? "error" : undefined}
       message={error}
     />

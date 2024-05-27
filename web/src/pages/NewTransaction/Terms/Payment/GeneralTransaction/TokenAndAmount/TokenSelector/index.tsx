@@ -17,7 +17,7 @@ const Container = styled.div`
   position: relative;
 `;
 
-const TokenSelector = () => {
+const TokenSelector: React.FC = () => {
   const { address } = useAccount();
   const { chain } = useNetwork();
   const { sendingToken, setSendingToken } = useNewTransactionContext();
