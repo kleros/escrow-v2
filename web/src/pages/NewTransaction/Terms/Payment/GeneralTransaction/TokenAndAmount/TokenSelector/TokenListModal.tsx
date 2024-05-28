@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { useClickAway } from "react-use";
 import { Searchbar } from "@kleros/ui-components-library";
 import { useNewTransactionContext } from "context/NewTransactionContext";
@@ -7,10 +7,17 @@ import { Overlay } from "components/Overlay";
 import TokenItem from "./TokenItem";
 import { StyledModal } from "pages/MyTransactions/Modal/StyledModal";
 import { useFilteredTokens } from "hooks/useFilteredTokens";
+import { landscapeStyle } from "styles/landscapeStyle";
+import { responsiveSize } from "styles/responsiveSize";
 
 const ReStyledModal = styled(StyledModal)`
   display: flex;
-  width: 500px;
+  width: ${responsiveSize(320, 500)};
+  ${landscapeStyle(
+    () => css`
+      width: 500px;
+    `
+  )}
 `;
 
 const StyledSearchbar = styled(Searchbar)`

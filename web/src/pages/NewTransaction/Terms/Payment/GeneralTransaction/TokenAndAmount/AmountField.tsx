@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { Field } from "@kleros/ui-components-library";
 
 const StyledField = styled(Field)`
-  width: 132px;
+  width: 186px;
   input[type="number"]::-webkit-inner-spin-button,
   input[type="number"]::-webkit-outer-spin-button {
     -webkit-appearance: none;
@@ -15,6 +15,7 @@ const StyledField = styled(Field)`
 
   input {
     font-size: 16px;
+    padding-right: ${({ variant }) => (variant ? "40px" : "16px")};
   }
 `;
 

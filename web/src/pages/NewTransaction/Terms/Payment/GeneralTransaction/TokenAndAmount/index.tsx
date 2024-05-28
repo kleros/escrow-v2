@@ -16,12 +16,6 @@ const Container = styled.div`
   gap: 24px;
   margin-bottom: ${responsiveSize(16, 0)};
   flex-wrap: wrap;
-
-  ${landscapeStyle(
-    () => css`
-      margin-left: 24px;
-    `
-  )}
 `;
 
 const TokenSelectorAndMaxBalance = styled.div`
