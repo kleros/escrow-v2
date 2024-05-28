@@ -9,6 +9,7 @@ import {
   usePrepareEscrowUniversalProposeSettlement,
   useEscrowUniversalProposeSettlement,
 } from "hooks/contracts/generated";
+import { useQueryRefetch } from "hooks/useQueryRefetch";
 
 interface IProposeSettlementButton {
   toggleModal?: () => void;
@@ -26,6 +27,7 @@ const ProposeSettlementButton: React.FC<IProposeSettlementButton> = ({
   const [isSending, setIsSending] = useState<boolean>(false);
   const publicClient = usePublicClient();
   const { id } = useTransactionDetailsContext();
+  const refetchQuery = useQueryRefetch();
 
   const { config: proposeSettlementConfig } = usePrepareEscrowUniversalProposeSettlement({
     args: [BigInt(id), parseEther(amountProposed)],
@@ -38,9 +40,9 @@ const ProposeSettlementButton: React.FC<IProposeSettlementButton> = ({
       setIsSending(true);
       wrapWithToast(async () => await proposeSettlement().then((response) => response.hash), publicClient)
         .then((wrapResult) => {
-          if (wrapResult.status && toggleModal) {
-            toggleModal();
-          } else if (wrapResult.status) {
+          if (wrapResult.status) {
+            toggleModal && toggleModal();
+            refetchQuery([["refetchOnBlock", "useTransactionDetailsQuery"]]);
           } else {
             setIsSending(false);
           }

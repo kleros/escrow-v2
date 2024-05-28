@@ -8,6 +8,10 @@ const StyledP = styled.p`
   word-break: break-word;
 `;
 
+const InlineBlockSpan = styled.span`
+  display: inline-block;
+`;
+
 interface IDescription {
   escrowType: string;
   deliverableText: string;
@@ -17,7 +21,7 @@ interface IDescription {
   sendingQuantity: string;
   sendingToken: string;
   sellerAddress: string;
-  deadlineDate: Date;
+  deadline: number;
   assetSymbol: string;
   buyer: string;
 }
@@ -31,19 +35,25 @@ const Description: React.FC<IDescription> = ({
   sendingQuantity,
   sendingToken,
   sellerAddress,
-  deadlineDate,
+  deadline,
   assetSymbol,
 }) => {
-  const generalEscrowSummary =
-    `By Paying ${sendingQuantity + " " + assetSymbol}, address ${buyerAddress} should receive` +
-    ` "${deliverableText}" from address ${sellerAddress} before the delivery deadline ${new Date(
-      deadlineDate
-    )}.`;
+  const generalEscrowSummary = (
+    <>
+      By Paying {sendingQuantity}{" "}
+      <InlineBlockSpan>{assetSymbol ? assetSymbol : <StyledSkeleton width={30} />}</InlineBlockSpan>, address{" "}
+      {buyerAddress} should receive "{deliverableText}" from address {sellerAddress} before the delivery deadline{" "}
+      {new Date(deadline).toString()}.
+    </>
+  );
 
-  const cryptoSwapSummary =
-    `By Paying ${sendingQuantity + " " + sendingToken}, [Blockchain] address ${buyerAddress} should receive` +
-    ` ${receivingQuantity + " " + receivingToken} at the [Blockchain] address ${sellerAddress}` +
-    ` from [Blockchain] address TODO before the delivery deadline ${deadlineDate}.`;
+  const cryptoSwapSummary = (
+    <>
+      By Paying {sendingQuantity} {sendingToken}, [Blockchain] address {buyerAddress} should receive {receivingQuantity}{" "}
+      {receivingToken} at the [Blockchain] address {sellerAddress} from [Blockchain] address TODO before the delivery
+      deadline {new Date(deadline).toString()}.
+    </>
+  );
 
   return isUndefined(deliverableText) ? (
     <StyledSkeleton />
@@ -58,4 +68,5 @@ const Description: React.FC<IDescription> = ({
     </div>
   );
 };
+
 export default Description;

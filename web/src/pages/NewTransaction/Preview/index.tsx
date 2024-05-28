@@ -1,18 +1,16 @@
 import React from "react";
 import styled from "styled-components";
+import { useAccount } from "wagmi";
+import { useNewTransactionContext } from "context/NewTransactionContext";
+import PreviewCard from "components/PreviewCard";
 import Header from "./Header";
 import NavigationButtons from "../NavigationButtons";
-import PreviewCard from "components/PreviewCard";
-import { responsiveSize } from "styles/responsiveSize";
-import { useNewTransactionContext } from "context/NewTransactionContext";
 import { useNativeTokenSymbol } from "hooks/useNativeTokenSymbol";
-import { useAccount } from "wagmi";
 
 const Container = styled.div`
   display: flex;
   align-items: center;
   flex-direction: column;
-  padding: 0 ${responsiveSize(24, 136)};
 `;
 
 const Preview: React.FC = () => {
@@ -20,7 +18,6 @@ const Preview: React.FC = () => {
     escrowType,
     deliverableText,
     receivingQuantity,
-    receivingToken,
     sellerAddress,
     sendingQuantity,
     sendingToken,
@@ -28,6 +25,7 @@ const Preview: React.FC = () => {
     deadline,
     extraDescriptionUri,
   } = useNewTransactionContext();
+  const isNativeTransaction = sendingToken.address === "native";
   const nativeTokenSymbol = useNativeTokenSymbol();
 
   const { address } = useAccount();
@@ -36,20 +34,20 @@ const Preview: React.FC = () => {
     <Container>
       <Header />
       <PreviewCard
-        receivingQuantity={receivingQuantity}
-        receivingToken={receivingToken}
-        sellerAddress={sellerAddress}
-        sendingQuantity={sendingQuantity}
-        sendingToken={""}
         buyerAddress={address}
-        escrowType={escrowType}
-        deliverableText={deliverableText}
-        assetSymbol={escrowType === "general" ? nativeTokenSymbol : sendingToken}
-        deadlineDate={new Date(deadline).toLocaleString()}
+        assetSymbol={isNativeTransaction ? nativeTokenSymbol : sendingToken.symbol}
         overrideIsList={false}
-        escrowTitle={escrowTitle}
-        extraDescriptionUri={extraDescriptionUri}
         isPreview={true}
+        deadline={new Date(deadline).getTime()}
+        {...{
+          receivingQuantity,
+          sellerAddress,
+          sendingQuantity,
+          escrowType,
+          deliverableText,
+          escrowTitle,
+          extraDescriptionUri,
+        }}
       />
       <NavigationButtons prevRoute="/new-transaction/notifications" nextRoute="/new-transaction/deliverable" />
     </Container>

@@ -14,10 +14,10 @@ export const formatValue = (value: string, fractionDigits, roundDown) => {
   return commify(units.toFixed(fractionDigits));
 };
 
-export const formatPNK = (value: bigint, fractionDigits = 0, roundDown = false) =>
+export const formatPNK = (value: bigint, fractionDigits = 0, roundDown = true) =>
   formatValue(formatUnitsWei(value), fractionDigits, roundDown);
 
-export const formatETH = (value: bigint, fractionDigits = 4, roundDown = false) =>
+export const formatETH = (value: bigint, fractionDigits = 4, roundDown = true) =>
   formatValue(formatEther(value), fractionDigits, roundDown);
 
 export const formatUSD = (value: number, fractionDigits = 2) => "$" + commify(Number(value).toFixed(fractionDigits));

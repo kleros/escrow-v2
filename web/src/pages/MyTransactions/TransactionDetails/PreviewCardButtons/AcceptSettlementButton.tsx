@@ -8,6 +8,7 @@ import {
   usePrepareEscrowUniversalAcceptSettlement,
   useEscrowUniversalAcceptSettlement,
 } from "hooks/contracts/generated";
+import { useQueryRefetch } from "hooks/useQueryRefetch";
 
 interface IAcceptButton {
   toggleModal?: () => void;
@@ -17,6 +18,7 @@ const AcceptButton: React.FC<IAcceptButton> = ({ toggleModal }) => {
   const [isSending, setIsSending] = useState<boolean>(false);
   const publicClient = usePublicClient();
   const { id } = useTransactionDetailsContext();
+  const refetchQuery = useQueryRefetch();
 
   const { config: acceptSettlementConfig } = usePrepareEscrowUniversalAcceptSettlement({
     args: [BigInt(id)],
@@ -32,6 +34,7 @@ const AcceptButton: React.FC<IAcceptButton> = ({ toggleModal }) => {
           if (!wrapResult.status) {
             setIsSending(false);
           }
+          refetchQuery([["refetchOnBlock", "useTransactionDetailsQuery"]]);
         })
         .catch((error) => {
           console.error("Error raising dispute as buyer:", error);

@@ -52,15 +52,12 @@ interface IPreviewCard {
   escrowTitle: string;
   deliverableText: string;
   receivingQuantity: string;
-  receivingToken: string;
   transactionCreationTimestamp: string;
   status: string;
-  token: string;
   buyerAddress: string;
   sendingQuantity: string;
-  sendingToken: string;
   sellerAddress: string;
-  deadlineDate: string;
+  deadline: number;
   assetSymbol: string;
   overrideIsList: boolean;
   extraDescriptionUri: string;
@@ -80,15 +77,12 @@ const PreviewCard: React.FC<IPreviewCard> = ({
   escrowTitle,
   deliverableText,
   receivingQuantity,
-  receivingToken,
   transactionCreationTimestamp,
   status,
-  token,
   buyerAddress,
   sendingQuantity,
-  sendingToken,
   sellerAddress,
-  deadlineDate,
+  deadline,
   assetSymbol,
   overrideIsList,
   extraDescriptionUri,
@@ -108,9 +102,8 @@ const PreviewCard: React.FC<IPreviewCard> = ({
       <Divider />
       <TransactionInfo
         amount={sendingQuantity}
-        assetSymbol={assetSymbol}
         isPreview={true}
-        {...{ overrideIsList, deadlineDate, sellerAddress, buyerAddress }}
+        {...{ overrideIsList, deadline, sellerAddress, buyerAddress, assetSymbol }}
       />
       <Divider />
     </TransactionInfoContainer>
@@ -119,12 +112,10 @@ const PreviewCard: React.FC<IPreviewCard> = ({
         escrowType,
         deliverableText,
         receivingQuantity,
-        receivingToken,
         buyerAddress,
         sendingQuantity,
-        sendingToken,
         sellerAddress,
-        deadlineDate,
+        deadline,
         assetSymbol,
         extraDescriptionUri,
       }}
@@ -134,7 +125,7 @@ const PreviewCard: React.FC<IPreviewCard> = ({
       {...{
         isPreview,
         status,
-        token,
+        assetSymbol,
         transactionCreationTimestamp,
         buyerAddress,
         sellerAddress,

@@ -2,9 +2,9 @@ import React from "react";
 import { Button } from "@kleros/ui-components-library";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useNewTransactionContext } from "context/NewTransactionContext";
-import { validateAddress } from "../Terms/Payment/DestinationAddress";
 import { EMAIL_REGEX } from "../Terms/Notifications/EmailField";
 import { handleFileUpload } from "utils/handleFileUpload";
+import { validateAddress } from "utils/validateAddress";
 
 interface INextButton {
   nextRoute: string;
@@ -39,9 +39,7 @@ const NextButton: React.FC<INextButton> = ({ nextRoute }) => {
 
   const isSellerAddressValid = validateAddress(sellerAddress);
   const areSendingFieldsEmpty =
-    escrowType === "swap"
-      ? !sendingQuantity || !sendingToken || !sellerAddress
-      : !sendingQuantity || !sellerAddress;
+    escrowType === "swap" ? !sendingQuantity || !sendingToken || !sellerAddress : !sendingQuantity || !sellerAddress;
 
   const isEmailValid = notificationEmail === "" || EMAIL_REGEX.test(notificationEmail);
 
@@ -59,10 +57,7 @@ const NextButton: React.FC<INextButton> = ({ nextRoute }) => {
     (location.pathname.includes("/new-transaction/title") && !escrowTitle) ||
     (location.pathname.includes("/new-transaction/deliverable") && !isDeliverableValid) ||
     (location.pathname.includes("/new-transaction/payment") &&
-      (areSendingFieldsEmpty ||
-        !isSellerAddressValid ||
-        !isRecipientAddressResolved ||
-        !hasSufficientNativeBalance)) ||
+      (areSendingFieldsEmpty || !isSellerAddressValid || !isRecipientAddressResolved || !hasSufficientNativeBalance)) ||
     (location.pathname.includes("/new-transaction/deadline") && (!deadline || isDeadlineInPast)) ||
     (location.pathname.includes("/new-transaction/notifications") && !isEmailValid);
 

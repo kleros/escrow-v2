@@ -10,6 +10,7 @@ import {
 import { isUndefined } from "utils/index";
 import { wrapWithToast } from "utils/wrapWithToast";
 import { useTransactionDetailsContext } from "context/TransactionDetailsContext";
+import { useQueryRefetch } from "hooks/useQueryRefetch";
 
 const TimeOutButton: React.FC = () => {
   const { address } = useAccount();
@@ -17,6 +18,7 @@ const TimeOutButton: React.FC = () => {
   const publicClient = usePublicClient();
   const { buyer, id } = useTransactionDetailsContext();
   const isBuyer = useMemo(() => address?.toLowerCase() === buyer?.toLowerCase(), [address, buyer]);
+  const refetchQuery = useQueryRefetch();
 
   const { config: timeOutByBuyerConfig } = usePrepareEscrowUniversalTimeOutByBuyer({
     args: [BigInt(id)],
@@ -36,6 +38,7 @@ const TimeOutButton: React.FC = () => {
         .then((wrapResult) => {
           if (!wrapResult.status) {
             setIsSending(false);
+            refetchQuery([["refetchOnBlock", "useTransactionDetailsQuery"]]);
           }
         })
         .catch((error) => {
@@ -48,6 +51,7 @@ const TimeOutButton: React.FC = () => {
         .then((wrapResult) => {
           if (!wrapResult.status) {
             setIsSending(false);
+            refetchQuery([["refetchOnBlock", "useTransactionDetailsQuery"]]);
           }
         })
         .catch((error) => {

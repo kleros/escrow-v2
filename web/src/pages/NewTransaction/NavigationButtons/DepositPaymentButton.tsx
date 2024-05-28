@@ -5,19 +5,30 @@ import { Button } from "@kleros/ui-components-library";
 import {
   useEscrowUniversalCreateNativeTransaction,
   usePrepareEscrowUniversalCreateNativeTransaction,
+  useEscrowUniversalCreateErc20Transaction,
+  usePrepareEscrowUniversalCreateErc20Transaction,
+  escrowUniversalAddress,
 } from "hooks/contracts/generated";
+import { erc20ABI, useNetwork } from "wagmi";
 import { useNewTransactionContext } from "context/NewTransactionContext";
-import { useAccount, useEnsAddress, usePublicClient } from "wagmi";
-import { parseEther } from "viem";
+import {
+  useAccount,
+  useEnsAddress,
+  usePublicClient,
+  useContractRead,
+  useContractWrite,
+  usePrepareContractWrite,
+} from "wagmi";
+import { parseEther, parseUnits } from "viem";
 import { isUndefined } from "utils/index";
 import { wrapWithToast } from "utils/wrapWithToast";
-import { ethAddressPattern } from "../Terms/Payment/DestinationAddress";
+import { ethAddressPattern } from "utils/validateAddress";
+import { useQueryRefetch } from "hooks/useQueryRefetch";
 
 const StyledButton = styled(Button)``;
 
 const DepositPaymentButton: React.FC = () => {
   const {
-    escrowType,
     escrowTitle,
     deliverableText,
     transactionUri,
@@ -25,17 +36,24 @@ const DepositPaymentButton: React.FC = () => {
     sendingQuantity,
     sellerAddress,
     deadline,
-    token,
+    sendingToken,
     resetContext,
   } = useNewTransactionContext();
 
   const [currentTime, setCurrentTime] = useState(Date.now());
   const [finalRecipientAddress, setFinalRecipientAddress] = useState(sellerAddress);
-  const ensResult = useEnsAddress({ name: sellerAddress, chainId: 1 });
   const publicClient = usePublicClient();
   const navigate = useNavigate();
-  const [isSending, setIsSending] = useState<boolean>(false);
+  const refetchQuery = useQueryRefetch();
+  const [isSending, setIsSending] = useState(false);
+  const [isApproved, setIsApproved] = useState(false);
   const { address } = useAccount();
+  const { chain } = useNetwork();
+  const ensResult = useEnsAddress({ name: sellerAddress, chainId: 1 });
+  const deadlineTimestamp = new Date(deadline).getTime();
+  const timeoutPayment = (deadlineTimestamp - currentTime) / 1000;
+  const isNativeTransaction = sendingToken?.address === "native";
+  const transactionValue = isNativeTransaction ? parseEther(sendingQuantity) : parseUnits(sendingQuantity, 18);
 
   useEffect(() => {
     const intervalId = setInterval(() => setCurrentTime(Date.now()), 1000);
@@ -43,17 +61,24 @@ const DepositPaymentButton: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (ensResult.data) {
-      setFinalRecipientAddress(ensResult.data);
-    } else {
-      setFinalRecipientAddress(sellerAddress);
-    }
+    setFinalRecipientAddress(ensResult.data || sellerAddress);
   }, [sellerAddress, ensResult.data]);
 
-  const deadlineTimestamp = new Date(deadline).getTime();
-  const timeoutPayment = (deadlineTimestamp - currentTime) / 1000;
+  const { data: allowance } = useContractRead({
+    enabled: !isNativeTransaction,
+    address: sendingToken?.address,
+    abi: erc20ABI,
+    functionName: "allowance",
+    args: [address, escrowUniversalAddress?.[chain?.id]],
+  });
 
-  const templateData = {
+  useEffect(() => {
+    if (!isUndefined(allowance)) {
+      setIsApproved(allowance >= transactionValue);
+    }
+  }, [allowance, transactionValue]);
+
+  const templateData = JSON.stringify({
     $schema: "../NewDisputeTemplate.schema.json",
     title: escrowTitle,
     description: deliverableText,
@@ -82,7 +107,7 @@ const DepositPaymentButton: React.FC = () => {
       buyer: address,
       seller: sellerAddress,
       amount: sendingQuantity,
-      token: escrowType === "general" ? "native" : token,
+      token: isNativeTransaction ? "native" : sendingToken?.address,
       timeoutPayment: timeoutPayment,
       transactionUri: transactionUri,
     },
@@ -93,41 +118,82 @@ const DepositPaymentButton: React.FC = () => {
       Seller: sellerAddress,
     },
     version: "1.0",
-  };
+  });
 
-  const stringifiedTemplateData = JSON.stringify(templateData);
+  const { config: createNativeTransactionConfig } = usePrepareEscrowUniversalCreateNativeTransaction({
+    enabled: isNativeTransaction && ethAddressPattern.test(finalRecipientAddress),
+    args: [BigInt(Math.floor(timeoutPayment)), transactionUri, finalRecipientAddress, templateData, ""],
+    value: transactionValue,
+  });
 
-  const { config: createTransactionConfig } = usePrepareEscrowUniversalCreateNativeTransaction({
-    enabled: !isUndefined(ensResult) && ethAddressPattern.test(finalRecipientAddress),
+  const { config: createERC20TransactionConfig } = usePrepareEscrowUniversalCreateErc20Transaction({
+    enabled:
+      !isNativeTransaction &&
+      !isUndefined(allowance) &&
+      allowance >= transactionValue &&
+      ethAddressPattern.test(finalRecipientAddress),
     args: [
+      transactionValue,
+      sendingToken?.address,
       BigInt(Math.floor(timeoutPayment)),
       transactionUri,
       finalRecipientAddress,
-      stringifiedTemplateData,
-      /* Assuming no template data mappings are needed*/
-      ,
+      templateData,
+      "",
     ],
-    value: parseEther(sendingQuantity),
   });
 
-  const { writeAsync: createTransaction } = useEscrowUniversalCreateNativeTransaction(createTransactionConfig);
+  const { writeAsync: createNativeTransaction } =
+    useEscrowUniversalCreateNativeTransaction(createNativeTransactionConfig);
+  const { writeAsync: createERC20Transaction } = useEscrowUniversalCreateErc20Transaction(createERC20TransactionConfig);
 
-  const handleCreateTransaction = () => {
+  const { config: approveConfig } = usePrepareContractWrite({
+    enabled: !isNativeTransaction,
+    address: sendingToken?.address,
+    abi: erc20ABI,
+    functionName: "approve",
+    args: [escrowUniversalAddress?.[chain?.id], transactionValue],
+  });
+
+  const { writeAsync: approve } = useContractWrite(approveConfig);
+
+  const handleApproveToken = async () => {
+    if (!isUndefined(approve)) {
+      setIsSending(true);
+      try {
+        const wrapResult = await wrapWithToast(
+          async () => await approve().then((response) => response.hash),
+          publicClient
+        );
+        setIsApproved(wrapResult.status);
+      } catch (error) {
+        console.error("Approval failed:", error);
+        setIsApproved(false);
+      } finally {
+        setIsSending(false);
+      }
+    }
+  };
+
+  const handleCreateTransaction = async () => {
+    const createTransaction = isNativeTransaction ? createNativeTransaction : createERC20Transaction;
     if (!isUndefined(createTransaction)) {
       setIsSending(true);
-      wrapWithToast(async () => await createTransaction().then((response) => response.hash), publicClient)
-        .then((wrapResult) => {
-          if (wrapResult.status) {
-            resetContext();
-            navigate("/my-transactions/display/1/desc/all");
-          }
-        })
-        .catch((error) => {
-          console.error("Transaction failed:", error);
-        })
-        .finally(() => {
-          setIsSending(false);
-        });
+      try {
+        const wrapResult = await wrapWithToast(
+          async () => await createTransaction().then((response) => response.hash),
+          publicClient
+        );
+        if (wrapResult.status) {
+          refetchQuery([["refetchOnBlock", "useMyTransactionsQuery"], ["useUserQuery"]]);
+          resetContext();
+          navigate("/my-transactions/display/1/desc/all");
+        }
+      } catch (error) {
+        console.error("Transaction failed:", error);
+      } finally {
+        setIsSending(false);
+      }
     }
   };
 
@@ -135,8 +201,8 @@ const DepositPaymentButton: React.FC = () => {
     <StyledButton
       isLoading={isSending}
       disabled={isSending}
-      text="Deposit the Payment"
-      onClick={handleCreateTransaction}
+      text={isNativeTransaction || isApproved ? "Deposit the Payment" : "Approve Token"}
+      onClick={isNativeTransaction || isApproved ? handleCreateTransaction : handleApproveToken}
     />
   );
 };

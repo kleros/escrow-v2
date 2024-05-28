@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useMemo } from "react";
 import styled, { css } from "styled-components";
+import { responsiveSize } from "styles/responsiveSize";
 import { landscapeStyle } from "styles/landscapeStyle";
 import { Field } from "@kleros/ui-components-library";
-import { responsiveSize } from "styles/responsiveSize";
+import { useDebounce } from "react-use";
 import { useEnsAddress } from "wagmi";
 import { useNewTransactionContext } from "context/NewTransactionContext";
-import { useDebounce } from "react-use";
+import { ensDomainPattern, validateAddress } from "utils/validateAddress";
 
 const StyledField = styled(Field)`
   width: 84vw;
@@ -28,13 +29,6 @@ const StyledField = styled(Field)`
     `
   )}
 `;
-
-export const ethAddressPattern = /^0x[a-fA-F0-9]{40}$/;
-export const ensDomainPattern = /^[a-zA-Z0-9-]{1,}\.eth$/;
-
-export const validateAddress = (input: string) => {
-  return ethAddressPattern.test(input) || ensDomainPattern.test(input);
-};
 
 interface IDestinationAddress {
   recipientAddress: string;

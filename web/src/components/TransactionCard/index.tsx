@@ -1,18 +1,19 @@
 import React from "react";
 import styled from "styled-components";
-import { formatEther } from "viem";
-import { Card } from "@kleros/ui-components-library";
-import { useIsList } from "context/IsListProvider";
-import TransactionInfo from "../TransactionInfo";
-import StatusBanner from "./StatusBanner";
 import { responsiveSize } from "styles/responsiveSize";
+import { Card } from "@kleros/ui-components-library";
+import { formatEther } from "viem";
+import { useIsList } from "context/IsListProvider";
 import { mapStatusToEnum } from "utils/mapStatusToEnum";
 import { isUndefined } from "utils/index";
+import { StyledSkeleton, StyledSkeletonTitle } from "../StyledSkeleton";
+import TransactionInfo from "../TransactionInfo";
+import StatusBanner from "./StatusBanner";
+import { useNavigateAndScrollTop } from "hooks/useNavigateAndScrollTop";
 import { useNativeTokenSymbol } from "hooks/useNativeTokenSymbol";
 import useFetchIpfsJson from "hooks/useFetchIpfsJson";
-import { useNavigateAndScrollTop } from "hooks/useNavigateAndScrollTop";
+import { useTokenMetadata } from "hooks/useTokenMetadata";
 import { TransactionDetailsFragment } from "src/graphql/graphql";
-import { StyledSkeleton, StyledSkeletonTitle } from "../StyledSkeleton";
 
 const StyledCard = styled(Card)`
   width: 100%;
@@ -69,6 +70,8 @@ const TransactionCard: React.FC<ITransactionCard> = ({
   const transactionInfo = useFetchIpfsJson(transactionUri);
   const { isList } = useIsList();
   const nativeTokenSymbol = useNativeTokenSymbol();
+  const { tokenMetadata } = useTokenMetadata(token);
+  const erc20TokenSymbol = tokenMetadata?.symbol;
   const title = transactionInfo?.title;
   const navigateAndScrollTop = useNavigateAndScrollTop();
 
@@ -83,7 +86,7 @@ const TransactionCard: React.FC<ITransactionCard> = ({
             {!isUndefined(title) ? <StyledTitle>{title}</StyledTitle> : <StyledSkeleton />}
             <TransactionInfo
               amount={formatEther(amount)}
-              assetSymbol={!token ? nativeTokenSymbol : ""}
+              assetSymbol={!token ? nativeTokenSymbol : erc20TokenSymbol}
               buyerAddress={buyer}
               sellerAddress={seller}
               deadlineDate={new Date(deadline * 1000).toLocaleString()}
@@ -104,7 +107,7 @@ const TransactionCard: React.FC<ITransactionCard> = ({
             )}
             <TransactionInfo
               amount={formatEther(amount)}
-              assetSymbol={!token ? nativeTokenSymbol : ""}
+              assetSymbol={!token ? nativeTokenSymbol : erc20TokenSymbol}
               buyerAddress={buyer}
               sellerAddress={seller}
               deadlineDate={new Date(deadline * 1000).toLocaleString()}

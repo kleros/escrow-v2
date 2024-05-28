@@ -8,11 +8,12 @@ import { isUndefined } from "utils/index";
 import PreviewCard from "components/PreviewCard";
 import WasItFulfilled from "./WasItFulfilled";
 import InfoCards from "./InfoCards";
-import useFetchIpfsJson from "hooks/useFetchIpfsJson";
-import { useEscrowParametersQuery } from "hooks/queries/useEscrowParametersQuery";
+import { useEscrowParametersQuery } from "queries/useEscrowParametersQuery";
+import { useTransactionDetailsQuery } from "queries/useTransactionsQuery";
+import { useArbitrationCost } from "queries/useArbitrationCostFromKlerosCore";
 import { useNativeTokenSymbol } from "hooks/useNativeTokenSymbol";
-import { useTransactionDetailsQuery } from "hooks/queries/useTransactionsQuery";
-import { useArbitrationCost } from "hooks/queries/useArbitrationCostFromKlerosCore";
+import useFetchIpfsJson from "hooks/useFetchIpfsJson";
+import { useTokenMetadata } from "hooks/useTokenMetadata";
 
 const Container = styled.div``;
 
@@ -32,6 +33,10 @@ const TransactionDetails: React.FC = () => {
   const { data: escrowParameters } = useEscrowParametersQuery();
   const { arbitrationCost } = useArbitrationCost(escrowParameters?.escrowParameters?.arbitratorExtraData);
   const nativeTokenSymbol = useNativeTokenSymbol();
+  const { tokenMetadata } = useTokenMetadata(transactionDetails?.escrow?.token);
+  const erc20TokenSymbol = tokenMetadata?.symbol;
+  const { setTransactionDetails } = useTransactionDetailsContext();
+
   const {
     timestamp,
     transactionUri,
@@ -46,14 +51,19 @@ const TransactionDetails: React.FC = () => {
     settlementProposals,
     disputeRequest,
     resolvedEvents,
-    setTransactionDetails,
   } = useTransactionDetailsContext();
 
   const transactionInfo = useFetchIpfsJson(transactionUri);
 
   useEffect(() => {
-    setTransactionDetails(transactionDetails?.escrow);
-  }, [transactionDetails, setTransactionDetails]);
+    if (transactionDetails?.escrow) {
+      const detailsWithSymbol = {
+        ...transactionDetails.escrow,
+        erc20TokenSymbol: token ? erc20TokenSymbol : nativeTokenSymbol,
+      };
+      setTransactionDetails(detailsWithSymbol);
+    }
+  }, [transactionDetails, setTransactionDetails, erc20TokenSymbol, nativeTokenSymbol, token]);
 
   return (
     <Container>
@@ -66,13 +76,11 @@ const TransactionDetails: React.FC = () => {
           extraDescriptionUri={transactionInfo?.extraDescriptionUri}
           receivingQuantity={""}
           buyerAddress={buyer}
-          receivingToken={!token ? nativeTokenSymbol : token}
           sellerAddress={seller}
           transactionCreationTimestamp={timestamp}
           sendingQuantity={!isUndefined(amount) ? formatEther(amount) : ""}
-          sendingToken={!token ? nativeTokenSymbol : token}
-          deadlineDate={new Date(deadline * 1000).toLocaleString()}
-          assetSymbol={!token ? nativeTokenSymbol : token}
+          deadline={deadline * 1000}
+          assetSymbol={!token ? nativeTokenSymbol : erc20TokenSymbol}
           overrideIsList={false}
           amount={!isUndefined(amount) ? formatEther(amount) : ""}
           isPreview={false}
