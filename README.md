@@ -8,7 +8,7 @@ Setup:
 yarn
 ```
 
-The frontend is located in the `web` folder
+The frontend is located in the `web` folder.
 
 ```bash
 cd web
