@@ -114,7 +114,13 @@ const NextButton: React.FC<INextButton> = ({ nextRoute }) => {
     }
   };
 
-  return <Button disabled={isButtonDisabled} onClick={handleNextClick} text="Next" />;
+  return (
+    <Button
+      disabled={isButtonDisabled}
+      onClick={handleNextClick}
+      text={escrowType === "general" ? "Next" : "Coming Soon"}
+    />
+  );
 };
 
 export default NextButton;
