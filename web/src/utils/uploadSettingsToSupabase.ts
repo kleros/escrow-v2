@@ -10,9 +10,14 @@ type SettingsToSupabaseData = {
 };
 
 export function uploadSettingsToSupabase(formData: SettingsToSupabaseData): Promise<Response> {
+  const authToken = sessionStorage.getItem("auth-token")?.replace(/"/g, "");
   return toast.promise<Response, Error>(
     fetch("/.netlify/functions/update-settings", {
       method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-auth-token": authToken ?? "",
+      },
       body: JSON.stringify(formData),
     }).then(async (response) => {
       if (response.status !== 200) {

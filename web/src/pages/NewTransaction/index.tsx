@@ -17,6 +17,7 @@ import { useAccount, useNetwork } from "wagmi";
 import ConnectWallet from "components/ConnectWallet";
 import { ConnectWalletContainer } from "../MyTransactions";
 import { DEFAULT_CHAIN } from "consts/chains";
+import { EnsureAuth } from "components/EnsureAuth";
 
 const Container = styled.div`
   display: flex;
@@ -50,18 +51,20 @@ const NewTransaction: React.FC = () => {
       <Container>
         {isConnected && isOnSupportedChain && !isPreviewPage ? <Timeline /> : null}
         {isConnected && isOnSupportedChain ? (
-          <MiddleContentContainer>
-            <Routes>
-              <Route index element={<Navigate to="escrow-type" replace />} />
-              <Route path="/escrow-type/*" element={<TypeOfEscrow />} />
-              <Route path="/title/*" element={<Title />} />
-              <Route path="/deliverable/*" element={<Deliverable />} />
-              <Route path="/payment/*" element={<Payment />} />
-              <Route path="/deadline/*" element={<Deadline />} />
-              <Route path="/notifications/*" element={<Notifications />} />
-              <Route path="/preview/*" element={<Preview />} />
-            </Routes>
-          </MiddleContentContainer>
+          <EnsureAuth message={"Sign a message to verify yourself."} buttonText="Verify">
+            <MiddleContentContainer>
+              <Routes>
+                <Route index element={<Navigate to="escrow-type" replace />} />
+                <Route path="/escrow-type/*" element={<TypeOfEscrow />} />
+                <Route path="/title/*" element={<Title />} />
+                <Route path="/deliverable/*" element={<Deliverable />} />
+                <Route path="/payment/*" element={<Payment />} />
+                <Route path="/deadline/*" element={<Deadline />} />
+                <Route path="/notifications/*" element={<Notifications />} />
+                <Route path="/preview/*" element={<Preview />} />
+              </Routes>
+            </MiddleContentContainer>
+          </EnsureAuth>
         ) : (
           <ConnectWalletContainer>
             To create a new escrow transaction, connect first and switch to the supported chain
