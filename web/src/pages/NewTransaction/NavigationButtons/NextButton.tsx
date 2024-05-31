@@ -1,16 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@kleros/ui-components-library";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useNewTransactionContext } from "context/NewTransactionContext";
-import { EMAIL_REGEX } from "../Terms/Notifications/EmailField";
+import { useUserSettings } from "queries/useUserSettings";
 import { handleFileUpload } from "utils/handleFileUpload";
 import { validateAddress } from "utils/validateAddress";
+import { useAccount } from "wagmi";
+import { uploadSettingsToSupabase } from "utils/uploadSettingsToSupabase";
+import { EMAIL_REGEX } from "src/consts";
+import { isUndefined } from "src/utils";
 
 interface INextButton {
   nextRoute: string;
 }
 
 const NextButton: React.FC<INextButton> = ({ nextRoute }) => {
+  const { address } = useAccount();
   const navigate = useNavigate();
   const location = useLocation();
   const {
@@ -33,6 +38,9 @@ const NextButton: React.FC<INextButton> = ({ nextRoute }) => {
     hasSufficientNativeBalance,
     isRecipientAddressResolved,
   } = useNewTransactionContext();
+  const { data: userSettings, isLoading: isLoadingSettings, refetch: refetchUserSettings } = useUserSettings();
+
+  const [isUpdatingSettings, setIsUpdatingSettings] = useState<boolean>(false);
 
   const isBuyerAddressValid = validateAddress(buyerAddress);
   const areReceivingFieldsEmpty = !receivingQuantity || !receivingToken || !buyerAddress;
@@ -59,7 +67,8 @@ const NextButton: React.FC<INextButton> = ({ nextRoute }) => {
     (location.pathname.includes("/new-transaction/payment") &&
       (areSendingFieldsEmpty || !isSellerAddressValid || !isRecipientAddressResolved || !hasSufficientNativeBalance)) ||
     (location.pathname.includes("/new-transaction/deadline") && (!deadline || isDeadlineInPast)) ||
-    (location.pathname.includes("/new-transaction/notifications") && !isEmailValid);
+    (location.pathname.includes("/new-transaction/notifications") &&
+      (!isEmailValid || isUpdatingSettings || isLoadingSettings));
 
   const handleNextClick = async () => {
     try {
@@ -76,6 +85,27 @@ const NextButton: React.FC<INextButton> = ({ nextRoute }) => {
           setTransactionUri(transactionUri);
           navigate(nextRoute);
         }
+      } else if (
+        location.pathname.includes("/new-transaction/notifications") &&
+        !isUndefined(address) &&
+        userSettings &&
+        userSettings.email !== notificationEmail
+      ) {
+        const data = {
+          email: notificationEmail,
+          telegram: "",
+          address,
+        };
+
+        setIsUpdatingSettings(true);
+
+        const res = await uploadSettingsToSupabase(data);
+        if (res.ok) {
+          refetchUserSettings();
+          navigate(nextRoute);
+        }
+
+        setIsUpdatingSettings(false);
       } else {
         navigate(nextRoute);
       }

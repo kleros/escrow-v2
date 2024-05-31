@@ -4,9 +4,7 @@ import { OPTIONS } from "utils/wrapWithToast";
 type SettingsToSupabaseData = {
   email: string;
   telegram: string;
-  nonce: string;
   address: `0x${string}`;
-  signature: `0x${string}`;
 };
 
 export function uploadSettingsToSupabase(formData: SettingsToSupabaseData): Promise<Response> {
