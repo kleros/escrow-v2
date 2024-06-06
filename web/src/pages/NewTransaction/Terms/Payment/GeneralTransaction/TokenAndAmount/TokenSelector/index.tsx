@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import styled from "styled-components";
 import { useClickAway } from "react-use";
 import { Alchemy } from "alchemy-sdk";
@@ -25,7 +25,9 @@ const TokenSelector: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef(null);
   const [loading, setLoading] = useState(true);
-  const alchemyInstance = new Alchemy(alchemyConfig(chain?.id));
+
+  const alchemyInstance = useMemo(() => new Alchemy(alchemyConfig(chain?.id)), [chain?.id]);
+
   useClickAway(containerRef, () => setIsOpen(false));
 
   useEffect(() => {
@@ -33,7 +35,7 @@ const TokenSelector: React.FC = () => {
       localStorage.removeItem("tokens");
       initializeTokens(address, setTokens, setLoading, chain, alchemyInstance);
     }
-  }, [address, chain, alchemyInstance, setTokens]);
+  }, [address, chain, alchemyInstance]);
 
   useEffect(() => {
     if (tokens?.length > 0) {
