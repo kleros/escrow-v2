@@ -29,12 +29,11 @@ const TokenSelector: React.FC = () => {
   useClickAway(containerRef, () => setIsOpen(false));
 
   useEffect(() => {
-  }, [address, chain, alchemyInstance, setTokens]);
     if (address && chain) {
       localStorage.removeItem("tokens");
       initializeTokens(address, setTokens, setLoading, chain, alchemyInstance);
     }
-  }, [address, chain]);
+  }, [address, chain, alchemyInstance, setTokens]);
 
   useEffect(() => {
     if (tokens?.length > 0) {
