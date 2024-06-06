@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import Balance from "./Balance";
+import TokenIcon from "./TokenIcon";
 
 const Container = styled.div<{ selected: boolean }>`
   display: flex;
@@ -24,11 +25,6 @@ const LogoAndLabel = styled.div`
   gap: 8px;
 `;
 
-const TokenLogo = styled.img`
-  width: 24px;
-  height: 24px;
-`;
-
 const TokenLabel = styled.span`
   color: ${({ theme }) => theme.primaryText};
 `;
@@ -37,7 +33,7 @@ const TokenItem = ({ token, selected, onSelect }) => {
   return (
     <Container selected={selected} onClick={() => onSelect(token)}>
       <LogoAndLabel>
-        <TokenLogo src={token.logo} alt={`${token.symbol} logo`} />
+        <TokenIcon symbol={token.symbol} logo={token.logo} />
         <TokenLabel>{token.symbol}</TokenLabel>
       </LogoAndLabel>
       <Balance {...{ token }} />

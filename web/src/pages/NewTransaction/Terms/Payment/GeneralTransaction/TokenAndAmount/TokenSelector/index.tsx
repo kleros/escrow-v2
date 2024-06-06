@@ -30,6 +30,7 @@ const TokenSelector: React.FC = () => {
 
   useEffect(() => {
     if (address && chain) {
+      localStorage.removeItem("tokens");
       initializeTokens(address, setTokens, setLoading, chain, alchemyInstance);
     }
   }, [address, chain]);

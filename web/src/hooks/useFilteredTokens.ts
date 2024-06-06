@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useTokenMetadata } from "./useTokenMetadata";
 import { IToken } from "context/NewTransactionContext";
-import EthTokenIcon from "svgs/icons/eth-token-icon.png";
 
 export const useFilteredTokens = (
   searchQuery: string,
@@ -27,7 +26,7 @@ export const useFilteredTokens = (
         const resultToken = {
           symbol: tokenMetadata.symbol,
           address: searchQuery.toLowerCase(),
-          logo: tokenMetadata.logo || EthTokenIcon,
+          logo: tokenMetadata.logo,
         };
 
         const updatedTokens = [...tokens, resultToken];
