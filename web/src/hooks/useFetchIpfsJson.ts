@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import fetch from "node-fetch";
+import { getIpfsUrl } from "utils/getIpfsUrl";
 
 const useFetchIpfsJson = (ipfsUri: string) => {
   const [data, setData] = useState(null);
@@ -9,7 +10,7 @@ const useFetchIpfsJson = (ipfsUri: string) => {
       if (!ipfsUri) return;
 
       try {
-        const formattedUri = ipfsUri.replace(/^ipfs:\/\//, "https://cdn.kleros.link/ipfs/");
+        const formattedUri = getIpfsUrl(ipfsUri);
 
         const response = await fetch(formattedUri);
         if (!response.ok) {

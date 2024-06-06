@@ -1,6 +1,5 @@
 import React, { useMemo, useState, useEffect } from "react";
-import styled, { css } from "styled-components";
-import { landscapeStyle } from "styles/landscapeStyle";
+import styled from "styled-components";
 import { responsiveSize } from "styles/responsiveSize";
 import { useBalance, useAccount } from "wagmi";
 import { useNewTransactionContext } from "context/NewTransactionContext";
