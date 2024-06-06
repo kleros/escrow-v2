@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Field } from "@kleros/ui-components-library";
 import { landscapeStyle } from "styles/landscapeStyle";
 import styled, { css } from "styled-components";
 import { responsiveSize } from "styles/responsiveSize";
 import { useNewTransactionContext } from "context/NewTransactionContext";
+import { EMAIL_REGEX } from "src/consts";
+import { useUserSettings } from "hooks/queries/useUserSettings";
 
 const StyledField = styled(Field)`
   width: 84vw;
@@ -20,11 +22,16 @@ const StyledField = styled(Field)`
   )}
 `;
 
-export const EMAIL_REGEX = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-
 const EmailField: React.FC = () => {
   const { notificationEmail, setNotificationEmail } = useNewTransactionContext();
   const [isEmailValid, setIsEmailValid] = useState(true);
+  const { data: userSettings } = useUserSettings();
+
+  useEffect(() => {
+    if (!userSettings) return;
+
+    setNotificationEmail(userSettings.email ?? "");
+  }, [userSettings]);
 
   const handleWrite = (event: React.ChangeEvent<HTMLInputElement>) => {
     const input = event.target.value;

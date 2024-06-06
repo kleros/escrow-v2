@@ -2841,6 +2841,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@datastream/core@npm:0.0.35":
+  version: 0.0.35
+  resolution: "@datastream/core@npm:0.0.35"
+  dependencies:
+    cloneable-readable: "npm:3.0.0"
+  checksum: 10/761fa24ec42760dbc7a0914b3084022ba6765bbeb183ad63d7976f14650db5d86e831e452ce2cf2b04e9990b2d9eafb8ecc651ec74c88bcf9084f61747a4b629
+  languageName: node
+  linkType: hard
+
 "@datepicker-react/hooks@npm:^2.8.4":
   version: 2.8.4
   resolution: "@datepicker-react/hooks@npm:2.8.4"
@@ -4767,6 +4776,8 @@ __metadata:
     "@graphql-codegen/cli": "npm:^4.0.1"
     "@graphql-codegen/client-preset": "npm:^4.1.0"
     "@kleros/ui-components-library": "npm:^2.12.0"
+    "@middy/core": "npm:^5.3.5"
+    "@middy/http-json-body-parser": "npm:^5.3.5"
     "@netlify/functions": "npm:^1.6.0"
     "@parcel/transformer-svg-react": "npm:2.11.0"
     "@parcel/watcher": "npm:~2.2.0"
@@ -4788,7 +4799,7 @@ __metadata:
     "@web3modal/react": "npm:^2.2.2"
     "@yornaath/batshit": "npm:^0.9.0"
     alchemy-sdk: "npm:^3.3.1"
-    amqplib: "npm:^0.10.3"
+    amqplib: "npm:^0.10.4"
     chart.js: "npm:^3.9.1"
     chartjs-adapter-moment: "npm:^1.0.1"
     core-js: "npm:^3.35.0"
@@ -4800,6 +4811,7 @@ __metadata:
     ethers: "npm:^5.7.2"
     graphql: "npm:^16.8.1"
     graphql-request: "npm:~6.1.0"
+    jose: "npm:^5.3.0"
     lru-cache: "npm:^7.18.3"
     moment: "npm:^2.30.1"
     overlayscrollbars: "npm:^2.4.6"
@@ -4818,6 +4830,7 @@ __metadata:
     react-scripts: "npm:^5.0.1"
     react-toastify: "npm:^9.1.3"
     react-use: "npm:^17.4.3"
+    siwe: "npm:^2.3.2"
     styled-components: "npm:^5.3.11"
     supabase: "npm:^1.133.3"
     typescript: "npm:^5.3.3"
@@ -5094,6 +5107,31 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@middy/core@npm:^5.3.5":
+  version: 5.3.5
+  resolution: "@middy/core@npm:5.3.5"
+  dependencies:
+    "@datastream/core": "npm:0.0.35"
+  checksum: 10/f9847d365a358d733434c6030849117111f5a421f1447f42bb9eebaa0c11aba32241ea31bd08178b769ff091cd4865010afd794c26e4cf814a970e01fdfe200a
+  languageName: node
+  linkType: hard
+
+"@middy/http-json-body-parser@npm:^5.3.5":
+  version: 5.3.5
+  resolution: "@middy/http-json-body-parser@npm:5.3.5"
+  dependencies:
+    "@middy/util": "npm:5.3.5"
+  checksum: 10/eaf65a6302775d5f7ac234c19b55b820e61feb35405e35c80aa643b8c41dac6fc694c275823611db3398dfdc3da9b0503774fed76eaa79f47e07122621df6713
+  languageName: node
+  linkType: hard
+
+"@middy/util@npm:5.3.5":
+  version: 5.3.5
+  resolution: "@middy/util@npm:5.3.5"
+  checksum: 10/9bf6c3d8bb4af8a544851aa36116d461060320a0037d00768940ebc0950ecf81ee9c79733e2a97deff2b55f18086184404cf88fe53098df51bc76e7c12062369
+  languageName: node
+  linkType: hard
+
 "@mischnic/json-sourcemap@npm:^0.1.0":
   version: 0.1.1
   resolution: "@mischnic/json-sourcemap@npm:0.1.1"
@@ -5303,6 +5341,13 @@ __metadata:
   version: 1.3.2
   resolution: "@noble/hashes@npm:1.3.2"
   checksum: 10/685f59d2d44d88e738114b71011d343a9f7dce9dfb0a121f1489132f9247baa60bc985e5ec6f3213d114fbd1e1168e7294644e46cbd0ce2eba37994f28eeb51b
+  languageName: node
+  linkType: hard
+
+"@noble/hashes@npm:^1.1.2":
+  version: 1.4.0
+  resolution: "@noble/hashes@npm:1.4.0"
+  checksum: 10/e156e65794c473794c52fa9d06baf1eb20903d0d96719530f523cc4450f6c721a957c544796e6efd0197b2296e7cd70efeb312f861465e17940a3e3c7e0febc6
   languageName: node
   linkType: hard
 
@@ -7917,6 +7962,18 @@ __metadata:
   version: 0.17.0
   resolution: "@solidity-parser/parser@npm:0.17.0"
   checksum: 10/76de7d1268de676c101b9a41576c324c0d0b9699e3ba3d846b5e580d6cae454fd7ec088011c316ce18af1b23a1482da88768d30f0e41becfd9da90f692fb9a65
+  languageName: node
+  linkType: hard
+
+"@spruceid/siwe-parser@npm:^2.1.2":
+  version: 2.1.2
+  resolution: "@spruceid/siwe-parser@npm:2.1.2"
+  dependencies:
+    "@noble/hashes": "npm:^1.1.2"
+    apg-js: "npm:^4.3.0"
+    uri-js: "npm:^4.4.1"
+    valid-url: "npm:^1.0.9"
+  checksum: 10/48459fe3b4d4b3091375ee87af700864c9023d4a1271d34850c6d27475e5d93a45d1efe8a71da367ad838b6921ced60c387d54737edd0a7a0d8e4e0a3cc2b8b7
   languageName: node
   linkType: hard
 
@@ -10873,15 +10930,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"amqplib@npm:^0.10.3":
-  version: 0.10.3
-  resolution: "amqplib@npm:0.10.3"
+"amqplib@npm:^0.10.4":
+  version: 0.10.4
+  resolution: "amqplib@npm:0.10.4"
   dependencies:
     "@acuminous/bitsyntax": "npm:^0.1.2"
     buffer-more-ints: "npm:~1.0.0"
     readable-stream: "npm:1.x >=1.1.9"
     url-parse: "npm:~1.5.10"
-  checksum: 10/ec96c384e659cda401ecd512b94aa0d5a0632a8c0a78c1d054bc4ac34d18f512fc9b150ae906f70701d36cc22bd337fe6bd127f65e0c294731b6c10350c4830d
+  checksum: 10/de96a1da2be66e8367174a6a76266e9e5088cff60c8ef4ca0843eaf320a8a745f37e17316d4fa8bc895e9ff7dadbe572ae2dd7db5d9e4a42f67e69fa00d0309e
   languageName: node
   linkType: hard
 
@@ -11040,6 +11097,13 @@ __metadata:
     normalize-path: "npm:^3.0.0"
     picomatch: "npm:^2.0.4"
   checksum: 10/3e044fd6d1d26545f235a9fe4d7a534e2029d8e59fa7fd9f2a6eb21230f6b5380ea1eaf55136e60cbf8e613544b3b766e7a6fa2102e2a3a117505466e3025dc2
+  languageName: node
+  linkType: hard
+
+"apg-js@npm:^4.3.0":
+  version: 4.4.0
+  resolution: "apg-js@npm:4.4.0"
+  checksum: 10/425f19096026742f5f156f26542b68f55602aa60f0c4ae2d72a0a888cf15fe9622223191202262dd8979d76a6125de9d8fd164d56c95fb113f49099f405eb08c
   languageName: node
   linkType: hard
 
@@ -12877,6 +12941,15 @@ __metadata:
   version: 2.1.2
   resolution: "clone@npm:2.1.2"
   checksum: 10/d9c79efba655f0bf601ab299c57eb54cbaa9860fb011aee9d89ed5ac0d12df1660ab7642fddaabb9a26b7eff0e117d4520512cb70798319ff5d30a111b5310c2
+  languageName: node
+  linkType: hard
+
+"cloneable-readable@npm:3.0.0":
+  version: 3.0.0
+  resolution: "cloneable-readable@npm:3.0.0"
+  dependencies:
+    readable-stream: "npm:^4.0.0"
+  checksum: 10/5004e0a0bb9b0720d1ebb9aacc9d22e8f8cbb42749e0a56f6859696fec323612e01889fdadb50f46089cef7bdbadb0a0f0bc92055d0e4b47ada70cefca95df2b
   languageName: node
   linkType: hard
 
@@ -20325,6 +20398,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"jose@npm:^5.3.0":
+  version: 5.3.0
+  resolution: "jose@npm:5.3.0"
+  checksum: 10/49979fcb893899bb92820573470aa0b5b08e54351d374b1f0271264ec74245c685ab4a9f2761bbb2cbd32a5bf5f1cad14b5c1de0f20cf2b3b6b1794a9beb039b
+  languageName: node
+  linkType: hard
+
 "joycon@npm:^3.1.1":
   version: 3.1.1
   resolution: "joycon@npm:3.1.1"
@@ -27235,6 +27315,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"siwe@npm:^2.3.2":
+  version: 2.3.2
+  resolution: "siwe@npm:2.3.2"
+  dependencies:
+    "@spruceid/siwe-parser": "npm:^2.1.2"
+    "@stablelib/random": "npm:^1.0.1"
+    uri-js: "npm:^4.4.1"
+    valid-url: "npm:^1.0.9"
+  peerDependencies:
+    ethers: ^5.6.8 || ^6.0.8
+  checksum: 10/6ea5ad9a9046fa916f85bf9d3092bc898f7e339d9c552714ea53ecc17daa4f78300c3cf7cc9c70fe57baf77dcee5cb38c6e1d692400b874cd84d297b1261918c
+  languageName: node
+  linkType: hard
+
 "slash@npm:^3.0.0":
   version: 3.0.0
   resolution: "slash@npm:3.0.0"
@@ -29696,7 +29790,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"uri-js@npm:^4.2.2":
+"uri-js@npm:^4.2.2, uri-js@npm:^4.4.1":
   version: 4.4.1
   resolution: "uri-js@npm:4.4.1"
   dependencies:
@@ -29865,6 +29959,13 @@ __metadata:
     convert-source-map: "npm:^1.6.0"
     source-map: "npm:^0.7.3"
   checksum: 10/db5469f133a7cfb7680a28ddfb31aad2cc64f282fa7cf0c8e91f91bfd542bf61597260282be28c9648f0f2114963a24b273ed92af9a5cad6cb629c708ca72f8e
+  languageName: node
+  linkType: hard
+
+"valid-url@npm:^1.0.9":
+  version: 1.0.9
+  resolution: "valid-url@npm:1.0.9"
+  checksum: 10/343dfaf85eb3691dc8eb93f7bc007be1ee6091e6c6d1a68bf633cb85e4bf2930e34ca9214fb2c3330de5b652510b257a8ee1ff0a0a37df0925e9dabf93ee512d
   languageName: node
   linkType: hard
 

@@ -4,12 +4,14 @@ import { ISettings } from "../../../index";
 
 import FormContactDetails from "./FormContactDetails";
 import { EnsureChain } from "components/EnsureChain";
+import { EnsureAuth } from "components/EnsureAuth";
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
   height: 100%;
+  align-items: center;
 `;
 
 const HeaderContainer = styled.div`
@@ -38,8 +40,12 @@ const NotificationSettings: React.FC<ISettings> = ({ toggleIsSettingsOpen }) => 
     <EnsureChainContainer>
       <EnsureChain>
         <Container>
-          <HeaderNotifs />
-          <FormContactDetails toggleIsSettingsOpen={toggleIsSettingsOpen} />
+          <EnsureAuth>
+            <>
+              <HeaderNotifs />
+              <FormContactDetails toggleIsSettingsOpen={toggleIsSettingsOpen} />
+            </>
+          </EnsureAuth>
         </Container>
       </EnsureChain>
     </EnsureChainContainer>
