@@ -64,7 +64,7 @@ const TransactionDetails: React.FC = () => {
       };
       setTransactionDetails(detailsWithSymbol);
     }
-  }, [transactionDetails, setTransactionDetails, erc20TokenSymbol, nativeTokenSymbol, token]);
+  }, [transactionDetails, setTransactionDetails, assetSymbol]);
 
   return (
     <Container>
