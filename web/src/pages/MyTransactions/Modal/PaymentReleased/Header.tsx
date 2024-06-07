@@ -2,7 +2,6 @@ import React from "react";
 import styled from "styled-components";
 import { formatEther } from "viem";
 import { useTransactionDetailsContext } from "context/TransactionDetailsContext";
-import { useNativeTokenSymbol } from "hooks/useNativeTokenSymbol";
 
 const StyledHeader = styled.h1`
   margin: 0;
@@ -11,12 +10,11 @@ const StyledHeader = styled.h1`
 `;
 
 const Header: React.FC = () => {
-  const { amount, token } = useTransactionDetailsContext();
-  const nativeTokenSymbol = useNativeTokenSymbol();
+  const { amount, assetSymbol } = useTransactionDetailsContext();
 
   return (
     <StyledHeader>
-      Full payment released: {formatEther(amount)} {!token ? nativeTokenSymbol : token}
+      Full payment released: {formatEther(amount)} {assetSymbol}
     </StyledHeader>
   );
 };
