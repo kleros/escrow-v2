@@ -114,7 +114,7 @@ contract Escrow is IEscrow, IArbitrableV2 {
 
     /// @inheritdoc IEscrow
     function createNativeTransaction(
-        uint256 _timeoutPayment,
+        uint256 _deadline,
         string memory _transactionUri,
         address payable _seller,
         string memory _templateData,
@@ -124,7 +124,7 @@ contract Escrow is IEscrow, IArbitrableV2 {
         transaction.buyer = payable(msg.sender);
         transaction.seller = _seller;
         transaction.amount = msg.value;
-        transaction.deadline = block.timestamp + _timeoutPayment;
+        transaction.deadline = _deadline;
         transaction.templateData = _templateData;
         transaction.templateDataMappings = _templateDataMappings;
 

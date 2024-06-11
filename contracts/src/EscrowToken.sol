@@ -135,7 +135,7 @@ contract EscrowToken is IEscrow, IArbitrableV2 {
     function createERC20Transaction(
         uint256 _amount,
         IERC20 _token,
-        uint256 _timeoutPayment,
+        uint256 _deadline,
         string memory _transactionUri,
         address payable _seller,
         string memory _templateData,
@@ -149,7 +149,7 @@ contract EscrowToken is IEscrow, IArbitrableV2 {
         transaction.amount = _amount;
         transaction.token = _token;
         // transaction.paymentType = PaymentType.ERC20;
-        transaction.deadline = block.timestamp + _timeoutPayment;
+        transaction.deadline = _deadline;
         transaction.templateData = _templateData;
         transaction.templateDataMappings = _templateDataMappings;
 

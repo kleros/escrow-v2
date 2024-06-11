@@ -18,7 +18,7 @@ Refresh the list of deployed contracts by running `./scripts/generateDeployments
 
 - [Escrow](https://sepolia.arbiscan.io/address/0x250AB0477346aDFC010585b58FbF61cff1d8f3ea)
 - [EscrowToken](https://sepolia.arbiscan.io/address/0xe7B52a7Bc50cb4Ff13d057629082844780b6E28D)
-- [EscrowUniversal](https://sepolia.arbiscan.io/address/0x5c4B2Cff2998529f9d405A9b6EbB44BC537c8D7F)
+- [EscrowUniversal](https://sepolia.arbiscan.io/address/0xBa2cC03e2e34C5DEDaEbC481b2531e06946353De)
 
 #### Sepolia
 
