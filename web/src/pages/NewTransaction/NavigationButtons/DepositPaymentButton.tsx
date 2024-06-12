@@ -40,7 +40,6 @@ const DepositPaymentButton: React.FC = () => {
     resetContext,
   } = useNewTransactionContext();
 
-  const [currentTime, setCurrentTime] = useState(Date.now());
   const [finalRecipientAddress, setFinalRecipientAddress] = useState(sellerAddress);
   const publicClient = usePublicClient();
   const navigateAndScrollTop = useNavigateAndScrollTop();
@@ -50,32 +49,19 @@ const DepositPaymentButton: React.FC = () => {
   const { address } = useAccount();
   const { chain } = useNetwork();
   const ensResult = useEnsAddress({ name: sellerAddress, chainId: 1 });
-  const deadlineTimestamp = useMemo(() => new Date(deadline).getTime(), [deadline]);
-  const timeoutPayment = useMemo(() => (deadlineTimestamp - currentTime) / 1000, [deadlineTimestamp, currentTime]);
+  const deadlineTimestamp = useMemo(() => BigInt(Math.floor(new Date(deadline).getTime() / 1000)), [deadline]);
   const isNativeTransaction = sendingToken?.address === "native";
   const transactionValue = useMemo(
     () => (isNativeTransaction ? parseEther(sendingQuantity) : parseUnits(sendingQuantity, 18)),
     [isNativeTransaction, sendingQuantity]
   );
-  const isDeadlinePassed = currentTime >= deadlineTimestamp;
-
-  useEffect(() => {
-    if (isDeadlinePassed) {
-      navigateAndScrollTop("/new-transaction/deadline");
-    }
-  }, [isDeadlinePassed, navigateAndScrollTop]);
-
-  useEffect(() => {
-    const intervalId = setInterval(() => setCurrentTime(Date.now()), 1000);
-    return () => clearInterval(intervalId);
-  }, []);
 
   useEffect(() => {
     setFinalRecipientAddress(ensResult.data || sellerAddress);
   }, [sellerAddress, ensResult.data]);
 
-  const { data: allowance } = useContractRead({
-    enabled: !isNativeTransaction && !isDeadlinePassed,
+  const { data: allowance, refetch: refetchAllowance } = useContractRead({
+    enabled: !isNativeTransaction,
     address: sendingToken?.address,
     abi: erc20ABI,
     functionName: "allowance",
@@ -120,7 +106,7 @@ const DepositPaymentButton: React.FC = () => {
           seller: sellerAddress,
           amount: sendingQuantity,
           token: isNativeTransaction ? "native" : sendingToken?.address,
-          timeoutPayment: timeoutPayment,
+          deadline: deadlineTimestamp.toString(),
           transactionUri: transactionUri,
         },
         category: "Escrow",
@@ -140,14 +126,14 @@ const DepositPaymentButton: React.FC = () => {
       address,
       isNativeTransaction,
       sendingToken?.address,
-      timeoutPayment,
+      deadlineTimestamp,
       transactionUri,
     ]
   );
 
   const { config: createNativeTransactionConfig } = usePrepareEscrowUniversalCreateNativeTransaction({
-    enabled: isNativeTransaction && ethAddressPattern.test(finalRecipientAddress) && !isDeadlinePassed,
-    args: [BigInt(Math.floor(timeoutPayment)), transactionUri, finalRecipientAddress, templateData, ""],
+    enabled: isNativeTransaction && ethAddressPattern.test(finalRecipientAddress),
+    args: [deadlineTimestamp, transactionUri, finalRecipientAddress, templateData, ""],
     value: transactionValue,
   });
 
@@ -156,12 +142,11 @@ const DepositPaymentButton: React.FC = () => {
       !isNativeTransaction &&
       !isUndefined(allowance) &&
       allowance >= transactionValue &&
-      ethAddressPattern.test(finalRecipientAddress) &&
-      !isDeadlinePassed,
+      ethAddressPattern.test(finalRecipientAddress),
     args: [
       transactionValue,
       sendingToken?.address,
-      BigInt(Math.floor(timeoutPayment)),
+      deadlineTimestamp,
       transactionUri,
       finalRecipientAddress,
       templateData,
@@ -174,7 +159,7 @@ const DepositPaymentButton: React.FC = () => {
   const { writeAsync: createERC20Transaction } = useEscrowUniversalCreateErc20Transaction(createERC20TransactionConfig);
 
   const { config: approveConfig } = usePrepareContractWrite({
-    enabled: !isNativeTransaction && !isDeadlinePassed,
+    enabled: !isNativeTransaction,
     address: sendingToken?.address,
     abi: erc20ABI,
     functionName: "approve",
@@ -192,6 +177,7 @@ const DepositPaymentButton: React.FC = () => {
           publicClient
         );
         setIsApproved(wrapResult.status);
+        await refetchAllowance();
       } catch (error) {
         console.error("Approval failed:", error);
         setIsApproved(false);
@@ -226,7 +212,7 @@ const DepositPaymentButton: React.FC = () => {
   return (
     <StyledButton
       isLoading={isSending}
-      disabled={isSending || isDeadlinePassed}
+      disabled={isSending}
       text={isNativeTransaction || isApproved ? "Deposit the Payment" : "Approve Token"}
       onClick={isNativeTransaction || isApproved ? handleCreateTransaction : handleApproveToken}
     />
