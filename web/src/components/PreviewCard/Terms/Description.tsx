@@ -20,7 +20,7 @@ const StyledCopiable = styled(Copiable)`
   gap: 6px;
 `;
 
-const StyledLabel = styled.span`
+const StyledSpan = styled.span`
   color: ${({ theme }) => theme.primaryBlue};
 `;
 
@@ -61,11 +61,11 @@ const Description: React.FC<IDescription> = ({
       By Paying {sendingQuantity}{" "}
       <InlineBlockSpan>{assetSymbol ? assetSymbol : <StyledSkeleton width={30} />}</InlineBlockSpan>, address{" "}
       <StyledCopiable copiableContent={buyerAddress ?? ""} info="Copy Buyer Address">
-        <StyledLabel>{displayBuyerAddress}</StyledLabel>
+        <StyledSpan>{displayBuyerAddress}</StyledSpan>
       </StyledCopiable>{" "}
       should receive "{deliverableText}" from address{" "}
       <StyledCopiable copiableContent={sellerAddress ?? ""} info="Copy Seller Address">
-        <StyledLabel>{displaySellerAddress}</StyledLabel>
+        <StyledSpan>{displaySellerAddress}</StyledSpan>
       </StyledCopiable>{" "}
       before the delivery deadline {new Date(deadline).toString()}.
     </>
@@ -75,11 +75,11 @@ const Description: React.FC<IDescription> = ({
     <>
       By Paying {sendingQuantity} {sendingToken}, [Blockchain] address{" "}
       <StyledCopiable copiableContent={buyerAddress ?? ""} info="Copy Buyer Address">
-        <StyledLabel>{displayBuyerAddress}</StyledLabel>
+        <StyledSpan>{displayBuyerAddress}</StyledSpan>
       </StyledCopiable>{" "}
       should receive {receivingQuantity} {receivingToken} at the [Blockchain] address{" "}
       <StyledCopiable copiableContent={sellerAddress ?? ""} info="Copy Seller Address">
-        <StyledLabel>{displaySellerAddress}</StyledLabel>
+        <StyledSpan>{displaySellerAddress}</StyledSpan>
       </StyledCopiable>{" "}
       from [Blockchain] address TODO before the delivery deadline {new Date(deadline).toString()}.
     </>
