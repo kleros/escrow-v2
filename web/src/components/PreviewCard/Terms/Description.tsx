@@ -1,7 +1,10 @@
 import React from "react";
 import styled from "styled-components";
 import { StyledSkeleton } from "components/StyledSkeleton";
+import { Copiable } from "@kleros/ui-components-library";
+import { useEnsName } from "wagmi";
 import { isUndefined } from "utils/index";
+import { shortenAddress } from "utils/shortenAddress";
 
 const StyledP = styled.p`
   margin: 0;
@@ -10,6 +13,15 @@ const StyledP = styled.p`
 
 const InlineBlockSpan = styled.span`
   display: inline-block;
+`;
+
+const StyledCopiable = styled(Copiable)`
+  margin-right: 2px;
+  gap: 6px;
+`;
+
+const StyledLabel = styled.span`
+  color: ${({ theme }) => theme.primaryBlue};
 `;
 
 interface IDescription {
@@ -38,20 +50,38 @@ const Description: React.FC<IDescription> = ({
   deadline,
   assetSymbol,
 }) => {
+  const buyerEns = useEnsName({ address: buyerAddress, chainId: 1 });
+  const sellerEns = useEnsName({ address: sellerAddress, chainId: 1 });
+
+  const displayBuyerAddress = buyerEns.data || shortenAddress(buyerAddress);
+  const displaySellerAddress = sellerEns.data || shortenAddress(sellerAddress);
+
   const generalEscrowSummary = (
     <>
       By Paying {sendingQuantity}{" "}
       <InlineBlockSpan>{assetSymbol ? assetSymbol : <StyledSkeleton width={30} />}</InlineBlockSpan>, address{" "}
-      {buyerAddress} should receive "{deliverableText}" from address {sellerAddress} before the delivery deadline{" "}
-      {new Date(deadline).toString()}.
+      <StyledCopiable copiableContent={buyerAddress ?? ""} info="Copy Buyer Address">
+        <StyledLabel>{displayBuyerAddress}</StyledLabel>
+      </StyledCopiable>{" "}
+      should receive "{deliverableText}" from address{" "}
+      <StyledCopiable copiableContent={sellerAddress ?? ""} info="Copy Seller Address">
+        <StyledLabel>{displaySellerAddress}</StyledLabel>
+      </StyledCopiable>{" "}
+      before the delivery deadline {new Date(deadline).toString()}.
     </>
   );
 
   const cryptoSwapSummary = (
     <>
-      By Paying {sendingQuantity} {sendingToken}, [Blockchain] address {buyerAddress} should receive {receivingQuantity}{" "}
-      {receivingToken} at the [Blockchain] address {sellerAddress} from [Blockchain] address TODO before the delivery
-      deadline {new Date(deadline).toString()}.
+      By Paying {sendingQuantity} {sendingToken}, [Blockchain] address{" "}
+      <StyledCopiable copiableContent={buyerAddress ?? ""} info="Copy Buyer Address">
+        <StyledLabel>{displayBuyerAddress}</StyledLabel>
+      </StyledCopiable>{" "}
+      should receive {receivingQuantity} {receivingToken} at the [Blockchain] address{" "}
+      <StyledCopiable copiableContent={sellerAddress ?? ""} info="Copy Seller Address">
+        <StyledLabel>{displaySellerAddress}</StyledLabel>
+      </StyledCopiable>{" "}
+      from [Blockchain] address TODO before the delivery deadline {new Date(deadline).toString()}.
     </>
   );
 
