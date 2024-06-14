@@ -7,7 +7,7 @@ import Header from "./Header";
 import TransactionInfo from "components/TransactionInfo";
 import Terms from "./Terms";
 import EscrowTimeline from "./EscrowTimeline";
-import Buttons from "pages/MyTransactions/TransactionDetails/PreviewCardButtons";
+import PreviewCardButtons from "pages/MyTransactions/TransactionDetails/PreviewCardButtons";
 import { DisputeRequest, HasToPayFee, Payment, SettlementProposal, TransactionResolved } from "src/graphql/graphql";
 
 export const StyledCard = styled(Card)<{ isPreview?: boolean }>`
@@ -140,7 +140,7 @@ const PreviewCard: React.FC<IPreviewCard> = ({
         settlementTimeout,
       }}
     />
-    {!isPreview ? <Buttons {...{ feeTimeout, settlementTimeout, arbitrationCost }} /> : null}
+    {!isPreview ? <PreviewCardButtons {...{ feeTimeout, settlementTimeout, arbitrationCost }} /> : null}
   </StyledCard>
 );
 
