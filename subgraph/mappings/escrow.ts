@@ -22,7 +22,7 @@ import {
 } from "../generated/EscrowUniversal/EscrowUniversal";
 import { ZERO, ONE } from "./utils";
 
-function createEscrow(id: string): Escrow {
+function createEscrow(id: string, transactionHash: Bytes): Escrow {
   let escrow = new Escrow(id);
   escrow.buyer = Bytes.empty();
   escrow.seller = Bytes.empty();
@@ -34,6 +34,7 @@ function createEscrow(id: string): Escrow {
   escrow.templateData = "";
   escrow.templateDataMappings = "";
   escrow.status = "NoDispute";
+  escrow.transactionHash = transactionHash;
   return escrow;
 }
 
@@ -95,7 +96,7 @@ export function handleHasToPayFee(event: HasToPayFeeEvent): void {
   let escrow = Escrow.load(escrowId);
 
   if (!escrow) {
-    escrow = createEscrow(escrowId);
+    return;
   }
 
   let seller = getUser(escrow.seller.toHex());
@@ -131,7 +132,7 @@ export function handleHasToPayFee(event: HasToPayFeeEvent): void {
 
 export function handleNativeTransactionCreated(event: NativeTransactionCreatedEvent): void {
   let escrowId = event.params._transactionID.toString();
-  let escrow = Escrow.load(escrowId) || createEscrow(escrowId);
+  let escrow = Escrow.load(escrowId) || createEscrow(escrowId, event.transaction.hash);
 
   escrow!.buyer = event.params._buyer;
   escrow!.seller = event.params._seller;
@@ -163,7 +164,7 @@ export function handleNativeTransactionCreated(event: NativeTransactionCreatedEv
 
 export function handleERC20TransactionCreated(event: ERC20TransactionCreatedEvent): void {
   let escrowId = event.params._transactionID.toString();
-  let escrow = Escrow.load(escrowId) || createEscrow(escrowId);
+  let escrow = Escrow.load(escrowId) || createEscrow(escrowId, event.transaction.hash);
 
   escrow!.buyer = event.params._buyer;
   escrow!.seller = event.params._seller;
@@ -199,7 +200,7 @@ export function handleTransactionResolved(event: TransactionResolvedEvent): void
   let escrow = Escrow.load(escrowId);
 
   if (!escrow) {
-    escrow = createEscrow(escrowId);
+    return;
   }
 
   let transactionResolvedId = event.transaction.hash.toHex() + "-" + event.logIndex.toString();
@@ -248,7 +249,7 @@ export function handleDisputeRequest(event: DisputeRequestEvent): void {
 
   let escrow = Escrow.load(transactionID);
   if (!escrow) {
-    escrow = createEscrow(transactionID);
+    return;
   }
 
   disputeRequest.escrow = escrow.id;
@@ -284,7 +285,7 @@ export function handleSettlementProposed(event: SettlementProposedEvent): void {
 
   let escrow = Escrow.load(transactionID);
   if (!escrow) {
-    escrow = createEscrow(transactionID);
+    return;
   }
   escrow.lastFeePaymentTime = event.block.timestamp;
 

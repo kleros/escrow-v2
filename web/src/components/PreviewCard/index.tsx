@@ -54,6 +54,7 @@ interface IPreviewCard {
   receivingQuantity: string;
   transactionCreationTimestamp: string;
   status: string;
+  transactionHash: string;
   buyerAddress: string;
   sendingQuantity: string;
   sellerAddress: string;
@@ -79,6 +80,7 @@ const PreviewCard: React.FC<IPreviewCard> = ({
   receivingQuantity,
   transactionCreationTimestamp,
   status,
+  transactionHash,
   buyerAddress,
   sendingQuantity,
   sellerAddress,
@@ -97,7 +99,7 @@ const PreviewCard: React.FC<IPreviewCard> = ({
   arbitrationCost,
 }) => (
   <StyledCard {...{ isPreview }}>
-    <Header {...{ escrowType, escrowTitle, status, isCard: false }} />
+    <Header {...{ escrowType, escrowTitle, status, transactionHash, isCard: false }} />
     <TransactionInfoContainer>
       <Divider />
       <TransactionInfo

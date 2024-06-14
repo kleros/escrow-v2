@@ -41,6 +41,7 @@ type Escrow @entity {
   token: Bytes
   status: Status
   timestamp: BigInt
+  transactionHash: Bytes!
   payments: [Payment!]! @derivedFrom(field: "escrow")
   hasToPayFees: [HasToPayFee!]! @derivedFrom(field: "escrow")
   createdEvents: [TransactionCreated!]! @derivedFrom(field: "escrow")
