@@ -9,6 +9,7 @@ import AcceptButton from "./AcceptSettlementButton";
 import ViewCaseButton from "./ViewCaseButton";
 import RaiseDisputeButton from "./RaiseDisputeButton";
 import TimeOutButton from "./TimeOutButton";
+import ExecuteTransactionButton from "./ExecuteTransactionButton";
 
 const Container = styled.div`
   display: flex;
@@ -17,13 +18,13 @@ const Container = styled.div`
   gap: 24px;
 `;
 
-interface IButtons {
+interface IPreviewCardButtons {
   feeTimeout: number;
   settlementTimeout: number;
   arbitrationCost: bigint;
 }
 
-const Buttons: React.FC<IButtons> = ({ feeTimeout, settlementTimeout, arbitrationCost }) => {
+const PreviewCardButtons: React.FC<IPreviewCardButtons> = ({ feeTimeout, settlementTimeout, arbitrationCost }) => {
   const { address } = useAccount();
   const { seller, buyer, status, settlementProposals, disputeRequest, hasToPayFees, resolvedEvents } =
     useTransactionDetailsContext();
@@ -89,6 +90,11 @@ const Buttons: React.FC<IButtons> = ({ feeTimeout, settlementTimeout, arbitratio
     [feeTimeout, currentTime, hasToPayFees]
   );
 
+  const shouldDisplayExecuteTransactionButton = useMemo(
+    () => status === "NoDispute" && currentTime >= settlementTimeout,
+    [status, currentTime, settlementTimeout]
+  );
+
   return (
     <>
       {shouldDisplaySettlementButtons ? (
@@ -121,8 +127,13 @@ const Buttons: React.FC<IButtons> = ({ feeTimeout, settlementTimeout, arbitratio
           <TimeOutButton />
         </Container>
       ) : null}
+      {shouldDisplayExecuteTransactionButton ? (
+        <Container>
+          <ExecuteTransactionButton />
+        </Container>
+      ) : null}
     </>
   );
 };
 
-export default Buttons;
+export default PreviewCardButtons;

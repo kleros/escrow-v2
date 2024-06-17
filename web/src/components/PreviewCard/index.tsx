@@ -7,7 +7,7 @@ import Header from "./Header";
 import TransactionInfo from "components/TransactionInfo";
 import Terms from "./Terms";
 import EscrowTimeline from "./EscrowTimeline";
-import Buttons from "pages/MyTransactions/TransactionDetails/PreviewCardButtons";
+import PreviewCardButtons from "pages/MyTransactions/TransactionDetails/PreviewCardButtons";
 import { DisputeRequest, HasToPayFee, Payment, SettlementProposal, TransactionResolved } from "src/graphql/graphql";
 
 export const StyledCard = styled(Card)<{ isPreview?: boolean }>`
@@ -54,6 +54,7 @@ interface IPreviewCard {
   receivingQuantity: string;
   transactionCreationTimestamp: string;
   status: string;
+  transactionHash: string;
   buyerAddress: string;
   sendingQuantity: string;
   sellerAddress: string;
@@ -79,6 +80,7 @@ const PreviewCard: React.FC<IPreviewCard> = ({
   receivingQuantity,
   transactionCreationTimestamp,
   status,
+  transactionHash,
   buyerAddress,
   sendingQuantity,
   sellerAddress,
@@ -97,7 +99,7 @@ const PreviewCard: React.FC<IPreviewCard> = ({
   arbitrationCost,
 }) => (
   <StyledCard {...{ isPreview }}>
-    <Header {...{ escrowType, escrowTitle, status, isCard: false }} />
+    <Header {...{ escrowType, escrowTitle, status, transactionHash, isCard: false }} />
     <TransactionInfoContainer>
       <Divider />
       <TransactionInfo
@@ -138,7 +140,7 @@ const PreviewCard: React.FC<IPreviewCard> = ({
         settlementTimeout,
       }}
     />
-    {!isPreview ? <Buttons {...{ feeTimeout, settlementTimeout, arbitrationCost }} /> : null}
+    {!isPreview ? <PreviewCardButtons {...{ feeTimeout, settlementTimeout, arbitrationCost }} /> : null}
   </StyledCard>
 );
 

@@ -20,6 +20,7 @@ export const transactionFragment = graphql(`
     templateData
     templateDataMappings
     status
+    transactionHash
     payments {
       id
       amount

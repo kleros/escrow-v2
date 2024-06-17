@@ -46,6 +46,7 @@ const TransactionDetails: React.FC = () => {
     seller,
     buyer,
     status,
+    transactionHash,
     payments,
     hasToPayFees,
     settlementProposals,
@@ -96,6 +97,7 @@ const TransactionDetails: React.FC = () => {
             resolvedEvents,
             arbitrationCost,
             assetSymbol,
+            transactionHash,
           }}
         />
         {status === "NoDispute" && payments?.length === 0 ? <WasItFulfilled /> : null}
