@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
 import { Button } from "@kleros/ui-components-library";
 import {
   useEscrowUniversalCreateNativeTransaction,
@@ -24,6 +23,7 @@ import { isUndefined } from "utils/index";
 import { wrapWithToast } from "utils/wrapWithToast";
 import { ethAddressPattern } from "utils/validateAddress";
 import { useQueryRefetch } from "hooks/useQueryRefetch";
+import { useNavigateAndScrollTop } from "hooks/useNavigateAndScrollTop";
 
 const StyledButton = styled(Button)``;
 
@@ -40,31 +40,27 @@ const DepositPaymentButton: React.FC = () => {
     resetContext,
   } = useNewTransactionContext();
 
-  const [currentTime, setCurrentTime] = useState(Date.now());
   const [finalRecipientAddress, setFinalRecipientAddress] = useState(sellerAddress);
   const publicClient = usePublicClient();
-  const navigate = useNavigate();
+  const navigateAndScrollTop = useNavigateAndScrollTop();
   const refetchQuery = useQueryRefetch();
   const [isSending, setIsSending] = useState(false);
   const [isApproved, setIsApproved] = useState(false);
   const { address } = useAccount();
   const { chain } = useNetwork();
   const ensResult = useEnsAddress({ name: sellerAddress, chainId: 1 });
-  const deadlineTimestamp = new Date(deadline).getTime();
-  const timeoutPayment = (deadlineTimestamp - currentTime) / 1000;
+  const deadlineTimestamp = useMemo(() => BigInt(Math.floor(new Date(deadline).getTime() / 1000)), [deadline]);
   const isNativeTransaction = sendingToken?.address === "native";
-  const transactionValue = isNativeTransaction ? parseEther(sendingQuantity) : parseUnits(sendingQuantity, 18);
-
-  useEffect(() => {
-    const intervalId = setInterval(() => setCurrentTime(Date.now()), 1000);
-    return () => clearInterval(intervalId);
-  }, []);
+  const transactionValue = useMemo(
+    () => (isNativeTransaction ? parseEther(sendingQuantity) : parseUnits(sendingQuantity, 18)),
+    [isNativeTransaction, sendingQuantity]
+  );
 
   useEffect(() => {
     setFinalRecipientAddress(ensResult.data || sellerAddress);
   }, [sellerAddress, ensResult.data]);
 
-  const { data: allowance } = useContractRead({
+  const { data: allowance, refetch: refetchAllowance } = useContractRead({
     enabled: !isNativeTransaction,
     address: sendingToken?.address,
     abi: erc20ABI,
@@ -78,51 +74,66 @@ const DepositPaymentButton: React.FC = () => {
     }
   }, [allowance, transactionValue]);
 
-  const templateData = JSON.stringify({
-    $schema: "../NewDisputeTemplate.schema.json",
-    title: escrowTitle,
-    description: deliverableText,
-    question: "Which party abided by the terms of the contract?",
-    answers: [
-      {
-        title: "Refund the Buyer",
-        description: "Select this to return the funds to the Buyer.",
-      },
-      {
-        title: "Pay the Seller",
-        description: "Select this to release the funds to the Seller.",
-      },
-    ],
-    policyURI: "ipfs://TODO",
-    attachment: {
-      label: "Transaction Terms",
-      uri: extraDescriptionUri,
-    },
-    frontendUrl: `https://escrow-v2.kleros.builders/#/my-transactions/%s`,
-    arbitrableChainID: "421614",
-    arbitrableAddress: "0x250AB0477346aDFC010585b58FbF61cff1d8f3ea",
-    arbitratorChainID: "421614",
-    arbitratorAddress: "0xA54e7A16d7460e38a8F324eF46782FB520d58CE8",
-    metadata: {
-      buyer: address,
-      seller: sellerAddress,
-      amount: sendingQuantity,
-      token: isNativeTransaction ? "native" : sendingToken?.address,
-      timeoutPayment: timeoutPayment,
-      transactionUri: transactionUri,
-    },
-    category: "Escrow",
-    specification: "KIPXXX",
-    aliases: {
-      Buyer: address,
-      Seller: sellerAddress,
-    },
-    version: "1.0",
-  });
+  const templateData = useMemo(
+    () =>
+      JSON.stringify({
+        $schema: "../NewDisputeTemplate.schema.json",
+        title: escrowTitle,
+        description: deliverableText,
+        question: "Which party abided by the terms of the contract?",
+        answers: [
+          {
+            title: "Refund the Buyer",
+            description: "Select this to return the funds to the Buyer.",
+          },
+          {
+            title: "Pay the Seller",
+            description: "Select this to release the funds to the Seller.",
+          },
+        ],
+        policyURI: "ipfs://TODO",
+        attachment: {
+          label: "Transaction Terms",
+          uri: extraDescriptionUri,
+        },
+        frontendUrl: `https://escrow-v2.kleros.builders/#/my-transactions/%s`,
+        arbitrableChainID: "421614",
+        arbitrableAddress: "0x250AB0477346aDFC010585b58FbF61cff1d8f3ea",
+        arbitratorChainID: "421614",
+        arbitratorAddress: "0xA54e7A16d7460e38a8F324eF46782FB520d58CE8",
+        metadata: {
+          buyer: address,
+          seller: sellerAddress,
+          amount: sendingQuantity,
+          token: isNativeTransaction ? "native" : sendingToken?.address,
+          deadline: deadlineTimestamp.toString(),
+          transactionUri: transactionUri,
+        },
+        category: "Escrow",
+        specification: "KIPXXX",
+        aliases: {
+          Buyer: address,
+          Seller: sellerAddress,
+        },
+        version: "1.0",
+      }),
+    [
+      escrowTitle,
+      deliverableText,
+      extraDescriptionUri,
+      sendingQuantity,
+      sellerAddress,
+      address,
+      isNativeTransaction,
+      sendingToken?.address,
+      deadlineTimestamp,
+      transactionUri,
+    ]
+  );
 
   const { config: createNativeTransactionConfig } = usePrepareEscrowUniversalCreateNativeTransaction({
     enabled: isNativeTransaction && ethAddressPattern.test(finalRecipientAddress),
-    args: [BigInt(Math.floor(timeoutPayment)), transactionUri, finalRecipientAddress, templateData, ""],
+    args: [deadlineTimestamp, transactionUri, finalRecipientAddress, templateData, ""],
     value: transactionValue,
   });
 
@@ -135,7 +146,7 @@ const DepositPaymentButton: React.FC = () => {
     args: [
       transactionValue,
       sendingToken?.address,
-      BigInt(Math.floor(timeoutPayment)),
+      deadlineTimestamp,
       transactionUri,
       finalRecipientAddress,
       templateData,
@@ -166,6 +177,7 @@ const DepositPaymentButton: React.FC = () => {
           publicClient
         );
         setIsApproved(wrapResult.status);
+        await refetchAllowance();
       } catch (error) {
         console.error("Approval failed:", error);
         setIsApproved(false);
@@ -187,7 +199,7 @@ const DepositPaymentButton: React.FC = () => {
         if (wrapResult.status) {
           refetchQuery([["refetchOnBlock", "useMyTransactionsQuery"], ["useUserQuery"]]);
           resetContext();
-          navigate("/my-transactions/display/1/desc/all");
+          navigateAndScrollTop("/my-transactions/display/1/desc/all");
         }
       } catch (error) {
         console.error("Transaction failed:", error);

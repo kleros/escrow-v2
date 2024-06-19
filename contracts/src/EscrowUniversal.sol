@@ -123,7 +123,7 @@ contract EscrowUniversal is IEscrow, IArbitrableV2 {
 
     /// @inheritdoc IEscrow
     function createNativeTransaction(
-        uint256 _timeoutPayment,
+        uint256 _deadline,
         string memory _transactionUri,
         address payable _seller,
         string memory _templateData,
@@ -134,7 +134,7 @@ contract EscrowUniversal is IEscrow, IArbitrableV2 {
         transaction.seller = _seller;
         transaction.amount = msg.value;
         transaction.token = NATIVE;
-        transaction.deadline = block.timestamp + _timeoutPayment;
+        transaction.deadline = _deadline;
         transaction.templateData = _templateData;
         transaction.templateDataMappings = _templateDataMappings;
 
@@ -154,7 +154,7 @@ contract EscrowUniversal is IEscrow, IArbitrableV2 {
     function createERC20Transaction(
         uint256 _amount,
         IERC20 _token,
-        uint256 _timeoutPayment,
+        uint256 _deadline,
         string memory _transactionUri,
         address payable _seller,
         string memory _templateData,
@@ -167,7 +167,7 @@ contract EscrowUniversal is IEscrow, IArbitrableV2 {
         transaction.seller = _seller;
         transaction.amount = _amount;
         transaction.token = _token;
-        transaction.deadline = block.timestamp + _timeoutPayment;
+        transaction.deadline = _deadline;
         transaction.templateData = _templateData;
         transaction.templateDataMappings = _templateDataMappings;
 

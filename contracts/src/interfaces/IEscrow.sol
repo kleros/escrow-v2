@@ -74,14 +74,14 @@ interface IEscrow {
     // ************************************* //
 
     /// @dev Create a transaction.
-    /// @param _timeoutPayment Time after which a party can automatically execute the arbitrable transaction.
+    /// @param _deadline Time after which a party can automatically execute the arbitrable transaction.
     /// @param _transactionUri The IPFS Uri Hash of the transaction.
     /// @param _seller The recipient of the transaction.
     /// @param _templateData The dispute template data.
     /// @param _templateDataMappings The dispute template data mappings.
     /// @return transactionID The index of the transaction.
     function createNativeTransaction(
-        uint256 _timeoutPayment,
+        uint256 _deadline,
         string memory _transactionUri,
         address payable _seller,
         string memory _templateData,
@@ -91,7 +91,7 @@ interface IEscrow {
     /// @dev Create a transaction.
     /// @param _amount The amount of tokens in this transaction.
     /// @param _token The ERC20 token contract.
-    /// @param _timeoutPayment Time after which a party can automatically execute the arbitrable transaction.
+    /// @param _deadline Time after which a party can automatically execute the arbitrable transaction.
     /// @param _transactionUri The IPFS Uri Hash of the transaction.
     /// @param _seller The recipient of the transaction.
     /// @param _templateData The dispute template data.
@@ -100,7 +100,7 @@ interface IEscrow {
     function createERC20Transaction(
         uint256 _amount,
         IERC20 _token,
-        uint256 _timeoutPayment,
+        uint256 _deadline,
         string memory _transactionUri,
         address payable _seller,
         string memory _templateData,

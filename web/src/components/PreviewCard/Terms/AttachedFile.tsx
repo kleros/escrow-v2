@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { responsiveSize } from "styles/responsiveSize";
 import AttachmentIcon from "svgs/icons/attachment.svg";
+import { getIpfsUrl } from "utils/getIpfsUrl";
 
 const StyledA = styled.a`
   display: flex;
@@ -17,7 +18,7 @@ interface IAttachedFile {
 }
 
 const AttachedFile: React.FC<IAttachedFile> = ({ extraDescriptionUri }) => {
-  const href = extraDescriptionUri?.replace(/^ipfs:\/\//, "https://cdn.kleros.link/ipfs/");
+  const href = extraDescriptionUri && getIpfsUrl(extraDescriptionUri);
 
   return extraDescriptionUri ? (
     <StyledA href={href} target="_blank" rel="noreferrer">

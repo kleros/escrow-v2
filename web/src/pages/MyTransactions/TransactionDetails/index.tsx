@@ -46,6 +46,7 @@ const TransactionDetails: React.FC = () => {
     seller,
     buyer,
     status,
+    transactionHash,
     payments,
     hasToPayFees,
     settlementProposals,
@@ -54,16 +55,17 @@ const TransactionDetails: React.FC = () => {
   } = useTransactionDetailsContext();
 
   const transactionInfo = useFetchIpfsJson(transactionUri);
+  const assetSymbol = token ? erc20TokenSymbol : nativeTokenSymbol;
 
   useEffect(() => {
     if (transactionDetails?.escrow) {
       const detailsWithSymbol = {
         ...transactionDetails.escrow,
-        erc20TokenSymbol: token ? erc20TokenSymbol : nativeTokenSymbol,
+        assetSymbol,
       };
       setTransactionDetails(detailsWithSymbol);
     }
-  }, [transactionDetails, setTransactionDetails, erc20TokenSymbol, nativeTokenSymbol, token]);
+  }, [transactionDetails, setTransactionDetails, assetSymbol]);
 
   return (
     <Container>
@@ -80,7 +82,6 @@ const TransactionDetails: React.FC = () => {
           transactionCreationTimestamp={timestamp}
           sendingQuantity={!isUndefined(amount) ? formatEther(amount) : ""}
           deadline={deadline * 1000}
-          assetSymbol={!token ? nativeTokenSymbol : erc20TokenSymbol}
           overrideIsList={false}
           amount={!isUndefined(amount) ? formatEther(amount) : ""}
           isPreview={false}
@@ -95,6 +96,8 @@ const TransactionDetails: React.FC = () => {
             disputeRequest,
             resolvedEvents,
             arbitrationCost,
+            assetSymbol,
+            transactionHash,
           }}
         />
         {status === "NoDispute" && payments?.length === 0 ? <WasItFulfilled /> : null}

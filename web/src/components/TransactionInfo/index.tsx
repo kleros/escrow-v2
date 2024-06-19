@@ -1,14 +1,16 @@
 import React from "react";
 import styled, { css } from "styled-components";
-import Skeleton from "react-loading-skeleton";
 import { landscapeStyle } from "styles/landscapeStyle";
+import { Copiable } from "@kleros/ui-components-library";
+import { useEnsName } from "wagmi";
+import Skeleton from "react-loading-skeleton";
 import { Statuses } from "consts/statuses";
 import { useIsList } from "context/IsListProvider";
+import { shortenAddress } from "utils/shortenAddress";
 import CalendarIcon from "svgs/icons/calendar.svg";
 import PileCoinsIcon from "svgs/icons/pile-coins.svg";
 import UserIcon from "svgs/icons/user.svg";
 import Field from "./Field";
-import { shortenAddress } from "utils/shortenAddress";
 
 const Container = styled.div<{ isList: boolean; isPreview?: boolean }>`
   display: flex;
@@ -92,6 +94,12 @@ const TransactionInfo: React.FC<ITransactionInfo> = ({
   const { isList } = useIsList();
   const displayAsList = isList && !overrideIsList;
 
+  const buyerEns = useEnsName({ address: buyerAddress, chainId: 1 });
+  const sellerEns = useEnsName({ address: sellerAddress, chainId: 1 });
+
+  const displayBuyerAddress = buyerEns.data || shortenAddress(buyerAddress);
+  const displaySellerAddress = sellerEns.data || shortenAddress(sellerAddress);
+
   return (
     <Container isList={displayAsList} isPreview={isPreview}>
       <RestOfFieldsContainer isPreview={isPreview} isList={displayAsList}>
@@ -121,7 +129,15 @@ const TransactionInfo: React.FC<ITransactionInfo> = ({
           <Field
             icon={UserIcon}
             name="Buyer"
-            value={shortenAddress(buyerAddress)}
+            value={
+              isPreview ? (
+                <Copiable copiableContent={buyerAddress ?? ""} info="Copy Buyer Address">
+                  {displayBuyerAddress}
+                </Copiable>
+              ) : (
+                displayBuyerAddress
+              )
+            }
             displayAsList={displayAsList}
             isPreview={isPreview}
           />
@@ -130,7 +146,15 @@ const TransactionInfo: React.FC<ITransactionInfo> = ({
           <Field
             icon={UserIcon}
             name="Seller"
-            value={shortenAddress(sellerAddress)}
+            value={
+              isPreview ? (
+                <Copiable copiableContent={sellerAddress ?? ""} info="Copy Seller Address">
+                  {displaySellerAddress}
+                </Copiable>
+              ) : (
+                displaySellerAddress
+              )
+            }
             displayAsList={displayAsList}
             isPreview={isPreview}
           />

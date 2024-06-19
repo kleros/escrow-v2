@@ -89,7 +89,7 @@ const NextButton: React.FC<INextButton> = ({ nextRoute }) => {
         location.pathname.includes("/new-transaction/notifications") &&
         !isUndefined(address) &&
         userSettings &&
-        userSettings.email !== notificationEmail
+        ![userSettings.email, ""].includes(notificationEmail)
       ) {
         const data = {
           email: notificationEmail,
@@ -114,7 +114,13 @@ const NextButton: React.FC<INextButton> = ({ nextRoute }) => {
     }
   };
 
-  return <Button disabled={isButtonDisabled} onClick={handleNextClick} text="Next" />;
+  return (
+    <Button
+      disabled={isButtonDisabled}
+      onClick={handleNextClick}
+      text={escrowType === "general" ? "Next" : "Coming Soon"}
+    />
+  );
 };
 
 export default NextButton;

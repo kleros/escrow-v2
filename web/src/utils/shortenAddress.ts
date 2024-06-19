@@ -1,7 +1,9 @@
 import { getAddress } from "viem";
 
 export function shortenAddress(address: string): string {
-  if (address.endsWith('.eth')) {
+  if (!address) return "";
+
+  if (address.endsWith(".eth")) {
     return address;
   }
 

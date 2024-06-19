@@ -10,11 +10,7 @@ import {
 } from "hooks/contracts/generated";
 import { useQueryRefetch } from "hooks/useQueryRefetch";
 
-interface IAcceptButton {
-  toggleModal?: () => void;
-}
-
-const AcceptButton: React.FC<IAcceptButton> = ({ toggleModal }) => {
+const AcceptButton: React.FC = () => {
   const [isSending, setIsSending] = useState<boolean>(false);
   const publicClient = usePublicClient();
   const { id } = useTransactionDetailsContext();

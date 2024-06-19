@@ -1,6 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
+import { toast } from "react-toastify";
 
 import { isUndefined } from "utils/index";
+import { OPTIONS } from "utils/wrapWithToast";
 
 export const useUserSettings = () => {
   const authToken = sessionStorage.getItem("auth-token")?.replace(/"/g, "");
@@ -22,6 +24,7 @@ export const useUserSettings = () => {
 
         return (await res.json())?.data as IUserSettings;
       } catch {
+        toast.error("Error fetching User Settings!", OPTIONS);
         return {} as IUserSettings;
       }
     },

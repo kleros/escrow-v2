@@ -72,6 +72,7 @@ const TransactionCard: React.FC<ITransactionCard> = ({
   const nativeTokenSymbol = useNativeTokenSymbol();
   const { tokenMetadata } = useTokenMetadata(token);
   const erc20TokenSymbol = tokenMetadata?.symbol;
+  const assetSymbol = token ? erc20TokenSymbol : nativeTokenSymbol;
   const title = transactionInfo?.title;
   const navigateAndScrollTop = useNavigateAndScrollTop();
 
@@ -86,11 +87,11 @@ const TransactionCard: React.FC<ITransactionCard> = ({
             {!isUndefined(title) ? <StyledTitle>{title}</StyledTitle> : <StyledSkeleton />}
             <TransactionInfo
               amount={formatEther(amount)}
-              assetSymbol={!token ? nativeTokenSymbol : erc20TokenSymbol}
               buyerAddress={buyer}
               sellerAddress={seller}
               deadlineDate={new Date(deadline * 1000).toLocaleString()}
               isPreview={false}
+              {...{ assetSymbol }}
             />
           </CardContainer>
         </StyledCard>
@@ -107,11 +108,11 @@ const TransactionCard: React.FC<ITransactionCard> = ({
             )}
             <TransactionInfo
               amount={formatEther(amount)}
-              assetSymbol={!token ? nativeTokenSymbol : erc20TokenSymbol}
               buyerAddress={buyer}
               sellerAddress={seller}
               deadlineDate={new Date(deadline * 1000).toLocaleString()}
               isPreview={false}
+              {...{ assetSymbol }}
             />
           </ListContainer>
         </StyledListItem>

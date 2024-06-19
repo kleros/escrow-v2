@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import Skeleton from "react-loading-skeleton";
+import TokenIcon from "./TokenItem/TokenIcon";
 
 const Container = styled.div`
   border: 1px solid ${({ theme }) => theme.stroke};
@@ -26,11 +27,6 @@ const DropdownArrow = styled.span`
   margin-left: 8px;
 `;
 
-const TokenLogo = styled.img`
-  width: 24px;
-  height: 24px;
-`;
-
 const DropdownContent = styled.div`
   display: flex;
   align-items: center;
@@ -49,16 +45,14 @@ const SymbolSkeleton = styled(Skeleton)`
   height: 16px;
 `;
 
-export const DropdownButton = ({ loading, sendingToken, onClick }) => (
-  <Container onClick={onClick}>
-    <DropdownContent>
-      {loading ? (
-        <LogoSkeleton />
-      ) : (
-        sendingToken && <TokenLogo src={sendingToken.logo} alt={`${sendingToken.symbol} logo`} />
-      )}
-      {loading ? <SymbolSkeleton /> : sendingToken?.symbol}
-    </DropdownContent>
-    <DropdownArrow />
-  </Container>
-);
+export const DropdownButton = ({ loading, sendingToken, onClick }) => {
+  return (
+    <Container onClick={onClick}>
+      <DropdownContent>
+        {loading ? <LogoSkeleton /> : <TokenIcon symbol={sendingToken.symbol} logo={sendingToken.logo} />}
+        {loading ? <SymbolSkeleton /> : sendingToken?.symbol}
+      </DropdownContent>
+      <DropdownArrow />
+    </Container>
+  );
+};
