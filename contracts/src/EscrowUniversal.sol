@@ -191,15 +191,19 @@ contract EscrowUniversal is IEscrow, IArbitrableV2 {
         if (transaction.status != Status.NoDispute) revert TransactionDisputed();
         if (_amount > transaction.amount) revert MaximumPaymentAmountExceeded();
 
+        emit Payment(_transactionID, _amount, msg.sender);
+
         transaction.amount -= _amount;
+        if (transaction.amount == 0) {
+            transaction.status = Status.TransactionResolved;
+            emit TransactionResolved(_transactionID, Resolution.TransactionExecuted);
+        }
 
         if (transaction.token == NATIVE) {
             transaction.seller.send(_amount); // It is the user responsibility to accept ETH.
         } else {
             if (!transaction.token.safeTransfer(transaction.seller, _amount)) revert TokenTransferFailed();
         }
-
-        emit Payment(_transactionID, _amount, msg.sender);
     }
 
     /// @inheritdoc IEscrow
@@ -209,15 +213,19 @@ contract EscrowUniversal is IEscrow, IArbitrableV2 {
         if (transaction.status != Status.NoDispute) revert TransactionDisputed();
         if (_amountReimbursed > transaction.amount) revert MaximumPaymentAmountExceeded();
 
+        emit Payment(_transactionID, _amountReimbursed, msg.sender);
+
         transaction.amount -= _amountReimbursed;
+        if (transaction.amount == 0) {
+            transaction.status = Status.TransactionResolved;
+            emit TransactionResolved(_transactionID, Resolution.TransactionExecuted);
+        }
 
         if (transaction.token == NATIVE) {
             transaction.buyer.send(_amountReimbursed); // It is the user responsibility to accept ETH.
         } else {
             if (!transaction.token.safeTransfer(transaction.buyer, _amountReimbursed)) revert TokenTransferFailed();
         }
-
-        emit Payment(_transactionID, _amountReimbursed, msg.sender);
     }
 
     /// @inheritdoc IEscrow
@@ -228,6 +236,7 @@ contract EscrowUniversal is IEscrow, IArbitrableV2 {
 
         uint256 amount = transaction.amount;
         transaction.amount = 0;
+        transaction.status = Status.TransactionResolved;
 
         if (transaction.token == NATIVE) {
             transaction.seller.send(amount); // It is the user responsibility to accept ETH.
@@ -235,8 +244,7 @@ contract EscrowUniversal is IEscrow, IArbitrableV2 {
             if (!transaction.token.safeTransfer(transaction.seller, amount)) revert TokenTransferFailed();
         }
 
-        transaction.status = Status.TransactionResolved;
-
+        emit Payment(_transactionID, amount, msg.sender);
         emit TransactionResolved(_transactionID, Resolution.TransactionExecuted);
     }
 
