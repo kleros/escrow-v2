@@ -3,48 +3,66 @@ import { DeployFunction } from "hardhat-deploy/types";
 import { HomeChains, isSkipped } from "./utils";
 
 const disputeTemplate = `{
-  "title": "{{escrowTitle}}",
-  "description": "{{deliverableText}}",
+  "$schema": "../NewDisputeTemplate.schema.json",
+  "title": "Escrow dispute: {{escrowTitle}}", 
+  "description": "{{deliverableText}}", 
   "question": "Which party abided by the terms of the contract?",
   "answers": [
-      {
-          "title": "Refund the Buyer",
-          "description": "Select this to return the funds to the Buyer."
-      },
-      {
-          "title": "Pay the Seller",
-          "description": "Select this to release the funds to the Seller."
-      }
+    {
+      "title": "Refund the Buyer",
+      "description": "Select this to return the funds to the Buyer."
+    },
+    {
+      "title": "Pay the Seller",
+      "description": "Select this to release the funds to the Seller."
+    }
   ],
-  "policyURI": "ipfs://TODO",
-  "attachment": {
-      "label": "Transaction Terms",
-      "uri": "{{extraDescriptionUri}}"
+  "policyURI": "/ipfs/XxxxxXXX/escrow-general-policy.pdf", 
+  "attachment": { 
+    "label": "Transaction Terms",
+    "uri": "{{extraDescriptionUri}}"
   },
-  "frontendUrl": "https://escrow-v2.kleros.builders/#/myTransactions/%s",
+  "frontendUrl": "https://escrow-v2.kleros.builders/#/my-transactions/{{externalDisputeID}}", 
   "arbitrableChainID": "421614",
-  "arbitrableAddress": "0x250AB0477346aDFC010585b58FbF61cff1d8f3ea",
+  "arbitrableAddress": "0xFromContext",
   "arbitratorChainID": "421614",
-  "arbitratorAddress": "0xA54e7A16d7460e38a8F324eF46782FB520d58CE8",
+  "arbitratorAddress": "0xA54e7A16d7460e38a8F324eF46782FB520d58CE8", 
   "metadata": {
-      "buyer": "{{address}}",
-      "seller": "{{sendingRecipientAddress}}",
-      "amount": "{{sendingQuantity}}",
-      "asset": "{{escrowType}}",
-      "timeoutPayment": "{{timeoutPayment}}",
-      "transactionUri": "{{transactionUri}}"
+    "buyer": "{{buyer}}",
+    "seller": "{{seller}}",
+    "amount": "{{amount}}",
+    "token": "{{token}}",
+    "deadline": "{{deadline}}",
+    "transactionUri": "{{transactionUri}}" 
   },
   "category": "Escrow",
   "specification": "KIPXXX",
   "aliases": {
-      "Buyer": "{{address}}",
-      "Seller": "{{sendingRecipientAddress}}"
+    "Buyer": "{{buyer}}",
+    "Seller": "{{seller}}"
   },
   "version": "1.0"
 }
 `;
 
-const mapping = `{}`;
+const mapping = `[
+  {
+    "type": "graphql",
+    "endpoint": "https://gateway-arbitrum.network.thegraph.com/api/{{graphApiKey}}/subgraphs/id/3aZxYcZpZL5BuVhuUupqVrCV8VeNyZEvjmPXibyPHDFQ",
+    "query": "query GetTransaction($transactionId: ID!) { escrow(id: $transactionId) { transactionUri buyer seller amount token deadline } }",
+    "variables": {
+      "transactionId": "{{externalDisputeID}}"
+    },
+    "seek": ["escrow.transactionUri", "escrow.buyer", "escrow.seller", "escrow.amount", "escrow.token", "escrow.deadline"],
+    "populate": ["transactionUri", "buyer", "seller", "amount", "token", "deadline"]
+  },
+  {
+    "type": "fetch/ipfs/json",
+    "ipfsUri": "{{transactionUri}}",
+    "seek": ["title", "description", "extraDescriptionUri"],
+    "populate": ["escrowTitle", "deliverableText", "extraDescriptionUri"]
+  }
+]`;
 
 // General court, 3 jurors
 const extraData =
