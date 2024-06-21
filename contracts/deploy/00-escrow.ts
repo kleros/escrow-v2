@@ -22,7 +22,7 @@ const disputeTemplate = `{
     "label": "Transaction Terms",
     "uri": "{{extraDescriptionUri}}"
   },
-  "frontendUrl": "https://escrow-v2.kleros.builders/#/my-transactions/{{externalDisputeID}}", 
+  "frontendUrl": "https://escrow-v2.kleros.builders/#/transactions/{{externalDisputeID}}", 
   "arbitrableChainID": "421614",
   "arbitrableAddress": "0xFromContext",
   "arbitratorChainID": "421614",
