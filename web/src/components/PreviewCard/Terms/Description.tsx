@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { StyledSkeleton } from "components/StyledSkeleton";
 import { Copiable } from "@kleros/ui-components-library";
 import { useEnsName } from "wagmi";
+import { DEFAULT_CHAIN, SUPPORTED_CHAINS } from "consts/chains";
 import { isUndefined } from "utils/index";
 import { shortenAddress } from "utils/shortenAddress";
 
@@ -20,8 +21,13 @@ const StyledCopiable = styled(Copiable)`
   gap: 6px;
 `;
 
-const StyledSpan = styled.span`
+const StyledA = styled.a`
   color: ${({ theme }) => theme.primaryBlue};
+  font-size: 16px;
+
+  &:hover {
+    text-decoration: underline;
+  }
 `;
 
 interface IDescription {
@@ -61,11 +67,23 @@ const Description: React.FC<IDescription> = ({
       By Paying {sendingQuantity}{" "}
       <InlineBlockSpan>{assetSymbol ? assetSymbol : <StyledSkeleton width={30} />}</InlineBlockSpan>, address{" "}
       <StyledCopiable copiableContent={buyerAddress ?? ""} info="Copy Buyer Address">
-        <StyledSpan>{displayBuyerAddress}</StyledSpan>
+        <StyledA
+          href={`${SUPPORTED_CHAINS[DEFAULT_CHAIN].blockExplorers?.default.url}/address/${buyerAddress}`}
+          target="_blank"
+          rel="noreferrer"
+        >
+          {displayBuyerAddress}
+        </StyledA>
       </StyledCopiable>{" "}
       should receive "{deliverableText}" from address{" "}
       <StyledCopiable copiableContent={sellerAddress ?? ""} info="Copy Seller Address">
-        <StyledSpan>{displaySellerAddress}</StyledSpan>
+        <StyledA
+          href={`${SUPPORTED_CHAINS[DEFAULT_CHAIN].blockExplorers?.default.url}/address/${sellerAddress}`}
+          target="_blank"
+          rel="noreferrer"
+        >
+          {displaySellerAddress}
+        </StyledA>
       </StyledCopiable>{" "}
       before the delivery deadline {new Date(deadline).toString()}.
     </>
@@ -75,11 +93,23 @@ const Description: React.FC<IDescription> = ({
     <>
       By Paying {sendingQuantity} {sendingToken}, [Blockchain] address{" "}
       <StyledCopiable copiableContent={buyerAddress ?? ""} info="Copy Buyer Address">
-        <StyledSpan>{displayBuyerAddress}</StyledSpan>
+        <StyledA
+          href={`${SUPPORTED_CHAINS[DEFAULT_CHAIN].blockExplorers?.default.url}/address/${buyerAddress}`}
+          target="_blank"
+          rel="noreferrer"
+        >
+          {displayBuyerAddress}
+        </StyledA>
       </StyledCopiable>{" "}
       should receive {receivingQuantity} {receivingToken} at the [Blockchain] address{" "}
       <StyledCopiable copiableContent={sellerAddress ?? ""} info="Copy Seller Address">
-        <StyledSpan>{displaySellerAddress}</StyledSpan>
+        <StyledA
+          href={`${SUPPORTED_CHAINS[DEFAULT_CHAIN].blockExplorers?.default.url}/address/${sellerAddress}`}
+          target="_blank"
+          rel="noreferrer"
+        >
+          {displaySellerAddress}
+        </StyledA>
       </StyledCopiable>{" "}
       from [Blockchain] address TODO before the delivery deadline {new Date(deadline).toString()}.
     </>

@@ -5,6 +5,7 @@ import { Copiable } from "@kleros/ui-components-library";
 import { useEnsName } from "wagmi";
 import Skeleton from "react-loading-skeleton";
 import { Statuses } from "consts/statuses";
+import { DEFAULT_CHAIN, SUPPORTED_CHAINS } from "consts/chains";
 import { useIsList } from "context/IsListProvider";
 import { shortenAddress } from "utils/shortenAddress";
 import CalendarIcon from "svgs/icons/calendar.svg";
@@ -71,6 +72,16 @@ const RestOfFieldsContainer = styled.div<{ isList?: boolean; isPreview?: boolean
     `};
 `;
 
+const StyledA = styled.a`
+  color: ${({ theme }) => theme.primaryText};
+  font-weight: 600;
+
+  &:hover {
+    text-decoration: underline;
+    color: ${({ theme }) => theme.primaryBlue};
+  }
+`;
+
 export interface ITransactionInfo {
   amount?: string;
   deadline: number;
@@ -132,7 +143,13 @@ const TransactionInfo: React.FC<ITransactionInfo> = ({
             value={
               isPreview ? (
                 <Copiable copiableContent={buyerAddress ?? ""} info="Copy Buyer Address">
-                  {displayBuyerAddress}
+                  <StyledA
+                    href={`${SUPPORTED_CHAINS[DEFAULT_CHAIN].blockExplorers?.default.url}/address/${buyerAddress}`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {displayBuyerAddress}
+                  </StyledA>
                 </Copiable>
               ) : (
                 displayBuyerAddress
@@ -149,7 +166,13 @@ const TransactionInfo: React.FC<ITransactionInfo> = ({
             value={
               isPreview ? (
                 <Copiable copiableContent={sellerAddress ?? ""} info="Copy Seller Address">
-                  {displaySellerAddress}
+                  <StyledA
+                    href={`${SUPPORTED_CHAINS[DEFAULT_CHAIN].blockExplorers?.default.url}/address/${sellerAddress}`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {displaySellerAddress}
+                  </StyledA>
                 </Copiable>
               ) : (
                 displaySellerAddress

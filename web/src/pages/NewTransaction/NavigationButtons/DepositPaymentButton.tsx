@@ -96,7 +96,7 @@ const DepositPaymentButton: React.FC = () => {
           label: "Transaction Terms",
           uri: extraDescriptionUri,
         },
-        frontendUrl: `https://escrow-v2.kleros.builders/#/my-transactions/%s`,
+        frontendUrl: `https://escrow-v2.kleros.builders/#/transactions/%s`,
         arbitrableChainID: "421614",
         arbitrableAddress: "0x250AB0477346aDFC010585b58FbF61cff1d8f3ea",
         arbitratorChainID: "421614",
@@ -199,7 +199,7 @@ const DepositPaymentButton: React.FC = () => {
         if (wrapResult.status) {
           refetchQuery([["refetchOnBlock", "useMyTransactionsQuery"], ["useUserQuery"]]);
           resetContext();
-          navigateAndScrollTop("/my-transactions/display/1/desc/all");
+          navigateAndScrollTop("/transactions/display/1/desc/all");
         }
       } catch (error) {
         console.error("Transaction failed:", error);
