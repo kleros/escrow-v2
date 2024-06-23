@@ -26,7 +26,7 @@ interface IPreviewCardButtons {
 
 const PreviewCardButtons: React.FC<IPreviewCardButtons> = ({ feeTimeout, settlementTimeout, arbitrationCost }) => {
   const { address } = useAccount();
-  const { seller, buyer, status, settlementProposals, disputeRequest, hasToPayFees, resolvedEvents } =
+  const { seller, buyer, status, deadline, settlementProposals, disputeRequest, hasToPayFees, resolvedEvents } =
     useTransactionDetailsContext();
   const connectedAddress = address?.toLowerCase();
   const [currentTime, setCurrentTime] = useState(Math.floor(Date.now() / 1000));
@@ -91,7 +91,7 @@ const PreviewCardButtons: React.FC<IPreviewCardButtons> = ({ feeTimeout, settlem
   );
 
   const shouldDisplayExecuteTransactionButton = useMemo(
-    () => status === "NoDispute" && currentTime >= settlementTimeout,
+    () => status === "NoDispute" && currentTime >= Number(deadline),
     [status, currentTime, settlementTimeout]
   );
 
