@@ -48,7 +48,7 @@ const disputeTemplate = `{
 const mapping = `[
   {
     "type": "graphql",
-    "endpoint": "https://gateway-arbitrum.network.thegraph.com/api/{{graphApiKey}}/subgraphs/id/3aZxYcZpZL5BuVhuUupqVrCV8VeNyZEvjmPXibyPHDFQ",
+    "endpoint": "https://gateway-arbitrum.network.thegraph.com/api/{{{graphApiKey}}}/subgraphs/id/3aZxYcZpZL5BuVhuUupqVrCV8VeNyZEvjmPXibyPHDFQ",
     "query": "query GetTransaction($transactionId: ID!) { escrow(id: $transactionId) { transactionUri buyer seller amount token deadline } }",
     "variables": {
       "transactionId": "{{externalDisputeID}}"
@@ -58,7 +58,7 @@ const mapping = `[
   },
   {
     "type": "fetch/ipfs/json",
-    "ipfsUri": "{{transactionUri}}",
+    "ipfsUri": "{{{transactionUri}}}",
     "seek": ["title", "description", "extraDescriptionUri"],
     "populate": ["escrowTitle", "deliverableText", "extraDescriptionUri"]
   }
