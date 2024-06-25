@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import { Button } from "@kleros/ui-components-library";
 
@@ -57,7 +57,6 @@ const StyledButton = styled(Button)`
 `;
 
 const Header: React.FC = () => {
-  const { id } = useParams();
   const navigate = useNavigate();
 
   return (
