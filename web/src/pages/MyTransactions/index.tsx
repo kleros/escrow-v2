@@ -36,6 +36,7 @@ const Dashboard: React.FC = () => {
       {isConnected && isOnSupportedChain ? (
         <Routes>
           <Route path="/display/:page/:order/:filter" element={<TransactionsFetcher />} />
+
           <Route
             path="/:id/*"
             element={

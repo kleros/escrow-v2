@@ -13,6 +13,7 @@ import Layout from "layout/index";
 import NewTransaction from "./pages/NewTransaction";
 import MyTransactions from "./pages/MyTransactions";
 import { NewTransactionProvider } from "./context/NewTransactionContext";
+import AttachmentDisplay from "./pages/AttachmentDisplay";
 
 const App: React.FC = () => {
   return (
@@ -28,6 +29,7 @@ const App: React.FC = () => {
                     <Route index element={<Navigate to="new-transaction" replace />} />
                     <Route path="new-transaction/*" element={<NewTransaction />} />
                     <Route path="transactions/*" element={<MyTransactions />} />
+                    <Route path="attachment/*" element={<AttachmentDisplay />} />
                     <Route path="*" element={<h1>404 not found</h1>} />
                   </Route>
                 </SentryRoutes>
