@@ -74,66 +74,71 @@ const DepositPaymentButton: React.FC = () => {
     }
   }, [allowance, transactionValue]);
 
-  const templateData = useMemo(
-    () =>
-      JSON.stringify({
-        $schema: "../NewDisputeTemplate.schema.json",
-        title: escrowTitle,
-        description: deliverableText,
-        question: "Which party abided by the terms of the contract?",
-        answers: [
-          {
-            title: "Refund the Buyer",
-            description: "Select this to return the funds to the Buyer.",
-          },
-          {
-            title: "Pay the Seller",
-            description: "Select this to release the funds to the Seller.",
-          },
-        ],
-        policyURI: "ipfs://TODO",
-        attachment: {
-          label: "Transaction Terms",
-          uri: extraDescriptionUri,
-        },
-        frontendUrl: `https://escrow-v2.kleros.builders/#/transactions/%s`,
-        arbitrableChainID: "421614",
-        arbitrableAddress: "0x250AB0477346aDFC010585b58FbF61cff1d8f3ea",
-        arbitratorChainID: "421614",
-        arbitratorAddress: "0xA54e7A16d7460e38a8F324eF46782FB520d58CE8",
-        metadata: {
-          buyer: address,
-          seller: sellerAddress,
-          amount: sendingQuantity,
-          token: isNativeTransaction ? "native" : sendingToken?.address,
-          deadline: deadlineTimestamp.toString(),
-          transactionUri: transactionUri,
-        },
-        category: "Escrow",
-        specification: "KIPXXX",
-        aliases: {
-          Buyer: address,
-          Seller: sellerAddress,
-        },
-        version: "1.0",
-      }),
-    [
-      escrowTitle,
-      deliverableText,
-      extraDescriptionUri,
-      sendingQuantity,
-      sellerAddress,
-      address,
-      isNativeTransaction,
-      sendingToken?.address,
-      deadlineTimestamp,
-      transactionUri,
-    ]
-  );
+  const disputeTemplate = `{
+    "$schema": "../NewDisputeTemplate.schema.json",
+    "title": "Escrow dispute: {{escrowTitle}}", 
+    "description": "{{deliverableText}}", 
+    "question": "Which party abided by the terms of the contract?",
+    "answers": [
+      {
+        "title": "Refund the Buyer",
+        "description": "Select this to return the funds to the Buyer."
+      },
+      {
+        "title": "Pay the Seller",
+        "description": "Select this to release the funds to the Seller."
+      }
+    ],
+    "policyURI": "/ipfs/XxxxxXXX/escrow-general-policy.pdf", 
+    "attachment": { 
+      "label": "Transaction Terms",
+      "uri": "{{extraDescriptionUri}}"
+    },
+    "frontendUrl": "https://escrow-v2.kleros.builders/#/transactions/{{externalDisputeID}}", 
+    "arbitrableChainID": "421614",
+    "arbitrableAddress": "0xFromContext",
+    "arbitratorChainID": "421614",
+    "arbitratorAddress": "0xA54e7A16d7460e38a8F324eF46782FB520d58CE8", 
+    "metadata": {
+      "buyer": "{{buyer}}",
+      "seller": "{{seller}}",
+      "amount": "{{amount}}",
+      "token": "{{token}}",
+      "deadline": "{{deadline}}",
+      "transactionUri": "{{transactionUri}}" 
+    },
+    "category": "Escrow",
+    "specification": "KIPXXX",
+    "aliases": {
+      "Buyer": "{{buyer}}",
+      "Seller": "{{seller}}"
+    },
+    "version": "1.0"
+  }
+  `;
+
+  const dataMappings = `[
+    {
+      "type": "graphql",
+      "endpoint": "https://gateway-arbitrum.network.thegraph.com/api/{{{graphApiKey}}}/subgraphs/id/3aZxYcZpZL5BuVhuUupqVrCV8VeNyZEvjmPXibyPHDFQ",
+      "query": "query GetTransaction($transactionId: ID!) { escrow(id: $transactionId) { transactionUri buyer seller amount token deadline } }",
+      "variables": {
+        "transactionId": "{{externalDisputeID}}"
+      },
+      "seek": ["escrow.transactionUri", "escrow.buyer", "escrow.seller", "escrow.amount", "escrow.token", "escrow.deadline"],
+      "populate": ["transactionUri", "buyer", "seller", "amount", "token", "deadline"]
+    },
+    {
+      "type": "fetch/ipfs/json",
+      "ipfsUri": "{{{transactionUri}}}",
+      "seek": ["title", "description", "extraDescriptionUri"],
+      "populate": ["escrowTitle", "deliverableText", "extraDescriptionUri"]
+    }
+  ]`;
 
   const { config: createNativeTransactionConfig } = usePrepareEscrowUniversalCreateNativeTransaction({
     enabled: isNativeTransaction && ethAddressPattern.test(finalRecipientAddress),
-    args: [deadlineTimestamp, transactionUri, finalRecipientAddress, templateData, ""],
+    args: [deadlineTimestamp, transactionUri, finalRecipientAddress, disputeTemplate, dataMappings],
     value: transactionValue,
   });
 
@@ -149,8 +154,8 @@ const DepositPaymentButton: React.FC = () => {
       deadlineTimestamp,
       transactionUri,
       finalRecipientAddress,
-      templateData,
-      "",
+      disputeTemplate,
+      dataMappings,
     ],
   });
 
