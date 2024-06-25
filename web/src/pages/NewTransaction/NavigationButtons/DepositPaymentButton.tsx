@@ -92,7 +92,7 @@ const DepositPaymentButton: React.FC = () => {
     "policyURI": "/ipfs/XxxxxXXX/escrow-general-policy.pdf", 
     "attachment": { 
       "label": "Transaction Terms",
-      "uri": "{{extraDescriptionUri}}"
+      "uri": "{{{extraDescriptionUri}}}"
     },
     "frontendUrl": "https://escrow-v2.kleros.builders/#/transactions/{{externalDisputeID}}", 
     "arbitrableChainID": "421614",
@@ -105,7 +105,7 @@ const DepositPaymentButton: React.FC = () => {
       "amount": "{{amount}}",
       "token": "{{token}}",
       "deadline": "{{deadline}}",
-      "transactionUri": "{{transactionUri}}" 
+      "transactionUri": "{{{transactionUri}}}" 
     },
     "category": "Escrow",
     "specification": "KIPXXX",
