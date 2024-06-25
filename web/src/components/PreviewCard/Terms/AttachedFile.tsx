@@ -1,16 +1,23 @@
 import React from "react";
-import styled from "styled-components";
-import { responsiveSize } from "styles/responsiveSize";
+import { Link } from "react-router-dom";
+import styled, { css } from "styled-components";
 import AttachmentIcon from "svgs/icons/attachment.svg";
+import { responsiveSize } from "styles/responsiveSize";
+import { landscapeStyle } from "styles/landscapeStyle";
 import { getIpfsUrl } from "utils/getIpfsUrl";
 
-const StyledA = styled.a`
+const StyledA = styled(Link)`
+  height: fit-content;
   display: flex;
   gap: ${responsiveSize(5, 6)};
-  > svg {
-    width: 16px;
-    fill: ${({ theme }) => theme.primaryBlue};
-  }
+  ${landscapeStyle(
+    () => css`
+      > svg {
+        width: 16px;
+        fill: ${({ theme }) => theme.primaryBlue};
+      }
+    `
+  )}
 `;
 
 interface IAttachedFile {
@@ -18,10 +25,10 @@ interface IAttachedFile {
 }
 
 const AttachedFile: React.FC<IAttachedFile> = ({ extraDescriptionUri }) => {
-  const href = extraDescriptionUri && getIpfsUrl(extraDescriptionUri);
+  const uri = extraDescriptionUri && getIpfsUrl(extraDescriptionUri);
 
   return extraDescriptionUri ? (
-    <StyledA href={href} target="_blank" rel="noreferrer">
+    <StyledA to={`/attachment/?url=${uri}`}>
       <AttachmentIcon />
       View Attached File
     </StyledA>
