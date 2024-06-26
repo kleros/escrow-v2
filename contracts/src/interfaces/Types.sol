@@ -40,8 +40,6 @@ struct Transaction {
     uint256 buyerFee; // Total fees paid by the buyer.
     uint256 sellerFee; // Total fees paid by the seller.
     uint256 lastFeePaymentTime; // Last time the dispute fees were paid by either party or settlement proposed.
-    string templateData;
-    string templateDataMappings;
     Status status;
     IERC20 token; // Token to pay the seller with.
 }

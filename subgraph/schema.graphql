@@ -36,8 +36,6 @@ type Escrow @entity {
   feeTimeout: BigInt
   settlementTimeout: BigInt
   arbitratorExtraData: Bytes
-  templateData: String
-  templateDataMappings: String
   token: Bytes
   status: Status
   timestamp: BigInt
