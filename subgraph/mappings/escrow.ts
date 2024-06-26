@@ -31,8 +31,6 @@ function createEscrow(id: string, transactionHash: Bytes): Escrow {
   escrow.buyerFee = ZERO;
   escrow.sellerFee = ZERO;
   escrow.lastFeePaymentTime = ZERO;
-  escrow.templateData = "";
-  escrow.templateDataMappings = "";
   escrow.status = "NoDispute";
   escrow.transactionHash = transactionHash;
   return escrow;

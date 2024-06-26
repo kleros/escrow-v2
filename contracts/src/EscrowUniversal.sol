@@ -135,8 +135,6 @@ contract EscrowUniversal is IEscrow, IArbitrableV2 {
         transaction.amount = msg.value;
         transaction.token = NATIVE;
         transaction.deadline = _deadline;
-        transaction.templateData = _templateData;
-        transaction.templateDataMappings = _templateDataMappings;
 
         transactionID = transactions.length - 1;
 
@@ -168,8 +166,6 @@ contract EscrowUniversal is IEscrow, IArbitrableV2 {
         transaction.amount = _amount;
         transaction.token = _token;
         transaction.deadline = _deadline;
-        transaction.templateData = _templateData;
-        transaction.templateDataMappings = _templateDataMappings;
 
         transactionID = transactions.length - 1;
 

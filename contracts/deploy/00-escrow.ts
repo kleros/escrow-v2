@@ -20,7 +20,7 @@ const disputeTemplate = `{
   "policyURI": "/ipfs/XxxxxXXX/escrow-general-policy.pdf", 
   "attachment": { 
     "label": "Transaction Terms",
-    "uri": "{{extraDescriptionUri}}"
+    "uri": "{{{extraDescriptionUri}}}"
   },
   "frontendUrl": "https://escrow-v2.kleros.builders/#/transactions/{{externalDisputeID}}", 
   "arbitrableChainID": "421614",
@@ -33,7 +33,7 @@ const disputeTemplate = `{
     "amount": "{{amount}}",
     "token": "{{token}}",
     "deadline": "{{deadline}}",
-    "transactionUri": "{{transactionUri}}" 
+    "transactionUri": "{{{transactionUri}}}" 
   },
   "category": "Escrow",
   "specification": "KIPXXX",
@@ -66,7 +66,7 @@ const mapping = `[
 
 // General court, 3 jurors
 const extraData =
-    "0x00000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000003";
+  "0x00000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000003";
 
 const deploy: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
   const { deployments, getNamedAccounts, getChainId } = hre;
@@ -81,7 +81,7 @@ const deploy: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
   const disputeTemplateRegistry = await deployments.get("DisputeTemplateRegistry");
   const feeTimeout = 600; // 10 minutes
   const settlementTimeout = 600; // 10 minutes
-  
+
   await deploy("EscrowUniversal", {
     from: deployer,
     args: [

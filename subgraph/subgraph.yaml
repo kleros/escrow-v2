@@ -6,9 +6,9 @@ dataSources:
     name: EscrowUniversal
     network: arbitrum-sepolia
     source:
-      address: '0xd3d61eB06c96F69D03B285392C269d5577ff2342'
+      address: '0x9B56c711C54F00276787574B6CEE97C33e690BCb'
       abi: EscrowUniversal
-      startBlock: 56637255
+      startBlock: 58521526
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
