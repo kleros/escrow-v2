@@ -125,9 +125,7 @@ contract EscrowUniversal is IEscrow, IArbitrableV2 {
     function createNativeTransaction(
         uint256 _deadline,
         string memory _transactionUri,
-        address payable _seller,
-        string memory _templateData,
-        string memory _templateDataMappings
+        address payable _seller
     ) external payable override returns (uint256 transactionID) {
         Transaction storage transaction = transactions.push();
         transaction.buyer = payable(msg.sender);
@@ -154,9 +152,7 @@ contract EscrowUniversal is IEscrow, IArbitrableV2 {
         IERC20 _token,
         uint256 _deadline,
         string memory _transactionUri,
-        address payable _seller,
-        string memory _templateData,
-        string memory _templateDataMappings
+        address payable _seller
     ) external override returns (uint256 transactionID) {
         // Transfers token from sender wallet to contract.
         if (!_token.safeTransferFrom(msg.sender, address(this), _amount)) revert TokenTransferFailed();
