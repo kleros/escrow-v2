@@ -74,71 +74,9 @@ const DepositPaymentButton: React.FC = () => {
     }
   }, [allowance, transactionValue]);
 
-  const disputeTemplate = `{
-    "$schema": "../NewDisputeTemplate.schema.json",
-    "title": "Escrow dispute: {{escrowTitle}}", 
-    "description": "{{deliverableText}}", 
-    "question": "Which party abided by the terms of the contract?",
-    "answers": [
-      {
-        "title": "Refund the Buyer",
-        "description": "Select this to return the funds to the Buyer."
-      },
-      {
-        "title": "Pay the Seller",
-        "description": "Select this to release the funds to the Seller."
-      }
-    ],
-    "policyURI": "/ipfs/XxxxxXXX/escrow-general-policy.pdf", 
-    "attachment": { 
-      "label": "Transaction Terms",
-      "uri": "{{{extraDescriptionUri}}}"
-    },
-    "frontendUrl": "https://escrow-v2.kleros.builders/#/transactions/{{externalDisputeID}}", 
-    "arbitrableChainID": "421614",
-    "arbitrableAddress": "0xFromContext",
-    "arbitratorChainID": "421614",
-    "arbitratorAddress": "0xA54e7A16d7460e38a8F324eF46782FB520d58CE8", 
-    "metadata": {
-      "buyer": "{{buyer}}",
-      "seller": "{{seller}}",
-      "amount": "{{amount}}",
-      "token": "{{token}}",
-      "deadline": "{{deadline}}",
-      "transactionUri": "{{{transactionUri}}}" 
-    },
-    "category": "Escrow",
-    "specification": "KIPXXX",
-    "aliases": {
-      "Buyer": "{{buyer}}",
-      "Seller": "{{seller}}"
-    },
-    "version": "1.0"
-  }
-  `;
-
-  const dataMappings = `[
-    {
-      "type": "graphql",
-      "endpoint": "https://gateway-arbitrum.network.thegraph.com/api/{{{graphApiKey}}}/subgraphs/id/3aZxYcZpZL5BuVhuUupqVrCV8VeNyZEvjmPXibyPHDFQ",
-      "query": "query GetTransaction($transactionId: ID!) { escrow(id: $transactionId) { transactionUri buyer seller amount token deadline } }",
-      "variables": {
-        "transactionId": "{{externalDisputeID}}"
-      },
-      "seek": ["escrow.transactionUri", "escrow.buyer", "escrow.seller", "escrow.amount", "escrow.token", "escrow.deadline"],
-      "populate": ["transactionUri", "buyer", "seller", "amount", "token", "deadline"]
-    },
-    {
-      "type": "fetch/ipfs/json",
-      "ipfsUri": "{{{transactionUri}}}",
-      "seek": ["title", "description", "extraDescriptionUri"],
-      "populate": ["escrowTitle", "deliverableText", "extraDescriptionUri"]
-    }
-  ]`;
-
   const { config: createNativeTransactionConfig } = usePrepareEscrowUniversalCreateNativeTransaction({
     enabled: isNativeTransaction && ethAddressPattern.test(finalRecipientAddress),
-    args: [deadlineTimestamp, transactionUri, finalRecipientAddress, disputeTemplate, dataMappings],
+    args: [deadlineTimestamp, transactionUri, finalRecipientAddress],
     value: transactionValue,
   });
 
@@ -154,8 +92,6 @@ const DepositPaymentButton: React.FC = () => {
       deadlineTimestamp,
       transactionUri,
       finalRecipientAddress,
-      disputeTemplate,
-      dataMappings,
     ],
   });
 

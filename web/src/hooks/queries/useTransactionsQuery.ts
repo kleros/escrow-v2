@@ -17,8 +17,6 @@ export const transactionFragment = graphql(`
     buyerFee
     sellerFee
     lastFeePaymentTime
-    templateData
-    templateDataMappings
     status
     transactionHash
     payments {
