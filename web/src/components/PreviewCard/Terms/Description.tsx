@@ -89,7 +89,7 @@ const Description: React.FC<IDescription> = ({
           {displayBuyerAddress}
         </StyledA>
       </StyledCopiable>{" "}
-      should receive "<StyledReactMarkdown>{deliverableText}</StyledReactMarkdown>" from address{" "}
+      should receive: <StyledReactMarkdown>{deliverableText}</StyledReactMarkdown> from address{" "}
       <StyledCopiable copiableContent={sellerAddress ?? ""} info="Copy Seller Address">
         <StyledA
           href={`${SUPPORTED_CHAINS[DEFAULT_CHAIN].blockExplorers?.default.url}/address/${sellerAddress}`}
