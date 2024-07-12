@@ -11,6 +11,7 @@ import Court from "svgs/icons/kleros.svg";
 import POH from "svgs/icons/poh-image.png";
 import Vea from "svgs/icons/vea.svg";
 import Product from "./Product";
+import { Overlay } from "components/Overlay";
 
 const Header = styled.h1`
   padding-top: 32px;
@@ -141,14 +142,17 @@ const DappList: React.FC<IDappList> = ({ toggleIsDappListOpen }) => {
   useClickAway(containerRef, () => toggleIsDappListOpen());
 
   return (
-    <Container ref={containerRef}>
-      <Header>Kleros Solutions</Header>
-      <ItemsDiv>
-        {ITEMS.map((item) => {
-          return <Product {...item} key={item.text} />;
-        })}
-      </ItemsDiv>
-    </Container>
+    <>
+      <Overlay />
+      <Container ref={containerRef}>
+        <Header>Kleros Solutions</Header>
+        <ItemsDiv>
+          {ITEMS.map((item) => {
+            return <Product {...item} key={item.text} />;
+          })}
+        </ItemsDiv>
+      </Container>
+    </>
   );
 };
 export default DappList;

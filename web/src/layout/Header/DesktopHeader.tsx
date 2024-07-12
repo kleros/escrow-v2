@@ -13,7 +13,6 @@ import Explore from "./navbar/Explore";
 import Menu from "./navbar/Menu";
 import Help from "./navbar/Menu/Help";
 import Settings from "./navbar/Menu/Settings";
-import { Overlay } from "components/Overlay";
 import { PopupContainer } from ".";
 
 const Container = styled.div`
@@ -112,7 +111,6 @@ const DesktopHeader = () => {
       </Container>
       {(isDappListOpen || isHelpOpen || isSettingsOpen) && (
         <PopupContainer>
-          <Overlay />
           {isDappListOpen && <DappList {...{ toggleIsDappListOpen, isDappListOpen }} />}
           {isHelpOpen && <Help {...{ toggleIsHelpOpen, isHelpOpen }} />}
           {isSettingsOpen && <Settings {...{ toggleIsSettingsOpen, isSettingsOpen }} />}

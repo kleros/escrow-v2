@@ -9,6 +9,7 @@ import Faq from "svgs/menu-icons/help.svg";
 import Telegram from "svgs/socialmedia/telegram.svg";
 import { IHelp } from "..";
 import Debug from "../Debug";
+import { Overlay } from "components/Overlay";
 
 const Container = styled.div`
   display: flex;
@@ -99,6 +100,7 @@ const Help: React.FC<IHelp> = ({ toggleIsHelpOpen }) => {
 
   return (
     <>
+      <Overlay />
       <Container ref={containerRef}>
         {ITEMS.map((item, index) => (
           <ListItem href={item.url} key={item.text} target="_blank">
