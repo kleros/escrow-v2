@@ -3,6 +3,7 @@ import styled, { css } from "styled-components";
 import { landscapeStyle } from "styles/landscapeStyle";
 import { useToggle } from "react-use";
 import { Link } from "react-router-dom";
+import { useAccount } from "wagmi";
 import { useLockOverlayScroll } from "hooks/useLockOverlayScroll";
 import KlerosSolutionsIcon from "svgs/menu-icons/kleros-solutions.svg";
 import EscrowLogo from "svgs/header/escrow.svg";
@@ -73,12 +74,14 @@ const ConnectWalletContainer = styled.div`
   label {
     color: ${({ theme }) => theme.white};
   }
+  cursor: pointer;
 `;
 
 const DesktopHeader = () => {
   const [isDappListOpen, toggleIsDappListOpen] = useToggle(false);
   const [isHelpOpen, toggleIsHelpOpen] = useToggle(false);
   const [isSettingsOpen, toggleIsSettingsOpen] = useToggle(false);
+  const { isConnected } = useAccount();
   useLockOverlayScroll(isDappListOpen || isHelpOpen || isSettingsOpen);
 
   return (
@@ -104,7 +107,7 @@ const DesktopHeader = () => {
         </MiddleSide>
 
         <RightSide>
-          <ConnectWalletContainer>
+          <ConnectWalletContainer onClick={isConnected ? toggleIsSettingsOpen : undefined}>
             <ConnectWallet />
           </ConnectWalletContainer>
           <Menu {...{ toggleIsHelpOpen, toggleIsSettingsOpen }} />
