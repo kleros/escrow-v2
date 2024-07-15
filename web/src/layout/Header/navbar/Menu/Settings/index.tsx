@@ -5,7 +5,6 @@ import { useClickAway } from "react-use";
 import { Tabs } from "@kleros/ui-components-library";
 import General from "./General";
 import NotificationSettings from "./Notifications";
-import { Overlay } from "components/Overlay";
 import { ISettings } from "../../index";
 
 const Container = styled.div`
@@ -72,20 +71,17 @@ const Settings: React.FC<ISettings> = ({ toggleIsSettingsOpen }) => {
   useClickAway(containerRef, () => toggleIsSettingsOpen());
 
   return (
-    <>
-      <Overlay />
-      <Container ref={containerRef}>
-        <StyledSettingsText>Settings</StyledSettingsText>
-        <StyledTabs
-          currentValue={currentTab}
-          items={TABS}
-          callback={(n: number) => {
-            setCurrentTab(n);
-          }}
-        />
-        {currentTab === 0 ? <General /> : <NotificationSettings toggleIsSettingsOpen={toggleIsSettingsOpen} />}
-      </Container>
-    </>
+    <Container ref={containerRef}>
+      <StyledSettingsText>Settings</StyledSettingsText>
+      <StyledTabs
+        currentValue={currentTab}
+        items={TABS}
+        callback={(n: number) => {
+          setCurrentTab(n);
+        }}
+      />
+      {currentTab === 0 ? <General /> : <NotificationSettings toggleIsSettingsOpen={toggleIsSettingsOpen} />}
+    </Container>
   );
 };
 
