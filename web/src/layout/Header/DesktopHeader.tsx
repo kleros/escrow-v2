@@ -70,11 +70,19 @@ const StyledKlerosSolutionsIcon = styled(KlerosSolutionsIcon)`
   fill: ${({ theme }) => theme.white} !important;
 `;
 
-const ConnectWalletContainer = styled.div`
+const ConnectWalletContainer = styled.div<{ isConnected: boolean }>`
   label {
     color: ${({ theme }) => theme.white};
   }
-  cursor: pointer;
+
+  ${({ isConnected }) =>
+    isConnected &&
+    css`
+      cursor: pointer;
+      & > * {
+        pointer-events: none;
+      }
+    `}
 `;
 
 const DesktopHeader = () => {
@@ -107,7 +115,7 @@ const DesktopHeader = () => {
         </MiddleSide>
 
         <RightSide>
-          <ConnectWalletContainer onClick={isConnected ? toggleIsSettingsOpen : undefined}>
+          <ConnectWalletContainer isConnected={isConnected} onClick={isConnected ? toggleIsSettingsOpen : undefined}>
             <ConnectWallet />
           </ConnectWalletContainer>
           <Menu {...{ toggleIsHelpOpen, toggleIsSettingsOpen }} />
@@ -124,4 +132,5 @@ const DesktopHeader = () => {
     </>
   );
 };
+
 export default DesktopHeader;
