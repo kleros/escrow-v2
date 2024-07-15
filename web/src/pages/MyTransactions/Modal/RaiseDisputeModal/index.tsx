@@ -22,15 +22,14 @@ const RaiseDisputeModal: React.FC<IRaiseDisputeModal> = ({ toggleModal, arbitrat
   useClickAway(containerRef, () => toggleModal());
 
   return (
-    <>
-      <Overlay />
+    <Overlay>
       <ReStyledModal ref={containerRef}>
         <Header />
         <Description />
         <FeeRequired {...{ arbitrationCost }} />
         <Buttons {...{ toggleModal, arbitrationCost }} />
       </ReStyledModal>
-    </>
+    </Overlay>
   );
 };
 

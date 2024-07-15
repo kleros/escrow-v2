@@ -19,15 +19,14 @@ const ProposeSettlementModal: React.FC<IProposeSettlementModal> = ({ toggleModal
   const [isAmountValid, setIsAmountValid] = useState(true);
 
   return (
-    <>
-      <Overlay />
+    <Overlay>
       <StyledModal ref={containerRef}>
         <Header text={text} />
         <Description />
         <AmountField {...{ amountProposed, setAmountProposed, setIsAmountValid }} />
         <Buttons {...{ toggleModal, amountProposed, isAmountValid }} />
       </StyledModal>
-    </>
+    </Overlay>
   );
 };
 

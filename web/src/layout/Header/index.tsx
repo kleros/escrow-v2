@@ -21,7 +21,8 @@ export const PopupContainer = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 30;
+  z-index: 1;
+  background-color: ${({ theme }) => theme.blackLowOpacity};
 `;
 
 const Header: React.FC = () => {
