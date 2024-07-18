@@ -80,7 +80,7 @@ const Settings: React.FC<ISettings> = ({ toggleIsSettingsOpen }) => {
           setCurrentTab(n);
         }}
       />
-      {currentTab === 0 ? <General /> : <NotificationSettings toggleIsSettingsOpen={toggleIsSettingsOpen} />}
+      {currentTab === 0 ? <General /> : <NotificationSettings {...{toggleIsSettingsOpen}} />}
     </Container>
   );
 };
