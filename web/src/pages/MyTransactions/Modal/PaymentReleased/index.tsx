@@ -16,15 +16,14 @@ const PaymentReleased: React.FC<IPaymentReleased> = ({ toggleModal }) => {
   useClickAway(containerRef, () => toggleModal());
 
   return (
-    <>
-      <Overlay />
+    <Overlay>
       <StyledModal ref={containerRef}>
         <VerifiedLogo />
         <Header />
         <Description />
         <CloseButton toggleModal={toggleModal} />
       </StyledModal>
-    </>
+    </Overlay>
   );
 };
 export default PaymentReleased;

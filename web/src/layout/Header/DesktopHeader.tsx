@@ -3,6 +3,7 @@ import styled, { css } from "styled-components";
 import { landscapeStyle } from "styles/landscapeStyle";
 import { useToggle } from "react-use";
 import { Link } from "react-router-dom";
+import { useAccount } from "wagmi";
 import { useLockOverlayScroll } from "hooks/useLockOverlayScroll";
 import KlerosSolutionsIcon from "svgs/menu-icons/kleros-solutions.svg";
 import EscrowLogo from "svgs/header/escrow.svg";
@@ -13,7 +14,6 @@ import Explore from "./navbar/Explore";
 import Menu from "./navbar/Menu";
 import Help from "./navbar/Menu/Help";
 import Settings from "./navbar/Menu/Settings";
-import { Overlay } from "components/Overlay";
 import { PopupContainer } from ".";
 
 const Container = styled.div`
@@ -69,16 +69,26 @@ const StyledKlerosSolutionsIcon = styled(KlerosSolutionsIcon)`
   fill: ${({ theme }) => theme.white} !important;
 `;
 
-const ConnectWalletContainer = styled.div`
+const ConnectWalletContainer = styled.div<{ isConnected: boolean }>`
   label {
     color: ${({ theme }) => theme.white};
   }
+
+  ${({ isConnected }) =>
+    isConnected &&
+    css`
+      cursor: pointer;
+      & > * {
+        pointer-events: none;
+      }
+    `}
 `;
 
 const DesktopHeader = () => {
   const [isDappListOpen, toggleIsDappListOpen] = useToggle(false);
   const [isHelpOpen, toggleIsHelpOpen] = useToggle(false);
   const [isSettingsOpen, toggleIsSettingsOpen] = useToggle(false);
+  const { isConnected } = useAccount();
   useLockOverlayScroll(isDappListOpen || isHelpOpen || isSettingsOpen);
 
   return (
@@ -104,7 +114,7 @@ const DesktopHeader = () => {
         </MiddleSide>
 
         <RightSide>
-          <ConnectWalletContainer>
+          <ConnectWalletContainer {...{isConnected}} onClick={isConnected ? toggleIsSettingsOpen : undefined}>
             <ConnectWallet />
           </ConnectWalletContainer>
           <Menu {...{ toggleIsHelpOpen, toggleIsSettingsOpen }} />
@@ -112,7 +122,6 @@ const DesktopHeader = () => {
       </Container>
       {(isDappListOpen || isHelpOpen || isSettingsOpen) && (
         <PopupContainer>
-          <Overlay />
           {isDappListOpen && <DappList {...{ toggleIsDappListOpen, isDappListOpen }} />}
           {isHelpOpen && <Help {...{ toggleIsHelpOpen, isHelpOpen }} />}
           {isSettingsOpen && <Settings {...{ toggleIsSettingsOpen, isSettingsOpen }} />}
@@ -121,4 +130,5 @@ const DesktopHeader = () => {
     </>
   );
 };
+
 export default DesktopHeader;

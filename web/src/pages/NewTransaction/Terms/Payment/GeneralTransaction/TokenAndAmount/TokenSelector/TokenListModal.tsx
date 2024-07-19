@@ -50,8 +50,7 @@ export const TokenListModal = ({ setIsOpen, tokens, setTokens, handleSelectToken
   useClickAway(containerRef, () => setIsOpen(false));
 
   return (
-    <>
-      <Overlay />
+    <Overlay>
       <ReStyledModal ref={containerRef}>
         <StyledP>Select a token</StyledP>
         <StyledSearchbar
@@ -70,6 +69,6 @@ export const TokenListModal = ({ setIsOpen, tokens, setTokens, handleSelectToken
           ))}
         </ItemsContainer>
       </ReStyledModal>
-    </>
+    </Overlay>
   );
 };
