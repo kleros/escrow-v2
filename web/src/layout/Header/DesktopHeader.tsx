@@ -3,8 +3,9 @@ import styled, { css } from "styled-components";
 import { landscapeStyle } from "styles/landscapeStyle";
 import { useToggle } from "react-use";
 import { Link } from "react-router-dom";
-import { useAccount } from "wagmi";
+import { useAccount, useChainId } from "wagmi";
 import { useLockOverlayScroll } from "hooks/useLockOverlayScroll";
+import { DEFAULT_CHAIN } from "consts/chains";
 import KlerosSolutionsIcon from "svgs/menu-icons/kleros-solutions.svg";
 import EscrowLogo from "svgs/header/escrow.svg";
 import ConnectWallet from "components/ConnectWallet";
@@ -69,13 +70,13 @@ const StyledKlerosSolutionsIcon = styled(KlerosSolutionsIcon)`
   fill: ${({ theme }) => theme.white} !important;
 `;
 
-const ConnectWalletContainer = styled.div<{ isConnected: boolean }>`
+const ConnectWalletContainer = styled.div<{ isConnected: boolean; isCorrectChain: boolean }>`
   label {
     color: ${({ theme }) => theme.white};
   }
 
-  ${({ isConnected }) =>
-    isConnected &&
+  ${({ isConnected, isCorrectChain }) =>
+    isConnected && isCorrectChain &&
     css`
       cursor: pointer;
       & > * {
@@ -88,7 +89,9 @@ const DesktopHeader = () => {
   const [isDappListOpen, toggleIsDappListOpen] = useToggle(false);
   const [isHelpOpen, toggleIsHelpOpen] = useToggle(false);
   const [isSettingsOpen, toggleIsSettingsOpen] = useToggle(false);
+  const chainId = useChainId();
   const { isConnected } = useAccount();
+  const isCorrectChain = chainId === DEFAULT_CHAIN;
   useLockOverlayScroll(isDappListOpen || isHelpOpen || isSettingsOpen);
 
   return (
@@ -114,7 +117,7 @@ const DesktopHeader = () => {
         </MiddleSide>
 
         <RightSide>
-          <ConnectWalletContainer {...{isConnected}} onClick={isConnected ? toggleIsSettingsOpen : undefined}>
+          <ConnectWalletContainer {...{ isConnected, isCorrectChain }} onClick={isConnected && isCorrectChain ? toggleIsSettingsOpen : undefined}>
             <ConnectWallet />
           </ConnectWalletContainer>
           <Menu {...{ toggleIsHelpOpen, toggleIsSettingsOpen }} />
