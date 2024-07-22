@@ -3,7 +3,7 @@ import styled, { css } from "styled-components";
 import { landscapeStyle } from "styles/landscapeStyle";
 import { useToggle } from "react-use";
 import { Link } from "react-router-dom";
-import { useAccount, useChainId } from "wagmi";
+import { useAccount, useNetwork } from "wagmi";
 import { useLockOverlayScroll } from "hooks/useLockOverlayScroll";
 import { DEFAULT_CHAIN } from "consts/chains";
 import KlerosSolutionsIcon from "svgs/menu-icons/kleros-solutions.svg";
@@ -70,13 +70,13 @@ const StyledKlerosSolutionsIcon = styled(KlerosSolutionsIcon)`
   fill: ${({ theme }) => theme.white} !important;
 `;
 
-const ConnectWalletContainer = styled.div<{ isConnected: boolean; isCorrectChain: boolean }>`
+const ConnectWalletContainer = styled.div<{ isConnected: boolean; isDefaultChain: boolean }>`
   label {
     color: ${({ theme }) => theme.white};
   }
 
-  ${({ isConnected, isCorrectChain }) =>
-    isConnected && isCorrectChain &&
+  ${({ isConnected, isDefaultChain }) =>
+    isConnected && isDefaultChain &&
     css`
       cursor: pointer;
       & > * {
@@ -89,9 +89,9 @@ const DesktopHeader = () => {
   const [isDappListOpen, toggleIsDappListOpen] = useToggle(false);
   const [isHelpOpen, toggleIsHelpOpen] = useToggle(false);
   const [isSettingsOpen, toggleIsSettingsOpen] = useToggle(false);
-  const chainId = useChainId();
+  const { chain } = useNetwork();
   const { isConnected } = useAccount();
-  const isCorrectChain = chainId === DEFAULT_CHAIN;
+  const isDefaultChain = chain?.id === DEFAULT_CHAIN;
   useLockOverlayScroll(isDappListOpen || isHelpOpen || isSettingsOpen);
 
   return (
@@ -117,7 +117,7 @@ const DesktopHeader = () => {
         </MiddleSide>
 
         <RightSide>
-          <ConnectWalletContainer {...{ isConnected, isCorrectChain }} onClick={isConnected && isCorrectChain ? toggleIsSettingsOpen : undefined}>
+          <ConnectWalletContainer {...{ isConnected, isDefaultChain }} onClick={isConnected && isDefaultChain ? toggleIsSettingsOpen : undefined}>
             <ConnectWallet />
           </ConnectWalletContainer>
           <Menu {...{ toggleIsHelpOpen, toggleIsSettingsOpen }} />
