@@ -8,7 +8,7 @@ import {
   usePrepareEscrowUniversalCreateErc20Transaction,
   escrowUniversalAddress,
 } from "hooks/contracts/generated";
-import { erc20ABI, useNetwork } from "wagmi";
+import { erc20ABI, useChainId } from "wagmi";
 import { useNewTransactionContext } from "context/NewTransactionContext";
 import {
   useAccount,
@@ -47,7 +47,7 @@ const DepositPaymentButton: React.FC = () => {
   const [isSending, setIsSending] = useState(false);
   const [isApproved, setIsApproved] = useState(false);
   const { address } = useAccount();
-  const { chain } = useNetwork();
+  const chainId = useChainId();
   const ensResult = useEnsAddress({ name: sellerAddress, chainId: 1 });
   const deadlineTimestamp = useMemo(() => BigInt(Math.floor(new Date(deadline).getTime() / 1000)), [deadline]);
   const isNativeTransaction = sendingToken?.address === "native";
@@ -65,7 +65,7 @@ const DepositPaymentButton: React.FC = () => {
     address: sendingToken?.address,
     abi: erc20ABI,
     functionName: "allowance",
-    args: [address, escrowUniversalAddress?.[chain?.id]],
+    args: [address, escrowUniversalAddress?.[chainId]],
   });
 
   useEffect(() => {
@@ -104,7 +104,7 @@ const DepositPaymentButton: React.FC = () => {
     address: sendingToken?.address,
     abi: erc20ABI,
     functionName: "approve",
-    args: [escrowUniversalAddress?.[chain?.id], transactionValue],
+    args: [escrowUniversalAddress?.[chainId], transactionValue],
   });
 
   const { writeAsync: approve } = useContractWrite(approveConfig);

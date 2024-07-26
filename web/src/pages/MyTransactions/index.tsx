@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { Route, Routes } from "react-router-dom";
-import { useAccount, useNetwork } from "wagmi";
+import { useAccount, useChainId } from "wagmi";
 import { DEFAULT_CHAIN } from "consts/chains";
 import ConnectWallet from "components/ConnectWallet";
 import TransactionsFetcher from "./TransactionsFetcher";
@@ -28,8 +28,8 @@ export const ConnectWalletContainer = styled.div`
 
 const Dashboard: React.FC = () => {
   const { isConnected } = useAccount();
-  const { chain } = useNetwork();
-  const isOnSupportedChain = chain?.id === DEFAULT_CHAIN;
+  const chainId = useChainId();
+  const isOnSupportedChain = chainId === DEFAULT_CHAIN;
 
   return (
     <Container>

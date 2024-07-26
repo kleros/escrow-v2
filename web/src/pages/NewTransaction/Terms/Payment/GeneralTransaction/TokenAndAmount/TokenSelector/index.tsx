@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useMemo } from "react";
 import styled from "styled-components";
 import { useClickAway } from "react-use";
 import { Alchemy } from "alchemy-sdk";
-import { useAccount, useNetwork } from "wagmi";
+import { useAccount, useChainId } from "wagmi";
 import { useNewTransactionContext } from "context/NewTransactionContext";
 import { initializeTokens } from "utils/initializeTokens";
 import { alchemyConfig } from "utils/alchemyConfig";
@@ -19,23 +19,23 @@ const Container = styled.div`
 
 const TokenSelector: React.FC = () => {
   const { address } = useAccount();
-  const { chain } = useNetwork();
+  const chainId = useChainId();
   const { sendingToken, setSendingToken } = useNewTransactionContext();
   const [tokens, setTokens] = useLocalStorage("tokens", []);
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef(null);
   const [loading, setLoading] = useState(true);
 
-  const alchemyInstance = useMemo(() => new Alchemy(alchemyConfig(chain?.id)), [chain?.id]);
+  const alchemyInstance = useMemo(() => new Alchemy(alchemyConfig(chainId)), [chainId]);
 
   useClickAway(containerRef, () => setIsOpen(false));
 
   useEffect(() => {
-    if (address && chain) {
+    if (address && chainId) {
       localStorage.removeItem("tokens");
-      initializeTokens(address, setTokens, setLoading, chain, alchemyInstance);
+      initializeTokens(address, setTokens, setLoading, chainId, alchemyInstance);
     }
-  }, [address, chain, alchemyInstance]);
+  }, [address, chainId, alchemyInstance]);
 
   useEffect(() => {
     if (tokens?.length > 0) {
