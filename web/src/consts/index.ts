@@ -2,7 +2,7 @@ import { version, gitCommitHash, gitCommitShortHash, gitBranch, gitTags, clean }
 
 export const ONE_BASIS_POINT = 10000n;
 
-export const IPFS_GATEWAY = import.meta.env.REACT_APP_IPFS_GATEWAY || "https://cdn.kleros.link";
+export const IPFS_GATEWAY = process.env.REACT_APP_IPFS_GATEWAY || "https://cdn.kleros.link";
 
 export const GIT_BRANCH = gitBranch;
 export const GIT_TAGS = gitTags;
