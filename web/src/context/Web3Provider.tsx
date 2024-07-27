@@ -3,15 +3,15 @@ import { EthereumClient, w3mConnectors } from "@web3modal/ethereum";
 import { alchemyProvider } from "@wagmi/core/providers/alchemy";
 import { Web3Modal } from "@web3modal/react";
 import { configureChains, createConfig, WagmiConfig } from "wagmi";
-import { mainnet, arbitrumSepolia, gnosisChiado } from "wagmi/chains";
+import { mainnet, arbitrumSepolia, gnosisChiado, arbitrum } from "wagmi/chains";
 import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
 import { useToggleTheme } from "hooks/useToggleThemeContext";
 import { useTheme } from "styled-components";
 
-const chains = [arbitrumSepolia, mainnet, gnosisChiado];
-const projectId = process.env.WALLETCONNECT_PROJECT_ID ?? "";
+const chains = [arbitrumSepolia, mainnet, gnosisChiado, arbitrum];
+const projectId = import.meta.env.WALLETCONNECT_PROJECT_ID ?? "";
 
-export const alchemyApiKey = process.env.ALCHEMY_API_KEY ?? "";
+export const alchemyApiKey = import.meta.env.ALCHEMY_API_KEY ?? "";
 
 const { publicClient, webSocketPublicClient } = configureChains(chains, [
   alchemyProvider({ apiKey: alchemyApiKey }),

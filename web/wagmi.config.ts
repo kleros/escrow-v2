@@ -37,7 +37,7 @@ const readArtifacts = async (viemChainName: string, hardhatChainName?: string) =
 };
 
 const getConfig = async (): Promise<Config> => {
-  const deployment = process.env.REACT_APP_DEPLOYMENT ?? "devnet";
+  const deployment = import.meta.env.REACT_APP_DEPLOYMENT ?? "devnet";
 
   let viemNetwork: string;
   let hardhatNetwork: string;
