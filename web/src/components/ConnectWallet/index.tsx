@@ -37,7 +37,7 @@ const ConnectWallet: React.FC = () => {
   const chainId = useChainId();
   const { isConnected } = useAccount();
   if (isConnected) {
-    if (chain && chain.id !== DEFAULT_CHAIN) {
+    if (chainId !== DEFAULT_CHAIN) {
       return <SwitchChainButton />;
     } else return <AccountDisplay />;
   } else return <ConnectButton />;
