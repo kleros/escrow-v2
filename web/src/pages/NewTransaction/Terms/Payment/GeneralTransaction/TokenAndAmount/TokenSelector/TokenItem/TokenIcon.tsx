@@ -1,16 +1,16 @@
 import React from "react";
 import styled from "styled-components";
-import ArbIcon from "tsx:svgs/icons/tokens/arb.svg";
-import DaiIcon from "tsx:svgs/icons/tokens/dai.svg";
-import EthIcon from "tsx:svgs/icons/tokens/eth.svg";
-import GnoIcon from "tsx:svgs/icons/tokens/gno.svg";
-import MaticIcon from "tsx:svgs/icons/tokens/matic.svg";
-import OpIcon from "tsx:svgs/icons/tokens/op.svg";
-import PnkIcon from "tsx:svgs/icons/tokens/pnk.svg";
-import UsdcIcon from "tsx:svgs/icons/tokens/usdc.svg";
-import UsdtIcon from "tsx:svgs/icons/tokens/usdt.svg";
-import WethIcon from "tsx:svgs/icons/tokens/weth.svg";
-import UnknownTokenIcon from "tsx:svgs/icons/tokens/unknown.svg";
+import ArbIcon from "svgs/icons/tokens/arb.svg";
+import DaiIcon from "svgs/icons/tokens/dai.svg";
+import EthIcon from "svgs/icons/tokens/eth.svg";
+import GnoIcon from "svgs/icons/tokens/gno.svg";
+import MaticIcon from "svgs/icons/tokens/matic.svg";
+import OpIcon from "svgs/icons/tokens/op.svg";
+import PnkIcon from "svgs/icons/tokens/pnk.svg";
+import UsdcIcon from "svgs/icons/tokens/usdc.svg";
+import UsdtIcon from "svgs/icons/tokens/usdt.svg";
+import WethIcon from "svgs/icons/tokens/weth.svg";
+import UnknownTokenIcon from "svgs/icons/tokens/unknown.svg";
 
 export const TokenLogoImg = styled.img`
   width: 24px;

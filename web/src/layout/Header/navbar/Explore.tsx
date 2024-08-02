@@ -1,7 +1,7 @@
 import React from "react";
 import styled, { css } from "styled-components";
 import { landscapeStyle } from "styles/landscapeStyle";
-import { Link, useLocation } from "react-router-dom";
+import { Link, LinkProps, useLocation } from "react-router-dom";
 import { useOpenContext } from "../MobileHeader";
 
 const Container = styled.div`
@@ -33,12 +33,16 @@ const Title = styled.h1`
   )};
 `;
 
-const StyledLink = styled(Link)<{ isActive: boolean }>`
+interface StyledLinkProps extends LinkProps {
+  isActive: boolean;
+}
+
+const StyledLink = styled(({ isActive, ...props }: StyledLinkProps) => <Link {...props} />)`
   color: ${({ theme }) => theme.primaryText};
   text-decoration: none;
   font-size: 16px;
 
-  font-weight: ${({ isActive }) => (isActive ? "600" : "normal")};
+  font-weight: ${({ isActive }: StyledLinkProps) => (isActive ? "600" : "normal")};
 
   ${landscapeStyle(
     () => css`

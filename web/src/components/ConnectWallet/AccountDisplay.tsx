@@ -1,7 +1,7 @@
 import React from "react";
 import styled, { css } from "styled-components";
 import { landscapeStyle } from "styles/landscapeStyle";
-import { useAccount, useNetwork, useEnsAvatar, useEnsName } from "wagmi";
+import { useAccount, useChainId, useEnsAvatar, useEnsName } from "wagmi";
 import Identicon from "react-identicons";
 import { shortenAddress } from "utils/shortenAddress";
 
@@ -138,7 +138,7 @@ export const AddressOrName: React.FC<IAddressOrName> = ({ address: propAddress }
 };
 
 export const ChainDisplay: React.FC = () => {
-  const { chain } = useNetwork();
+  const chainId = useChainId();
   return <label>{chain?.name}</label>;
 };
 

@@ -2,10 +2,10 @@ import React from "react";
 import { useTheme } from "styled-components";
 import { useWindowSize } from "react-use";
 import { BREAKPOINT_LANDSCAPE } from "styles/landscapeStyle";
-import HeroLightMobile from "tsx:svgs/hero/hero-lightmode-mobile.svg";
-import HeroDarkMobile from "tsx:svgs/hero/hero-darkmode-mobile.svg";
-import HeroLightDesktop from "tsx:svgs/hero/hero-lightmode-desktop.svg";
-import HeroDarkDesktop from "tsx:svgs/hero/hero-darkmode-desktop.svg";
+import HeroLightMobile from "svgs/hero/hero-lightmode-mobile.svg";
+import HeroDarkMobile from "svgs/hero/hero-darkmode-mobile.svg";
+import HeroLightDesktop from "svgs/hero/hero-lightmode-desktop.svg";
+import HeroDarkDesktop from "svgs/hero/hero-darkmode-desktop.svg";
 
 const HeroImage = () => {
   const { width } = useWindowSize();

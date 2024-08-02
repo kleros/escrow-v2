@@ -1,5 +1,5 @@
 import React from "react";
-import { useAccount, useNetwork, useSwitchNetwork } from "wagmi";
+import { useAccount, useChainId, useSwitchNetwork } from "wagmi";
 import { useWeb3Modal } from "@web3modal/react";
 import { Button } from "@kleros/ui-components-library";
 import { SUPPORTED_CHAINS, DEFAULT_CHAIN } from "consts/chains";
@@ -34,10 +34,10 @@ const ConnectButton: React.FC = () => {
 };
 
 const ConnectWallet: React.FC = () => {
-  const { chain } = useNetwork();
+  const chainId = useChainId();
   const { isConnected } = useAccount();
   if (isConnected) {
-    if (chain && chain.id !== DEFAULT_CHAIN) {
+    if (chainId !== DEFAULT_CHAIN) {
       return <SwitchChainButton />;
     } else return <AccountDisplay />;
   } else return <ConnectButton />;
