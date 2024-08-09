@@ -5,7 +5,7 @@ import { alchemyConfig } from "utils/alchemyConfig";
 
 export const useTokenMetadata = (tokenAddress: string) => {
   const chainId = useChainId();
-  const [tokenMetadata, setTokenMetadata] = useState(null);
+  const [tokenMetadata, setTokenMetadata] = useState<any>(null);
 
   useEffect(() => {
     const fetchTokenMetadata = async () => {

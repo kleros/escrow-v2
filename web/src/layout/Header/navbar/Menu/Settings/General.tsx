@@ -66,7 +66,7 @@ const UserContainer = styled.div`
 
 export const DisconnectWalletButton: React.FC = () => {
   const { disconnect } = useDisconnect();
-  return <Button text={`Disconnect`} onClick={() => disconnect()} />;
+  return <Button text="Disconnect" onClick={() => disconnect()} />;
 };
 
 const General: React.FC = () => {

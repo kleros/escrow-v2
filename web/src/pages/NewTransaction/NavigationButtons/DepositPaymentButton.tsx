@@ -2,21 +2,22 @@ import React, { useEffect, useState, useMemo } from "react";
 import styled from "styled-components";
 import { Button } from "@kleros/ui-components-library";
 import {
-  useEscrowUniversalCreateNativeTransaction,
-  usePrepareEscrowUniversalCreateNativeTransaction,
-  useEscrowUniversalCreateErc20Transaction,
-  usePrepareEscrowUniversalCreateErc20Transaction,
+  useWriteEscrowUniversalCreateNativeTransaction,
+  useSimulateEscrowUniversalCreateNativeTransaction,
+  useWriteEscrowUniversalCreateErc20Transaction,
+  useSimulateEscrowUniversalCreateErc20Transaction,
   escrowUniversalAddress,
 } from "hooks/contracts/generated";
-import { erc20ABI, useChainId } from "wagmi";
+import { useChainId } from "wagmi";
+import { erc20Abi } from 'viem'
 import { useNewTransactionContext } from "context/NewTransactionContext";
 import {
   useAccount,
   useEnsAddress,
   usePublicClient,
-  useContractRead,
-  useContractWrite,
-  usePrepareContractWrite,
+  useReadContract,
+  useWriteContract,
+  useSimulateContract,
 } from "wagmi";
 import { parseEther, parseUnits } from "viem";
 import { isUndefined } from "utils/index";
@@ -60,10 +61,10 @@ const DepositPaymentButton: React.FC = () => {
     setFinalRecipientAddress(ensResult.data || sellerAddress);
   }, [sellerAddress, ensResult.data]);
 
-  const { data: allowance, refetch: refetchAllowance } = useContractRead({
+  const { data: allowance, refetch: refetchAllowance } = useReadContract({
     enabled: !isNativeTransaction,
     address: sendingToken?.address,
-    abi: erc20ABI,
+    abi: erc20Abi,
     functionName: "allowance",
     args: [address, escrowUniversalAddress?.[chainId]],
   });
@@ -74,13 +75,13 @@ const DepositPaymentButton: React.FC = () => {
     }
   }, [allowance, transactionValue]);
 
-  const { config: createNativeTransactionConfig } = usePrepareEscrowUniversalCreateNativeTransaction({
+  const { config: createNativeTransactionConfig } = useSimulateEscrowUniversalCreateNativeTransaction({
     enabled: isNativeTransaction && ethAddressPattern.test(finalRecipientAddress),
     args: [deadlineTimestamp, transactionUri, finalRecipientAddress],
     value: transactionValue,
   });
 
-  const { config: createERC20TransactionConfig } = usePrepareEscrowUniversalCreateErc20Transaction({
+  const { config: createERC20TransactionConfig } = useSimulateEscrowUniversalCreateErc20Transaction({
     enabled:
       !isNativeTransaction &&
       !isUndefined(allowance) &&
@@ -96,18 +97,18 @@ const DepositPaymentButton: React.FC = () => {
   });
 
   const { writeAsync: createNativeTransaction } =
-    useEscrowUniversalCreateNativeTransaction(createNativeTransactionConfig);
-  const { writeAsync: createERC20Transaction } = useEscrowUniversalCreateErc20Transaction(createERC20TransactionConfig);
+    useWriteEscrowUniversalCreateNativeTransaction(createNativeTransactionConfig);
+  const { writeAsync: createERC20Transaction } = useWriteEscrowUniversalCreateErc20Transaction(createERC20TransactionConfig);
 
-  const { config: approveConfig } = usePrepareContractWrite({
+  const { config: approveConfig } = useSimulateContract({
     enabled: !isNativeTransaction,
     address: sendingToken?.address,
-    abi: erc20ABI,
+    abi: erc20Abi,
     functionName: "approve",
     args: [escrowUniversalAddress?.[chainId], transactionValue],
   });
 
-  const { writeAsync: approve } = useContractWrite(approveConfig);
+  const { writeAsync: approve } = useWriteContract(approveConfig);
 
   const handleApproveToken = async () => {
     if (!isUndefined(approve)) {

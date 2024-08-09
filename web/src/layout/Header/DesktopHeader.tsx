@@ -16,7 +16,6 @@ import Menu from "./navbar/Menu";
 import Help from "./navbar/Menu/Help";
 import Settings from "./navbar/Menu/Settings";
 import { PopupContainer } from ".";
-
 const Container = styled.div`
   display: none;
   position: absolute;
@@ -89,9 +88,12 @@ const DesktopHeader = () => {
   const [isDappListOpen, toggleIsDappListOpen] = useToggle(false);
   const [isHelpOpen, toggleIsHelpOpen] = useToggle(false);
   const [isSettingsOpen, toggleIsSettingsOpen] = useToggle(false);
+  
   const chainId = useChainId();
   const { isConnected } = useAccount();
+  
   const isDefaultChain = chainId === DEFAULT_CHAIN;
+  
   useLockOverlayScroll(isDappListOpen || isHelpOpen || isSettingsOpen);
 
   return (
@@ -101,9 +103,7 @@ const DesktopHeader = () => {
           <LightButtonContainer>
             <LightButton
               text=""
-              onClick={() => {
-                toggleIsDappListOpen();
-              }}
+              onClick={toggleIsDappListOpen}
               Icon={StyledKlerosSolutionsIcon}
             />
           </LightButtonContainer>

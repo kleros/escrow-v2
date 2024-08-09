@@ -5,8 +5,8 @@ import { isUndefined } from "utils/index";
 import { wrapWithToast } from "utils/wrapWithToast";
 import { useTransactionDetailsContext } from "context/TransactionDetailsContext";
 import {
-  usePrepareEscrowUniversalAcceptSettlement,
-  useEscrowUniversalAcceptSettlement,
+  useSimulateEscrowUniversalAcceptSettlement,
+  useWriteEscrowUniversalAcceptSettlement,
 } from "hooks/contracts/generated";
 import { useQueryRefetch } from "hooks/useQueryRefetch";
 
@@ -16,11 +16,11 @@ const AcceptButton: React.FC = () => {
   const { id } = useTransactionDetailsContext();
   const refetchQuery = useQueryRefetch();
 
-  const { config: acceptSettlementConfig } = usePrepareEscrowUniversalAcceptSettlement({
+  const { config: acceptSettlementConfig } = useSimulateEscrowUniversalAcceptSettlement({
     args: [BigInt(id)],
   });
 
-  const { writeAsync: acceptSettlement } = useEscrowUniversalAcceptSettlement(acceptSettlementConfig);
+  const { writeAsync: acceptSettlement } = useWriteEscrowUniversalAcceptSettlement(acceptSettlementConfig);
 
   const handleAcceptSettlement = () => {
     if (!isUndefined(acceptSettlement)) {

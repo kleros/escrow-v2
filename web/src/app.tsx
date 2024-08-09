@@ -7,7 +7,6 @@ import Web3Provider from "context/Web3Provider";
 import IsListProvider from "context/IsListProvider";
 import QueryClientProvider from "context/QueryClientProvider";
 import StyledComponentsProvider from "context/StyledComponentsProvider";
-import RefetchOnBlock from "context/RefetchOnBlock";
 import GraphqlBatcherProvider from "context/GraphqlBatcher";
 import Layout from "layout/index";
 import NewTransaction from "./pages/NewTransaction";
@@ -19,7 +18,6 @@ const App: React.FC = () => {
   return (
     <StyledComponentsProvider>
       <QueryClientProvider>
-        <RefetchOnBlock />
         <GraphqlBatcherProvider>
           <Web3Provider>
             <IsListProvider>

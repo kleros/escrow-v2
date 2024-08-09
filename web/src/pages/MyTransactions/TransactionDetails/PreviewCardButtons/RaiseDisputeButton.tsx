@@ -2,10 +2,10 @@ import React, { useMemo, useState } from "react";
 import { Button } from "@kleros/ui-components-library";
 import { useAccount, usePublicClient } from "wagmi";
 import {
-  useEscrowUniversalPayArbitrationFeeByBuyer,
-  useEscrowUniversalPayArbitrationFeeBySeller,
-  usePrepareEscrowUniversalPayArbitrationFeeByBuyer,
-  usePrepareEscrowUniversalPayArbitrationFeeBySeller,
+  useWriteEscrowUniversalPayArbitrationFeeByBuyer,
+  useWriteEscrowUniversalPayArbitrationFeeBySeller,
+  useSimulateEscrowUniversalPayArbitrationFeeByBuyer,
+  useSimulateEscrowUniversalPayArbitrationFeeBySeller,
 } from "hooks/contracts/generated";
 import { isUndefined } from "utils/index";
 import { wrapWithToast } from "utils/wrapWithToast";
@@ -26,19 +26,19 @@ const RaiseDisputeButton: React.FC<IRaiseDisputeButton> = ({ toggleModal, button
   const isBuyer = useMemo(() => address?.toLowerCase() === buyer?.toLowerCase(), [address, buyer]);
   const refetchQuery = useQueryRefetch();
 
-  const { config: payArbitrationFeeByBuyerConfig } = usePrepareEscrowUniversalPayArbitrationFeeByBuyer({
+  const { config: payArbitrationFeeByBuyerConfig } = useSimulateEscrowUniversalPayArbitrationFeeByBuyer({
     args: [BigInt(id)],
     value: arbitrationCost,
   });
 
-  const { config: payArbitrationFeeBySellerConfig } = usePrepareEscrowUniversalPayArbitrationFeeBySeller({
+  const { config: payArbitrationFeeBySellerConfig } = useSimulateEscrowUniversalPayArbitrationFeeBySeller({
     args: [BigInt(id)],
     value: arbitrationCost,
   });
 
   const { writeAsync: payArbitrationFeeByBuyer } =
-    useEscrowUniversalPayArbitrationFeeByBuyer(payArbitrationFeeByBuyerConfig);
-  const { writeAsync: payArbitrationFeeBySeller } = useEscrowUniversalPayArbitrationFeeBySeller(
+    useWriteEscrowUniversalPayArbitrationFeeByBuyer(payArbitrationFeeByBuyerConfig);
+  const { writeAsync: payArbitrationFeeBySeller } = useWriteEscrowUniversalPayArbitrationFeeBySeller(
     payArbitrationFeeBySellerConfig
   );
 
