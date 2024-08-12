@@ -1,11 +1,15 @@
 import React, { useMemo, useState } from "react";
+
 import * as jwt from "jose";
 import { SiweMessage } from "siwe";
 import { useAccount, useChainId, useSignMessage } from "wagmi";
+
 import { Button } from "@kleros/ui-components-library";
+
 import { DEFAULT_CHAIN } from "consts/chains";
 import { useSessionStorage } from "hooks/useSessionStorage";
 import { authoriseUser, getNonce } from "utils/authoriseUser";
+
 import styled from "styled-components";
 
 const Container = styled.div`

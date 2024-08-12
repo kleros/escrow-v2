@@ -3,7 +3,7 @@ import React from "react";
 import { createWeb3Modal } from "@web3modal/wagmi/react";
 import { type Chain } from "viem";
 import { createConfig, fallback, http, WagmiProvider, webSocket } from "wagmi";
-import { mainnet, arbitrumSepolia, arbitrum, gnosisChiado } from "wagmi/chains";
+import { mainnet, arbitrumSepolia, gnosisChiado } from "wagmi/chains";
 import { walletConnect } from "wagmi/connectors";
 
 import { lightTheme } from "styles/themes";
@@ -11,7 +11,6 @@ import { lightTheme } from "styles/themes";
 export const alchemyApiKey = import.meta.env.ALCHEMY_API_KEY ?? "";
 
 const alchemyToViemChain = {
-  [arbitrum.id]: "arb-mainnet",
   [arbitrumSepolia.id]: "arb-sepolia",
   [mainnet.id]: "eth-mainnet",
 };
@@ -31,14 +30,13 @@ const getTransports = () => {
     ]);
 
   return {
-    [arbitrum.id]: alchemyTransport(arbitrum),
     [arbitrumSepolia.id]: alchemyTransport(arbitrumSepolia),
     [mainnet.id]: alchemyTransport(mainnet),
     [gnosisChiado.id]: chiadoTransport(),
   };
 };
 
-const chains = [arbitrumSepolia, mainnet, gnosisChiado, arbitrum] as [Chain, ...Chain[]];
+const chains = [arbitrumSepolia, mainnet, gnosisChiado] as [Chain, ...Chain[]];
 const transports = getTransports();
 const projectId = import.meta.env.WALLETCONNECT_PROJECT_ID ?? "";
 const wagmiConfig = createConfig({

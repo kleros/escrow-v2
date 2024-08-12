@@ -47,7 +47,7 @@
       ]
     },
     "target": "es2020",
-    "rootDir": "src",
+    "rootDir": ".",
     "outDir": "build/dist",
     "allowJs": true,
     "forceConsistentCasingInFileNames": true,
