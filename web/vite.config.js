@@ -7,15 +7,26 @@ export default defineConfig({
   root: "src",
   build: {
     outDir: "../dist",
+    rollupOptions: {
+      onwarn: (warning, warn) => {
+        if (warning.code === "MODULE_LEVEL_DIRECTIVE") {
+          return;
+        }
+        warn(warning);
+      },
+    },
   },
   envPrefix: ["REACT_APP", "ALCHEMY", "WALLETCONNECT_PROJECT_ID"],
   plugins: [
     svgr({
       include: ["**/*.svg", "tsx:**/*.svg"],
+      exclude: ["../node_modules/**/*"],
     }),
     tsconfigPaths({
       ignoreConfigErrors: true,
     }),
-    nodePolyfills(),
+    nodePolyfills({
+      include: ["fs", "stream"],
+    }),
   ],
 });
