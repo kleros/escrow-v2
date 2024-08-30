@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import Logo from "tsx:svgs/icons/general-escrow.svg";
+import Logo from "svgs/icons/general-escrow.svg";
 import { useNewTransactionContext } from "context/NewTransactionContext";
 import { StyledCard } from ".";
 

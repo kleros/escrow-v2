@@ -1,6 +1,8 @@
-import { useNetwork } from "wagmi";
+import { useChainId } from "wagmi";
+import { getChain } from "consts/chains";
 
 export const useNativeTokenSymbol = () => {
-  const { chain } = useNetwork();
-  return chain?.nativeCurrency?.symbol;
+  const chainId = useChainId();
+  const chain = getChain(chainId);
+  return chain?.nativeCurrency.symbol;
 };

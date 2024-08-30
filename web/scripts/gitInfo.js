@@ -1,8 +1,9 @@
 /* eslint-disable max-len */
-const fs = require("fs");
-const path = require("path");
-const { execSync } = require("child_process");
-const packageJson = require("../package.json");
+import fs from "fs";
+import path from "path";
+import { execSync } from "child_process";
+
+import packageJson from "../package.json" with { type: "json" };
 
 const execSyncWrapper = (command) => {
   let stdout = null;

@@ -3,8 +3,8 @@ import { Button } from "@kleros/ui-components-library";
 import { useToggle } from "react-use";
 import PaymentReleased from "pages/MyTransactions/Modal/PaymentReleased";
 import {
-  useEscrowUniversalExecuteTransaction,
-  usePrepareEscrowUniversalExecuteTransaction,
+  useWriteEscrowUniversalExecuteTransaction,
+  useSimulateEscrowUniversalExecuteTransaction,
 } from "hooks/contracts/generated";
 import { isUndefined } from "utils/index";
 import { wrapWithToast } from "utils/wrapWithToast";
@@ -17,11 +17,11 @@ const ClaimFullPaymentButton: React.FC = () => {
   const publicClient = usePublicClient();
   const { id } = useTransactionDetailsContext();
 
-  const { config: executeTransactionConfig } = usePrepareEscrowUniversalExecuteTransaction({
+  const { config: executeTransactionConfig } = useSimulateEscrowUniversalExecuteTransaction({
     args: [id],
   });
 
-  const { writeAsync: executeTransaction } = useEscrowUniversalExecuteTransaction(executeTransactionConfig);
+  const { writeAsync: executeTransaction } = useWriteEscrowUniversalExecuteTransaction(executeTransactionConfig);
 
   const handleExecuteTransaction = () => {
     if (!isUndefined(executeTransaction)) {

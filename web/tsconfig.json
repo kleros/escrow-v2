@@ -47,12 +47,11 @@
       ]
     },
     "target": "es2020",
-    "rootDir": "src",
+    "rootDir": ".",
     "outDir": "build/dist",
     "allowJs": true,
     "forceConsistentCasingInFileNames": true,
     "strictNullChecks": true,
-    "suppressImplicitAnyIndexErrors": true,
     "noUnusedLocals": true,
     "skipLibCheck": true,
     "allowSyntheticDefaultImports": true,

@@ -7,7 +7,6 @@ import Web3Provider from "context/Web3Provider";
 import IsListProvider from "context/IsListProvider";
 import QueryClientProvider from "context/QueryClientProvider";
 import StyledComponentsProvider from "context/StyledComponentsProvider";
-import RefetchOnBlock from "context/RefetchOnBlock";
 import GraphqlBatcherProvider from "context/GraphqlBatcher";
 import Layout from "layout/index";
 import NewTransaction from "./pages/NewTransaction";
@@ -18,10 +17,9 @@ import AttachmentDisplay from "./pages/AttachmentDisplay";
 const App: React.FC = () => {
   return (
     <StyledComponentsProvider>
-      <QueryClientProvider>
-        <RefetchOnBlock />
-        <GraphqlBatcherProvider>
-          <Web3Provider>
+      <Web3Provider>
+        <QueryClientProvider>
+          <GraphqlBatcherProvider>
             <IsListProvider>
               <NewTransactionProvider>
                 <SentryRoutes>
@@ -35,9 +33,9 @@ const App: React.FC = () => {
                 </SentryRoutes>
               </NewTransactionProvider>
             </IsListProvider>
-          </Web3Provider>
-        </GraphqlBatcherProvider>
-      </QueryClientProvider>
+          </GraphqlBatcherProvider>
+        </QueryClientProvider>
+      </Web3Provider>
     </StyledComponentsProvider>
   );
 };

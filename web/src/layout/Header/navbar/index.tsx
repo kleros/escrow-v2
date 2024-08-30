@@ -76,9 +76,7 @@ const NavBar: React.FC = () => {
       <Container {...{ isOpen }}>
         <LightButton
           text="Kleros Solutions"
-          onClick={() => {
-            toggleIsDappListOpen();
-          }}
+          onClick={toggleIsDappListOpen}
           Icon={KlerosSolutionsIcon}
         />
         <hr />

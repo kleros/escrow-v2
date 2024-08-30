@@ -99,10 +99,8 @@ export const NewTransactionProvider: React.FC<{ children: React.ReactNode }> = (
   const [receivingToken, setReceivingToken] = useState<string>(localStorage.getItem("receivingToken") || "");
   const [sellerAddress, setSellerAddress] = useState<string>(localStorage.getItem("sellerAddress") || "");
   const [sendingQuantity, setSendingQuantity] = useState<string>(localStorage.getItem("sendingQuantity") || "");
-  const [sendingToken, setSendingToken] = useState<IToken>(
-    JSON.parse(localStorage.getItem("sendingToken")) || { address: "native", symbol: "", logo: "" }
-  );
-  const [buyerAddress, setBuyerAddress] = useState<string>(localStorage.getItem("buyerAddress") || "");
+  const [sendingToken, setSendingToken] = useState<IToken>(JSON.parse(localStorage.getItem("sendingToken") ?? "null") || { address: "native", symbol: "", logo: "" });
+  const [buyerAddress, setBuyerAddress] = useState<string>(localStorage.getItem("buyerAddress") ?? "");
   const [isRecipientAddressResolved, setIsRecipientAddressResolved] = useState(false);
   const [deadline, setDeadline] = useState<string>(localStorage.getItem("deadline") || "");
   const [notificationEmail, setNotificationEmail] = useState<string>(localStorage.getItem("notificationEmail") || "");

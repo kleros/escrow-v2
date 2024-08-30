@@ -5,8 +5,8 @@ import { useTransactionDetailsContext } from "context/TransactionDetailsContext"
 import { isUndefined } from "utils/index";
 import { wrapWithToast } from "utils/wrapWithToast";
 import {
-  usePrepareEscrowUniversalExecuteTransaction,
-  useEscrowUniversalExecuteTransaction,
+  useSimulateEscrowUniversalExecuteTransaction,
+  useWriteEscrowUniversalExecuteTransaction,
 } from "hooks/contracts/generated";
 import { useQueryRefetch } from "hooks/useQueryRefetch";
 
@@ -16,11 +16,11 @@ const ExecuteTransactionButton: React.FC = () => {
   const { id } = useTransactionDetailsContext();
   const refetchQuery = useQueryRefetch();
 
-  const { config: executeTransactionConfig } = usePrepareEscrowUniversalExecuteTransaction({
+  const { config: executeTransactionConfig } = useSimulateEscrowUniversalExecuteTransaction({
     args: [BigInt(id)],
   });
 
-  const { writeAsync: executeTransaction } = useEscrowUniversalExecuteTransaction(executeTransactionConfig);
+  const { writeAsync: executeTransaction } = useWriteEscrowUniversalExecuteTransaction(executeTransactionConfig);
 
   const handleExecuteTransaction = () => {
     if (!isUndefined(executeTransaction)) {
