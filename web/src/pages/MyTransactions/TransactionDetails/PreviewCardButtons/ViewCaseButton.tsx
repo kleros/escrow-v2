@@ -28,8 +28,8 @@ const ViewCaseButton: React.FC = () => {
 
   const buttonLink = useMemo(() => {
     if (disputeRequest?.id && resolvedEvents?.length > 0)
-      return `https://dev--kleros-v2.netlify.app/#/cases/${disputeRequest.id}/voting`;
-    return `https://dev--kleros-v2.netlify.app/#/cases/${disputeRequest.id}`;
+      return `https://dev--kleros-v2-testnet.netlify.app/#/cases/${disputeRequest.id}/voting`;
+    return `https://dev--kleros-v2-testnet.netlify.app/#/cases/${disputeRequest.id}`;
   }, [disputeRequest, resolvedEvents]);
 
   const handleButtonClick = () => {
