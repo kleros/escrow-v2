@@ -1,3 +1,4 @@
+import React from "react";
 import { useEffect, useMemo, useState } from "react";
 import { DefaultTheme, useTheme } from "styled-components";
 import { formatEther } from "viem";
