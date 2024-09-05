@@ -17,16 +17,16 @@ const ClaimFullPaymentButton: React.FC = () => {
   const publicClient = usePublicClient();
   const { id } = useTransactionDetailsContext();
 
-  const { config: executeTransactionConfig } = useSimulateEscrowUniversalExecuteTransaction({
+  const { data: executeTransactionConfig } = useSimulateEscrowUniversalExecuteTransaction({
     args: [id],
   });
 
-  const { writeAsync: executeTransaction } = useWriteEscrowUniversalExecuteTransaction(executeTransactionConfig);
+  const { writeContractAsync: executeTransaction } = useWriteEscrowUniversalExecuteTransaction(executeTransactionConfig);
 
   const handleExecuteTransaction = () => {
     if (!isUndefined(executeTransaction)) {
       setIsSending(true);
-      wrapWithToast(async () => await executeTransaction().then((response) => response.hash), publicClient)
+      wrapWithToast(async () => await executeTransaction(executeTransactionConfig.request), publicClient)
         .then((wrapResult) => {
           if (wrapResult.status) {
             toggleModal();

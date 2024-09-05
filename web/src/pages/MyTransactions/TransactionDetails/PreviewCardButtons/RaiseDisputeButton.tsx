@@ -26,26 +26,26 @@ const RaiseDisputeButton: React.FC<IRaiseDisputeButton> = ({ toggleModal, button
   const isBuyer = useMemo(() => address?.toLowerCase() === buyer?.toLowerCase(), [address, buyer]);
   const refetchQuery = useQueryRefetch();
 
-  const { config: payArbitrationFeeByBuyerConfig } = useSimulateEscrowUniversalPayArbitrationFeeByBuyer({
+  const { data: payArbitrationFeeByBuyerConfig } = useSimulateEscrowUniversalPayArbitrationFeeByBuyer({
     args: [BigInt(id)],
     value: arbitrationCost,
   });
 
-  const { config: payArbitrationFeeBySellerConfig } = useSimulateEscrowUniversalPayArbitrationFeeBySeller({
+  const { data: payArbitrationFeeBySellerConfig } = useSimulateEscrowUniversalPayArbitrationFeeBySeller({
     args: [BigInt(id)],
     value: arbitrationCost,
   });
 
-  const { writeAsync: payArbitrationFeeByBuyer } =
+  const { writeContractAsync: payArbitrationFeeByBuyer } =
     useWriteEscrowUniversalPayArbitrationFeeByBuyer(payArbitrationFeeByBuyerConfig);
-  const { writeAsync: payArbitrationFeeBySeller } = useWriteEscrowUniversalPayArbitrationFeeBySeller(
+  const { writeContractAsync: payArbitrationFeeBySeller } = useWriteEscrowUniversalPayArbitrationFeeBySeller(
     payArbitrationFeeBySellerConfig
   );
 
   const handleRaiseDispute = () => {
     if (isBuyer && !isUndefined(payArbitrationFeeByBuyer)) {
       setIsSending(true);
-      wrapWithToast(async () => await payArbitrationFeeByBuyer().then((response) => response.hash), publicClient)
+      wrapWithToast(async () => await payArbitrationFeeByBuyer(payArbitrationFeeByBuyerConfig.request), publicClient)
         .then((wrapResult) => {
           if (wrapResult.status) {
             toggleModal && toggleModal();
@@ -60,7 +60,7 @@ const RaiseDisputeButton: React.FC<IRaiseDisputeButton> = ({ toggleModal, button
         });
     } else if (!isBuyer && !isUndefined(payArbitrationFeeBySeller)) {
       setIsSending(true);
-      wrapWithToast(async () => await payArbitrationFeeBySeller().then((response) => response.hash), publicClient)
+      wrapWithToast(async () => await payArbitrationFeeBySeller(payArbitrationFeeBySellerConfig.request), publicClient)
         .then((wrapResult) => {
           if (wrapResult.status) {
             toggleModal && toggleModal();

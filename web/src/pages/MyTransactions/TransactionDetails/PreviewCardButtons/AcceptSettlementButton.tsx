@@ -16,16 +16,16 @@ const AcceptButton: React.FC = () => {
   const { id } = useTransactionDetailsContext();
   const refetchQuery = useQueryRefetch();
 
-  const { config: acceptSettlementConfig } = useSimulateEscrowUniversalAcceptSettlement({
+  const { data: acceptSettlementConfig } = useSimulateEscrowUniversalAcceptSettlement({
     args: [BigInt(id)],
   });
 
-  const { writeAsync: acceptSettlement } = useWriteEscrowUniversalAcceptSettlement(acceptSettlementConfig);
+  const { writeContractAsync: acceptSettlement } = useWriteEscrowUniversalAcceptSettlement(acceptSettlementConfig);
 
   const handleAcceptSettlement = () => {
     if (!isUndefined(acceptSettlement)) {
       setIsSending(true);
-      wrapWithToast(async () => await acceptSettlement().then((response) => response.hash), publicClient)
+      wrapWithToast(async () => await acceptSettlement(acceptSettlementConfig.request), publicClient)
         .then((wrapResult) => {
           if (!wrapResult.status) {
             setIsSending(false);

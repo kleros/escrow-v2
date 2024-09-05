@@ -29,16 +29,16 @@ const ProposeSettlementButton: React.FC<IProposeSettlementButton> = ({
   const { id } = useTransactionDetailsContext();
   const refetchQuery = useQueryRefetch();
 
-  const { config: proposeSettlementConfig } = useSimulateEscrowUniversalProposeSettlement({
+  const { data: proposeSettlementConfig } = useSimulateEscrowUniversalProposeSettlement({
     args: [BigInt(id), parseEther(amountProposed)],
   });
 
-  const { writeAsync: proposeSettlement } = useWriteEscrowUniversalProposeSettlement(proposeSettlementConfig);
+  const { writeContractAsync: proposeSettlement } = useWriteEscrowUniversalProposeSettlement(proposeSettlementConfig);
 
   const handleProposeSettlement = () => {
     if (!isUndefined(proposeSettlement)) {
       setIsSending(true);
-      wrapWithToast(async () => await proposeSettlement().then((response) => response.hash), publicClient)
+      wrapWithToast(async () => await proposeSettlement(proposeSettlementConfig.request), publicClient)
         .then((wrapResult) => {
           if (wrapResult.status) {
             toggleModal && toggleModal();

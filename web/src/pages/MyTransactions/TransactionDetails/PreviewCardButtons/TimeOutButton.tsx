@@ -20,21 +20,21 @@ const TimeOutButton: React.FC = () => {
   const isBuyer = useMemo(() => address?.toLowerCase() === buyer?.toLowerCase(), [address, buyer]);
   const refetchQuery = useQueryRefetch();
 
-  const { config: timeOutByBuyerConfig } = useSimulateEscrowUniversalTimeOutByBuyer({
+  const { data: timeOutByBuyerConfig } = useSimulateEscrowUniversalTimeOutByBuyer({
     args: [BigInt(id)],
   });
 
-  const { config: timeOutBySellerConfig } = useSimulateEscrowUniversalTimeOutBySeller({
+  const { data: timeOutBySellerConfig } = useSimulateEscrowUniversalTimeOutBySeller({
     args: [BigInt(id)],
   });
 
-  const { writeAsync: timeOutByBuyer } = useWriteEscrowUniversalTimeOutByBuyer(timeOutByBuyerConfig);
-  const { writeAsync: timeOutBySeller } = useWriteEscrowUniversalTimeOutBySeller(timeOutBySellerConfig);
+  const { writeContractAsync: timeOutByBuyer } = useWriteEscrowUniversalTimeOutByBuyer(timeOutByBuyerConfig);
+  const { writeContractAsync: timeOutBySeller } = useWriteEscrowUniversalTimeOutBySeller(timeOutBySellerConfig);
 
   const handleTimeout = () => {
     if (isBuyer && !isUndefined(timeOutByBuyer)) {
       setIsSending(true);
-      wrapWithToast(async () => await timeOutByBuyer().then((response) => response.hash), publicClient)
+      wrapWithToast(async () => await timeOutByBuyer(timeOutByBuyerConfig.request), publicClient)
         .then((wrapResult) => {
           if (!wrapResult.status) {
             setIsSending(false);
@@ -47,7 +47,7 @@ const TimeOutButton: React.FC = () => {
         });
     } else if (!isBuyer && !isUndefined(timeOutBySeller)) {
       setIsSending(true);
-      wrapWithToast(async () => await timeOutBySeller().then((response) => response.hash), publicClient)
+      wrapWithToast(async () => await timeOutBySeller(timeOutBySellerConfig.request), publicClient)
         .then((wrapResult) => {
           if (!wrapResult.status) {
             setIsSending(false);

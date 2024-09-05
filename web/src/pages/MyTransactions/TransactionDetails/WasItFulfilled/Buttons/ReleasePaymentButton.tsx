@@ -16,16 +16,16 @@ const ReleasePaymentButton: React.FC = () => {
   const { id, amount } = useTransactionDetailsContext();
   const refetchQuery = useQueryRefetch();
 
-  const { config: releaseFullPaymentConfig } = useSimulateEscrowUniversalPay({
+  const { data: releaseFullPaymentConfig } = useSimulateEscrowUniversalPay({
     args: [id, amount],
   });
 
-  const { writeAsync: releaseFullPayment } = useWriteEscrowUniversalPay(releaseFullPaymentConfig);
+  const { writeContractAsync: releaseFullPayment } = useWriteEscrowUniversalPay(releaseFullPaymentConfig);
 
   const handleReleasePayment = () => {
     if (!isUndefined(releaseFullPayment)) {
       setIsSending(true);
-      wrapWithToast(async () => await releaseFullPayment().then((response) => response.hash), publicClient)
+      wrapWithToast(async () => await releaseFullPayment(releaseFullPaymentConfig.request), publicClient)
         .then((wrapResult) => {
           if (wrapResult.status) {
             toggleModal();
