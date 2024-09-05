@@ -9,7 +9,7 @@ import {
   escrowUniversalAddress,
 } from "hooks/contracts/generated";
 import { useChainId } from "wagmi";
-import { erc20Abi } from 'viem'
+import { erc20Abi } from "viem";
 import { useNewTransactionContext } from "context/NewTransactionContext";
 import {
   useAccount,
@@ -62,7 +62,7 @@ const DepositPaymentButton: React.FC = () => {
   }, [sellerAddress, ensResult.data]);
 
   const { data: allowance, refetch: refetchAllowance } = useReadContract({
-    enabled: !isNativeTransaction,
+    query: { enabled: !isNativeTransaction },
     address: sendingToken?.address,
     abi: erc20Abi,
     functionName: "allowance",
@@ -75,49 +75,46 @@ const DepositPaymentButton: React.FC = () => {
     }
   }, [allowance, transactionValue]);
 
-  const { config: createNativeTransactionConfig } = useSimulateEscrowUniversalCreateNativeTransaction({
-    enabled: isNativeTransaction && ethAddressPattern.test(finalRecipientAddress),
+  const { data: createNativeTransactionConfig } = useSimulateEscrowUniversalCreateNativeTransaction({
+    query: {
+      enabled: isNativeTransaction && ethAddressPattern.test(finalRecipientAddress),
+    },
     args: [deadlineTimestamp, transactionUri, finalRecipientAddress],
     value: transactionValue,
   });
 
-  const { config: createERC20TransactionConfig } = useSimulateEscrowUniversalCreateErc20Transaction({
-    enabled:
-      !isNativeTransaction &&
-      !isUndefined(allowance) &&
-      allowance >= transactionValue &&
-      ethAddressPattern.test(finalRecipientAddress),
-    args: [
-      transactionValue,
-      sendingToken?.address,
-      deadlineTimestamp,
-      transactionUri,
-      finalRecipientAddress,
-    ],
+  const { data: createERC20TransactionConfig } = useSimulateEscrowUniversalCreateErc20Transaction({
+    query: {
+      enabled:
+        !isNativeTransaction &&
+        !isUndefined(allowance) &&
+        allowance >= transactionValue &&
+        ethAddressPattern.test(finalRecipientAddress),
+    },
+    args: [transactionValue, sendingToken?.address, deadlineTimestamp, transactionUri, finalRecipientAddress],
   });
 
-  const { writeAsync: createNativeTransaction } =
+  const { writeContractAsync: createNativeTransaction } =
     useWriteEscrowUniversalCreateNativeTransaction(createNativeTransactionConfig);
-  const { writeAsync: createERC20Transaction } = useWriteEscrowUniversalCreateErc20Transaction(createERC20TransactionConfig);
 
-  const { config: approveConfig } = useSimulateContract({
-    enabled: !isNativeTransaction,
+  const { writeContractAsync: createERC20Transaction } =
+    useWriteEscrowUniversalCreateErc20Transaction(createERC20TransactionConfig);
+
+  const { data: approveConfig } = useSimulateContract({
+    query: { enabled: !isNativeTransaction },
     address: sendingToken?.address,
     abi: erc20Abi,
     functionName: "approve",
     args: [escrowUniversalAddress?.[chainId], transactionValue],
   });
 
-  const { writeAsync: approve } = useWriteContract(approveConfig);
+  const { writeContractAsync: approve } = useWriteContract(approveConfig);
 
   const handleApproveToken = async () => {
     if (!isUndefined(approve)) {
       setIsSending(true);
       try {
-        const wrapResult = await wrapWithToast(
-          async () => await approve().then((response) => response.hash),
-          publicClient
-        );
+        const wrapResult = await wrapWithToast(async () => await approve(approveConfig.request), publicClient);
         setIsApproved(wrapResult.status);
         await refetchAllowance();
       } catch (error) {
@@ -131,11 +128,13 @@ const DepositPaymentButton: React.FC = () => {
 
   const handleCreateTransaction = async () => {
     const createTransaction = isNativeTransaction ? createNativeTransaction : createERC20Transaction;
-    if (!isUndefined(createTransaction)) {
+    const transactionConfig = isNativeTransaction ? createNativeTransactionConfig : createERC20TransactionConfig;
+
+    if (!isUndefined(createTransaction) && !isUndefined(transactionConfig)) {
       setIsSending(true);
       try {
         const wrapResult = await wrapWithToast(
-          async () => await createTransaction().then((response) => response.hash),
+          async () => await createTransaction(transactionConfig.request),
           publicClient
         );
         if (wrapResult.status) {
