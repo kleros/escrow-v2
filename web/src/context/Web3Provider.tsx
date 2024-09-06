@@ -1,57 +1,61 @@
 import React from "react";
-import { EthereumClient, w3mConnectors } from "@web3modal/ethereum";
-import { alchemyProvider } from "@wagmi/core/providers/alchemy";
-import { Web3Modal } from "@web3modal/react";
-import { configureChains, createConfig, WagmiConfig } from "wagmi";
+
+import { createWeb3Modal } from "@web3modal/wagmi/react";
+import { type Chain } from "viem";
+import { createConfig, fallback, http, WagmiProvider, webSocket } from "wagmi";
 import { mainnet, arbitrumSepolia, gnosisChiado } from "wagmi/chains";
-import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
-import { useToggleTheme } from "hooks/useToggleThemeContext";
-import { useTheme } from "styled-components";
+import { walletConnect } from "wagmi/connectors";
 
-const chains = [arbitrumSepolia, mainnet, gnosisChiado];
-const projectId = process.env.WALLETCONNECT_PROJECT_ID ?? "";
+import { lightTheme } from "styles/themes";
 
-export const alchemyApiKey = process.env.ALCHEMY_API_KEY ?? "";
+export const alchemyApiKey = import.meta.env.ALCHEMY_API_KEY ?? "";
 
-const { publicClient, webSocketPublicClient } = configureChains(chains, [
-  alchemyProvider({ apiKey: alchemyApiKey }),
-  jsonRpcProvider({
-    rpc: () => ({
-      http: `https://rpc.chiadochain.net`,
-      webSocket: `wss://rpc.chiadochain.net/wss`,
-    }),
-  }),
-]);
+const alchemyToViemChain = {
+  [arbitrumSepolia.id]: "arb-sepolia",
+  [mainnet.id]: "eth-mainnet",
+};
 
+type AlchemyProtocol = "https" | "wss";
+
+const alchemyURL = (protocol: AlchemyProtocol, chainId: number) =>
+  `${protocol}://${alchemyToViemChain[chainId]}.g.alchemy.com/v2/${alchemyApiKey}`;
+
+const getTransports = () => {
+  const alchemyTransport = (chain: Chain) =>
+    fallback([http(alchemyURL("https", chain.id)), webSocket(alchemyURL("wss", chain.id))]);
+  const chiadoTransport = () =>
+    fallback([
+      http("https://rpc.chiadochain.net"),
+      webSocket("wss://rpc.chiadochain.net/wss"),
+    ]);
+
+  return {
+    [arbitrumSepolia.id]: alchemyTransport(arbitrumSepolia),
+    [mainnet.id]: alchemyTransport(mainnet),
+    [gnosisChiado.id]: chiadoTransport(),
+  };
+};
+
+const chains = [arbitrumSepolia, mainnet, gnosisChiado] as [Chain, ...Chain[]];
+const transports = getTransports();
+const projectId = import.meta.env.WALLETCONNECT_PROJECT_ID ?? "";
 const wagmiConfig = createConfig({
-  autoConnect: true,
-  connectors: w3mConnectors({ projectId, version: 2, chains }),
-  publicClient,
-  webSocketPublicClient,
+  chains,
+  transports,
+  connectors: [walletConnect({ projectId })],
 });
 
-const ethereumClient = new EthereumClient(wagmiConfig, chains);
+createWeb3Modal({
+  wagmiConfig,
+  projectId,
+  themeVariables: {
+    "--w3m-color-mix": lightTheme.primaryPurple,
+    "--w3m-color-mix-strength": 20,
+  },
+});
 
 const Web3Provider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [themeToggle] = useToggleTheme();
-  const theme = useTheme();
-  return (
-    <>
-      <Web3Modal
-        themeMode={themeToggle as "light" | "dark"}
-        themeVariables={{
-          "--w3m-accent-color": theme.primaryPurple,
-          "--w3m-background-color": theme.primaryPurple,
-          "--w3m-overlay-background-color": "rgba(0, 0, 0, 0.6)",
-          "--w3m-overlay-backdrop-filter": "blur(3px)",
-          "--w3m-logo-image-url": "https://github.com/kleros/kleros-v2/blob/dev/docs/kleros-logo-white.png?raw=true",
-          "--w3m-color-bg-1": theme.lightBackground,
-        }}
-        {...{ projectId, ethereumClient }}
-      />
-      <WagmiConfig config={wagmiConfig}> {children} </WagmiConfig>
-    </>
-  );
+  return <WagmiProvider config={wagmiConfig}> {children} </WagmiProvider>;
 };
 
 export default Web3Provider;

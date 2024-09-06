@@ -2,10 +2,10 @@ import React, { useMemo, useState } from "react";
 import { Button } from "@kleros/ui-components-library";
 import { useAccount, usePublicClient } from "wagmi";
 import {
-  useEscrowUniversalPayArbitrationFeeByBuyer,
-  useEscrowUniversalPayArbitrationFeeBySeller,
-  usePrepareEscrowUniversalPayArbitrationFeeByBuyer,
-  usePrepareEscrowUniversalPayArbitrationFeeBySeller,
+  useWriteEscrowUniversalPayArbitrationFeeByBuyer,
+  useWriteEscrowUniversalPayArbitrationFeeBySeller,
+  useSimulateEscrowUniversalPayArbitrationFeeByBuyer,
+  useSimulateEscrowUniversalPayArbitrationFeeBySeller,
 } from "hooks/contracts/generated";
 import { isUndefined } from "utils/index";
 import { wrapWithToast } from "utils/wrapWithToast";
@@ -26,26 +26,26 @@ const RaiseDisputeButton: React.FC<IRaiseDisputeButton> = ({ toggleModal, button
   const isBuyer = useMemo(() => address?.toLowerCase() === buyer?.toLowerCase(), [address, buyer]);
   const refetchQuery = useQueryRefetch();
 
-  const { config: payArbitrationFeeByBuyerConfig } = usePrepareEscrowUniversalPayArbitrationFeeByBuyer({
+  const { data: payArbitrationFeeByBuyerConfig } = useSimulateEscrowUniversalPayArbitrationFeeByBuyer({
     args: [BigInt(id)],
     value: arbitrationCost,
   });
 
-  const { config: payArbitrationFeeBySellerConfig } = usePrepareEscrowUniversalPayArbitrationFeeBySeller({
+  const { data: payArbitrationFeeBySellerConfig } = useSimulateEscrowUniversalPayArbitrationFeeBySeller({
     args: [BigInt(id)],
     value: arbitrationCost,
   });
 
-  const { writeAsync: payArbitrationFeeByBuyer } =
-    useEscrowUniversalPayArbitrationFeeByBuyer(payArbitrationFeeByBuyerConfig);
-  const { writeAsync: payArbitrationFeeBySeller } = useEscrowUniversalPayArbitrationFeeBySeller(
+  const { writeContractAsync: payArbitrationFeeByBuyer } =
+    useWriteEscrowUniversalPayArbitrationFeeByBuyer(payArbitrationFeeByBuyerConfig);
+  const { writeContractAsync: payArbitrationFeeBySeller } = useWriteEscrowUniversalPayArbitrationFeeBySeller(
     payArbitrationFeeBySellerConfig
   );
 
   const handleRaiseDispute = () => {
     if (isBuyer && !isUndefined(payArbitrationFeeByBuyer)) {
       setIsSending(true);
-      wrapWithToast(async () => await payArbitrationFeeByBuyer().then((response) => response.hash), publicClient)
+      wrapWithToast(async () => await payArbitrationFeeByBuyer(payArbitrationFeeByBuyerConfig.request), publicClient)
         .then((wrapResult) => {
           if (wrapResult.status) {
             toggleModal && toggleModal();
@@ -60,7 +60,7 @@ const RaiseDisputeButton: React.FC<IRaiseDisputeButton> = ({ toggleModal, button
         });
     } else if (!isBuyer && !isUndefined(payArbitrationFeeBySeller)) {
       setIsSending(true);
-      wrapWithToast(async () => await payArbitrationFeeBySeller().then((response) => response.hash), publicClient)
+      wrapWithToast(async () => await payArbitrationFeeBySeller(payArbitrationFeeBySellerConfig.request), publicClient)
         .then((wrapResult) => {
           if (wrapResult.status) {
             toggleModal && toggleModal();

@@ -23,8 +23,6 @@ const disputeTemplate = `{
     "uri": "{{{extraDescriptionUri}}}"
   },
   "frontendUrl": "https://escrow-v2.kleros.builders/#/transactions/{{externalDisputeID}}", 
-  "arbitrableChainID": "421614",
-  "arbitrableAddress": "0xFromContext",
   "arbitratorChainID": "421614",
   "arbitratorAddress": "0xA54e7A16d7460e38a8F324eF46782FB520d58CE8", 
   "metadata": {

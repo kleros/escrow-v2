@@ -3,8 +3,8 @@ import { Button } from "@kleros/ui-components-library";
 import { useToggle } from "react-use";
 import PaymentReleased from "pages/MyTransactions/Modal/PaymentReleased";
 import {
-  useEscrowUniversalExecuteTransaction,
-  usePrepareEscrowUniversalExecuteTransaction,
+  useWriteEscrowUniversalExecuteTransaction,
+  useSimulateEscrowUniversalExecuteTransaction,
 } from "hooks/contracts/generated";
 import { isUndefined } from "utils/index";
 import { wrapWithToast } from "utils/wrapWithToast";
@@ -17,16 +17,16 @@ const ClaimFullPaymentButton: React.FC = () => {
   const publicClient = usePublicClient();
   const { id } = useTransactionDetailsContext();
 
-  const { config: executeTransactionConfig } = usePrepareEscrowUniversalExecuteTransaction({
+  const { data: executeTransactionConfig } = useSimulateEscrowUniversalExecuteTransaction({
     args: [id],
   });
 
-  const { writeAsync: executeTransaction } = useEscrowUniversalExecuteTransaction(executeTransactionConfig);
+  const { writeContractAsync: executeTransaction } = useWriteEscrowUniversalExecuteTransaction(executeTransactionConfig);
 
   const handleExecuteTransaction = () => {
     if (!isUndefined(executeTransaction)) {
       setIsSending(true);
-      wrapWithToast(async () => await executeTransaction().then((response) => response.hash), publicClient)
+      wrapWithToast(async () => await executeTransaction(executeTransactionConfig.request), publicClient)
         .then((wrapResult) => {
           if (wrapResult.status) {
             toggleModal();

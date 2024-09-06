@@ -70,11 +70,17 @@ const Description: React.FC<IDescription> = ({
   deadline,
   assetSymbol,
 }) => {
-  const buyerEns = useEnsName({ address: buyerAddress, chainId: 1 });
-  const sellerEns = useEnsName({ address: sellerAddress, chainId: 1 });
+  const { data: buyerEns } = useEnsName({ 
+    address: buyerAddress as `0x${string}`, 
+    chainId: 1 
+  });
+  const { data: sellerEns } = useEnsName({ 
+    address: sellerAddress as `0x${string}`, 
+    chainId: 1 
+  });
 
-  const displayBuyerAddress = buyerEns.data || shortenAddress(buyerAddress);
-  const displaySellerAddress = sellerEns.data || shortenAddress(sellerAddress);
+  const displayBuyerAddress = buyerEns || shortenAddress(buyerAddress);
+  const displaySellerAddress = sellerEns || shortenAddress(sellerAddress);
 
   const generalEscrowSummary = (
     <>

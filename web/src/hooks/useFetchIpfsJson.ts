@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import fetch from "node-fetch";
 import { getIpfsUrl } from "utils/getIpfsUrl";
 
 const useFetchIpfsJson = (ipfsUri: string) => {

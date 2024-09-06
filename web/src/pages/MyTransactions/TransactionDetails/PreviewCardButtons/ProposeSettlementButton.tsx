@@ -6,8 +6,8 @@ import { isUndefined } from "utils/index";
 import { wrapWithToast } from "utils/wrapWithToast";
 import { useTransactionDetailsContext } from "context/TransactionDetailsContext";
 import {
-  usePrepareEscrowUniversalProposeSettlement,
-  useEscrowUniversalProposeSettlement,
+  useSimulateEscrowUniversalProposeSettlement,
+  useWriteEscrowUniversalProposeSettlement,
 } from "hooks/contracts/generated";
 import { useQueryRefetch } from "hooks/useQueryRefetch";
 
@@ -29,16 +29,16 @@ const ProposeSettlementButton: React.FC<IProposeSettlementButton> = ({
   const { id } = useTransactionDetailsContext();
   const refetchQuery = useQueryRefetch();
 
-  const { config: proposeSettlementConfig } = usePrepareEscrowUniversalProposeSettlement({
+  const { data: proposeSettlementConfig } = useSimulateEscrowUniversalProposeSettlement({
     args: [BigInt(id), parseEther(amountProposed)],
   });
 
-  const { writeAsync: proposeSettlement } = useEscrowUniversalProposeSettlement(proposeSettlementConfig);
+  const { writeContractAsync: proposeSettlement } = useWriteEscrowUniversalProposeSettlement(proposeSettlementConfig);
 
   const handleProposeSettlement = () => {
     if (!isUndefined(proposeSettlement)) {
       setIsSending(true);
-      wrapWithToast(async () => await proposeSettlement().then((response) => response.hash), publicClient)
+      wrapWithToast(async () => await proposeSettlement(proposeSettlementConfig.request), publicClient)
         .then((wrapResult) => {
           if (wrapResult.status) {
             toggleModal && toggleModal();

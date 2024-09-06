@@ -5,8 +5,8 @@ import { useTransactionDetailsContext } from "context/TransactionDetailsContext"
 import { isUndefined } from "utils/index";
 import { wrapWithToast } from "utils/wrapWithToast";
 import {
-  usePrepareEscrowUniversalExecuteTransaction,
-  useEscrowUniversalExecuteTransaction,
+  useSimulateEscrowUniversalExecuteTransaction,
+  useWriteEscrowUniversalExecuteTransaction,
 } from "hooks/contracts/generated";
 import { useQueryRefetch } from "hooks/useQueryRefetch";
 
@@ -16,16 +16,16 @@ const ExecuteTransactionButton: React.FC = () => {
   const { id } = useTransactionDetailsContext();
   const refetchQuery = useQueryRefetch();
 
-  const { config: executeTransactionConfig } = usePrepareEscrowUniversalExecuteTransaction({
+  const { data: executeTransactionConfig } = useSimulateEscrowUniversalExecuteTransaction({
     args: [BigInt(id)],
   });
 
-  const { writeAsync: executeTransaction } = useEscrowUniversalExecuteTransaction(executeTransactionConfig);
+  const { writeContractAsync: executeTransaction } = useWriteEscrowUniversalExecuteTransaction(executeTransactionConfig);
 
   const handleExecuteTransaction = () => {
     if (!isUndefined(executeTransaction)) {
       setIsSending(true);
-      wrapWithToast(async () => await executeTransaction().then((response) => response.hash), publicClient)
+      wrapWithToast(async () => await executeTransaction(executeTransactionConfig.request), publicClient)
         .then((wrapResult) => {
           if (wrapResult.status) {
             refetchQuery([["refetchOnBlock", "useTransactionDetailsQuery"]]);

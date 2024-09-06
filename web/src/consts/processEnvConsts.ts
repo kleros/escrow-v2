@@ -1,8 +1,9 @@
+import { arbitrum, arbitrumSepolia } from "viem/chains"
 import { version, gitCommitHash, gitCommitShortHash, gitBranch, gitTags, clean } from "../generatedGitInfo.json";
 
 export const ONE_BASIS_POINT = 10000n;
 
-export const IPFS_GATEWAY = import.meta.env.REACT_APP_IPFS_GATEWAY || "https://cdn.kleros.link";
+export const IPFS_GATEWAY = process.env.REACT_APP_IPFS_GATEWAY || "https://cdn.kleros.link";
 
 export const GIT_BRANCH = gitBranch;
 export const GIT_TAGS = gitTags;
@@ -17,3 +18,7 @@ export const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.
 export const TELEGRAM_REGEX = /^@\w{5,32}$/;
 export const ETH_ADDRESS_REGEX = /^0x[a-fA-F0-9]{40}$/;
 export const ETH_SIGNATURE_REGEX = /^0x[a-fA-F0-9]{130}$/;
+
+export const isProductionDeployment = () => process.env.REACT_APP_DEPLOYMENT === "mainnet";
+
+export const DEFAULT_CHAIN = isProductionDeployment() ? arbitrum.id : arbitrumSepolia.id;

@@ -2,10 +2,10 @@ import React, { useMemo, useState } from "react";
 import { Button } from "@kleros/ui-components-library";
 import { useAccount, usePublicClient } from "wagmi";
 import {
-  useEscrowUniversalTimeOutByBuyer,
-  useEscrowUniversalTimeOutBySeller,
-  usePrepareEscrowUniversalTimeOutByBuyer,
-  usePrepareEscrowUniversalTimeOutBySeller,
+  useWriteEscrowUniversalTimeOutByBuyer,
+  useWriteEscrowUniversalTimeOutBySeller,
+  useSimulateEscrowUniversalTimeOutByBuyer,
+  useSimulateEscrowUniversalTimeOutBySeller,
 } from "hooks/contracts/generated";
 import { isUndefined } from "utils/index";
 import { wrapWithToast } from "utils/wrapWithToast";
@@ -20,21 +20,21 @@ const TimeOutButton: React.FC = () => {
   const isBuyer = useMemo(() => address?.toLowerCase() === buyer?.toLowerCase(), [address, buyer]);
   const refetchQuery = useQueryRefetch();
 
-  const { config: timeOutByBuyerConfig } = usePrepareEscrowUniversalTimeOutByBuyer({
+  const { data: timeOutByBuyerConfig } = useSimulateEscrowUniversalTimeOutByBuyer({
     args: [BigInt(id)],
   });
 
-  const { config: timeOutBySellerConfig } = usePrepareEscrowUniversalTimeOutBySeller({
+  const { data: timeOutBySellerConfig } = useSimulateEscrowUniversalTimeOutBySeller({
     args: [BigInt(id)],
   });
 
-  const { writeAsync: timeOutByBuyer } = useEscrowUniversalTimeOutByBuyer(timeOutByBuyerConfig);
-  const { writeAsync: timeOutBySeller } = useEscrowUniversalTimeOutBySeller(timeOutBySellerConfig);
+  const { writeContractAsync: timeOutByBuyer } = useWriteEscrowUniversalTimeOutByBuyer(timeOutByBuyerConfig);
+  const { writeContractAsync: timeOutBySeller } = useWriteEscrowUniversalTimeOutBySeller(timeOutBySellerConfig);
 
   const handleTimeout = () => {
     if (isBuyer && !isUndefined(timeOutByBuyer)) {
       setIsSending(true);
-      wrapWithToast(async () => await timeOutByBuyer().then((response) => response.hash), publicClient)
+      wrapWithToast(async () => await timeOutByBuyer(timeOutByBuyerConfig.request), publicClient)
         .then((wrapResult) => {
           if (!wrapResult.status) {
             setIsSending(false);
@@ -47,7 +47,7 @@ const TimeOutButton: React.FC = () => {
         });
     } else if (!isBuyer && !isUndefined(timeOutBySeller)) {
       setIsSending(true);
-      wrapWithToast(async () => await timeOutBySeller().then((response) => response.hash), publicClient)
+      wrapWithToast(async () => await timeOutBySeller(timeOutBySellerConfig.request), publicClient)
         .then((wrapResult) => {
           if (!wrapResult.status) {
             setIsSending(false);

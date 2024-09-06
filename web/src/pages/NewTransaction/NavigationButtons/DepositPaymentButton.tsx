@@ -2,21 +2,22 @@ import React, { useEffect, useState, useMemo } from "react";
 import styled from "styled-components";
 import { Button } from "@kleros/ui-components-library";
 import {
-  useEscrowUniversalCreateNativeTransaction,
-  usePrepareEscrowUniversalCreateNativeTransaction,
-  useEscrowUniversalCreateErc20Transaction,
-  usePrepareEscrowUniversalCreateErc20Transaction,
+  useWriteEscrowUniversalCreateNativeTransaction,
+  useSimulateEscrowUniversalCreateNativeTransaction,
+  useWriteEscrowUniversalCreateErc20Transaction,
+  useSimulateEscrowUniversalCreateErc20Transaction,
   escrowUniversalAddress,
 } from "hooks/contracts/generated";
-import { erc20ABI, useNetwork } from "wagmi";
+import { useChainId } from "wagmi";
+import { erc20Abi } from "viem";
 import { useNewTransactionContext } from "context/NewTransactionContext";
 import {
   useAccount,
   useEnsAddress,
   usePublicClient,
-  useContractRead,
-  useContractWrite,
-  usePrepareContractWrite,
+  useReadContract,
+  useWriteContract,
+  useSimulateContract,
 } from "wagmi";
 import { parseEther, parseUnits } from "viem";
 import { isUndefined } from "utils/index";
@@ -47,7 +48,7 @@ const DepositPaymentButton: React.FC = () => {
   const [isSending, setIsSending] = useState(false);
   const [isApproved, setIsApproved] = useState(false);
   const { address } = useAccount();
-  const { chain } = useNetwork();
+  const chainId = useChainId();
   const ensResult = useEnsAddress({ name: sellerAddress, chainId: 1 });
   const deadlineTimestamp = useMemo(() => BigInt(Math.floor(new Date(deadline).getTime() / 1000)), [deadline]);
   const isNativeTransaction = sendingToken?.address === "native";
@@ -60,12 +61,12 @@ const DepositPaymentButton: React.FC = () => {
     setFinalRecipientAddress(ensResult.data || sellerAddress);
   }, [sellerAddress, ensResult.data]);
 
-  const { data: allowance, refetch: refetchAllowance } = useContractRead({
-    enabled: !isNativeTransaction,
+  const { data: allowance, refetch: refetchAllowance } = useReadContract({
+    query: { enabled: !isNativeTransaction },
     address: sendingToken?.address,
-    abi: erc20ABI,
+    abi: erc20Abi,
     functionName: "allowance",
-    args: [address, escrowUniversalAddress?.[chain?.id]],
+    args: [address, escrowUniversalAddress?.[chainId]],
   });
 
   useEffect(() => {
@@ -74,49 +75,46 @@ const DepositPaymentButton: React.FC = () => {
     }
   }, [allowance, transactionValue]);
 
-  const { config: createNativeTransactionConfig } = usePrepareEscrowUniversalCreateNativeTransaction({
-    enabled: isNativeTransaction && ethAddressPattern.test(finalRecipientAddress),
+  const { data: createNativeTransactionConfig } = useSimulateEscrowUniversalCreateNativeTransaction({
+    query: {
+      enabled: isNativeTransaction && ethAddressPattern.test(finalRecipientAddress),
+    },
     args: [deadlineTimestamp, transactionUri, finalRecipientAddress],
     value: transactionValue,
   });
 
-  const { config: createERC20TransactionConfig } = usePrepareEscrowUniversalCreateErc20Transaction({
-    enabled:
-      !isNativeTransaction &&
-      !isUndefined(allowance) &&
-      allowance >= transactionValue &&
-      ethAddressPattern.test(finalRecipientAddress),
-    args: [
-      transactionValue,
-      sendingToken?.address,
-      deadlineTimestamp,
-      transactionUri,
-      finalRecipientAddress,
-    ],
+  const { data: createERC20TransactionConfig } = useSimulateEscrowUniversalCreateErc20Transaction({
+    query: {
+      enabled:
+        !isNativeTransaction &&
+        !isUndefined(allowance) &&
+        allowance >= transactionValue &&
+        ethAddressPattern.test(finalRecipientAddress),
+    },
+    args: [transactionValue, sendingToken?.address, deadlineTimestamp, transactionUri, finalRecipientAddress],
   });
 
-  const { writeAsync: createNativeTransaction } =
-    useEscrowUniversalCreateNativeTransaction(createNativeTransactionConfig);
-  const { writeAsync: createERC20Transaction } = useEscrowUniversalCreateErc20Transaction(createERC20TransactionConfig);
+  const { writeContractAsync: createNativeTransaction } =
+    useWriteEscrowUniversalCreateNativeTransaction(createNativeTransactionConfig);
 
-  const { config: approveConfig } = usePrepareContractWrite({
-    enabled: !isNativeTransaction,
+  const { writeContractAsync: createERC20Transaction } =
+    useWriteEscrowUniversalCreateErc20Transaction(createERC20TransactionConfig);
+
+  const { data: approveConfig } = useSimulateContract({
+    query: { enabled: !isNativeTransaction },
     address: sendingToken?.address,
-    abi: erc20ABI,
+    abi: erc20Abi,
     functionName: "approve",
-    args: [escrowUniversalAddress?.[chain?.id], transactionValue],
+    args: [escrowUniversalAddress?.[chainId], transactionValue],
   });
 
-  const { writeAsync: approve } = useContractWrite(approveConfig);
+  const { writeContractAsync: approve } = useWriteContract(approveConfig);
 
   const handleApproveToken = async () => {
     if (!isUndefined(approve)) {
       setIsSending(true);
       try {
-        const wrapResult = await wrapWithToast(
-          async () => await approve().then((response) => response.hash),
-          publicClient
-        );
+        const wrapResult = await wrapWithToast(async () => await approve(approveConfig.request), publicClient);
         setIsApproved(wrapResult.status);
         await refetchAllowance();
       } catch (error) {
@@ -130,11 +128,13 @@ const DepositPaymentButton: React.FC = () => {
 
   const handleCreateTransaction = async () => {
     const createTransaction = isNativeTransaction ? createNativeTransaction : createERC20Transaction;
-    if (!isUndefined(createTransaction)) {
+    const transactionConfig = isNativeTransaction ? createNativeTransactionConfig : createERC20TransactionConfig;
+
+    if (!isUndefined(createTransaction) && !isUndefined(transactionConfig)) {
       setIsSending(true);
       try {
         const wrapResult = await wrapWithToast(
-          async () => await createTransaction().then((response) => response.hash),
+          async () => await createTransaction(transactionConfig.request),
           publicClient
         );
         if (wrapResult.status) {
