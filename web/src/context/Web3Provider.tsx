@@ -24,10 +24,7 @@ const getTransports = () => {
   const alchemyTransport = (chain: Chain) =>
     fallback([http(alchemyURL("https", chain.id)), webSocket(alchemyURL("wss", chain.id))]);
   const chiadoTransport = () =>
-    fallback([
-      http("https://rpc.chiadochain.net"),
-      webSocket("wss://rpc.chiadochain.net/wss"),
-    ]);
+    fallback([http("https://rpc.chiadochain.net"), webSocket("wss://rpc.chiadochain.net/wss")]);
 
   return {
     [arbitrumSepolia.id]: alchemyTransport(arbitrumSepolia),
@@ -42,7 +39,7 @@ const projectId = import.meta.env.WALLETCONNECT_PROJECT_ID ?? "";
 const wagmiConfig = createConfig({
   chains,
   transports,
-  connectors: [walletConnect({ projectId })],
+  connectors: [walletConnect({ projectId, showQrModal: false })],
 });
 
 createWeb3Modal({
