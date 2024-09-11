@@ -4,9 +4,8 @@ import styled, { css } from "styled-components";
 import Identicon from "react-identicons";
 import { isAddress } from "viem";
 import { normalize } from "viem/ens";
-import { useAccount, useChainId, useEnsAvatar, useEnsName } from "wagmi";
+import { useAccount, useEnsAvatar, useEnsName } from "wagmi";
 
-import { getChain } from "consts/chains";
 import { shortenAddress } from "utils/shortenAddress";
 
 import { landscapeStyle } from "styles/landscapeStyle";
@@ -144,8 +143,7 @@ export const AddressOrName: React.FC<IAddressOrName> = ({ address: propAddress }
 };
 
 export const ChainDisplay: React.FC = () => {
-  const chainId = useChainId();
-  const chain = getChain(chainId);
+  const { chain } = useAccount();
   return <label>{chain?.name}</label>;
 };
 

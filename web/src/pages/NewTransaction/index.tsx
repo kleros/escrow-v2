@@ -13,7 +13,7 @@ import Notifications from "./Terms/Notifications";
 import Payment from "./Terms/Payment";
 import Timeline from "./Timeline";
 import { responsiveSize } from "styles/responsiveSize";
-import { useAccount, useChainId } from "wagmi";
+import { useAccount } from "wagmi";
 import ConnectWallet from "components/ConnectWallet";
 import { ConnectWalletContainer } from "../MyTransactions";
 import { DEFAULT_CHAIN } from "consts/chains";
@@ -39,11 +39,10 @@ const MiddleContentContainer = styled.div`
 const NewTransaction: React.FC = () => {
   const location = useLocation();
   const { width } = useWindowSize();
-  const { isConnected } = useAccount();
-  const chainId = useChainId();
+  const { isConnected, chain } = useAccount();
   const isPreviewPage = location.pathname.includes("/preview");
   const isMobileView = width <= BREAKPOINT_LANDSCAPE;
-  const isOnSupportedChain = chainId === DEFAULT_CHAIN;
+  const isOnSupportedChain = chain?.id === DEFAULT_CHAIN;
 
   return (
     <>
