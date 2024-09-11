@@ -3,7 +3,7 @@ import styled, { css } from "styled-components";
 import { landscapeStyle } from "styles/landscapeStyle";
 import { useToggle } from "react-use";
 import { Link } from "react-router-dom";
-import { useAccount, useChainId } from "wagmi";
+import { useAccount } from "wagmi";
 import { useLockOverlayScroll } from "hooks/useLockOverlayScroll";
 import { DEFAULT_CHAIN } from "consts/chains";
 import KlerosSolutionsIcon from "svgs/menu-icons/kleros-solutions.svg";
@@ -75,7 +75,8 @@ const ConnectWalletContainer = styled.div<{ isConnected: boolean; isDefaultChain
   }
 
   ${({ isConnected, isDefaultChain }) =>
-    isConnected && isDefaultChain &&
+    isConnected &&
+    isDefaultChain &&
     css`
       cursor: pointer;
       & > * {
@@ -88,12 +89,11 @@ const DesktopHeader = () => {
   const [isDappListOpen, toggleIsDappListOpen] = useToggle(false);
   const [isHelpOpen, toggleIsHelpOpen] = useToggle(false);
   const [isSettingsOpen, toggleIsSettingsOpen] = useToggle(false);
-  
-  const chainId = useChainId();
-  const { isConnected } = useAccount();
-  
-  const isDefaultChain = chainId === DEFAULT_CHAIN;
-  
+
+  const { isConnected, chain } = useAccount();
+
+  const isDefaultChain = chain?.id === DEFAULT_CHAIN;
+
   useLockOverlayScroll(isDappListOpen || isHelpOpen || isSettingsOpen);
 
   return (
@@ -101,11 +101,7 @@ const DesktopHeader = () => {
       <Container>
         <LeftSide>
           <LightButtonContainer>
-            <LightButton
-              text=""
-              onClick={toggleIsDappListOpen}
-              Icon={StyledKlerosSolutionsIcon}
-            />
+            <LightButton text="" onClick={toggleIsDappListOpen} Icon={StyledKlerosSolutionsIcon} />
           </LightButtonContainer>
           <StyledLink to={"/"}>
             <EscrowLogo />
@@ -117,7 +113,10 @@ const DesktopHeader = () => {
         </MiddleSide>
 
         <RightSide>
-          <ConnectWalletContainer {...{ isConnected, isDefaultChain }} onClick={isConnected && isDefaultChain ? toggleIsSettingsOpen : undefined}>
+          <ConnectWalletContainer
+            {...{ isConnected, isDefaultChain }}
+            onClick={isConnected && isDefaultChain ? toggleIsSettingsOpen : undefined}
+          >
             <ConnectWallet />
           </ConnectWalletContainer>
           <Menu {...{ toggleIsHelpOpen, toggleIsSettingsOpen }} />

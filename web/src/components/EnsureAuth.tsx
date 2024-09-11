@@ -2,7 +2,7 @@ import React, { useMemo, useState } from "react";
 
 import * as jwt from "jose";
 import { SiweMessage } from "siwe";
-import { useAccount, useChainId, useSignMessage } from "wagmi";
+import { useAccount, useSignMessage } from "wagmi";
 
 import { Button } from "@kleros/ui-components-library";
 
@@ -37,8 +37,7 @@ export const EnsureAuth: React.FC<IEnsureAuth> = ({ children, message, buttonTex
   const [isLoading, setIsLoading] = useState(false);
 
   const [authToken, setAuthToken] = useSessionStorage<string | null>("auth-token", localToken);
-  const { address } = useAccount();
-  const chainId = useChainId();
+  const { address, chain } = useAccount();
 
   const { signMessageAsync } = useSignMessage();
 
@@ -58,7 +57,7 @@ export const EnsureAuth: React.FC<IEnsureAuth> = ({ children, message, buttonTex
       setIsLoading(true);
       if (!address) return;
 
-      const message = await createSiweMessage(address, "Sign In to Kleros with Ethereum.", chainId);
+      const message = await createSiweMessage(address, "Sign In to Kleros with Ethereum.", chain.id);
 
       const signature = await signMessageAsync({ message });
 

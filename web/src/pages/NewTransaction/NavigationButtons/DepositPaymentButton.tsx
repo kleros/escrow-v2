@@ -8,7 +8,6 @@ import {
   useSimulateEscrowUniversalCreateErc20Transaction,
   escrowUniversalAddress,
 } from "hooks/contracts/generated";
-import { useChainId } from "wagmi";
 import { erc20Abi } from "viem";
 import { useNewTransactionContext } from "context/NewTransactionContext";
 import {
@@ -47,8 +46,7 @@ const DepositPaymentButton: React.FC = () => {
   const refetchQuery = useQueryRefetch();
   const [isSending, setIsSending] = useState(false);
   const [isApproved, setIsApproved] = useState(false);
-  const { address } = useAccount();
-  const chainId = useChainId();
+  const { address, chain } = useAccount();
   const ensResult = useEnsAddress({ name: sellerAddress, chainId: 1 });
   const deadlineTimestamp = useMemo(() => BigInt(Math.floor(new Date(deadline).getTime() / 1000)), [deadline]);
   const isNativeTransaction = sendingToken?.address === "native";
@@ -62,11 +60,11 @@ const DepositPaymentButton: React.FC = () => {
   }, [sellerAddress, ensResult.data]);
 
   const { data: allowance, refetch: refetchAllowance } = useReadContract({
-    query: { enabled: !isNativeTransaction },
+    query: { enabled: !isNativeTransaction && chain?.id },
     address: sendingToken?.address,
     abi: erc20Abi,
     functionName: "allowance",
-    args: [address, escrowUniversalAddress?.[chainId]],
+    args: [address, escrowUniversalAddress?.[chain?.id]],
   });
 
   useEffect(() => {
@@ -101,11 +99,11 @@ const DepositPaymentButton: React.FC = () => {
     useWriteEscrowUniversalCreateErc20Transaction(createERC20TransactionConfig);
 
   const { data: approveConfig } = useSimulateContract({
-    query: { enabled: !isNativeTransaction },
+    query: { enabled: !isNativeTransaction && chain?.id },
     address: sendingToken?.address,
     abi: erc20Abi,
     functionName: "approve",
-    args: [escrowUniversalAddress?.[chainId], transactionValue],
+    args: [escrowUniversalAddress?.[chain?.id], transactionValue],
   });
 
   const { writeContractAsync: approve } = useWriteContract(approveConfig);

@@ -1,16 +1,16 @@
 import { useState, useEffect } from "react";
 import { Alchemy } from "alchemy-sdk";
-import { useChainId } from "wagmi";
+import { useAccount } from "wagmi";
 import { alchemyConfig } from "utils/alchemyConfig";
 
 export const useTokenMetadata = (tokenAddress: string) => {
-  const chainId = useChainId();
+  const { chain } = useAccount();
   const [tokenMetadata, setTokenMetadata] = useState<any>(null);
 
   useEffect(() => {
     const fetchTokenMetadata = async () => {
-      if (!tokenAddress || tokenAddress === "native") return;
-      const alchemy = new Alchemy(alchemyConfig(chainId));
+      if (!tokenAddress || tokenAddress === "native" || !chain) return;
+      const alchemy = new Alchemy(alchemyConfig(chain.id));
       try {
         const metadata = await alchemy.core.getTokenMetadata(tokenAddress);
         setTokenMetadata(metadata);
@@ -21,7 +21,7 @@ export const useTokenMetadata = (tokenAddress: string) => {
     };
 
     fetchTokenMetadata();
-  }, [tokenAddress, chainId]);
+  }, [tokenAddress, chain]);
 
   return { tokenMetadata };
 };
