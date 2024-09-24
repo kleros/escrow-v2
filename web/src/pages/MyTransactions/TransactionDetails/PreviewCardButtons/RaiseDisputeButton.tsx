@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from "react";
 import { Button } from "@kleros/ui-components-library";
 import { useAccount, usePublicClient } from "wagmi";
+import { useNewTransactionContext } from "context/NewTransactionContext";
 import {
   useWriteEscrowUniversalPayArbitrationFeeByBuyer,
   useWriteEscrowUniversalPayArbitrationFeeBySeller,
@@ -25,6 +26,7 @@ const RaiseDisputeButton: React.FC<IRaiseDisputeButton> = ({ toggleModal, button
   const { buyer, id } = useTransactionDetailsContext();
   const isBuyer = useMemo(() => address?.toLowerCase() === buyer?.toLowerCase(), [address, buyer]);
   const refetchQuery = useQueryRefetch();
+  const { hasSufficientNativeBalance } = useNewTransactionContext();
 
   const { data: payArbitrationFeeByBuyerConfig } = useSimulateEscrowUniversalPayArbitrationFeeByBuyer({
     args: [BigInt(id)],
@@ -76,7 +78,14 @@ const RaiseDisputeButton: React.FC<IRaiseDisputeButton> = ({ toggleModal, button
     }
   };
 
-  return <Button isLoading={isSending} disabled={isSending} text={buttonText} onClick={handleRaiseDispute} />;
+  return (
+    <Button
+      isLoading={isSending}
+      disabled={isSending || !hasSufficientNativeBalance}
+      text={buttonText}
+      onClick={handleRaiseDispute}
+    />
+  );
 };
 
 export default RaiseDisputeButton;

@@ -4,6 +4,7 @@ import { usePublicClient } from "wagmi";
 import { useTransactionDetailsContext } from "context/TransactionDetailsContext";
 import { isUndefined } from "utils/index";
 import { wrapWithToast } from "utils/wrapWithToast";
+import { useNewTransactionContext } from "context/NewTransactionContext";
 import {
   useSimulateEscrowUniversalExecuteTransaction,
   useWriteEscrowUniversalExecuteTransaction,
@@ -15,6 +16,7 @@ const ExecuteTransactionButton: React.FC = () => {
   const publicClient = usePublicClient();
   const { id } = useTransactionDetailsContext();
   const refetchQuery = useQueryRefetch();
+  const { hasSufficientNativeBalance } = useNewTransactionContext();
 
   const { data: executeTransactionConfig } = useSimulateEscrowUniversalExecuteTransaction({
     args: [BigInt(id)],
@@ -41,7 +43,12 @@ const ExecuteTransactionButton: React.FC = () => {
   };
 
   return (
-    <Button isLoading={isSending} disabled={isSending} text="Execute Transaction" onClick={handleExecuteTransaction} />
+    <Button
+      isLoading={isSending}
+      disabled={isSending || !hasSufficientNativeBalance}
+      text="Execute Transaction"
+      onClick={handleExecuteTransaction}
+    />
   );
 };
 

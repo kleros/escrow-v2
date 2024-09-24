@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useMemo } from "react";
 import styled from "styled-components";
 import { Button } from "@kleros/ui-components-library";
+import { useNewTransactionContext } from "context/NewTransactionContext";
 import {
   useWriteEscrowUniversalCreateNativeTransaction,
   useSimulateEscrowUniversalCreateNativeTransaction,
@@ -54,6 +55,7 @@ const DepositPaymentButton: React.FC = () => {
     () => (isNativeTransaction ? parseEther(sendingQuantity) : parseUnits(sendingQuantity, 18)),
     [isNativeTransaction, sendingQuantity]
   );
+  const { hasSufficientNativeBalance } = useNewTransactionContext();
 
   useEffect(() => {
     setFinalRecipientAddress(ensResult.data || sellerAddress);
@@ -151,7 +153,7 @@ const DepositPaymentButton: React.FC = () => {
   return (
     <StyledButton
       isLoading={isSending}
-      disabled={isSending}
+      disabled={isSending || !hasSufficientNativeBalance}
       text={isNativeTransaction || isApproved ? "Deposit the Payment" : "Approve Token"}
       onClick={isNativeTransaction || isApproved ? handleCreateTransaction : handleApproveToken}
     />
