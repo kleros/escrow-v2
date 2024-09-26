@@ -26,15 +26,17 @@ const RaiseDisputeButton: React.FC<IRaiseDisputeButton> = ({ toggleModal, button
   const isBuyer = useMemo(() => address?.toLowerCase() === buyer?.toLowerCase(), [address, buyer]);
   const refetchQuery = useQueryRefetch();
 
-  const { data: payArbitrationFeeByBuyerConfig } = useSimulateEscrowUniversalPayArbitrationFeeByBuyer({
-    args: [BigInt(id)],
-    value: arbitrationCost,
-  });
+  const { data: payArbitrationFeeByBuyerConfig, error: simulateBuyerError } =
+    useSimulateEscrowUniversalPayArbitrationFeeByBuyer({
+      args: [BigInt(id)],
+      value: arbitrationCost,
+    });
 
-  const { data: payArbitrationFeeBySellerConfig } = useSimulateEscrowUniversalPayArbitrationFeeBySeller({
-    args: [BigInt(id)],
-    value: arbitrationCost,
-  });
+  const { data: payArbitrationFeeBySellerConfig, error: simulateSellerError } =
+    useSimulateEscrowUniversalPayArbitrationFeeBySeller({
+      args: [BigInt(id)],
+      value: arbitrationCost,
+    });
 
   const { writeContractAsync: payArbitrationFeeByBuyer } =
     useWriteEscrowUniversalPayArbitrationFeeByBuyer(payArbitrationFeeByBuyerConfig);
@@ -43,36 +45,72 @@ const RaiseDisputeButton: React.FC<IRaiseDisputeButton> = ({ toggleModal, button
   );
 
   const handleRaiseDispute = () => {
-    if (isBuyer && !isUndefined(payArbitrationFeeByBuyer)) {
-      setIsSending(true);
-      wrapWithToast(async () => await payArbitrationFeeByBuyer(payArbitrationFeeByBuyerConfig.request), publicClient)
-        .then((wrapResult) => {
-          if (wrapResult.status) {
-            toggleModal && toggleModal();
-            refetchQuery([["refetchOnBlock", "useTransactionDetailsQuery"]]);
-          } else {
+    if (isBuyer) {
+      if (simulateBuyerError) {
+        console.log({simulateBuyerError});
+        let errorMessage = "An error occurred during simulation.";
+        if (simulateBuyerError.message.includes("insufficient funds")) {
+          errorMessage = "You don't have enough balance to raise a dispute.";
+        }
+        // Use wrapWithToast to display the error
+        wrapWithToast(() => Promise.reject(new Error(errorMessage)), publicClient);
+        return;
+      }
+
+      if (isUndefined(payArbitrationFeeByBuyerConfig)) {
+        console.log({ payArbitrationFeeByBuyerConfig });
+        console.log({ simulateBuyerError });
+        wrapWithToast(() => Promise.reject(new Error("Unable to prepare transaction.")), publicClient);
+        return;
+      }
+
+      if (!isUndefined(payArbitrationFeeByBuyer)) {
+        setIsSending(true);
+        wrapWithToast(() => payArbitrationFeeByBuyer(payArbitrationFeeByBuyerConfig.request), publicClient)
+          .then((wrapResult) => {
             setIsSending(false);
-          }
-        })
-        .catch((error) => {
-          console.error("Error raising dispute as buyer:", error);
-          setIsSending(false);
-        });
-    } else if (!isBuyer && !isUndefined(payArbitrationFeeBySeller)) {
-      setIsSending(true);
-      wrapWithToast(async () => await payArbitrationFeeBySeller(payArbitrationFeeBySellerConfig.request), publicClient)
-        .then((wrapResult) => {
-          if (wrapResult.status) {
-            toggleModal && toggleModal();
-            refetchQuery([["refetchOnBlock", "useTransactionDetailsQuery"]]);
-          } else {
+            if (wrapResult.status) {
+              toggleModal && toggleModal();
+              refetchQuery([["refetchOnBlock", "useTransactionDetailsQuery"]]);
+            }
+          })
+          .catch((error) => {
+            console.error("Error raising dispute as buyer:", error);
             setIsSending(false);
-          }
-        })
-        .catch((error) => {
-          console.error("Error raising dispute as seller:", error);
-          setIsSending(false);
-        });
+          });
+      }
+    } else {
+      if (simulateSellerError) {
+        let errorMessage = "An error occurred during simulation.";
+        if (simulateSellerError.message.includes("insufficient funds")) {
+          errorMessage = "You don't have enough balance to raise a dispute.";
+        }
+        wrapWithToast(() => Promise.reject(new Error(errorMessage)), publicClient);
+        return;
+      }
+
+      if (isUndefined(payArbitrationFeeBySellerConfig)) {
+        console.log({ payArbitrationFeeBySellerConfig });
+        console.log({ simulateSellerError });
+        wrapWithToast(() => Promise.reject(new Error("Unable to prepare transaction.")), publicClient);
+        return;
+      }
+
+      if (!isUndefined(payArbitrationFeeBySeller)) {
+        setIsSending(true);
+        wrapWithToast(() => payArbitrationFeeBySeller(payArbitrationFeeBySellerConfig.request), publicClient)
+          .then((wrapResult) => {
+            setIsSending(false);
+            if (wrapResult.status) {
+              toggleModal && toggleModal();
+              refetchQuery([["refetchOnBlock", "useTransactionDetailsQuery"]]);
+            }
+          })
+          .catch((error) => {
+            console.error("Error raising dispute as seller:", error);
+            setIsSending(false);
+          });
+      }
     }
   };
 
