@@ -1,7 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { Button } from "@kleros/ui-components-library";
 import { useAccount, usePublicClient } from "wagmi";
-import { useNewTransactionContext } from "context/NewTransactionContext";
 import {
   useWriteEscrowUniversalTimeOutByBuyer,
   useWriteEscrowUniversalTimeOutBySeller,
@@ -20,7 +19,6 @@ const TimeOutButton: React.FC = () => {
   const { buyer, id } = useTransactionDetailsContext();
   const isBuyer = useMemo(() => address?.toLowerCase() === buyer?.toLowerCase(), [address, buyer]);
   const refetchQuery = useQueryRefetch();
-  const { hasSufficientNativeBalance } = useNewTransactionContext();
 
   const { data: timeOutByBuyerConfig } = useSimulateEscrowUniversalTimeOutByBuyer({
     args: [BigInt(id)],
@@ -66,7 +64,7 @@ const TimeOutButton: React.FC = () => {
   return (
     <Button
       isLoading={isSending}
-      disabled={isSending || !hasSufficientNativeBalance}
+      disabled={isSending}
       text="Claim full payment back"
       onClick={handleTimeout}
     />

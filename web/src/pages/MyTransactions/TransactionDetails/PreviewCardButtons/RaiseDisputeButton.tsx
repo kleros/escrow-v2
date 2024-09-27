@@ -1,7 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { Button } from "@kleros/ui-components-library";
 import { useAccount, usePublicClient } from "wagmi";
-import { useNewTransactionContext } from "context/NewTransactionContext";
 import {
   useWriteEscrowUniversalPayArbitrationFeeByBuyer,
   useWriteEscrowUniversalPayArbitrationFeeBySeller,
@@ -26,23 +25,29 @@ const RaiseDisputeButton: React.FC<IRaiseDisputeButton> = ({ toggleModal, button
   const { buyer, id } = useTransactionDetailsContext();
   const isBuyer = useMemo(() => address?.toLowerCase() === buyer?.toLowerCase(), [address, buyer]);
   const refetchQuery = useQueryRefetch();
-  const { hasSufficientNativeBalance } = useNewTransactionContext();
 
-  const { data: payArbitrationFeeByBuyerConfig } = useSimulateEscrowUniversalPayArbitrationFeeByBuyer({
-    args: [BigInt(id)],
-    value: arbitrationCost,
-  });
+  const { data: payArbitrationFeeByBuyerConfig, isLoading: isPreparingBuyerConfig } =
+    useSimulateEscrowUniversalPayArbitrationFeeByBuyer({
+      query: {
+        enabled: isBuyer,
+      },
+      args: [BigInt(id)],
+      value: arbitrationCost,
+    });
 
-  const { data: payArbitrationFeeBySellerConfig } = useSimulateEscrowUniversalPayArbitrationFeeBySeller({
-    args: [BigInt(id)],
-    value: arbitrationCost,
-  });
+  const { data: payArbitrationFeeBySellerConfig, isLoading: isPreparingSellerConfig } =
+    useSimulateEscrowUniversalPayArbitrationFeeBySeller({
+      query: {
+        enabled: !isBuyer,
+      },
+      args: [BigInt(id)],
+      value: arbitrationCost,
+    });
 
   const { writeContractAsync: payArbitrationFeeByBuyer } =
     useWriteEscrowUniversalPayArbitrationFeeByBuyer(payArbitrationFeeByBuyerConfig);
-  const { writeContractAsync: payArbitrationFeeBySeller } = useWriteEscrowUniversalPayArbitrationFeeBySeller(
-    payArbitrationFeeBySellerConfig
-  );
+  const { writeContractAsync: payArbitrationFeeBySeller } =
+    useWriteEscrowUniversalPayArbitrationFeeBySeller(payArbitrationFeeBySellerConfig);
 
   const handleRaiseDispute = () => {
     if (isBuyer && !isUndefined(payArbitrationFeeByBuyer)) {
@@ -80,8 +85,8 @@ const RaiseDisputeButton: React.FC<IRaiseDisputeButton> = ({ toggleModal, button
 
   return (
     <Button
-      isLoading={isSending}
-      disabled={isSending || !hasSufficientNativeBalance}
+      isLoading={isSending || isPreparingBuyerConfig || isPreparingSellerConfig}
+      disabled={isSending || isPreparingBuyerConfig || isPreparingSellerConfig}
       text={buttonText}
       onClick={handleRaiseDispute}
     />

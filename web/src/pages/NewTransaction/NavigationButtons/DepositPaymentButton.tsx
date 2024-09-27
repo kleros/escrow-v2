@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useMemo } from "react";
 import styled from "styled-components";
 import { Button } from "@kleros/ui-components-library";
-import { useNewTransactionContext } from "context/NewTransactionContext";
 import {
   useWriteEscrowUniversalCreateNativeTransaction,
   useSimulateEscrowUniversalCreateNativeTransaction,
@@ -18,6 +17,7 @@ import {
   useReadContract,
   useWriteContract,
   useSimulateContract,
+  useBalance,
 } from "wagmi";
 import { parseEther, parseUnits } from "viem";
 import { isUndefined } from "utils/index";
@@ -39,6 +39,7 @@ const DepositPaymentButton: React.FC = () => {
     deadline,
     sendingToken,
     resetContext,
+    setHasSufficientNativeBalance,
   } = useNewTransactionContext();
 
   const [finalRecipientAddress, setFinalRecipientAddress] = useState(sellerAddress);
@@ -55,11 +56,33 @@ const DepositPaymentButton: React.FC = () => {
     () => (isNativeTransaction ? parseEther(sendingQuantity) : parseUnits(sendingQuantity, 18)),
     [isNativeTransaction, sendingQuantity]
   );
-  const { hasSufficientNativeBalance } = useNewTransactionContext();
+
+  const { data: balanceData } = useBalance({
+    address: address as `0x${string}` | undefined,
+    token: isNativeTransaction ? undefined : sendingToken?.address as `0x${string}` | undefined,
+  });
+
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     setFinalRecipientAddress(ensResult.data || sellerAddress);
   }, [sellerAddress, ensResult.data]);
+
+  useEffect(() => {
+    const balance = parseFloat(balanceData?.formatted || "0");
+    const quantity = parseFloat(sendingQuantity);
+
+    if (quantity > balance) {
+      setError("Insufficient balance");
+      setHasSufficientNativeBalance(false);
+    } else if (quantity === 0) {
+      setError("Amount cannot be zero");
+      setHasSufficientNativeBalance(false);
+    } else {
+      setError(null);
+      setHasSufficientNativeBalance(true);
+    }
+  }, [balanceData, sendingQuantity, setHasSufficientNativeBalance]);
 
   const { data: allowance, refetch: refetchAllowance } = useReadContract({
     query: { enabled: !isNativeTransaction && chain?.id },
@@ -151,12 +174,15 @@ const DepositPaymentButton: React.FC = () => {
   };
 
   return (
-    <StyledButton
-      isLoading={isSending}
-      disabled={isSending || !hasSufficientNativeBalance}
-      text={isNativeTransaction || isApproved ? "Deposit the Payment" : "Approve Token"}
-      onClick={isNativeTransaction || isApproved ? handleCreateTransaction : handleApproveToken}
-    />
+    <>
+      <StyledButton
+        isLoading={isSending}
+        disabled={isSending || !!error}
+        text={isNativeTransaction || isApproved ? "Deposit the Payment" : "Approve Token"}
+        onClick={isNativeTransaction || isApproved ? handleCreateTransaction : handleApproveToken}
+      />
+      <p>{error}</p>
+    </>
   );
 };
 

@@ -5,7 +5,6 @@ import { parseEther } from "viem";
 import { isUndefined } from "utils/index";
 import { wrapWithToast } from "utils/wrapWithToast";
 import { useTransactionDetailsContext } from "context/TransactionDetailsContext";
-import { useNewTransactionContext } from "context/NewTransactionContext";
 import {
   useSimulateEscrowUniversalProposeSettlement,
   useWriteEscrowUniversalProposeSettlement,
@@ -29,7 +28,6 @@ const ProposeSettlementButton: React.FC<IProposeSettlementButton> = ({
   const publicClient = usePublicClient();
   const { id } = useTransactionDetailsContext();
   const refetchQuery = useQueryRefetch();
-  const { hasSufficientNativeBalance } = useNewTransactionContext();
 
   const { data: proposeSettlementConfig } = useSimulateEscrowUniversalProposeSettlement({
     args: [BigInt(id), parseEther(amountProposed)],
@@ -59,7 +57,7 @@ const ProposeSettlementButton: React.FC<IProposeSettlementButton> = ({
   return (
     <Button
       isLoading={isSending}
-      disabled={isSending || !isAmountValid || !hasSufficientNativeBalance}
+      disabled={isSending || !isAmountValid}
       text={buttonText}
       onClick={handleProposeSettlement}
     />

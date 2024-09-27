@@ -4,7 +4,6 @@ import { usePublicClient } from "wagmi";
 import { isUndefined } from "utils/index";
 import { wrapWithToast } from "utils/wrapWithToast";
 import { useTransactionDetailsContext } from "context/TransactionDetailsContext";
-import { useNewTransactionContext } from "context/NewTransactionContext";
 import {
   useSimulateEscrowUniversalAcceptSettlement,
   useWriteEscrowUniversalAcceptSettlement,
@@ -16,7 +15,6 @@ const AcceptButton: React.FC = () => {
   const publicClient = usePublicClient();
   const { id } = useTransactionDetailsContext();
   const refetchQuery = useQueryRefetch();
-  const { hasSufficientNativeBalance } = useNewTransactionContext();
 
   const { data: acceptSettlementConfig } = useSimulateEscrowUniversalAcceptSettlement({
     args: [BigInt(id)],
@@ -44,7 +42,7 @@ const AcceptButton: React.FC = () => {
   return (
     <Button
       isLoading={isSending}
-      disabled={isSending || !hasSufficientNativeBalance}
+      disabled={isSending}
       text="Accept"
       onClick={handleAcceptSettlement}
     />

@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Button } from "@kleros/ui-components-library";
 import { useToggle } from "react-use";
 import PaymentReleased from "pages/MyTransactions/Modal/PaymentReleased";
-import { useNewTransactionContext } from "context/NewTransactionContext";
 import { useWriteEscrowUniversalPay, useSimulateEscrowUniversalPay } from "hooks/contracts/generated";
 import { isUndefined } from "utils/index";
 import { wrapWithToast } from "utils/wrapWithToast";
@@ -16,7 +15,6 @@ const ReleasePaymentButton: React.FC = () => {
   const publicClient = usePublicClient();
   const { id, amount } = useTransactionDetailsContext();
   const refetchQuery = useQueryRefetch();
-  const { hasSufficientNativeBalance } = useNewTransactionContext();
 
   const { data: releaseFullPaymentConfig } = useSimulateEscrowUniversalPay({
     args: [id, amount],
@@ -47,7 +45,7 @@ const ReleasePaymentButton: React.FC = () => {
     <>
       <Button
         isLoading={isSending}
-        disabled={isSending || !hasSufficientNativeBalance}
+        disabled={isSending}
         text={"Yes. Release full payment"}
         onClick={handleReleasePayment}
       />

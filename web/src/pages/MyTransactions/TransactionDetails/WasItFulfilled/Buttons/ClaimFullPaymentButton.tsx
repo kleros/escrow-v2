@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Button } from "@kleros/ui-components-library";
 import { useToggle } from "react-use";
 import PaymentReleased from "pages/MyTransactions/Modal/PaymentReleased";
-import { useNewTransactionContext } from "context/NewTransactionContext";
 import {
   useWriteEscrowUniversalExecuteTransaction,
   useSimulateEscrowUniversalExecuteTransaction,
@@ -17,7 +16,6 @@ const ClaimFullPaymentButton: React.FC = () => {
   const [isSending, setIsSending] = useState<boolean>(false);
   const publicClient = usePublicClient();
   const { id } = useTransactionDetailsContext();
-  const { hasSufficientNativeBalance } = useNewTransactionContext();
 
   const { data: executeTransactionConfig } = useSimulateEscrowUniversalExecuteTransaction({
     args: [id],
@@ -49,7 +47,7 @@ const ClaimFullPaymentButton: React.FC = () => {
     <>
       <Button
         isLoading={isSending}
-        disabled={isSending || !hasSufficientNativeBalance}
+        disabled={isSending}
         text={"No. Claim full payment"}
         onClick={handleExecuteTransaction}
       />
