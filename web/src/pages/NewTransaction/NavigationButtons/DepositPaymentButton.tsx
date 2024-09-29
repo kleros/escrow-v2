@@ -32,9 +32,9 @@ const StyledButton = styled(Button)``;
 const ErrorMessage = styled.div`
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 4px;
   justify-content: center;
-  margin: 4px;
+  margin: 12px;
   color: ${({ theme }) => theme.error};
 `;
 
