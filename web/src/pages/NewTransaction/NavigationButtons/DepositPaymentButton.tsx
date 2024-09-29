@@ -25,8 +25,18 @@ import { wrapWithToast } from "utils/wrapWithToast";
 import { ethAddressPattern } from "utils/validateAddress";
 import { useQueryRefetch } from "hooks/useQueryRefetch";
 import { useNavigateAndScrollTop } from "hooks/useNavigateAndScrollTop";
+import ClosedCircleIcon from "components/StyledIcons/ClosedCircleIcon";
 
 const StyledButton = styled(Button)``;
+
+const ErrorMessage = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-content: center;
+  margin: 4px;
+  color: ${({ theme }) => theme.error};
+`;
 
 const DepositPaymentButton: React.FC = () => {
   const {
@@ -174,15 +184,16 @@ const DepositPaymentButton: React.FC = () => {
   };
 
   return (
-    <>
+    <div>
       <StyledButton
         isLoading={isSending}
         disabled={isSending || !!error}
+        tooltip={error}
         text={isNativeTransaction || isApproved ? "Deposit the Payment" : "Approve Token"}
         onClick={isNativeTransaction || isApproved ? handleCreateTransaction : handleApproveToken}
       />
-      <p>{error}</p>
-    </>
+      {error ? <ErrorMessage><ClosedCircleIcon /> {error}</ErrorMessage> : null}
+    </div>
   );
 };
 
