@@ -37,7 +37,7 @@ const FeeRequired: React.FC<IFeeRequired> = ({ arbitrationCost }) => {
   return (
     <StyledCard>
       <StyledHeader>Arbitration fee required</StyledHeader>
-      <StyledQuantity>{formatEther(arbitrationCost)} ETH</StyledQuantity>
+      {arbitrationCost ? <StyledQuantity>{formatEther(arbitrationCost)} ETH</StyledQuantity> : null}
     </StyledCard>
   );
 };
