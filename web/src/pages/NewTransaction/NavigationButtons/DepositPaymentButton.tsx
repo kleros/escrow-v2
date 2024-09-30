@@ -29,13 +29,14 @@ import ClosedCircleIcon from "components/StyledIcons/ClosedCircleIcon";
 
 const StyledButton = styled(Button)``;
 
-const ErrorMessage = styled.div`
+export const ErrorButtonMessage = styled.div`
   display: flex;
   align-items: center;
   gap: 4px;
   justify-content: center;
   margin: 12px;
   color: ${({ theme }) => theme.error};
+  font-size: 14px;
 `;
 
 const DepositPaymentButton: React.FC = () => {
@@ -49,10 +50,8 @@ const DepositPaymentButton: React.FC = () => {
     deadline,
     sendingToken,
     resetContext,
-    setHasSufficientNativeBalance,
   } = useNewTransactionContext();
 
-  const [finalRecipientAddress, setFinalRecipientAddress] = useState(sellerAddress);
   const publicClient = usePublicClient();
   const navigateAndScrollTop = useNavigateAndScrollTop();
   const refetchQuery = useQueryRefetch();
@@ -67,32 +66,14 @@ const DepositPaymentButton: React.FC = () => {
     [isNativeTransaction, sendingQuantity]
   );
 
+  const finalRecipientAddress = ensResult.data || sellerAddress;
+
   const { data: balanceData } = useBalance({
     address: address as `0x${string}` | undefined,
-    token: isNativeTransaction ? undefined : sendingToken?.address as `0x${string}` | undefined,
+    token: isNativeTransaction ? undefined : (sendingToken?.address as `0x${string}` | undefined),
   });
 
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    setFinalRecipientAddress(ensResult.data || sellerAddress);
-  }, [sellerAddress, ensResult.data]);
-
-  useEffect(() => {
-    const balance = parseFloat(balanceData?.formatted || "0");
-    const quantity = parseFloat(sendingQuantity);
-
-    if (quantity > balance) {
-      setError("Insufficient balance");
-      setHasSufficientNativeBalance(false);
-    } else if (quantity === 0) {
-      setError("Amount cannot be zero");
-      setHasSufficientNativeBalance(false);
-    } else {
-      setError(null);
-      setHasSufficientNativeBalance(true);
-    }
-  }, [balanceData, sendingQuantity, setHasSufficientNativeBalance]);
+  const insufficientBalance = parseFloat(sendingQuantity) > parseFloat(balanceData?.value.toString() || "0");
 
   const { data: allowance, refetch: refetchAllowance } = useReadContract({
     query: { enabled: !isNativeTransaction && chain?.id },
@@ -187,12 +168,15 @@ const DepositPaymentButton: React.FC = () => {
     <div>
       <StyledButton
         isLoading={isSending}
-        disabled={isSending || !!error}
-        tooltip={error}
+        disabled={isSending || insufficientBalance}
         text={isNativeTransaction || isApproved ? "Deposit the Payment" : "Approve Token"}
         onClick={isNativeTransaction || isApproved ? handleCreateTransaction : handleApproveToken}
       />
-      {error ? <ErrorMessage><ClosedCircleIcon /> {error}</ErrorMessage> : null}
+      {insufficientBalance && (
+        <ErrorButtonMessage>
+          <ClosedCircleIcon /> Insufficient balance
+        </ErrorButtonMessage>
+      )}
     </div>
   );
 };
