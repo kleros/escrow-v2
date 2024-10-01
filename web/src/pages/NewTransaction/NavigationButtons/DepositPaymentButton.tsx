@@ -76,8 +76,6 @@ const DepositPaymentButton: React.FC = () => {
   });
 
   const insufficientBalance = useMemo(() => {
-    if (isUndefined(sendingQuantity) || isUndefined(balanceData)) return true;
-
     return BigInt(sendingQuantity.toString()) > BigInt(balanceData.toString());
   }, [sendingQuantity, balanceData]);
 
