@@ -27,13 +27,12 @@ const RaiseDisputeButton: React.FC<IRaiseDisputeButton> = ({ toggleModal, button
   const { buyer, id } = useTransactionDetailsContext();
   const isBuyer = useMemo(() => address?.toLowerCase() === buyer?.toLowerCase(), [address, buyer]);
   const refetchQuery = useQueryRefetch();
+  
   const { data: balanceData } = useBalance({
     address: address as `0x${string}` | undefined,
   });
 
   const insufficientBalance = useMemo(() => {
-     if(isUndefined(arbitrationCost) || isUndefined(balanceData)) return true;
-
      return BigInt(arbitrationCost.toString()) > BigInt(balanceData.value.toString());
   },[arbitrationCost, balanceData]);
 
@@ -47,7 +46,7 @@ const RaiseDisputeButton: React.FC<IRaiseDisputeButton> = ({ toggleModal, button
 
   const { data: payArbitrationFeeBySellerConfig } = useSimulateEscrowUniversalPayArbitrationFeeBySeller({
     query: {
-      enabled: !isBuyer || !insufficientBalance,
+      enabled: !isBuyer && !insufficientBalance,
     },
     args: [BigInt(id)],
     value: arbitrationCost,
