@@ -76,7 +76,7 @@ const TokenAndAmount: React.FC<ITokenAndAmount> = ({ quantity, setQuantity }) =>
       setError("");
       setHasSufficientNativeBalance(true);
     }
-  }, [quantity, setHasSufficientNativeBalance, sendingToken]);
+  }, [quantity, balanceAmount, setHasSufficientNativeBalance]);
 
   const formattedBalance = useMemo(() => {
     const balance = isNativeTransaction ? nativeBalance : tokenBalance;
