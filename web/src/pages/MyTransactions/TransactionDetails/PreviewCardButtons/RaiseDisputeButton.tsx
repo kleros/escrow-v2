@@ -33,7 +33,7 @@ const RaiseDisputeButton: React.FC<IRaiseDisputeButton> = ({ toggleModal, button
   });
 
   const insufficientBalance = useMemo(() => {
-     return balanceData && parseFloat(arbitrationCost.toString()) > parseFloat(balanceData.value.toString());
+     return balanceData && BigInt(arbitrationCost.toString()) > BigInt(balanceData.value.toString());
   },[arbitrationCost, balanceData]);
 
   const { data: payArbitrationFeeByBuyerConfig, isLoading: isLoadingBuyerConfig, isError: isErrorBuyerConfig } = useSimulateEscrowUniversalPayArbitrationFeeByBuyer({
