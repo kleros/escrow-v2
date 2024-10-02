@@ -1,9 +1,11 @@
 import React, { useMemo, useState, useEffect } from "react";
 import styled from "styled-components";
 import { responsiveSize } from "styles/responsiveSize";
-import { useBalance, useAccount } from "wagmi";
+import { useAccount, useReadContract } from "wagmi";
 import { useNewTransactionContext } from "context/NewTransactionContext";
 import { getFormattedBalance } from "utils/getFormattedBalance";
+import { erc20Abi } from "viem";
+import { formatUnits } from "viem";
 import AmountField from "./AmountField";
 import TokenSelector from "./TokenSelector";
 import MaxBalance from "./MaxBalance";
@@ -31,14 +33,24 @@ interface ITokenAndAmount {
 const TokenAndAmount: React.FC<ITokenAndAmount> = ({ quantity, setQuantity }) => {
   const { address } = useAccount();
   const { sendingToken, setHasSufficientNativeBalance } = useNewTransactionContext();
-  const { data: balanceData } = useBalance({
-    address: address,
-    token: sendingToken?.address === "native" ? undefined : sendingToken?.address,
+  
+  const { data: balanceData } = useReadContract({
+    address: sendingToken?.address as `0x${string}`,
+    abi: erc20Abi,
+    functionName: 'balanceOf',
+    args: [address as `0x${string}`],
   });
+
+  const { data: tokenDecimal } = useReadContract({
+    address: sendingToken?.address as `0x${string}`,
+    abi: erc20Abi,
+    functionName: 'decimals',
+  });
+
   const [error, setError] = useState("");
 
   useEffect(() => {
-    const balanceAmount = balanceData ? parseFloat(balanceData.formatted) : 0;
+    const balanceAmount = balanceData && tokenDecimal ? parseFloat(formatUnits(balanceData, tokenDecimal)) : 0;
     const enteredAmount = parseFloat(quantity);
 
     if (quantity && balanceAmount < enteredAmount) {
@@ -51,7 +63,7 @@ const TokenAndAmount: React.FC<ITokenAndAmount> = ({ quantity, setQuantity }) =>
       setError("");
       setHasSufficientNativeBalance(true);
     }
-  }, [balanceData, quantity, setHasSufficientNativeBalance]);
+  }, [balanceData, quantity, setHasSufficientNativeBalance, sendingToken]);
 
   const formattedBalance = useMemo(() => getFormattedBalance(balanceData, sendingToken), [balanceData, sendingToken]);
 
@@ -62,11 +74,12 @@ const TokenAndAmount: React.FC<ITokenAndAmount> = ({ quantity, setQuantity }) =>
         <TokenSelector />
         <MaxBalance
           formattedBalance={formattedBalance}
-          rawBalance={parseFloat(balanceData?.formatted)}
+          rawBalance={parseFloat(formatUnits(balanceData, tokenDecimal))}
           setQuantity={setQuantity}
         />
       </TokenSelectorAndMaxBalance>
     </Container>
   );
 };
+
 export default TokenAndAmount;

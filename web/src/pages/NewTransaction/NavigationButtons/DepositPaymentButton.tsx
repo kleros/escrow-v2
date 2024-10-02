@@ -118,7 +118,7 @@ const DepositPaymentButton: React.FC = () => {
         ethAddressPattern.test(finalRecipientAddress) &&
         !insufficientBalance,
     },
-    args: [transactionValue, sendingToken?.address, deadlineTimestamp, transactionUri, finalRecipientAddress],
+    args: [transactionValue, sendingToken?.address as `0x${string}`, deadlineTimestamp, transactionUri, finalRecipientAddress as `0x${string}`],
   });
 
   const { writeContractAsync: createNativeTransaction } =
@@ -129,7 +129,7 @@ const DepositPaymentButton: React.FC = () => {
 
   const { data: approveConfig } = useSimulateContract({
     query: { enabled: !isNativeTransaction && chain?.id && !insufficientBalance },
-    address: sendingToken?.address,
+    address: sendingToken?.address as `0x${string}`,
     abi: erc20Abi,
     functionName: "approve",
     args: [escrowUniversalAddress?.[chain?.id], transactionValue],
