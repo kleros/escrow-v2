@@ -36,7 +36,7 @@ const RaiseDisputeButton: React.FC<IRaiseDisputeButton> = ({ toggleModal, button
      return BigInt(arbitrationCost.toString()) > BigInt(balanceData.value.toString());
   },[arbitrationCost, balanceData]);
 
-  const { data: payArbitrationFeeByBuyerConfig } = useSimulateEscrowUniversalPayArbitrationFeeByBuyer({
+  const { data: payArbitrationFeeByBuyerConfig, isLoading: isLoadingBuyerConfig, isError: isErrorBuyerConfig } = useSimulateEscrowUniversalPayArbitrationFeeByBuyer({
     query: {
       enabled: isBuyer || !insufficientBalance,
     },
@@ -44,7 +44,7 @@ const RaiseDisputeButton: React.FC<IRaiseDisputeButton> = ({ toggleModal, button
     value: arbitrationCost,
   });
 
-  const { data: payArbitrationFeeBySellerConfig } = useSimulateEscrowUniversalPayArbitrationFeeBySeller({
+  const { data: payArbitrationFeeBySellerConfig, isLoading: isLoadingSellerConfig, isError: isErrorSellerConfig } = useSimulateEscrowUniversalPayArbitrationFeeBySeller({
     query: {
       enabled: !isBuyer && !insufficientBalance,
     },
@@ -95,8 +95,15 @@ const RaiseDisputeButton: React.FC<IRaiseDisputeButton> = ({ toggleModal, button
   return (
     <div>
       <Button
-        isLoading={isSending}
-        disabled={isSending || insufficientBalance}
+        isLoading={isSending || isLoadingBuyerConfig || isLoadingSellerConfig}
+        disabled={
+          isSending ||
+          insufficientBalance ||
+          isLoadingBuyerConfig ||
+          isLoadingSellerConfig ||
+          isErrorBuyerConfig ||
+          isErrorSellerConfig
+        }
         text={buttonText}
         onClick={handleRaiseDispute}
       />

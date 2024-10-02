@@ -93,7 +93,11 @@ const DepositPaymentButton: React.FC = () => {
     }
   }, [allowance, transactionValue]);
 
-  const { data: createNativeTransactionConfig } = useSimulateEscrowUniversalCreateNativeTransaction({
+  const {
+    data: createNativeTransactionConfig,
+    isLoading: isLoadingNativeConfig,
+    isError: isErrorNativeConfig,
+  } = useSimulateEscrowUniversalCreateNativeTransaction({
     query: {
       enabled: isNativeTransaction && ethAddressPattern.test(finalRecipientAddress) && !insufficientBalance,
     },
@@ -101,7 +105,11 @@ const DepositPaymentButton: React.FC = () => {
     value: transactionValue,
   });
 
-  const { data: createERC20TransactionConfig } = useSimulateEscrowUniversalCreateErc20Transaction({
+  const {
+    data: createERC20TransactionConfig,
+    isLoading: isLoadingERC20Config,
+    isError: isErrorERC20Config,
+  } = useSimulateEscrowUniversalCreateErc20Transaction({
     query: {
       enabled:
         !isNativeTransaction &&
@@ -172,8 +180,15 @@ const DepositPaymentButton: React.FC = () => {
   return (
     <div>
       <StyledButton
-        isLoading={isSending}
-        disabled={isSending || insufficientBalance}
+        isLoading={isSending || isLoadingNativeConfig || isLoadingERC20Config}
+        disabled={
+          isSending ||
+          insufficientBalance ||
+          isLoadingNativeConfig ||
+          isLoadingERC20Config ||
+          isErrorNativeConfig ||
+          isErrorERC20Config
+        }
         text={isNativeTransaction || isApproved ? "Deposit the Payment" : "Approve Token"}
         onClick={isNativeTransaction || isApproved ? handleCreateTransaction : handleApproveToken}
       />
