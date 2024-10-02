@@ -17,6 +17,7 @@ import {
   useReadContract,
   useWriteContract,
   useSimulateContract,
+  useBalance,
 } from "wagmi";
 import { parseEther, parseUnits } from "viem";
 import { normalize } from 'viem/ens'
@@ -68,23 +69,33 @@ const DepositPaymentButton: React.FC = () => {
 
   const finalRecipientAddress = ensResult.data || sellerAddress;
 
-  const { data: balanceData } = useReadContract({
-    address: isNativeTransaction ? undefined : sendingToken?.address as `0x${string}`,
-    abi: erc20Abi,
-    functionName: "balanceOf",
-    args: [address as `0x${string}`],
+  const { data: nativeBalance } = useBalance({
+    address: isNativeTransaction ? address as `0x${string}` : undefined,
   });
 
+  const { data: tokenBalance } = useReadContract({
+    address: !isNativeTransaction ? sendingToken?.address as `0x${string}` : undefined,
+    abi: erc20Abi,
+    functionName: 'balanceOf',
+    args: [address as `0x${string}`],
+  });
+  
   const insufficientBalance = useMemo(() => {
-    return BigInt(sendingQuantity.toString()) > BigInt(balanceData.toString());
-  }, [sendingQuantity, balanceData]);
+    if (isUndefined(sendingQuantity)) return true;
+    
+    if (isNativeTransaction) {
+      return nativeBalance ? parseFloat(sendingQuantity) > parseFloat(nativeBalance.value.toString()) : true;
+    }
+    
+    return isUndefined(tokenBalance) ? true : parseFloat(sendingQuantity) > parseFloat(tokenBalance.toString());
+  }, [sendingQuantity, tokenBalance, nativeBalance, isNativeTransaction]);
 
   const { data: allowance, refetch: refetchAllowance } = useReadContract({
     query: { enabled: !isNativeTransaction && chain?.id && !insufficientBalance },
-    address: sendingToken?.address,
+    address: sendingToken?.address as `0x${string}`,
     abi: erc20Abi,
     functionName: "allowance",
-    args: [address, escrowUniversalAddress?.[chain?.id]],
+    args: [address as `0x${string}`, escrowUniversalAddress?.[chain?.id]],
   });
 
   useEffect(() => {

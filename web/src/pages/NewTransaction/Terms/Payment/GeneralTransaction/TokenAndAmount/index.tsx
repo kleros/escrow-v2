@@ -1,7 +1,7 @@
 import React, { useMemo, useState, useEffect } from "react";
 import styled from "styled-components";
 import { responsiveSize } from "styles/responsiveSize";
-import { useAccount, useReadContract } from "wagmi";
+import { useAccount, useReadContract, useBalance } from "wagmi";
 import { useNewTransactionContext } from "context/NewTransactionContext";
 import { getFormattedBalance } from "utils/getFormattedBalance";
 import { erc20Abi } from "viem";
@@ -34,23 +34,36 @@ const TokenAndAmount: React.FC<ITokenAndAmount> = ({ quantity, setQuantity }) =>
   const { address } = useAccount();
   const { sendingToken, setHasSufficientNativeBalance } = useNewTransactionContext();
   
-  const { data: balanceData } = useReadContract({
-    address: sendingToken?.address as `0x${string}`,
+  const isNativeTransaction = sendingToken?.address === 'native';
+
+  const { data: nativeBalance } = useBalance({
+    address: isNativeTransaction ? address as `0x${string}` : undefined,
+  });
+
+  const { data: tokenBalance } = useReadContract({
+    address: !isNativeTransaction ? sendingToken?.address as `0x${string}` : undefined,
     abi: erc20Abi,
     functionName: 'balanceOf',
     args: [address as `0x${string}`],
   });
 
   const { data: tokenDecimal } = useReadContract({
-    address: sendingToken?.address as `0x${string}`,
+    address: !isNativeTransaction ? sendingToken?.address as `0x${string}` : undefined,
     abi: erc20Abi,
     functionName: 'decimals',
   });
 
   const [error, setError] = useState("");
 
+  const balanceAmount = useMemo(() => {
+    if (isNativeTransaction) {
+      return nativeBalance ? parseFloat(formatUnits(nativeBalance.value, nativeBalance.decimals)) : 0;
+    } else {
+      return tokenBalance && tokenDecimal ? parseFloat(formatUnits(tokenBalance, tokenDecimal)) : 0;
+    }
+  }, [isNativeTransaction, nativeBalance, tokenBalance, tokenDecimal]);
+
   useEffect(() => {
-    const balanceAmount = balanceData && tokenDecimal ? parseFloat(formatUnits(balanceData, tokenDecimal)) : 0;
     const enteredAmount = parseFloat(quantity);
 
     if (quantity && balanceAmount < enteredAmount) {
@@ -63,9 +76,12 @@ const TokenAndAmount: React.FC<ITokenAndAmount> = ({ quantity, setQuantity }) =>
       setError("");
       setHasSufficientNativeBalance(true);
     }
-  }, [balanceData, quantity, setHasSufficientNativeBalance, sendingToken]);
+  }, [quantity, setHasSufficientNativeBalance, sendingToken]);
 
-  const formattedBalance = useMemo(() => getFormattedBalance(balanceData, sendingToken), [balanceData, sendingToken]);
+  const formattedBalance = useMemo(() => {
+    const balance = isNativeTransaction ? nativeBalance : tokenBalance;
+    return getFormattedBalance(balance, sendingToken);
+  }, [balanceAmount, sendingToken, isNativeTransaction, nativeBalance, tokenBalance]);
 
   return (
     <Container>
@@ -74,7 +90,7 @@ const TokenAndAmount: React.FC<ITokenAndAmount> = ({ quantity, setQuantity }) =>
         <TokenSelector />
         <MaxBalance
           formattedBalance={formattedBalance}
-          rawBalance={parseFloat(formatUnits(balanceData, tokenDecimal))}
+          rawBalance={balanceAmount}
           setQuantity={setQuantity}
         />
       </TokenSelectorAndMaxBalance>

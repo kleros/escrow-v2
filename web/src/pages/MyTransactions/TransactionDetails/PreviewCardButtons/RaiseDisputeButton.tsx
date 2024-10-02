@@ -38,7 +38,7 @@ const RaiseDisputeButton: React.FC<IRaiseDisputeButton> = ({ toggleModal, button
 
   const { data: payArbitrationFeeByBuyerConfig, isLoading: isLoadingBuyerConfig, isError: isErrorBuyerConfig } = useSimulateEscrowUniversalPayArbitrationFeeByBuyer({
     query: {
-      enabled: isBuyer || !insufficientBalance,
+      enabled: isBuyer && !insufficientBalance,
     },
     args: [BigInt(id)],
     value: arbitrationCost,
