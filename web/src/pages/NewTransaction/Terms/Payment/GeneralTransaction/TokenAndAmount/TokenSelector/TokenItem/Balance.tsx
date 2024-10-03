@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import styled from "styled-components";
 import Skeleton from "react-loading-skeleton";
-import { useAccount, useReadContract } from "wagmi";
+import { useAccount, useBalance, useReadContract } from "wagmi";
 import { IToken } from "context/NewTransactionContext";
 import { isUndefined } from "utils/index";
 import { getFormattedBalance } from "utils/getFormattedBalance";
@@ -23,20 +23,27 @@ interface IBalance {
 
 const Balance: React.FC<IBalance> = ({ token }) => {
   const { address } = useAccount();
+  const isNativeTransaction = token?.address === 'native';
 
-  const { data: balanceData } = useReadContract({
-    address: token?.address as `0x${string}`,
+  const { data: nativeBalance } = useBalance({
+    address: isNativeTransaction ? address as `0x${string}` : undefined,
+  });
+
+  const { data: tokenBalance } = useReadContract({
+    address: !isNativeTransaction ? token?.address as `0x${string}` : undefined,
     abi: erc20Abi,
     functionName: 'balanceOf',
     args: [address as `0x${string}`],
   });
 
-  const formattedBalance = useMemo(() => getFormattedBalance(balanceData, token), [balanceData, token]);
+  const formattedBalance = useMemo(() => {
+    const balance = isNativeTransaction ? nativeBalance : tokenBalance;
+    return getFormattedBalance(balance, token);
+  }, [isNativeTransaction, nativeBalance, tokenBalance, token]);
 
   return (
     <Container>
-      {isUndefined(formattedBalance) ? <StyledAmountSkeleton /> : null}
-      {!isUndefined(formattedBalance) && formattedBalance !== "0" ? formattedBalance : null}
+      {isUndefined(formattedBalance) ? <StyledAmountSkeleton /> : formattedBalance !== "0" ? formattedBalance : null}
     </Container>
   );
 };
