@@ -20,7 +20,7 @@ import {
   useBalance,
 } from "wagmi";
 import { parseEther, parseUnits } from "viem";
-import { normalize } from 'viem/ens'
+import { normalize } from "viem/ens";
 import { isUndefined } from "utils/index";
 import { wrapWithToast } from "utils/wrapWithToast";
 import { ethAddressPattern } from "utils/validateAddress";
@@ -70,23 +70,23 @@ const DepositPaymentButton: React.FC = () => {
   const finalRecipientAddress = ensResult.data || sellerAddress;
 
   const { data: nativeBalance } = useBalance({
-    address: isNativeTransaction ? address as `0x${string}` : undefined,
+    address: isNativeTransaction ? (address as `0x${string}`) : undefined,
   });
 
   const { data: tokenBalance } = useReadContract({
-    address: !isNativeTransaction ? sendingToken?.address as `0x${string}` : undefined,
+    address: !isNativeTransaction ? (sendingToken?.address as `0x${string}`) : undefined,
     abi: erc20Abi,
-    functionName: 'balanceOf',
+    functionName: "balanceOf",
     args: [address as `0x${string}`],
   });
-  
+
   const insufficientBalance = useMemo(() => {
     if (isUndefined(sendingQuantity)) return true;
-    
+
     if (isNativeTransaction) {
       return nativeBalance ? parseFloat(sendingQuantity) > parseFloat(nativeBalance.value.toString()) : true;
     }
-    
+
     return isUndefined(tokenBalance) ? true : parseFloat(sendingQuantity) > parseFloat(tokenBalance.toString());
   }, [sendingQuantity, tokenBalance, nativeBalance, isNativeTransaction]);
 
@@ -129,7 +129,13 @@ const DepositPaymentButton: React.FC = () => {
         ethAddressPattern.test(finalRecipientAddress) &&
         !insufficientBalance,
     },
-    args: [transactionValue, sendingToken?.address as `0x${string}`, deadlineTimestamp, transactionUri, finalRecipientAddress as `0x${string}`],
+    args: [
+      transactionValue,
+      sendingToken?.address as `0x${string}`,
+      deadlineTimestamp,
+      transactionUri,
+      finalRecipientAddress as `0x${string}`,
+    ],
   });
 
   const { writeContractAsync: createNativeTransaction } =
@@ -191,7 +197,7 @@ const DepositPaymentButton: React.FC = () => {
   return (
     <div>
       <StyledButton
-        isLoading={isSending || isLoadingNativeConfig || isLoadingERC20Config}
+        isLoading={!insufficientBalance && (isSending || isLoadingNativeConfig || isLoadingERC20Config)}
         disabled={
           isSending ||
           insufficientBalance ||

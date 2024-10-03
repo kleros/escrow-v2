@@ -27,16 +27,20 @@ const RaiseDisputeButton: React.FC<IRaiseDisputeButton> = ({ toggleModal, button
   const { buyer, id } = useTransactionDetailsContext();
   const isBuyer = useMemo(() => address?.toLowerCase() === buyer?.toLowerCase(), [address, buyer]);
   const refetchQuery = useQueryRefetch();
-  
+
   const { data: balanceData } = useBalance({
     address: address as `0x${string}` | undefined,
   });
 
   const insufficientBalance = useMemo(() => {
-     return balanceData && BigInt(arbitrationCost.toString()) > BigInt(balanceData.value.toString());
-  },[arbitrationCost, balanceData]);
+    return balanceData && BigInt(arbitrationCost.toString()) > BigInt(balanceData.value.toString());
+  }, [arbitrationCost, balanceData]);
 
-  const { data: payArbitrationFeeByBuyerConfig, isLoading: isLoadingBuyerConfig, isError: isErrorBuyerConfig } = useSimulateEscrowUniversalPayArbitrationFeeByBuyer({
+  const {
+    data: payArbitrationFeeByBuyerConfig,
+    isLoading: isLoadingBuyerConfig,
+    isError: isErrorBuyerConfig,
+  } = useSimulateEscrowUniversalPayArbitrationFeeByBuyer({
     query: {
       enabled: isBuyer && !insufficientBalance,
     },
@@ -44,7 +48,11 @@ const RaiseDisputeButton: React.FC<IRaiseDisputeButton> = ({ toggleModal, button
     value: arbitrationCost,
   });
 
-  const { data: payArbitrationFeeBySellerConfig, isLoading: isLoadingSellerConfig, isError: isErrorSellerConfig } = useSimulateEscrowUniversalPayArbitrationFeeBySeller({
+  const {
+    data: payArbitrationFeeBySellerConfig,
+    isLoading: isLoadingSellerConfig,
+    isError: isErrorSellerConfig,
+  } = useSimulateEscrowUniversalPayArbitrationFeeBySeller({
     query: {
       enabled: !isBuyer && !insufficientBalance,
     },
@@ -95,7 +103,7 @@ const RaiseDisputeButton: React.FC<IRaiseDisputeButton> = ({ toggleModal, button
   return (
     <div>
       <Button
-        isLoading={isSending || isLoadingBuyerConfig || isLoadingSellerConfig}
+        isLoading={!insufficientBalance && (isSending || isLoadingBuyerConfig || isLoadingSellerConfig)}
         disabled={
           isSending ||
           insufficientBalance ||
