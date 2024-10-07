@@ -38,12 +38,13 @@ const Balance: React.FC<IBalance> = ({ token }) => {
 
   const formattedBalance = useMemo(() => {
     const balance = isNativeTransaction ? nativeBalance?.value : tokenBalance;
-    return getFormattedBalance(balance, token);
+    return !isUndefined(balance) ? getFormattedBalance(balance, token) : undefined;
   }, [isNativeTransaction, nativeBalance, tokenBalance, token]);
 
   return (
     <Container>
-      {isUndefined(formattedBalance) ? <StyledAmountSkeleton /> : formattedBalance !== "0" ? formattedBalance : null}
+      {isUndefined(formattedBalance) ? <StyledAmountSkeleton /> : null}
+      {!isUndefined(formattedBalance) && formattedBalance !== "0" ? formattedBalance : null}
     </Container>
   );
 };

@@ -9,6 +9,7 @@ import { formatUnits } from "viem";
 import AmountField from "./AmountField";
 import TokenSelector from "./TokenSelector";
 import MaxBalance from "./MaxBalance";
+import { isUndefined } from "utils/index";
 
 const Container = styled.div`
   display: flex;
@@ -80,7 +81,7 @@ const TokenAndAmount: React.FC<ITokenAndAmount> = ({ quantity, setQuantity }) =>
 
   const formattedBalance = useMemo(() => {
     const balance = isNativeTransaction ? nativeBalance?.value : tokenBalance;
-    return getFormattedBalance(balance, sendingToken);
+    return !isUndefined(balance) ? getFormattedBalance(balance, sendingToken) : undefined;
   }, [balanceAmount, sendingToken, isNativeTransaction, nativeBalance, tokenBalance]);
 
   return (

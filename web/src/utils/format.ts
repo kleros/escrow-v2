@@ -15,12 +15,10 @@ export const formatValue = (value: string, fractionDigits: number, roundDown: bo
 };
 
 export const formatPNK = (value: bigint, fractionDigits = 0, roundDown = true) => {
-  if (value === undefined) return "0";
   return formatValue(formatUnitsWei(value), fractionDigits, roundDown);
 };
 
 export const formatETH = (value: bigint, fractionDigits = 4, roundDown = true) => {
-  if (value === undefined) return "0";
   return formatValue(formatEther(value), fractionDigits, roundDown);
 };
 
