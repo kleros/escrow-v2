@@ -70,10 +70,12 @@ const DepositPaymentButton: React.FC = () => {
   const finalRecipientAddress = ensResult.data || sellerAddress;
 
   const { data: nativeBalance } = useBalance({
+    query: { enabled: isNativeTransaction },
     address: isNativeTransaction ? (address as `0x${string}`) : undefined,
   });
 
   const { data: tokenBalance } = useReadContract({
+    query: { enabled: !isNativeTransaction },
     address: !isNativeTransaction ? (sendingToken?.address as `0x${string}`) : undefined,
     abi: erc20Abi,
     functionName: "balanceOf",

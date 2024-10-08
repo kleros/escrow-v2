@@ -23,16 +23,18 @@ interface IBalance {
 
 const Balance: React.FC<IBalance> = ({ token }) => {
   const { address } = useAccount();
-  const isNativeTransaction = token?.address === 'native';
+  const isNativeTransaction = token?.address === "native";
 
   const { data: nativeBalance } = useBalance({
-    address: isNativeTransaction ? address as `0x${string}` : undefined,
+    query: { enabled: isNativeTransaction },
+    address: isNativeTransaction ? (address as `0x${string}`) : undefined,
   });
 
   const { data: tokenBalance } = useReadContract({
-    address: !isNativeTransaction ? token?.address as `0x${string}` : undefined,
+    query: { enabled: !isNativeTransaction },
+    address: !isNativeTransaction ? (token?.address as `0x${string}`) : undefined,
     abi: erc20Abi,
-    functionName: 'balanceOf',
+    functionName: "balanceOf",
     args: [address as `0x${string}`],
   });
 

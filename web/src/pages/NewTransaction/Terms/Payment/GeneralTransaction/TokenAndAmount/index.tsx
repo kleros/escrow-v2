@@ -35,23 +35,26 @@ const TokenAndAmount: React.FC<ITokenAndAmount> = ({ quantity, setQuantity }) =>
   const { address } = useAccount();
   const { sendingToken, setHasSufficientNativeBalance } = useNewTransactionContext();
   
-  const isNativeTransaction = sendingToken?.address === 'native';
+  const isNativeTransaction = sendingToken?.address === "native";
 
   const { data: nativeBalance } = useBalance({
-    address: isNativeTransaction ? address as `0x${string}` : undefined,
+    query: { enabled: isNativeTransaction },
+    address: isNativeTransaction ? (address as `0x${string}`) : undefined,
   });
 
   const { data: tokenBalance } = useReadContract({
-    address: !isNativeTransaction ? sendingToken?.address as `0x${string}` : undefined,
+    query: { enabled: !isNativeTransaction },
+    address: !isNativeTransaction ? (sendingToken?.address as `0x${string}`) : undefined,
     abi: erc20Abi,
-    functionName: 'balanceOf',
+    functionName: "balanceOf",
     args: [address as `0x${string}`],
   });
 
   const { data: tokenDecimal } = useReadContract({
-    address: !isNativeTransaction ? sendingToken?.address as `0x${string}` : undefined,
+    query: { enabled: !isNativeTransaction },
+    address: !isNativeTransaction ? (sendingToken?.address as `0x${string}`) : undefined,
     abi: erc20Abi,
-    functionName: 'decimals',
+    functionName: "decimals",
   });
 
   const [error, setError] = useState("");
@@ -89,11 +92,7 @@ const TokenAndAmount: React.FC<ITokenAndAmount> = ({ quantity, setQuantity }) =>
       <AmountField quantity={quantity} setQuantity={setQuantity} error={error} />
       <TokenSelectorAndMaxBalance>
         <TokenSelector />
-        <MaxBalance
-          formattedBalance={formattedBalance}
-          rawBalance={balanceAmount}
-          setQuantity={setQuantity}
-        />
+        <MaxBalance rawBalance={balanceAmount} {...{ setQuantity, formattedBalance }} />
       </TokenSelectorAndMaxBalance>
     </Container>
   );
