@@ -27,12 +27,12 @@ const Balance: React.FC<IBalance> = ({ token }) => {
 
   const { data: nativeBalance } = useBalance({
     query: { enabled: isNativeTransaction },
-    address: isNativeTransaction ? (address as `0x${string}`) : undefined,
+    address: address as `0x${string}`,
   });
 
   const { data: tokenBalance } = useReadContract({
     query: { enabled: !isNativeTransaction },
-    address: !isNativeTransaction ? (token?.address as `0x${string}`) : undefined,
+    address: token?.address as `0x${string}`,
     abi: erc20Abi,
     functionName: "balanceOf",
     args: [address as `0x${string}`],
