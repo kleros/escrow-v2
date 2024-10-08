@@ -52,7 +52,7 @@ const TokenAndAmount: React.FC<ITokenAndAmount> = ({ quantity, setQuantity }) =>
 
   const { data: tokenDecimal } = useReadContract({
     query: { enabled: !isNativeTransaction },
-    address: !isNativeTransaction ? (sendingToken?.address as `0x${string}`) : undefined,
+    address: sendingToken?.address as `0x${string}`,
     abi: erc20Abi,
     functionName: "decimals",
   });
