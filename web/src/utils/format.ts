@@ -8,16 +8,18 @@ export const roundNumberDown = (value: number, fractionDigits = 0) => {
 
 export const formatUnitsWei = (value: bigint) => formatUnits(value, 18);
 
-export const formatValue = (value: string, fractionDigits, roundDown) => {
+export const formatValue = (value: string, fractionDigits: number, roundDown: boolean) => {
   let units = Number(value);
   if (roundDown) units = roundNumberDown(units, fractionDigits);
   return commify(units.toFixed(fractionDigits));
 };
 
-export const formatPNK = (value: bigint, fractionDigits = 0, roundDown = true) =>
-  formatValue(formatUnitsWei(value), fractionDigits, roundDown);
+export const formatPNK = (value: bigint, fractionDigits = 0, roundDown = true) => {
+  return formatValue(formatUnitsWei(value), fractionDigits, roundDown);
+};
 
-export const formatETH = (value: bigint, fractionDigits = 4, roundDown = true) =>
-  formatValue(formatEther(value), fractionDigits, roundDown);
+export const formatETH = (value: bigint, fractionDigits = 4, roundDown = true) => {
+  return formatValue(formatEther(value), fractionDigits, roundDown);
+};
 
 export const formatUSD = (value: number, fractionDigits = 2) => "$" + commify(Number(value).toFixed(fractionDigits));

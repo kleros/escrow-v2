@@ -17,15 +17,28 @@ import {
   useReadContract,
   useWriteContract,
   useSimulateContract,
+  useBalance,
 } from "wagmi";
 import { parseEther, parseUnits } from "viem";
+import { normalize } from "viem/ens";
 import { isUndefined } from "utils/index";
 import { wrapWithToast } from "utils/wrapWithToast";
 import { ethAddressPattern } from "utils/validateAddress";
 import { useQueryRefetch } from "hooks/useQueryRefetch";
 import { useNavigateAndScrollTop } from "hooks/useNavigateAndScrollTop";
+import ClosedCircleIcon from "components/StyledIcons/ClosedCircleIcon";
 
 const StyledButton = styled(Button)``;
+
+export const ErrorButtonMessage = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  justify-content: center;
+  margin: 12px;
+  color: ${({ theme }) => theme.error};
+  font-size: 14px;
+`;
 
 const DepositPaymentButton: React.FC = () => {
   const {
@@ -40,14 +53,13 @@ const DepositPaymentButton: React.FC = () => {
     resetContext,
   } = useNewTransactionContext();
 
-  const [finalRecipientAddress, setFinalRecipientAddress] = useState(sellerAddress);
   const publicClient = usePublicClient();
   const navigateAndScrollTop = useNavigateAndScrollTop();
   const refetchQuery = useQueryRefetch();
   const [isSending, setIsSending] = useState(false);
   const [isApproved, setIsApproved] = useState(false);
   const { address, chain } = useAccount();
-  const ensResult = useEnsAddress({ name: sellerAddress, chainId: 1 });
+  const ensResult = useEnsAddress({ name: normalize(sellerAddress), chainId: 1 });
   const deadlineTimestamp = useMemo(() => BigInt(Math.floor(new Date(deadline).getTime() / 1000)), [deadline]);
   const isNativeTransaction = sendingToken?.address === "native";
   const transactionValue = useMemo(
@@ -55,16 +67,37 @@ const DepositPaymentButton: React.FC = () => {
     [isNativeTransaction, sendingQuantity]
   );
 
-  useEffect(() => {
-    setFinalRecipientAddress(ensResult.data || sellerAddress);
-  }, [sellerAddress, ensResult.data]);
+  const finalRecipientAddress = ensResult.data || sellerAddress;
+
+  const { data: nativeBalance } = useBalance({
+    query: { enabled: isNativeTransaction },
+    address: address as `0x${string}`,
+  });
+
+  const { data: tokenBalance } = useReadContract({
+    query: { enabled: !isNativeTransaction },
+    address: sendingToken?.address as `0x${string}`,
+    abi: erc20Abi,
+    functionName: "balanceOf",
+    args: [address as `0x${string}`],
+  });
+
+  const insufficientBalance = useMemo(() => {
+    if (isUndefined(sendingQuantity)) return true;
+
+    if (isNativeTransaction) {
+      return nativeBalance ? parseFloat(sendingQuantity) > parseFloat(nativeBalance.value.toString()) : true;
+    }
+
+    return isUndefined(tokenBalance) ? true : parseFloat(sendingQuantity) > parseFloat(tokenBalance.toString());
+  }, [sendingQuantity, tokenBalance, nativeBalance, isNativeTransaction]);
 
   const { data: allowance, refetch: refetchAllowance } = useReadContract({
-    query: { enabled: !isNativeTransaction && chain?.id },
-    address: sendingToken?.address,
+    query: { enabled: !isNativeTransaction && chain?.id && !insufficientBalance },
+    address: sendingToken?.address as `0x${string}`,
     abi: erc20Abi,
     functionName: "allowance",
-    args: [address, escrowUniversalAddress?.[chain?.id]],
+    args: [address as `0x${string}`, escrowUniversalAddress?.[chain?.id]],
   });
 
   useEffect(() => {
@@ -73,23 +106,38 @@ const DepositPaymentButton: React.FC = () => {
     }
   }, [allowance, transactionValue]);
 
-  const { data: createNativeTransactionConfig } = useSimulateEscrowUniversalCreateNativeTransaction({
+  const {
+    data: createNativeTransactionConfig,
+    isLoading: isLoadingNativeConfig,
+    isError: isErrorNativeConfig,
+  } = useSimulateEscrowUniversalCreateNativeTransaction({
     query: {
-      enabled: isNativeTransaction && ethAddressPattern.test(finalRecipientAddress),
+      enabled: isNativeTransaction && ethAddressPattern.test(finalRecipientAddress) && !insufficientBalance,
     },
     args: [deadlineTimestamp, transactionUri, finalRecipientAddress],
     value: transactionValue,
   });
 
-  const { data: createERC20TransactionConfig } = useSimulateEscrowUniversalCreateErc20Transaction({
+  const {
+    data: createERC20TransactionConfig,
+    isLoading: isLoadingERC20Config,
+    isError: isErrorERC20Config,
+  } = useSimulateEscrowUniversalCreateErc20Transaction({
     query: {
       enabled:
         !isNativeTransaction &&
         !isUndefined(allowance) &&
         allowance >= transactionValue &&
-        ethAddressPattern.test(finalRecipientAddress),
+        ethAddressPattern.test(finalRecipientAddress) &&
+        !insufficientBalance,
     },
-    args: [transactionValue, sendingToken?.address, deadlineTimestamp, transactionUri, finalRecipientAddress],
+    args: [
+      transactionValue,
+      sendingToken?.address as `0x${string}`,
+      deadlineTimestamp,
+      transactionUri,
+      finalRecipientAddress as `0x${string}`,
+    ],
   });
 
   const { writeContractAsync: createNativeTransaction } =
@@ -99,8 +147,8 @@ const DepositPaymentButton: React.FC = () => {
     useWriteEscrowUniversalCreateErc20Transaction(createERC20TransactionConfig);
 
   const { data: approveConfig } = useSimulateContract({
-    query: { enabled: !isNativeTransaction && chain?.id },
-    address: sendingToken?.address,
+    query: { enabled: !isNativeTransaction && chain?.id && !insufficientBalance },
+    address: sendingToken?.address as `0x${string}`,
     abi: erc20Abi,
     functionName: "approve",
     args: [escrowUniversalAddress?.[chain?.id], transactionValue],
@@ -149,12 +197,26 @@ const DepositPaymentButton: React.FC = () => {
   };
 
   return (
-    <StyledButton
-      isLoading={isSending}
-      disabled={isSending}
-      text={isNativeTransaction || isApproved ? "Deposit the Payment" : "Approve Token"}
-      onClick={isNativeTransaction || isApproved ? handleCreateTransaction : handleApproveToken}
-    />
+    <div>
+      <StyledButton
+        isLoading={!insufficientBalance && (isSending || isLoadingNativeConfig || isLoadingERC20Config)}
+        disabled={
+          isSending ||
+          insufficientBalance ||
+          isLoadingNativeConfig ||
+          isLoadingERC20Config ||
+          isErrorNativeConfig ||
+          isErrorERC20Config
+        }
+        text={isNativeTransaction || isApproved ? "Deposit the Payment" : "Approve Token"}
+        onClick={isNativeTransaction || isApproved ? handleCreateTransaction : handleApproveToken}
+      />
+      {insufficientBalance && (
+        <ErrorButtonMessage>
+          <ClosedCircleIcon /> Insufficient balance
+        </ErrorButtonMessage>
+      )}
+    </div>
   );
 };
 

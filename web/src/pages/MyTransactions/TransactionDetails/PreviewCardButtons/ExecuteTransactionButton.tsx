@@ -16,7 +16,7 @@ const ExecuteTransactionButton: React.FC = () => {
   const { id } = useTransactionDetailsContext();
   const refetchQuery = useQueryRefetch();
 
-  const { data: executeTransactionConfig } = useSimulateEscrowUniversalExecuteTransaction({
+  const { data: executeTransactionConfig, isLoading, isError } = useSimulateEscrowUniversalExecuteTransaction({
     args: [BigInt(id)],
   });
 
@@ -41,7 +41,12 @@ const ExecuteTransactionButton: React.FC = () => {
   };
 
   return (
-    <Button isLoading={isSending} disabled={isSending} text="Execute Transaction" onClick={handleExecuteTransaction} />
+    <Button
+      isLoading={isSending || isLoading}
+      disabled={isSending || isLoading || isError}
+      text="Execute Transaction"
+      onClick={handleExecuteTransaction}
+    />
   );
 };
 

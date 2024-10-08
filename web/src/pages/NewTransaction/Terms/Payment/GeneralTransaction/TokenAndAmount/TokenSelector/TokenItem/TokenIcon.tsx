@@ -39,7 +39,7 @@ const tokenIcons = {
 };
 
 const getTokenLogo = (tokenSymbol) => {
-  const symbol = tokenSymbol.toLowerCase();
+  const symbol = tokenSymbol?.toLowerCase();
   return tokenIcons[symbol] || null;
 };
 

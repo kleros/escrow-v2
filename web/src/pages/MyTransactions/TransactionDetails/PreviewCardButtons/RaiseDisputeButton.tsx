@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { Button } from "@kleros/ui-components-library";
-import { useAccount, usePublicClient } from "wagmi";
+import { useAccount, useBalance, usePublicClient } from "wagmi";
 import {
   useWriteEscrowUniversalPayArbitrationFeeByBuyer,
   useWriteEscrowUniversalPayArbitrationFeeBySeller,
@@ -11,6 +11,8 @@ import { isUndefined } from "utils/index";
 import { wrapWithToast } from "utils/wrapWithToast";
 import { useTransactionDetailsContext } from "context/TransactionDetailsContext";
 import { useQueryRefetch } from "hooks/useQueryRefetch";
+import ClosedCircleIcon from "components/StyledIcons/ClosedCircleIcon";
+import { ErrorButtonMessage } from "pages/NewTransaction/NavigationButtons/DepositPaymentButton";
 
 interface IRaiseDisputeButton {
   toggleModal?: () => void;
@@ -26,12 +28,34 @@ const RaiseDisputeButton: React.FC<IRaiseDisputeButton> = ({ toggleModal, button
   const isBuyer = useMemo(() => address?.toLowerCase() === buyer?.toLowerCase(), [address, buyer]);
   const refetchQuery = useQueryRefetch();
 
-  const { data: payArbitrationFeeByBuyerConfig } = useSimulateEscrowUniversalPayArbitrationFeeByBuyer({
+  const { data: balanceData } = useBalance({
+    address: address as `0x${string}` | undefined,
+  });
+
+  const insufficientBalance = useMemo(() => {
+    return balanceData && BigInt(arbitrationCost.toString()) > BigInt(balanceData.value.toString());
+  }, [arbitrationCost, balanceData]);
+
+  const {
+    data: payArbitrationFeeByBuyerConfig,
+    isLoading: isLoadingBuyerConfig,
+    isError: isErrorBuyerConfig,
+  } = useSimulateEscrowUniversalPayArbitrationFeeByBuyer({
+    query: {
+      enabled: isBuyer && !insufficientBalance,
+    },
     args: [BigInt(id)],
     value: arbitrationCost,
   });
 
-  const { data: payArbitrationFeeBySellerConfig } = useSimulateEscrowUniversalPayArbitrationFeeBySeller({
+  const {
+    data: payArbitrationFeeBySellerConfig,
+    isLoading: isLoadingSellerConfig,
+    isError: isErrorSellerConfig,
+  } = useSimulateEscrowUniversalPayArbitrationFeeBySeller({
+    query: {
+      enabled: !isBuyer && !insufficientBalance,
+    },
     args: [BigInt(id)],
     value: arbitrationCost,
   });
@@ -76,7 +100,28 @@ const RaiseDisputeButton: React.FC<IRaiseDisputeButton> = ({ toggleModal, button
     }
   };
 
-  return <Button isLoading={isSending} disabled={isSending} text={buttonText} onClick={handleRaiseDispute} />;
+  return (
+    <div>
+      <Button
+        isLoading={!insufficientBalance && (isSending || isLoadingBuyerConfig || isLoadingSellerConfig)}
+        disabled={
+          isSending ||
+          insufficientBalance ||
+          isLoadingBuyerConfig ||
+          isLoadingSellerConfig ||
+          isErrorBuyerConfig ||
+          isErrorSellerConfig
+        }
+        text={buttonText}
+        onClick={handleRaiseDispute}
+      />
+      {insufficientBalance && (
+        <ErrorButtonMessage>
+          <ClosedCircleIcon /> Insufficient balance
+        </ErrorButtonMessage>
+      )}
+    </div>
+  );
 };
 
 export default RaiseDisputeButton;
