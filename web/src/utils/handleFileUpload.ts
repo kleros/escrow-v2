@@ -1,9 +1,14 @@
-import { toast } from "react-toastify";
-import { uploadFileToIPFS } from "./uploadFileToIPFS";
-import { uploadTransactionObject } from "./uploadTransactionObject";
-import { OPTIONS } from "./wrapWithToast";
+import { errorToast, infoToast, successToast } from "./wrapWithToast";
+import { Roles } from "@kleros/kleros-app";
+
+type TransactionDetails = {
+  title: string;
+  description: string;
+  extraDescriptionUri?: string;
+};
 
 export const handleFileUpload = async (
+  uploadFile: (file: File, role: Roles) => Promise<string | null>,
   escrowTitle: string,
   deliverableText: string,
   setIsFileUploading: (isFileUploading: boolean) => void,
@@ -12,7 +17,8 @@ export const handleFileUpload = async (
 ) => {
   try {
     setIsFileUploading(true);
-    const transactionDetails = {
+    infoToast("Uploading terms");
+    const transactionDetails: TransactionDetails = {
       title: escrowTitle,
       description: deliverableText,
     };
@@ -20,23 +26,36 @@ export const handleFileUpload = async (
 
     if (deliverableFile) {
       if (deliverableFile.type !== "application/pdf") {
-        toast.error("That type of file is not valid. Please upload a PDF file.", OPTIONS);
+        errorToast("That type of file is not valid. Please upload a PDF file.");
         setIsFileUploading(false);
         return;
       }
 
-      const fileResponse = await uploadFileToIPFS(deliverableFile);
-      const fileData = await fileResponse.json();
-      const fileHash = fileData.cids[0];
+      const fileHash = await uploadFile(deliverableFile, Roles.Policy);
+
+      if (!fileHash) throw Error("Error uploading file.");
+
       transactionDetails.extraDescriptionUri = fileHash;
       setExtraDescriptionUri(fileHash);
     }
 
-    const transactionObject = await uploadTransactionObject(transactionDetails);
+    const transactionJSON = new File([JSON.stringify(transactionDetails)], "transaction.json", {
+      type: "application/json",
+    });
+
+    const transactionObjectHash = await uploadFile(transactionJSON, Roles.Policy);
+
+    if (!transactionObjectHash) throw Error("Error uploading terms");
+
+    successToast("Contract terms uploaded successfully.");
     setIsFileUploading(false);
-    return transactionObject;
+
+    return transactionObjectHash;
   } catch (error) {
     console.error("Error in file upload process:", error);
+    //@ts-ignore
+    errorToast(`Upload failed: ${error?.message ?? "Unknown error"}`);
     setIsFileUploading(false);
+    return null;
   }
 };

@@ -6,6 +6,7 @@ import { Tabs } from "@kleros/ui-components-library";
 import General from "./General";
 import NotificationSettings from "./Notifications";
 import { ISettings } from "../../index";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const Container = styled.div`
   display: flex;
@@ -65,11 +66,16 @@ const TABS = [
   },
 ];
 
-const Settings: React.FC<ISettings> = ({ toggleIsSettingsOpen }) => {
-  const [currentTab, setCurrentTab] = useState<number>(0);
+const Settings: React.FC<ISettings> = ({ toggleIsSettingsOpen, initialTab }) => {
+  const [currentTab, setCurrentTab] = useState<number>(initialTab ?? 0);
   const containerRef = useRef(null);
-  useClickAway(containerRef, () => toggleIsSettingsOpen());
 
+  const location = useLocation();
+  const navigate = useNavigate();
+  useClickAway(containerRef, () => {
+    toggleIsSettingsOpen();
+    if (location.hash.includes("#notifications")) navigate("#", { replace: true });
+  });
   return (
     <Container ref={containerRef}>
       <StyledSettingsText>Settings</StyledSettingsText>
@@ -80,7 +86,7 @@ const Settings: React.FC<ISettings> = ({ toggleIsSettingsOpen }) => {
           setCurrentTab(n);
         }}
       />
-      {currentTab === 0 ? <General /> : <NotificationSettings {...{toggleIsSettingsOpen}} />}
+      {currentTab === 0 ? <General /> : <NotificationSettings {...{ toggleIsSettingsOpen }} />}
     </Container>
   );
 };

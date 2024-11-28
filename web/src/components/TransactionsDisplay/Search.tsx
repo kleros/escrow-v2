@@ -6,6 +6,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useDebounce } from "react-use";
 import { Searchbar, DropdownSelect } from "@kleros/ui-components-library";
 import { decodeURIFilter, encodeURIFilter, useRootPath } from "utils/uri";
+import { isEmpty } from "src/utils";
 
 const Container = styled.div`
   display: flex;
@@ -51,7 +52,7 @@ const Search: React.FC = () => {
 
   useDebounce(
     () => {
-      const newFilters = search === "" ? { ...filterObject } : { ...filterObject, id: search };
+      const newFilters = isEmpty(search) ? { ...filterObject } : { ...filterObject, id: search };
       const encodedFilter = encodeURIFilter(newFilters);
       navigate(`${location}/${page}/${order}/${encodedFilter}`);
     },
