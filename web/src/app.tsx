@@ -13,27 +13,32 @@ import NewTransaction from "./pages/NewTransaction";
 import MyTransactions from "./pages/MyTransactions";
 import { NewTransactionProvider } from "./context/NewTransactionContext";
 import AttachmentDisplay from "./pages/AttachmentDisplay";
+import AtlasProvider from "./context/AtlasProvider";
+import Settings from "./pages/Settings";
 
 const App: React.FC = () => {
   return (
     <StyledComponentsProvider>
       <Web3Provider>
         <QueryClientProvider>
-          <GraphqlBatcherProvider>
-            <IsListProvider>
-              <NewTransactionProvider>
-                <SentryRoutes>
-                  <Route path="/" element={<Layout />}>
-                    <Route index element={<Navigate to="new-transaction" replace />} />
-                    <Route path="new-transaction/*" element={<NewTransaction />} />
-                    <Route path="transactions/*" element={<MyTransactions />} />
-                    <Route path="attachment/*" element={<AttachmentDisplay />} />
-                    <Route path="*" element={<h1>404 not found</h1>} />
-                  </Route>
-                </SentryRoutes>
-              </NewTransactionProvider>
-            </IsListProvider>
-          </GraphqlBatcherProvider>
+          <AtlasProvider>
+            <GraphqlBatcherProvider>
+              <IsListProvider>
+                <NewTransactionProvider>
+                  <SentryRoutes>
+                    <Route path="/" element={<Layout />}>
+                      <Route index element={<Navigate to="new-transaction" replace />} />
+                      <Route path="new-transaction/*" element={<NewTransaction />} />
+                      <Route path="transactions/*" element={<MyTransactions />} />
+                      <Route path="attachment/*" element={<AttachmentDisplay />} />
+                      <Route path="settings/*" element={<Settings />} />
+                      <Route path="*" element={<h1>404 not found</h1>} />
+                    </Route>
+                  </SentryRoutes>
+                </NewTransactionProvider>
+              </IsListProvider>
+            </GraphqlBatcherProvider>
+          </AtlasProvider>
         </QueryClientProvider>
       </Web3Provider>
     </StyledComponentsProvider>

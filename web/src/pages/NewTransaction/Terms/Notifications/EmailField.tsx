@@ -5,7 +5,10 @@ import styled, { css } from "styled-components";
 import { responsiveSize } from "styles/responsiveSize";
 import { useNewTransactionContext } from "context/NewTransactionContext";
 import { EMAIL_REGEX } from "src/consts";
-import { useUserSettings } from "hooks/queries/useUserSettings";
+import { isEmpty, isUndefined } from "src/utils";
+import { useAtlasProvider } from "@kleros/kleros-app";
+import InfoCard from "components/InfoCard";
+import { timeLeftUntil } from "utils/date";
 
 const StyledField = styled(Field)`
   width: 84vw;
@@ -22,39 +25,57 @@ const StyledField = styled(Field)`
   )}
 `;
 
+const StyledInfoCard = styled(InfoCard)`
+  width: fit-content;
+  font-size: 14px;
+  margin-bottom: 12px;
+  word-wrap: break-word;
+  align-self: flex-start;
+`;
+
 const EmailField: React.FC = () => {
   const { notificationEmail, setNotificationEmail } = useNewTransactionContext();
   const [isEmailValid, setIsEmailValid] = useState(true);
-  const { data: userSettings } = useUserSettings();
+  const { user } = useAtlasProvider();
+
+  const isEmailUpdateable = user?.email
+    ? !isUndefined(user?.emailUpdateableAt) && new Date(user.emailUpdateableAt!).getTime() < new Date().getTime()
+    : true;
 
   useEffect(() => {
-    if (!userSettings) return;
+    if (!user) return;
 
-    setNotificationEmail(userSettings.email ?? "");
-  }, [userSettings]);
+    setNotificationEmail(user.email ?? "");
+  }, [user]);
 
   const handleWrite = (event: React.ChangeEvent<HTMLInputElement>) => {
     const input = event.target.value;
     setNotificationEmail(input);
-    setIsEmailValid(input === "" || EMAIL_REGEX.test(input));
+    setIsEmailValid(isEmpty(input) || EMAIL_REGEX.test(input));
   };
 
-  const variant = notificationEmail === "" ? "info" : isEmailValid ? "success" : "error";
+  const variant = isEmpty(notificationEmail) ? "info" : isEmailValid ? "success" : "error";
 
   const message =
-    isEmailValid || notificationEmail === ""
+    isEmailValid || isEmpty(notificationEmail)
       ? "We advise you to subscribe to notifications to be informed about the escrow progress."
       : "Email is not valid.";
 
   return (
-    <StyledField
-      type="email"
-      value={notificationEmail}
-      onChange={handleWrite}
-      placeholder="youremail@email.com"
-      variant={variant}
-      message={message}
-    />
+    <>
+      {!isEmailUpdateable ? (
+        <StyledInfoCard msg={`You can update email again ${timeLeftUntil(user?.emailUpdateableAt!)}`} />
+      ) : null}
+      <StyledField
+        type="email"
+        value={notificationEmail}
+        onChange={handleWrite}
+        placeholder="youremail@email.com"
+        variant={variant}
+        message={message}
+        disabled={!isEmailUpdateable}
+      />
+    </>
   );
 };
 

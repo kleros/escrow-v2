@@ -7,6 +7,7 @@ import { useDebounce } from "react-use";
 import { useEnsAddress } from "wagmi";
 import { useNewTransactionContext } from "context/NewTransactionContext";
 import { ensDomainPattern, validateAddress } from "utils/validateAddress";
+import { isEmpty } from "src/utils";
 
 const StyledField = styled(Field)`
   width: 84vw;
@@ -60,7 +61,7 @@ const DestinationAddress: React.FC<IDestinationAddress> = ({ recipientAddress, s
   };
 
   const message = useMemo(() => {
-    if (debouncedRecipientAddress === "" || isValid) {
+    if (isEmpty(debouncedRecipientAddress) || isValid) {
       return "The ETH address or ENS of the person/entity that will receive the funds.";
     } else {
       return "The ETH address or ENS of the person/entity is not correct.";
@@ -68,7 +69,7 @@ const DestinationAddress: React.FC<IDestinationAddress> = ({ recipientAddress, s
   }, [debouncedRecipientAddress, isValid]);
 
   const variant = useMemo(() => {
-    if (debouncedRecipientAddress === "") return "info";
+    if (isEmpty(debouncedRecipientAddress)) return "info";
     else if (isValid) return "success";
     else return "error";
   }, [debouncedRecipientAddress, isValid]);

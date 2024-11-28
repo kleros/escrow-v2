@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import styled, { css } from "styled-components";
 import { landscapeStyle } from "styles/landscapeStyle";
 import { useToggle } from "react-use";
@@ -89,11 +89,19 @@ const DesktopHeader = () => {
   const [isDappListOpen, toggleIsDappListOpen] = useToggle(false);
   const [isHelpOpen, toggleIsHelpOpen] = useToggle(false);
   const [isSettingsOpen, toggleIsSettingsOpen] = useToggle(false);
+  const [initialTab, setInitialTab] = useState<number>(0);
 
   const { isConnected, chain } = useAccount();
 
   const isDefaultChain = chain?.id === DEFAULT_CHAIN;
 
+  const initializeFragmentURL = useCallback(() => {
+    const hasNotificationsPath = location.hash.includes("#notifications");
+    toggleIsSettingsOpen(hasNotificationsPath);
+    setInitialTab(hasNotificationsPath ? 1 : 0);
+  }, [toggleIsSettingsOpen, location.hash]);
+
+  useEffect(initializeFragmentURL, [initializeFragmentURL]);
   useLockOverlayScroll(isDappListOpen || isHelpOpen || isSettingsOpen);
 
   return (
@@ -126,7 +134,7 @@ const DesktopHeader = () => {
         <PopupContainer>
           {isDappListOpen && <DappList {...{ toggleIsDappListOpen, isDappListOpen }} />}
           {isHelpOpen && <Help {...{ toggleIsHelpOpen, isHelpOpen }} />}
-          {isSettingsOpen && <Settings {...{ toggleIsSettingsOpen, isSettingsOpen }} />}
+          {isSettingsOpen && <Settings {...{ toggleIsSettingsOpen, isSettingsOpen, initialTab }} />}
         </PopupContainer>
       )}
     </>
