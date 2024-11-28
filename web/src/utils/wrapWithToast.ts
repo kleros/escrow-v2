@@ -25,25 +25,25 @@ export async function wrapWithToast(
   contractWrite: () => Promise<`0x${string}`>,
   publicClient: PublicClient
 ): Promise<WrapWithToastReturnType> {
-  toast.info("Transaction initiated", OPTIONS);
+  infoToast("Transaction initiated");
   return await contractWrite()
     .then(
       async (hash) =>
         await publicClient.waitForTransactionReceipt({ hash, confirmations: 2 }).then((res: TransactionReceipt) => {
           const status = res.status === "success";
 
-          if (status) toast.success("Transaction mined!", OPTIONS);
-          else toast.error("Transaction reverted!", OPTIONS);
+          if (status) successToast("Transaction mined!");
+          else errorToast("Transaction reverted!");
 
           return { status, result: res };
         })
     )
     .catch((error) => {
-      toast.error(error.shortMessage ?? error.message, OPTIONS);
+      errorToast(error.shortMessage ?? error.message);
       return { status: false };
     });
 }
 
 export async function catchShortMessage(promise: Promise<any>) {
-  return await promise.catch((error) => toast.error(error.shortMessage ?? error.message, OPTIONS));
+  return await promise.catch((error) => errorToast(error.shortMessage ?? error.message));
 }
