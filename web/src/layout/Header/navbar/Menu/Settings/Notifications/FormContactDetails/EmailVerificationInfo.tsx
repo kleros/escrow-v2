@@ -67,7 +67,7 @@ const EmailVerificationInfo: React.FC<IEmailInfo> = ({ toggleIsSettingsOpen }) =
     (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       if (!user) return;
-      infoToast(`Sending verfication email ...`);
+      infoToast(`Sending verification email ...`);
       updateEmail({ newEmail: user.email })
         .then(async (res) => {
           if (res) {

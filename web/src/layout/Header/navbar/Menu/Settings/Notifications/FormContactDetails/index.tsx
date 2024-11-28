@@ -69,7 +69,15 @@ const FormContactDetails: React.FC<ISettings> = ({ toggleIsSettingsOpen }) => {
     if (!address) {
       return;
     }
+    const handleSuccess = (action: string) => {
+      successToast(`${action} successful!`);
+      toggleIsSettingsOpen();
+    };
 
+    const handleError = (action: string, err: Error) => {
+      console.error(`${action} failed:`, err);
+      errorToast(`${action} failed: ${err?.message || "Unknown error"}`);
+    };
     // if user exists then update email
     if (userExists) {
       if (!isEmailUpdateable) return;
@@ -78,32 +86,16 @@ const FormContactDetails: React.FC<ISettings> = ({ toggleIsSettingsOpen }) => {
       };
       infoToast("Updating email ...");
       updateEmail(data)
-        .then(async (res) => {
-          if (res) {
-            successToast("Email updated successfully!");
-            toggleIsSettingsOpen();
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-          errorToast(`Updating email failed: ${err?.message}`);
-        });
+        .then((res) => res && handleSuccess("Email update"))
+        .catch((err) => handleError("Email update", err));
     } else {
       const data = {
         email: emailInput,
       };
       infoToast("Adding user ...");
       addUser(data)
-        .then(async (res) => {
-          if (res) {
-            successToast("User added successfully!");
-            toggleIsSettingsOpen();
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-          errorToast(`Adding user failed: ${err?.message}`);
-        });
+        .then((res) => res && handleSuccess("User addition"))
+        .catch((err) => handleError("User addition", err));
     }
   };
 

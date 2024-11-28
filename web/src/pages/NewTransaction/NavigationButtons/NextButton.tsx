@@ -94,6 +94,16 @@ const NextButton: React.FC<INextButton> = ({ nextRoute }) => {
       user &&
       ![user.email, ""].includes(notificationEmail)
     ) {
+      const handleSuccess = (action: string) => {
+        successToast(`${action} successful!`);
+        navigate(nextRoute);
+      };
+
+      const handleError = (action: string, err: Error) => {
+        console.error(`${action} failed:`, err);
+        errorToast(`${action} failed: ${err?.message || "Unknown error"}`);
+      };
+
       // if user exists then update email
       if (userExists) {
         if (!isEmailUpdateable) {
@@ -105,32 +115,16 @@ const NextButton: React.FC<INextButton> = ({ nextRoute }) => {
         };
         infoToast("Updating email ...");
         updateEmail(data)
-          .then(async (res) => {
-            if (res) {
-              successToast("Email updated successfully!");
-              navigate(nextRoute);
-            }
-          })
-          .catch((err) => {
-            console.log(err);
-            errorToast(`Updating email failed: ${err?.message}`);
-          });
+          .then((res) => res && handleSuccess("Email update"))
+          .catch((err) => handleError("Email update", err));
       } else {
         const data = {
           email: notificationEmail,
         };
         infoToast("Adding user ...");
         addUser(data)
-          .then(async (res) => {
-            if (res) {
-              successToast("User added successfully!");
-              navigate(nextRoute);
-            }
-          })
-          .catch((err) => {
-            console.log(err);
-            errorToast(`Adding user failed: ${err?.message}`);
-          });
+          .then((res) => res && handleSuccess("User addition"))
+          .catch((err) => handleError("User addition", err));
       }
     } else {
       navigate(nextRoute);
