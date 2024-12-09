@@ -53,6 +53,7 @@ const DisconnectWalletButtonContainer = styled.div`
 
 export interface ISettings {
   toggleIsSettingsOpen: () => void;
+  initialTab?: number;
 }
 
 export interface IHelp {
@@ -74,11 +75,7 @@ const NavBar: React.FC = () => {
   return (
     <>
       <Container {...{ isOpen }}>
-        <LightButton
-          text="Kleros Solutions"
-          onClick={toggleIsDappListOpen}
-          Icon={KlerosSolutionsIcon}
-        />
+        <LightButton text="Kleros Solutions" onClick={toggleIsDappListOpen} Icon={KlerosSolutionsIcon} />
         <hr />
         <Explore />
         <hr />

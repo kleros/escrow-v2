@@ -1,11 +1,10 @@
-import { toast } from "react-toastify";
-import { OPTIONS as toastOptions } from "utils/wrapWithToast";
+import { errorToast } from "utils/wrapWithToast";
 
 let timeoutId: NodeJS.Timeout;
 export const debounceErrorToast = (msg: string) => {
   if (timeoutId) clearTimeout(timeoutId);
 
   timeoutId = setTimeout(() => {
-    toast.error(msg, toastOptions);
+    errorToast(msg);
   }, 5000);
 };
