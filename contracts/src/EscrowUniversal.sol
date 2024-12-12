@@ -48,7 +48,7 @@ contract EscrowUniversal is IEscrow, IArbitrableV2 {
         _;
     }
 
-    modifier ShouldNotExceedCap(IERC20 _token, uint256 _amount) {
+    modifier shouldNotExceedCap(IERC20 _token, uint256 _amount) {
         if (amountCaps[_token] != 0 && _amount > amountCaps[_token]) revert AmountExceedsCap();
         _;
     }
@@ -136,7 +136,7 @@ contract EscrowUniversal is IEscrow, IArbitrableV2 {
         uint256 _deadline,
         string memory _transactionUri,
         address payable _seller
-    ) external payable override ShouldNotExceedCap(NATIVE, msg.value) returns (uint256 transactionID) {
+    ) external payable override shouldNotExceedCap(NATIVE, msg.value) returns (uint256 transactionID) {
         Transaction storage transaction = transactions.push();
         transaction.buyer = payable(msg.sender);
         transaction.seller = _seller;
@@ -163,7 +163,7 @@ contract EscrowUniversal is IEscrow, IArbitrableV2 {
         uint256 _deadline,
         string memory _transactionUri,
         address payable _seller
-    ) external override ShouldNotExceedCap(_token, _amount) returns (uint256 transactionID) {
+    ) external override shouldNotExceedCap(_token, _amount) returns (uint256 transactionID) {
         // Transfers token from sender wallet to contract.
         if (!_token.safeTransferFrom(msg.sender, address(this), _amount)) revert TokenTransferFailed();
         Transaction storage transaction = transactions.push();
