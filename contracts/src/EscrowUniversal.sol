@@ -37,6 +37,7 @@ contract EscrowUniversal is IEscrow, IArbitrableV2 {
     uint256 public settlementTimeout; // Time in seconds a party can take to accept or propose a settlement before being considered unresponsive.
     Transaction[] public transactions; // List of all created transactions.
     mapping(uint256 => uint256) public disputeIDtoTransactionID; // Naps dispute ID to tx ID.
+    mapping(IERC20 => uint256) public amountCaps; // Caps the amount of the respective token for the Escrow transaction.
 
     // ************************************* //
     // *        Function Modifiers         * //
@@ -44,6 +45,11 @@ contract EscrowUniversal is IEscrow, IArbitrableV2 {
 
     modifier onlyByGovernor() {
         if (governor != msg.sender) revert GovernorOnly();
+        _;
+    }
+
+    modifier ShouldNotExceedCap(IERC20 _token, uint256 _amount) {
+        if (amountCaps[_token] != 0 && _amount > amountCaps[_token]) revert AmountExceedsCap();
         _;
     }
 
@@ -117,6 +123,10 @@ contract EscrowUniversal is IEscrow, IArbitrableV2 {
         emit ParameterUpdated(feeTimeout, _settlementTimeout, arbitratorExtraData);
     }
 
+    function changeAmountCap(IERC20 _token, uint256 _amountCap) external onlyByGovernor {
+        amountCaps[_token] = _amountCap;
+    }
+
     // ************************************* //
     // *         State Modifiers           * //
     // ************************************* //
@@ -126,7 +136,7 @@ contract EscrowUniversal is IEscrow, IArbitrableV2 {
         uint256 _deadline,
         string memory _transactionUri,
         address payable _seller
-    ) external payable override returns (uint256 transactionID) {
+    ) external payable override ShouldNotExceedCap(NATIVE, msg.value) returns (uint256 transactionID) {
         Transaction storage transaction = transactions.push();
         transaction.buyer = payable(msg.sender);
         transaction.seller = _seller;
@@ -153,7 +163,7 @@ contract EscrowUniversal is IEscrow, IArbitrableV2 {
         uint256 _deadline,
         string memory _transactionUri,
         address payable _seller
-    ) external override returns (uint256 transactionID) {
+    ) external override ShouldNotExceedCap(_token, _amount) returns (uint256 transactionID) {
         // Transfers token from sender wallet to contract.
         if (!_token.safeTransferFrom(msg.sender, address(this), _amount)) revert TokenTransferFailed();
         Transaction storage transaction = transactions.push();
