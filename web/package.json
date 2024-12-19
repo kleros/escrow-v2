@@ -34,7 +34,7 @@
     "build-local": "scripts/runEnv.sh local 'yarn generate && vite build'",
     "build-devnet": "scripts/runEnv.sh devnet 'yarn generate && vite build'",
     "build-testnet": "scripts/runEnv.sh testnet 'yarn generate && vite build'",
-    "build-netlify": "scripts/runEnv.sh devnet 'scripts/generateBuildInfo.sh && yarn generate && vite build'",
+    "build-netlify": "scripts/generateBuildInfo.sh && yarn generate && vite build",
     "check-style": "eslint 'src/**/*.{js,jsx,ts,tsx}'",
     "check-types": "tsc --noEmit",
     "generate": "yarn generate:gql && yarn generate:hooks",
