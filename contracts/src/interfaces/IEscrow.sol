@@ -180,4 +180,5 @@ interface IEscrow {
     error SettlementPeriodNotOver();
     error NotSupported();
     error TokenTransferFailed();
+    error AmountExceedsCap();
 }
