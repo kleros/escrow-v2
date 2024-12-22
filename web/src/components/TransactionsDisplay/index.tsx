@@ -8,6 +8,11 @@ import { TransactionDetailsFragment } from "src/graphql/graphql";
 
 const StyledTitle = styled.h1`
   margin-bottom: ${responsiveSize(12, 24)};
+  font-size: ${responsiveSize(20, 24)};
+`;
+
+const StyledLabel = styled.label`
+  font-size: ${responsiveSize(14, 16)};
 `;
 
 interface ITransactionsDisplay extends ITransactionsGrid {
@@ -36,7 +41,7 @@ const TransactionsDisplay: React.FC<ITransactionsDisplay> = ({
       <StatsAndFilters totalTransactions={totalTransactions ?? 0} resolvedTransactions={resolvedTransactions ?? 0} />
 
       {transactions?.length === 0 ? (
-        <h1>No transactions found</h1>
+        <StyledLabel>No transactions found</StyledLabel>
       ) : (
         <TransactionsGrid
           transactions={transactions}
