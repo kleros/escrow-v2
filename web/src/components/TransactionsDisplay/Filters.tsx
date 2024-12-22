@@ -1,6 +1,6 @@
 import React from "react";
 
-import styled, { css, useTheme } from "styled-components";
+import styled, { css } from "styled-components";
 import { hoverShortTransitionTiming } from "styles/commonStyles";
 
 import { useNavigate, useParams } from "react-router-dom";
@@ -49,20 +49,13 @@ const StyledListIcon = styled(ListIcon)`
 `;
 
 const Filters: React.FC = () => {
-  const theme = useTheme();
   const { order, filter } = useParams();
-  const { ruled, period, ...filterObject } = decodeURIFilter(filter ?? "all");
+  const { ...filterObject } = decodeURIFilter(filter ?? "all");
   const navigate = useNavigate();
   const location = useRootPath();
 
-  const handleStatusChange = (value: string | number) => {
-    const parsedValue = JSON.parse(value as string);
-    const encodedFilter = encodeURIFilter({ ...filterObject, ...parsedValue });
-    navigate(`${location}/1/${order}/${encodedFilter}`);
-  };
-
   const handleOrderChange = (value: string | number) => {
-    const encodedFilter = encodeURIFilter({ ruled, period, ...filterObject });
+    const encodedFilter = encodeURIFilter({ ...filterObject });
     navigate(`${location}/1/${value}/${encodedFilter}`);
   };
 

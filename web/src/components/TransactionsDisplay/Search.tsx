@@ -21,6 +21,14 @@ const Container = styled.div`
 )}
 `;
 
+const StyledDropdownSelect = styled(DropdownSelect)`
+  [class*="button__Container"] {
+    [class*="base-item__Item"] {
+      border-left: 1px solid transparent;
+    }
+  }
+`
+
 const SearchBarContainer = styled.div`
   width: 100%;
   display: flex;
@@ -67,7 +75,7 @@ const Search: React.FC = () => {
 
   return (
     <Container>
-      <DropdownSelect
+      <StyledDropdownSelect
         items={[
           { text: "All States", dot: "grey", value: "all" },
           { text: "In Progress", dot: "blue", value: "NoDispute" },
