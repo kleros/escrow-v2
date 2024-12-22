@@ -8,7 +8,6 @@ import { landscapeStyle } from "styles/landscapeStyle";
 const Container = styled.div`
   display: flex;
   justify-content: center;
-  width: 84vw;
 
   ${landscapeStyle(
     () => css`

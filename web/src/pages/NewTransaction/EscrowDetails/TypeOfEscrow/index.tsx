@@ -14,7 +14,8 @@ const Container = styled.div`
 const TypeOfEscrow: React.FC = () => {
   return (
     <Container>
-      <Header text="What kind of escrow do you want to create?" />
+      <Header text="Create an escrow" />
+      {/* <Header text="What kind of escrow do you want to create?" /> */}
       <EscrowOptions />
       <Info />
       <NavigationButtons prevRoute="" nextRoute="/new-transaction/title" />

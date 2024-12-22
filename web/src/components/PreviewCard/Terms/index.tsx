@@ -1,5 +1,8 @@
 import React from "react";
-import styled from "styled-components";
+
+import styled, { css } from "styled-components";
+import { landscapeStyle } from "styles/landscapeStyle";
+
 import AttachedFile from "./AttachedFile";
 import Description from "./Description";
 import Header from "./Header";
@@ -7,7 +10,13 @@ import Header from "./Header";
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 16px;
+
+  ${landscapeStyle(
+    () => css`
+        gap: 24px;
+    `
+  )}
 `;
 
 interface ITerms {

@@ -1,7 +1,7 @@
 import React from "react";
 import styled, { css } from "styled-components";
 import GeneralEscrow from "./GeneralEscrow";
-import CryptoSwap from "./CryptoSwap";
+// import CryptoSwap from "./CryptoSwap";
 import { Card } from "@kleros/ui-components-library";
 
 const Container = styled.div`
@@ -31,7 +31,7 @@ const EscrowOptions: React.FC = () => {
   return (
     <Container>
       <GeneralEscrow />
-      <CryptoSwap />
+      {/* <CryptoSwap /> */}
     </Container>
   );
 };

@@ -1,19 +1,25 @@
 import React from "react";
-import styled from "styled-components";
-import { responsiveSize } from "styles/responsiveSize";
+import styled, { css } from "styled-components";
+
+import { landscapeStyle } from "styles/landscapeStyle";
+
 import { Card } from "@kleros/ui-components-library";
 import { formatEther } from "viem";
+
 import { useIsList } from "context/IsListProvider";
 import { mapStatusToEnum } from "utils/mapStatusToEnum";
 import { isUndefined } from "utils/index";
-import { StyledSkeleton, StyledSkeletonTitle } from "../StyledSkeleton";
-import TransactionInfo from "../TransactionInfo";
-import StatusBanner from "./StatusBanner";
+
 import { useNavigateAndScrollTop } from "hooks/useNavigateAndScrollTop";
 import { useNativeTokenSymbol } from "hooks/useNativeTokenSymbol";
 import useFetchIpfsJson from "hooks/useFetchIpfsJson";
 import { useTokenMetadata } from "hooks/useTokenMetadata";
+
 import { TransactionDetailsFragment } from "src/graphql/graphql";
+
+import { StyledSkeleton, StyledSkeletonTitle } from "../StyledSkeleton";
+import TransactionInfo from "../TransactionInfo";
+import StatusBanner from "./StatusBanner";
 
 const StyledCard = styled(Card)`
   width: 100%;
@@ -29,10 +35,16 @@ const StyledListItem = styled(Card)`
 
 const CardContainer = styled.div`
   height: calc(100% - 45px);
-  padding: ${responsiveSize(20, 24)};
+  padding: 20px 16px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+
+  ${landscapeStyle(
+    () => css`
+      padding: 20px 24px;
+    `
+  )}
 `;
 
 const ListContainer = styled.div`

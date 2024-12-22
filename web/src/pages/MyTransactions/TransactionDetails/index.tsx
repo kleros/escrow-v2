@@ -24,7 +24,8 @@ const OverviewContainer = styled.div`
 `;
 
 const Header = styled.h1`
-  margin-bottom: ${responsiveSize(16, 48)};
+  margin-bottom: ${responsiveSize(12, 24)};
+  font-size: ${responsiveSize(20, 24)};
 `;
 
 const TransactionDetails: React.FC = () => {

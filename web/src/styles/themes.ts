@@ -4,8 +4,10 @@ export const lightTheme = {
   ...componentsLightTheme,
   name: "light",
   white: "#FFFFFF",
+  black: "#000000",
   primaryPurple: "#4D00B4",
   secondaryPurple: "#9013FE",
+  darkPurple: "#220050",
   mediumPurple: "#F8F1FF",
   lightPurple: "#FBF9FE",
   violetPurple: "#6A1DCD",
@@ -24,7 +26,8 @@ export const lightTheme = {
 
   defaultShadow: "#00000002",
   hoveredShadow: "#00000002",
-  whiteLowOpacity: "#0000000d",
+  whiteLowOpacitySubtle: "#FFFFFF0D",
+  whiteLowOpacityStrong: "#FFFFFF26",
   blackLowOpacity: "#00000080",
 
   success: "#00C42B",
@@ -41,14 +44,19 @@ export const lightTheme = {
 
   skeletonBackground: "#EBEBEB",
   skeletonHighlight: "#F5F5F5",
+
+  paleCyan: "#ACFFFF",
+  limeGreen: "#F3FFD9",
 };
 
 export const darkTheme = {
   ...componentsDarkTheme,
   name: "dark",
   white: "#FFFFFF",
+  black: "#000000",
   primaryPurple: "#7E1BD4",
   secondaryPurple: "#B45FFF",
+  darkPurple: "#220050",
   mediumPurple: "#390F6C",
   lightPurple: "#FCFBFF",
   violetPurple: "#6A1DCD",
@@ -59,7 +67,7 @@ export const darkTheme = {
   lightBlue: "#2A1260",
   primaryText: "#DAF0FF",
   secondaryText: "#BECCE5",
-  stroke: "#42498F",
+  stroke: "#392C74",
   lightGrey: "#2D1865",
 
   whiteBackground: "#220050",
@@ -67,7 +75,8 @@ export const darkTheme = {
 
   defaultShadow: "#00000000",
   hoveredShadow: "#42498f80",
-  whiteLowOpacity: "#FFFFFF0F",
+  whiteLowOpacitySubtle: "#FFFFFF0F",
+  whiteLowOpacityStrong: "#FFFFFF24",
   blackLowOpacity: "#00000080",
 
   success: "#65DC7F",
@@ -84,4 +93,7 @@ export const darkTheme = {
 
   skeletonBackground: "#3A2270",
   skeletonHighlight: "#3E307C",
+
+  paleCyan: "#ACFFFF",
+  limeGreen: "#F3FFD9",
 };

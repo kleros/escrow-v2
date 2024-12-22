@@ -14,7 +14,7 @@ const Container = styled.div`
   flex-direction: row;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 20px;
+  gap: 12px;
 `;
 
 const StyledLabel = styled.label`
@@ -26,6 +26,7 @@ const StyledHeader = styled.h1`
   flex-wrap: wrap;
   word-break: break-word;
   width: 100%;
+  font-size: ${responsiveSize(20, 24)};
 `;
 
 const LeftContent = styled.div`

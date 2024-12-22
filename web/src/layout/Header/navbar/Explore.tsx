@@ -1,30 +1,25 @@
 import React from "react";
 import styled, { css } from "styled-components";
 import { landscapeStyle } from "styles/landscapeStyle";
-import { Link, LinkProps, useLocation } from "react-router-dom";
+
+import { Link, useLocation } from "react-router-dom";
+
 import { useOpenContext } from "../MobileHeader";
 
 const Container = styled.div`
   display: flex;
-  gap: 0px;
   flex-direction: column;
 
   ${landscapeStyle(
     () => css`
       flex-direction: row;
-      gap: calc(4px + (16 - 4) * ((100vw - 375px) / (1250 - 375)));
     `
   )};
 `;
 
-const LinkContainer = styled.div`
-  display: flex;
-  min-height: 32px;
-  align-items: center;
-`;
-
 const Title = styled.h1`
   display: block;
+  margin-bottom: 8px;
 
   ${landscapeStyle(
     () => css`
@@ -33,20 +28,24 @@ const Title = styled.h1`
   )};
 `;
 
-interface StyledLinkProps extends LinkProps {
-  isActive: boolean;
-}
-
-const StyledLink = styled(({ isActive, ...props }: StyledLinkProps) => <Link {...props} />)`
-  color: ${({ theme }) => theme.primaryText};
+const StyledLink = styled(Link) <{ isActive: boolean; isMobileNavbar?: boolean; }>`
+  display: flex;
+  align-items: center;
   text-decoration: none;
   font-size: 16px;
+  color: ${({ isActive, theme }) => (isActive ? theme.primaryText : `${theme.primaryText}BA`)};
+  font-weight: ${({ isActive, isMobileNavbar }) => (isMobileNavbar && isActive ? "600" : "normal")};
+  padding: 8px 8px 8px 0;
+  border-radius: 7px;
 
-  font-weight: ${({ isActive }: StyledLinkProps) => (isActive ? "600" : "normal")};
+  &:hover {
+    color: ${({ theme, isMobileNavbar }) => (isMobileNavbar ? theme.primaryText : theme.white)} !important;
+  }
 
   ${landscapeStyle(
     () => css`
-      color: ${({ theme }) => theme.white};
+      color: ${({ isActive, theme }) => (isActive ? theme.white : `${theme.white}BA`)};
+      padding: 16px 8px;
     `
   )};
 `;
@@ -56,7 +55,11 @@ const links = [
   { to: "/transactions/display/1/desc/all", text: "My Transactions" },
 ];
 
-const Explore: React.FC = () => {
+interface IExplore {
+  isMobileNavbar?: boolean;
+}
+
+const Explore: React.FC<IExplore> = ({ isMobileNavbar }) => {
   const location = useLocation();
   const { toggleIsOpen } = useOpenContext();
 
@@ -64,11 +67,14 @@ const Explore: React.FC = () => {
     <Container>
       <Title>Explore</Title>
       {links.map(({ to, text }) => (
-        <LinkContainer key={text}>
-          <StyledLink to={to} onClick={toggleIsOpen} isActive={location.pathname.startsWith(to)}>
-            {text}
-          </StyledLink>
-        </LinkContainer>
+        <StyledLink
+          key={text}
+          onClick={toggleIsOpen}
+          isActive={to === "/" ? location.pathname === "/" : location.pathname.split("/")[1] === to.split("/")[1]}
+          {...{ to, isMobileNavbar }}
+        >
+          {text}
+        </StyledLink>
       ))}
     </Container>
   );

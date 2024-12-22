@@ -1,24 +1,33 @@
 import React, { useCallback, useEffect, useState } from "react";
 import styled, { css } from "styled-components";
+
 import { landscapeStyle } from "styles/landscapeStyle";
+import { responsiveSize } from "styles/responsiveSize";
+
 import { useToggle } from "react-use";
-import { Link } from "react-router-dom";
 import { useAccount } from "wagmi";
+
 import { useLockOverlayScroll } from "hooks/useLockOverlayScroll";
 import { DEFAULT_CHAIN } from "consts/chains";
+
 import KlerosSolutionsIcon from "svgs/menu-icons/kleros-solutions.svg";
-import EscrowLogo from "svgs/header/escrow.svg";
+
 import ConnectWallet from "components/ConnectWallet";
 import LightButton from "components/LightButton";
+import OverlayPortal from "components/OverlayPortal";
+import { Overlay } from "components/Overlay";
+
 import DappList from "./navbar/DappList";
 import Explore from "./navbar/Explore";
 import Menu from "./navbar/Menu";
 import Help from "./navbar/Menu/Help";
 import Settings from "./navbar/Menu/Settings";
-import { PopupContainer } from ".";
+import Logo from "./Logo";
+
 const Container = styled.div`
   display: none;
   position: absolute;
+  height: 64px;
 
   ${landscapeStyle(
     () => css`
@@ -33,6 +42,7 @@ const Container = styled.div`
 
 const LeftSide = styled.div`
   display: flex;
+  gap: 8px;
 `;
 
 const MiddleSide = styled.div`
@@ -46,7 +56,8 @@ const MiddleSide = styled.div`
 
 const RightSide = styled.div`
   display: flex;
-  gap: calc(8px + (16 - 8) * ((100vw - 300px) / (1024 - 300)));
+  gap: ${responsiveSize(4, 8)};
+
   margin-left: 8px;
   canvas {
     width: 20px;
@@ -56,13 +67,6 @@ const RightSide = styled.div`
 const LightButtonContainer = styled.div`
   display: flex;
   align-items: center;
-  width: 16px;
-  margin-left: calc(4px + (8 - 4) * ((100vw - 375px) / (1250 - 375)));
-  margin-right: calc(12px + (16 - 12) * ((100vw - 375px) / (1250 - 375)));
-`;
-
-const StyledLink = styled(Link)`
-  min-height: 48px;
 `;
 
 const StyledKlerosSolutionsIcon = styled(KlerosSolutionsIcon)`
@@ -72,17 +76,8 @@ const StyledKlerosSolutionsIcon = styled(KlerosSolutionsIcon)`
 const ConnectWalletContainer = styled.div<{ isConnected: boolean; isDefaultChain: boolean }>`
   label {
     color: ${({ theme }) => theme.white};
+    cursor: pointer;
   }
-
-  ${({ isConnected, isDefaultChain }) =>
-    isConnected &&
-    isDefaultChain &&
-    css`
-      cursor: pointer;
-      & > * {
-        pointer-events: none;
-      }
-    `}
 `;
 
 const DesktopHeader = () => {
@@ -109,11 +104,15 @@ const DesktopHeader = () => {
       <Container>
         <LeftSide>
           <LightButtonContainer>
-            <LightButton text="" onClick={toggleIsDappListOpen} Icon={StyledKlerosSolutionsIcon} />
+            <LightButton
+              text=""
+              onClick={() => {
+                toggleIsDappListOpen();
+              }}
+              Icon={StyledKlerosSolutionsIcon}
+            />
           </LightButtonContainer>
-          <StyledLink to={"/"}>
-            <EscrowLogo />
-          </StyledLink>
+          <Logo />
         </LeftSide>
 
         <MiddleSide>
@@ -131,11 +130,13 @@ const DesktopHeader = () => {
         </RightSide>
       </Container>
       {(isDappListOpen || isHelpOpen || isSettingsOpen) && (
-        <PopupContainer>
-          {isDappListOpen && <DappList {...{ toggleIsDappListOpen, isDappListOpen }} />}
-          {isHelpOpen && <Help {...{ toggleIsHelpOpen, isHelpOpen }} />}
-          {isSettingsOpen && <Settings {...{ toggleIsSettingsOpen, isSettingsOpen, initialTab }} />}
-        </PopupContainer>
+        <OverlayPortal>
+          <Overlay>
+            {isDappListOpen && <DappList {...{ toggleIsDappListOpen, isDappListOpen }} />}
+            {isHelpOpen && <Help {...{ toggleIsHelpOpen, isHelpOpen }} />}
+            {isSettingsOpen && <Settings {...{ toggleIsSettingsOpen, isSettingsOpen, initialTab }} />}
+          </Overlay>
+        </OverlayPortal>
       )}
     </>
   );
