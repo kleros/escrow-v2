@@ -4475,7 +4475,7 @@ __metadata:
     "@graphql-codegen/cli": "npm:^4.0.1"
     "@graphql-codegen/client-preset": "npm:^4.1.0"
     "@kleros/kleros-app": "npm:^2.0.1"
-    "@kleros/ui-components-library": "npm:^2.15.0"
+    "@kleros/ui-components-library": "npm:^2.19.0"
     "@sentry/react": "npm:^7.93.0"
     "@sentry/tracing": "npm:^7.93.0"
     "@tanstack/react-query": "npm:^5.61.5"
@@ -4554,9 +4554,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@kleros/ui-components-library@npm:^2.15.0":
-  version: 2.15.0
-  resolution: "@kleros/ui-components-library@npm:2.15.0"
+"@kleros/ui-components-library@npm:^2.19.0":
+  version: 2.19.0
+  resolution: "@kleros/ui-components-library@npm:2.19.0"
   dependencies:
     "@datepicker-react/hooks": "npm:^2.8.4"
     "@swc/helpers": "npm:^0.3.2"
@@ -4573,7 +4573,7 @@ __metadata:
     react-dom: ^18.0.0
     react-is: ^18.0.0
     styled-components: ^5.3.3
-  checksum: 10/7c97e8fe45b1cd002a0aaf7fe4670b8c668a3abbbab82fac9261ef9a8382ccaf7d4a974ee54b8f299f1e8e7b68e58dab1f3f31d7c8b3b60c58a5af8abdf4a783
+  checksum: 10/b4c6b4e35812582af48246546ce634e7c6f2bb62281f3deff100897f905c53b54f85e35f2f04ae68cee89d83412750b2005a0791195f33610bffbd78e77846f4
   languageName: node
   linkType: hard
 

@@ -7,7 +7,7 @@ import { responsiveSize } from "styles/responsiveSize";
 import { TransactionDetailsFragment } from "src/graphql/graphql";
 
 const StyledTitle = styled.h1`
-  margin-bottom: ${responsiveSize(32, 48)};
+  margin-bottom: ${responsiveSize(12, 24)};
 `;
 
 interface ITransactionsDisplay extends ITransactionsGrid {

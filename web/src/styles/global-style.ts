@@ -17,6 +17,7 @@ export const GlobalStyle = createGlobalStyle`
   body {
     font-family: "Open Sans", sans-serif;
     margin: 0px;
+    background-color: ${({ theme }) => theme.lightBlue}
   }
 
   html {

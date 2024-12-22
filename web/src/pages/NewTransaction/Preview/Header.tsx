@@ -6,8 +6,9 @@ const StyledHeader = styled.h1`
   margin: 0;
   color: ${({ theme }) => theme.secondaryPurple};
   font-weight: 400;
-  margin-bottom: 32px;
+  margin-bottom: ${responsiveSize(20, 24)};
   margin-top: ${responsiveSize(4, 20)};
+  font-size: ${responsiveSize(20, 24)};
 `;
 
 const Header: React.FC = () => {

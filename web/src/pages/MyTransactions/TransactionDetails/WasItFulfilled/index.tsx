@@ -10,7 +10,7 @@ const StyledCard = styled(Card)`
   gap: 22px;
   background-color: ${({ theme }) => theme.mediumBlue};
   border: 1px solid ${({ theme }) => theme.primaryBlue};
-  width: 86vw;
+  width: 100%;
   height: auto;
   align-items: center;
   align-self: center;

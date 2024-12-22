@@ -19,3 +19,6 @@ export const EMAIL_REGEX =
 export const TELEGRAM_REGEX = /^@\w{5,32}$/;
 export const ETH_ADDRESS_REGEX = /^0x[a-fA-F0-9]{40}$/;
 export const ETH_SIGNATURE_REGEX = /^0x[a-fA-F0-9]{130}$/;
+
+export const isProductionDeployment = () => import.meta.env.REACT_APP_DEPLOYMENT === "mainnet";
+export const isTestnetDeployment = () => import.meta.env.REACT_APP_DEPLOYMENT === "testnet";

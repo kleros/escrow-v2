@@ -1,18 +1,23 @@
 import React, { useContext, useMemo, useRef } from "react";
 import styled, { css } from "styled-components";
 import { useClickAway, useToggle } from "react-use";
+
 import { landscapeStyle } from "styles/landscapeStyle";
+
 import { Link } from "react-router-dom";
-import EscrowLogo from "svgs/header/escrow.svg";
+
 import HamburgerIcon from "svgs/header/hamburger.svg";
+
 import LightButton from "components/LightButton";
 import NavBar from "./navbar";
+import Logo from "./Logo";
 
 const Container = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: 100%;
+  height: 64px;
 
   ${landscapeStyle(
     () => css`
@@ -31,10 +36,6 @@ const StyledLightButton = styled(LightButton)`
   .button-text {
     display: none;
   }
-`;
-
-const StyledLink = styled(Link)`
-  min-height: 48px;
 `;
 
 const OpenContext = React.createContext({
@@ -56,9 +57,9 @@ const MobileHeader = () => {
   return (
     <Container ref={containerRef}>
       <OpenContext.Provider value={memoizedContext}>
-        <StyledLink to={"/"}>
-          <EscrowLogo />
-        </StyledLink>
+        <Link to={"/"}>
+          <Logo />
+        </Link>
         <NavBar />
         <StyledLightButton text="" Icon={HamburgerIcon} onClick={toggleIsOpen} />
       </OpenContext.Provider>

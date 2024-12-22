@@ -10,7 +10,6 @@ import { ensDomainPattern, validateAddress } from "utils/validateAddress";
 import { isEmpty } from "src/utils";
 
 const StyledField = styled(Field)`
-  width: 84vw;
   margin-bottom: ${responsiveSize(68, 40)};
 
   small {

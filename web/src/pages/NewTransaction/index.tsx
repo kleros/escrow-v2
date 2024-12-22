@@ -1,8 +1,8 @@
 import React from "react";
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { useWindowSize } from "react-use";
-import { BREAKPOINT_LANDSCAPE } from "styles/landscapeStyle";
+import { BREAKPOINT_LANDSCAPE, MAX_WIDTH_LANDSCAPE, landscapeStyle } from "styles/landscapeStyle";
 import Title from "./EscrowDetails/Title";
 import TypeOfEscrow from "./EscrowDetails/TypeOfEscrow";
 import HeroImage from "./HeroImage";
@@ -20,15 +20,17 @@ import { DEFAULT_CHAIN } from "consts/chains";
 import { EnsureAuth } from "components/EnsureAuth";
 
 const Container = styled.div`
-  display: flex;
-  flex-direction: column;
   width: 100%;
   background-color: ${({ theme }) => theme.lightBackground};
-  padding: ${responsiveSize(24, 32)};
-  padding-top: ${responsiveSize(36, 42)};
-  padding-bottom: ${responsiveSize(76, 96)};
-  max-width: 1780px;
+  padding: 24px 16px 40px;
+  max-width: ${MAX_WIDTH_LANDSCAPE};
   margin: 0 auto;
+
+  ${landscapeStyle(
+    () => css`
+      padding: 32px ${responsiveSize(0, 132)} 60px;
+    `
+  )}
 `;
 
 const MiddleContentContainer = styled.div`

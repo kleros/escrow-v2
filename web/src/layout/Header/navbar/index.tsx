@@ -1,19 +1,25 @@
 import React from "react";
 import styled from "styled-components";
+
 import { useToggle } from "react-use";
 import { useAccount } from "wagmi";
+
 import { useLockOverlayScroll } from "hooks/useLockOverlayScroll";
+
+import KlerosSolutionsIcon from "svgs/menu-icons/kleros-solutions.svg";
+
+import ConnectWallet from "components/ConnectWallet";
+import LightButton from "components/LightButton";
+import OverlayPortal from "components/OverlayPortal";
+import { Overlay } from "components/Overlay";
+
 import { useOpenContext } from "../MobileHeader";
 import DappList from "./DappList";
 import Explore from "./Explore";
-import ConnectWallet from "components/ConnectWallet";
-import LightButton from "components/LightButton";
-import KlerosSolutionsIcon from "svgs/menu-icons/kleros-solutions.svg";
 import Menu from "./Menu";
 import Help from "./Menu/Help";
 import Settings from "./Menu/Settings";
 import { DisconnectWalletButton } from "./Menu/Settings/General";
-import { PopupContainer } from "..";
 
 const Container = styled.div<{ isOpen: boolean }>`
   position: absolute;
@@ -77,7 +83,7 @@ const NavBar: React.FC = () => {
       <Container {...{ isOpen }}>
         <LightButton text="Kleros Solutions" onClick={toggleIsDappListOpen} Icon={KlerosSolutionsIcon} />
         <hr />
-        <Explore />
+        <Explore isMobileNavbar={true} />
         <hr />
         <WalletContainer>
           <ConnectWallet />
@@ -92,11 +98,13 @@ const NavBar: React.FC = () => {
         <br />
       </Container>
       {(isDappListOpen || isHelpOpen || isSettingsOpen) && (
-        <PopupContainer>
-          {isDappListOpen && <DappList {...{ toggleIsDappListOpen }} />}
-          {isHelpOpen && <Help {...{ toggleIsHelpOpen }} />}
-          {isSettingsOpen && <Settings {...{ toggleIsSettingsOpen }} />}
-        </PopupContainer>
+        <OverlayPortal>
+          <Overlay>
+            {isDappListOpen && <DappList {...{ toggleIsDappListOpen }} />}
+            {isHelpOpen && <Help {...{ toggleIsHelpOpen }} />}
+            {isSettingsOpen && <Settings {...{ toggleIsSettingsOpen }} />}
+          </Overlay>
+        </OverlayPortal>
       )}
     </>
   );

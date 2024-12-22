@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import styled, { css } from "styled-components";
 import { landscapeStyle } from "styles/landscapeStyle";
-import { responsiveSize } from "styles/responsiveSize";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDebounce } from "react-use";
 import { Searchbar, DropdownSelect } from "@kleros/ui-components-library";
@@ -11,15 +10,15 @@ import { isEmpty } from "src/utils";
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 8px;
 
   ${landscapeStyle(
-    () =>
-      css`
+  () =>
+    css`
         flex-direction: row;
-        gap: ${responsiveSize(4, 22)};
+        gap: 16px;
       `
-  )}
+)}
 `;
 
 const SearchBarContainer = styled.div`
@@ -68,14 +67,6 @@ const Search: React.FC = () => {
 
   return (
     <Container>
-      <SearchBarContainer>
-        <StyledSearchbar
-          type="text"
-          placeholder="Search By ID"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-      </SearchBarContainer>
       <DropdownSelect
         items={[
           { text: "All States", dot: "grey", value: "all" },
@@ -90,6 +81,14 @@ const Search: React.FC = () => {
         defaultValue={decodedFilter.status ?? "all"}
         callback={(value) => handleStatusChange(value)}
       />
+      <SearchBarContainer>
+        <StyledSearchbar
+          type="text"
+          placeholder="Search By ID"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+      </SearchBarContainer>
     </Container>
   );
 };

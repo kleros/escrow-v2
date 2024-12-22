@@ -1,14 +1,17 @@
 import React, { useRef } from "react";
 import styled, { css } from "styled-components";
 import { landscapeStyle } from "styles/landscapeStyle";
+
 import { useClickAway } from "react-use";
+
 import Guide from "svgs/icons/book.svg";
 import Bug from "svgs/icons/bug.svg";
 import ETH from "svgs/icons/eth.svg";
 import Faq from "svgs/menu-icons/help.svg";
 import Telegram from "svgs/socialmedia/telegram.svg";
-import { IHelp } from "..";
+
 import Debug from "../Debug";
+import { IHelp } from "../index";
 
 const Container = styled.div`
   display: flex;
@@ -22,8 +25,7 @@ const Container = styled.div`
   left: 50%;
   transform: translateX(-50%);
   z-index: 1;
-  padding: 27px 10px;
-  gap: 23px;
+  padding: 12px 12px 24px 12px;
   border: 1px solid ${({ theme }) => theme.stroke};
   background-color: ${({ theme }) => theme.whiteBackground};
   border-radius: 3px;
@@ -44,20 +46,25 @@ const Container = styled.div`
 const ListItem = styled.a`
   display: flex;
   gap: 8px;
-  padding: 0px 8px;
+  padding: 12px 8px;
   cursor: pointer;
-  :hover {
-    transform: scale(1.02) translateZ(0);
-    transition: 200ms;
-    transition-timing-function: cubic-bezier(0.3, 0, 0.2, 1);
-    backface-visibility: hidden;
-  }
+  transition: transform 0.2s;
 
   small {
     font-size: 16px;
     font-weight: 400;
   }
+
+  :hover {
+    transform: scale(1.02);
+  }
+
+  :hover small {
+    transition: color 0.1s;
+    color: ${({ theme }) => theme.secondaryPurple};
+  }
 `;
+
 const Icon = styled.svg`
   display: inline-block;
   width: 16px;
@@ -101,7 +108,11 @@ const Help: React.FC<IHelp> = ({ toggleIsHelpOpen }) => {
     <>
       <Container ref={containerRef}>
         {ITEMS.map((item, index) => (
-          <ListItem href={item.url} key={item.text} target="_blank">
+          <ListItem
+            href={item.url}
+            key={item.text}
+            target="_blank"
+          >
             <Icon as={item.Icon} />
             <small>{item.text}</small>
           </ListItem>

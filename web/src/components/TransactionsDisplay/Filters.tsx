@@ -1,28 +1,23 @@
 import React from "react";
-import styled, { useTheme } from "styled-components";
+
+import styled, { css, useTheme } from "styled-components";
+import { hoverShortTransitionTiming } from "styles/commonStyles";
+
 import { useNavigate, useParams } from "react-router-dom";
-import { useWindowSize } from "react-use";
 import { DropdownSelect } from "@kleros/ui-components-library";
+
 import { useIsList } from "context/IsListProvider";
+import useIsDesktop from "hooks/useIsDesktop";
+import { decodeURIFilter, encodeURIFilter, useRootPath } from "utils/uri";
+
 import ListIcon from "svgs/icons/list.svg";
 import GridIcon from "svgs/icons/grid.svg";
-import { BREAKPOINT_LANDSCAPE } from "styles/landscapeStyle";
-import { decodeURIFilter, encodeURIFilter, useRootPath } from "utils/uri";
 
 const Container = styled.div`
   display: flex;
   justify-content: end;
   gap: 12px;
   width: fit-content;
-`;
-
-const StyledGridIcon = styled(GridIcon)`
-  cursor: pointer;
-  transition: filter 0.2s ease;
-  fill: ${({ theme }) => theme.primaryBlue};
-  width: 16px;
-  height: 16px;
-  overflow: hidden;
 `;
 
 const IconsContainer = styled.div`
@@ -32,13 +27,25 @@ const IconsContainer = styled.div`
   gap: 4px;
 `;
 
-const StyledListIcon = styled(ListIcon)`
+const BaseIconStyles = css`
+  ${hoverShortTransitionTiming}
   cursor: pointer;
-  transition: filter 0.2s ease;
   fill: ${({ theme }) => theme.primaryBlue};
   width: 16px;
   height: 16px;
   overflow: hidden;
+
+  :hover {
+    fill: ${({ theme }) => theme.secondaryBlue};
+  }
+`;
+
+const StyledGridIcon = styled(GridIcon)`
+  ${BaseIconStyles}
+`;
+
+const StyledListIcon = styled(ListIcon)`
+  ${BaseIconStyles}
 `;
 
 const Filters: React.FC = () => {
@@ -59,9 +66,8 @@ const Filters: React.FC = () => {
     navigate(`${location}/1/${value}/${encodedFilter}`);
   };
 
-  const { width } = useWindowSize();
   const { isList, setIsList } = useIsList();
-  const screenIsBig = width > BREAKPOINT_LANDSCAPE;
+  const isDesktop = useIsDesktop();
 
   return (
     <Container>
@@ -75,14 +81,14 @@ const Filters: React.FC = () => {
         defaultValue={order}
         callback={handleOrderChange}
       />
-      {screenIsBig ? (
+      {isDesktop ? (
         <IconsContainer>
           {isList ? (
             <StyledGridIcon onClick={() => setIsList(false)} />
           ) : (
             <StyledListIcon
               onClick={() => {
-                if (screenIsBig) {
+                if (isDesktop) {
                   setIsList(true);
                 }
               }}

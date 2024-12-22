@@ -12,9 +12,9 @@ import TransactionCard from "components/TransactionCard";
 import { TransactionDetailsFragment } from "src/graphql/graphql";
 
 const GridContainer = styled.div`
-  --gap: 24px;
+  --gap: 16px;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, max(348px, (100% - var(--gap) * 2)/3)), 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, max(312px, (100% - var(--gap) * 2)/3)), 1fr));
   align-items: center;
   gap: var(--gap);
 `;

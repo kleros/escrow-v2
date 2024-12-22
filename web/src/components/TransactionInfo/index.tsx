@@ -42,6 +42,15 @@ const RestOfFieldsContainer = styled.div<{ isList?: boolean; isPreview?: boolean
   width: 100%;
   height: 100%;
 
+  ${({ isPreview }) =>
+    isPreview &&
+    css`
+      gap: 16px 32px;
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: flex-start;
+   `};
+
   ${({ isList, isPreview }) =>
     isList &&
     !isPreview &&
@@ -62,14 +71,7 @@ const RestOfFieldsContainer = styled.div<{ isList?: boolean; isPreview?: boolean
         `
       )}
     `};
-  ${({ isPreview }) =>
-    isPreview &&
-    css`
-      gap: 32px;
-      flex-direction: row;
-      flex-wrap: wrap;
-      justify-content: flex-start;
-    `};
+  
 `;
 
 const StyledA = styled.a`
