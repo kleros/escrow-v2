@@ -16,7 +16,7 @@ const Container = styled.div`
 
 const StyledEscrowLogo = styled(EscrowLogo)`
   ${hoverShortTransitionTiming}
-  max-height: 40px;
+  max-height: 48px;
   width: auto;
 
   &:hover {
