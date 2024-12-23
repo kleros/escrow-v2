@@ -1,12 +1,16 @@
 import React, { useRef, useState } from "react";
 import styled, { css } from "styled-components";
+
 import { landscapeStyle } from "styles/landscapeStyle";
+import { responsiveSize } from "styles/responsiveSize";
+
+import { useLocation, useNavigate } from "react-router-dom";
 import { useClickAway } from "react-use";
 import { Tabs } from "@kleros/ui-components-library";
+
 import General from "./General";
 import NotificationSettings from "./Notifications";
 import { ISettings } from "../../index";
-import { useLocation, useNavigate } from "react-router-dom";
 
 const Container = styled.div`
   display: flex;
@@ -19,7 +23,6 @@ const Container = styled.div`
   left: 50%;
   transform: translateX(-50%);
   z-index: 1;
-  background-color: ${({ theme }) => theme.whiteBackground};
   border: 1px solid ${({ theme }) => theme.stroke};
   border-radius: 3px;
   overflow-y: auto;
@@ -44,13 +47,14 @@ const StyledSettingsText = styled.div`
 `;
 
 const StyledTabs = styled(Tabs)`
-  padding: 0 calc(8px + (32 - 8) * ((100vw - 300px) / (1250 - 300)));
+  padding: 0 ${responsiveSize(8, 32, 300)};
   width: 86vw;
   max-width: 660px;
-
+  align-self: center;
+  
   ${landscapeStyle(
     () => css`
-      width: calc(300px + (424 - 300) * ((100vw - 300px) / (1250 - 300)));
+      width: ${responsiveSize(300, 424, 300)};
     `
   )}
 `;
