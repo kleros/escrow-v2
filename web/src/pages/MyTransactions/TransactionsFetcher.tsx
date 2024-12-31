@@ -1,13 +1,21 @@
 import React, { useMemo } from "react";
+
+import { BREAKPOINT_LANDSCAPE } from "styles/landscapeStyle";
+
 import { useParams, useNavigate } from "react-router-dom";
 import { useWindowSize } from "react-use";
 import { useAccount } from "wagmi";
+
+import { DEFAULT_CHAIN } from "consts/chains";
 import { useRootPath, decodeURIFilter } from "utils/uri";
-import { useMyTransactionsQuery } from "hooks/queries/useTransactionsQuery";
-import { useUserQuery } from "hooks/queries/useUserQuery";
-import TransactionsDisplay from "components/TransactionsDisplay";
-import { BREAKPOINT_LANDSCAPE } from "styles/landscapeStyle";
+
+import { useMyTransactionsQuery } from "queries/useTransactionsQuery";
+import { useUserQuery } from "queries/useUserQuery";
 import { OrderDirection, TransactionDetailsFragment } from "src/graphql/graphql";
+
+import TransactionsDisplay from "components/TransactionsDisplay";
+import ConnectWallet from "components/ConnectWallet";
+import { ConnectWalletContainer } from "./index";
 
 const TransactionsFetcher: React.FC = () => {
   const { page, order, filter } = useParams();
@@ -28,6 +36,8 @@ const TransactionsFetcher: React.FC = () => {
     decodedFilter,
     order === "asc" ? OrderDirection.Asc : OrderDirection.Desc
   );
+  const { isConnected, chain } = useAccount();
+  const isOnSupportedChain = chain?.id === DEFAULT_CHAIN;
 
   const { totalTransactions, totalConcludedTransactions } = useMemo(() => {
     switch (decodedFilter.status) {
@@ -68,7 +78,7 @@ const TransactionsFetcher: React.FC = () => {
     return Math.ceil(totalTransactions / transactionsPerPage) || 1;
   }, [totalTransactions, transactionsPerPage]);
 
-  return (
+  return isConnected && isOnSupportedChain ? (
     <TransactionsDisplay
       transactions={escrowData?.escrows as TransactionDetailsFragment[]}
       totalTransactions={totalTransactions}
@@ -78,6 +88,12 @@ const TransactionsFetcher: React.FC = () => {
       totalPages={totalPages}
       transactionsPerPage={transactionsPerPage}
     />
+  ) : (
+    <ConnectWalletContainer>
+      To see your transactions, connect first and switch to the supported chain
+      <hr />
+      <ConnectWallet />
+    </ConnectWalletContainer>
   );
 };
 
