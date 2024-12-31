@@ -1,6 +1,5 @@
-import { useAccount } from "wagmi";
+import { DEFAULT_CHAIN, getChain } from "consts/chains";
 
 export const useNativeTokenSymbol = () => {
-  const { chain } = useAccount();
-  return chain?.nativeCurrency.symbol;
+  return getChain(DEFAULT_CHAIN)?.nativeCurrency.symbol;
 };
