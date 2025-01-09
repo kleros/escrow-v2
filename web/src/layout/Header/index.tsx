@@ -1,14 +1,15 @@
 import React from "react";
-import styled from "styled-components";
+import styled, { useTheme } from "styled-components";
 
 import DesktopHeader from "./DesktopHeader";
 import MobileHeader from "./MobileHeader";
+import { StatusBanner } from "subgraph-status";
+import { getGraphqlUrl } from "utils/getGraphqlUrl";
 
 const Container = styled.div`
   display: flex;
   flex-wrap: wrap;
   position: sticky;
-  padding: 0 24px;
   z-index: 10;
   top: 0;
   width: 100%;
@@ -27,11 +28,40 @@ export const PopupContainer = styled.div`
   background-color: ${({ theme }) => theme.blackLowOpacity};
 `;
 
+const HeaderContainer = styled.div`
+  width: 100%;
+  padding: 4px 24px 8px;
+`;
+
+const StyledBanner = styled(StatusBanner)`
+  position: sticky !important;
+  .status-text {
+    h2 {
+      margin: 0;
+      line-height: 24px;
+    }
+  }
+`;
 const Header: React.FC = () => {
+  const theme = useTheme();
   return (
     <Container>
-      <DesktopHeader />
-      <MobileHeader />
+      <StyledBanner
+        autoHide
+        watcherOptions={{ threshold: 5000, interval: 60_000 }} // 5000 blocks threshold, 60 sec interval check
+        theme={{
+          colors: {
+            main: theme.whiteBackground,
+            primary: theme.primaryText,
+            secondary: theme.secondaryText,
+          },
+        }}
+        subgraphs={[{ name: "Kleros Escrow", url: getGraphqlUrl() }]}
+      />
+      <HeaderContainer>
+        <DesktopHeader />
+        <MobileHeader />
+      </HeaderContainer>
     </Container>
   );
 };
