@@ -30,7 +30,7 @@ export const PopupContainer = styled.div`
 
 const HeaderContainer = styled.div`
   width: 100%;
-  padding: 4px 24px 8px;
+  padding: 0px 24px;
 `;
 
 const StyledBanner = styled(StatusBanner)`
