@@ -17,14 +17,14 @@ const disputeTemplate = `{
       "description": "Select this to release the funds to the Seller."
     }
   ],
-  "policyURI": "/ipfs/XxxxxXXX/escrow-general-policy.pdf", 
+  "policyURI": "/ipfs/XxxxxXXX/escrow-general-policy.pdf", // we need a general policy for escrows, ask the policy writer?
   "attachment": { 
     "label": "Transaction Terms",
     "uri": "{{{extraDescriptionUri}}}"
   },
   "frontendUrl": "https://escrow-v2.kleros.builders/#/transactions/{{externalDisputeID}}", 
-  "arbitratorChainID": "421614",
-  "arbitratorAddress": "0xA54e7A16d7460e38a8F324eF46782FB520d58CE8", 
+  "arbitratorChainID": "42161",
+  "arbitratorAddress": "0x991d2df165670b9cac3B022f4B68D65b664222ea", 
   "metadata": {
     "buyer": "{{buyer}}",
     "seller": "{{seller}}",
@@ -34,7 +34,7 @@ const disputeTemplate = `{
     "transactionUri": "{{{transactionUri}}}" 
   },
   "category": "Escrow",
-  "specification": "KIPXXX",
+  "specification": "KIPXXX", // what do we set this to, or do we just delete it?
   "aliases": {
     "Buyer": "{{buyer}}",
     "Seller": "{{seller}}"
@@ -46,7 +46,7 @@ const disputeTemplate = `{
 const mapping = `[
   {
     "type": "graphql",
-    "endpoint": "https://gateway-arbitrum.network.thegraph.com/api/{{{graphApiKey}}}/subgraphs/id/3aZxYcZpZL5BuVhuUupqVrCV8VeNyZEvjmPXibyPHDFQ",
+    "endpoint": "https://gateway-arbitrum.network.thegraph.com/api/{{{graphApiKey}}}/subgraphs/id/3aZxYcZpZL5BuVhuUupqVrCV8VeNyZEvjmPXibyPHDFQ", // we need to create a subgraph in arbitrum one, then change the id here.
     "query": "query GetTransaction($transactionId: ID!) { escrow(id: $transactionId) { transactionUri buyer seller amount token deadline } }",
     "variables": {
       "transactionId": "{{externalDisputeID}}"
