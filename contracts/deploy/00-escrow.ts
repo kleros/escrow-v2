@@ -17,7 +17,7 @@ export const disputeTemplate = `{
       "description": "Select this to release the funds to the Seller."
     }
   ],
-  "policyURI": "/ipfs/XxxxxXXX/escrow-general-policy.pdf", // we need a general policy for escrows, ask the policy writer?
+  "policyURI": "/ipfs/QmTaZuQjJT9NZCYsqyRmEwLb1Vt3gme1a6BS4NQLiWXtH2", // General policy for escrows in progress
   "attachment": { 
     "label": "Transaction Terms",
     "uri": "{{{extraDescriptionUri}}}"
@@ -34,7 +34,6 @@ export const disputeTemplate = `{
     "transactionUri": "{{{transactionUri}}}" 
   },
   "category": "Escrow",
-  "specification": "KIPXXX", // what do we set this to, or do we just delete it?
   "aliases": {
     "Buyer": "{{buyer}}",
     "Seller": "{{seller}}"
