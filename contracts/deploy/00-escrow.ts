@@ -2,7 +2,7 @@ import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { DeployFunction } from "hardhat-deploy/types";
 import { HomeChains, isSkipped } from "./utils";
 
-const disputeTemplate = `{
+export const disputeTemplate = `{
   "$schema": "../NewDisputeTemplate.schema.json",
   "title": "Escrow dispute: {{escrowTitle}}", 
   "description": "{{deliverableText}}", 
@@ -43,7 +43,7 @@ const disputeTemplate = `{
 }
 `;
 
-const mapping = `[
+export const mapping = `[
   {
     "type": "graphql",
     "endpoint": "https://gateway-arbitrum.network.thegraph.com/api/{{{graphApiKey}}}/subgraphs/id/3aZxYcZpZL5BuVhuUupqVrCV8VeNyZEvjmPXibyPHDFQ", // we need to create a subgraph in arbitrum one, then change the id here.
