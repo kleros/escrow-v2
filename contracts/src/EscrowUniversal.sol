@@ -49,7 +49,7 @@ contract EscrowUniversal is IEscrow, IArbitrableV2 {
     }
 
     modifier shouldNotExceedCap(IERC20 _token, uint256 _amount) {
-        if (amountCaps[_token] != 0 && _amount > amountCaps[_token]) revert AmountExceedsCap();
+        if (_amount > amountCaps[_token]) revert AmountExceedsCap();
         _;
     }
 
