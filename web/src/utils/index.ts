@@ -20,7 +20,6 @@ export const getFileUploaderMsg = (role: Roles, roleRestrictions?: Role[]) => {
   const restrictions = roleRestrictions.find((supportedRoles) => Roles[supportedRoles.name] === role);
 
   if (!restrictions) return;
-  console.log({ restrictions });
 
   return `Allowed file types: [ ${restrictions.restriction.allowedMimeTypes
     .map((type) => {
