@@ -8,6 +8,9 @@ import { responsiveSize } from "styles/responsiveSize";
 import NavigationButtons from "../../NavigationButtons";
 import TokenTransaction from "../Payment/TokenTransaction";
 import Header from "pages/NewTransaction/Header";
+import { Roles, useAtlasProvider } from "@kleros/kleros-app";
+import { getFileUploaderMsg } from "src/utils";
+import useIsDesktop from "hooks/useIsDesktop";
 
 const Container = styled.div`
   display: flex;
@@ -32,7 +35,12 @@ const StyledTextArea = styled(Textarea)`
 
 const StyledFileUploader = styled(FileUploader)`
   width: 84vw;
-  margin-bottom: ${responsiveSize(72, 52)};
+  margin-bottom: ${responsiveSize(130, 72)};
+
+  small {
+    white-space: pre-line;
+    text-align: start;
+  }
 
   ${landscapeStyle(
     () => css`
@@ -54,7 +62,9 @@ const Deliverable: React.FC = () => {
     buyerAddress,
     setBuyerAddress,
   } = useNewTransactionContext();
+  const { roleRestrictions } = useAtlasProvider();
 
+  const isDesktop = useIsDesktop();
   const handleWrite = (event: React.ChangeEvent<HTMLInputElement>) => {
     setDeliverableText(event.target.value);
   };
@@ -68,7 +78,8 @@ const Deliverable: React.FC = () => {
 
   const fileFootMessage =
     "You can attach additional information as a PDF file. Important: the above description must reference " +
-    "the relevant parts of the file content.";
+    "the relevant parts of the file content.\n" +
+    (getFileUploaderMsg(Roles.Policy, roleRestrictions) ?? "");
 
   return (
     <Container>
@@ -80,7 +91,11 @@ const Deliverable: React.FC = () => {
             onChange={handleWrite}
             placeholder="eg. I should receive a website created in React with the following specification: x,y,z."
           />
-          <StyledFileUploader callback={handleAttachFile} variant="info" msg={fileFootMessage} />
+          <StyledFileUploader
+            callback={handleAttachFile}
+            variant={isDesktop ? "info" : undefined}
+            msg={fileFootMessage}
+          />
           <NavigationButtons prevRoute="/new-transaction/title" nextRoute="/new-transaction/payment" />
         </>
       ) : (
