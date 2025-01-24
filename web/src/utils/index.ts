@@ -21,12 +21,17 @@ export const getFileUploaderMsg = (role: Roles, roleRestrictions?: Role[]) => {
 
   if (!restrictions) return;
 
-  return `Allowed file types: [ ${restrictions.restriction.allowedMimeTypes
+  const typesString = restrictions.restriction.allowedMimeTypes
     .map((type) => {
       const [prefix, suffix] = type.split("/");
       if (!suffix) return prefix ?? null;
 
       return suffix === "*" ? prefix : suffix;
     })
-    .join(", ")} ], Max allowed size: ${(restrictions.restriction.maxSize / (1024 * 1024)).toFixed(2)} MB.`;
+    .join(", ");
+
+  return `Allowed file types: [${typesString}], Max allowed size: ${(
+    restrictions.restriction.maxSize /
+    (1024 * 1024)
+  ).toFixed(2)} MB.`;
 };

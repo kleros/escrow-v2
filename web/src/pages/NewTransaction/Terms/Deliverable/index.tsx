@@ -77,7 +77,7 @@ const Deliverable: React.FC = () => {
   };
 
   const fileFootMessage =
-    "You can attach additional information as a PDF file. Important: the above description must reference " +
+    "You can attach additional information here. Important: the above description must reference " +
     "the relevant parts of the file content.\n" +
     (getFileUploaderMsg(Roles.Policy, roleRestrictions) ?? "");
 
