@@ -4474,7 +4474,7 @@ __metadata:
     "@cyntler/react-doc-viewer": "npm:^1.16.3"
     "@graphql-codegen/cli": "npm:^4.0.1"
     "@graphql-codegen/client-preset": "npm:^4.1.0"
-    "@kleros/kleros-app": "npm:^2.0.1"
+    "@kleros/kleros-app": "npm:^2.0.2"
     "@kleros/ui-components-library": "npm:^2.19.0"
     "@sentry/react": "npm:^7.93.0"
     "@sentry/tracing": "npm:^7.93.0"
@@ -4529,9 +4529,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@kleros/kleros-app@npm:^2.0.1":
-  version: 2.0.1
-  resolution: "@kleros/kleros-app@npm:2.0.1"
+"@kleros/kleros-app@npm:^2.0.2":
+  version: 2.0.2
+  resolution: "@kleros/kleros-app@npm:2.0.2"
   dependencies:
     jose: "npm:^5.9.6"
   peerDependencies:
@@ -4542,7 +4542,7 @@ __metadata:
     react-dom: ^18.3.1
     viem: ^2.21.42
     wagmi: ^2.13.0
-  checksum: 10/a193e49fe82738eaa7df3b82857fd74a5407e6ed166edeacd2352bbd149a49ea3cfde98f130fe0473f006761260cbf2475bc4fa138ad05650540eec43b9755d1
+  checksum: 10/89cf0536fed4bbb887772daa529d7cad209cea0e5105bcd366fe5e4bc7c5c14fca21aa201ba4d848c7e8addd3fc4921ac54e237afe2a5b7224c9cd219f72e08b
   languageName: node
   linkType: hard
 
