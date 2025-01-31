@@ -6,70 +6,82 @@ import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
 import {IERC20Metadata} from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 import {EscrowUniversal, Transaction, NATIVE, Party, Status, IERC20} from "./EscrowUniversal.sol";
 
+/// @title EscrowView
+/// @notice A view contract for EscrowUniversal to facilitate the display of ruling options.
 contract EscrowView {
     EscrowUniversal public immutable escrow;
 
+    /// @notice Initialize the view contract with the address of the EscrowUniversal contract.
+    /// @param _escrow The address of the EscrowUniversal contract.
     constructor(address _escrow) {
         escrow = EscrowUniversal(_escrow);
     }
 
-    /// @notice Get the payout messages for a transaction once a dispute is created.
+    /// @notice Get the payout messages for a transaction *once* a dispute is created.
+    /// @notice The amounts are exclusive of arbitration fees for clarity.
     /// @notice The amounts pre-dispute are imprecise as the arbitration fees are not paid yet by either or both parties.
+    /// @return noWinner The payout message for the case where nobody wins.
+    /// @return buyerWins The payout message for the case where the buyer wins.
+    /// @return sellerWins The payout message for the case where the seller wins.
     function getPayoutMessages(
         uint256 _transactionID
     ) external view returns (string memory noWinner, string memory buyerWins, string memory sellerWins) {
-        (, , uint256 amount, , , , , , , , , IERC20 token) = escrow.transactions(_transactionID);
+        (, , uint256 amount, , , , , uint256 buyerFee, uint256 sellerFee, , , IERC20 token) = escrow.transactions(
+            _transactionID
+        );
 
         (uint256 noWinnerPayout, uint256 noWinnerPayoutToken, , ) = escrow.getPayouts(_transactionID, Party.None);
         (, , uint256 buyerWinsCost, uint256 buyerWinsCostToken) = escrow.getPayouts(_transactionID, Party.Buyer);
         (, , uint256 sellerWinsCost, uint256 sellerWinsCostToken) = escrow.getPayouts(_transactionID, Party.Seller);
 
-        string memory amountStr = formatEth(amount);
-        string memory amountTokenStr = formatToken(amount, address(token));
-
         if (token == NATIVE) {
+            string memory amountStr = formatEth(amount);
             noWinner = string.concat(
                 "Buyer and Seller get ",
-                formatEth(noWinnerPayout),
-                " back and pay half of the arbitration fees each."
+                formatEth(noWinnerPayout - (buyerFee / 2)),
+                " back and half of the arbitration fees."
             );
+            string memory insteadStr = buyerWinsCost != amount ? string.concat(" instead of ", amountStr) : "";
             buyerWins = string.concat(
                 "Buyer pays ",
-                formatEth(buyerWinsCost),
-                " instead of ",
-                amountStr,
-                ", Seller pays for arbitration."
+                formatEth(buyerWinsCost), // Exclusive of arbitration fees
+                insteadStr,
+                ", gets the arbitration fees back."
             );
+            insteadStr = sellerWinsCost - sellerFee != amount ? string.concat(" instead of ", amountStr) : "";
             sellerWins = string.concat(
                 "Buyer pays ",
-                formatEth(sellerWinsCost),
-                " instead of ",
-                amountStr,
-                ", Buyer pays for arbitration."
+                formatEth(sellerWinsCost - sellerFee), // Including of arbitration fees, deduct them
+                insteadStr,
+                ", Seller gets the arbitration fees back."
             );
         } else {
+            string memory amountTokenStr = formatToken(amount, address(token));
             noWinner = string.concat(
                 "Buyer and Seller get ",
                 formatToken(noWinnerPayoutToken, address(token)),
-                " back and pay half of the arbitration fees each."
+                " back and half of the arbitration fees."
             );
+            string memory insteadStr = buyerWinsCost != amount ? string.concat(" instead of ", amountTokenStr) : "";
             buyerWins = string.concat(
                 "Buyer pays ",
                 formatToken(buyerWinsCostToken, address(token)),
-                " instead of ",
-                amountTokenStr,
-                ", Seller pays for arbitration."
+                insteadStr,
+                ", gets the arbitration fees back."
             );
+            insteadStr = sellerWinsCost - sellerFee != amount ? string.concat(" instead of ", amountTokenStr) : "";
             sellerWins = string.concat(
                 "Buyer pays ",
                 formatToken(sellerWinsCostToken, address(token)),
-                " instead of ",
-                amountTokenStr,
-                ", Buyer pays for arbitration."
+                insteadStr,
+                ", Seller gets the arbitration fees back."
             );
         }
     }
 
+    /// @notice Format an amount in ETH to 3 decimal places.
+    /// @param _amountWei The amount in wei.
+    /// @return The formatted amount.
     function formatEth(uint256 _amountWei) public pure returns (string memory) {
         uint256 ethWhole = _amountWei / 1 ether;
         uint256 ethFraction = (_amountWei % 1 ether) / 1e15; // Get the first 3 decimal digits
@@ -108,7 +120,12 @@ contract EscrowView {
         }
     }
 
+    /// @notice Format an amount in a token to 3 decimal places.
+    /// @param _amountWei The amount in wei.
+    /// @param _token The address of the token.
+    /// @return The formatted amount.
     function formatToken(uint256 _amountWei, address _token) public view returns (string memory) {
+        require(_token != address(0), "Invalid token address");
         IERC20Metadata token = IERC20Metadata(_token);
         uint8 decimals = token.decimals();
         string memory symbol = token.symbol();
