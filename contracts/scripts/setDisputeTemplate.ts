@@ -25,10 +25,12 @@ const disputeTemplateFn = (chainId: number, klerosCore: string) => `{
   "question": "Which party abided by the terms of the contract?",
   "answers": [
     {
+      "id":"0x1",
       "title": "Refund the Buyer",
       "description": "Select this to return the funds to the Buyer."
     },
     {
+      "id":"0x2",
       "title": "Pay the Seller",
       "description": "Select this to release the funds to the Seller."
     }
