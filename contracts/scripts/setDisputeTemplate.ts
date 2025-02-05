@@ -79,7 +79,7 @@ const mappingFn = (subgraphEndpoint: string) => `[
   }
 ]`;
 
-task("setDisputeTemplate", "Sets the dispute template").setAction(async (args, hre) => {
+task("set-dispute-template", "Sets the dispute template").setAction(async (args, hre) => {
   const { ethers, config, deployments } = hre;
   const escrow = (await ethers.getContract("EscrowUniversal")) as EscrowUniversal;
   const networkName = await deployments.getNetworkName();
