@@ -1,11 +1,9 @@
 import React from "react";
 
-import { createWeb3Modal } from "@web3modal/wagmi/react";
-import { type Chain } from "viem";
-import { createConfig, fallback, http, WagmiProvider, webSocket } from "wagmi";
-import { mainnet, arbitrumSepolia, gnosisChiado } from "wagmi/chains";
-import { walletConnect } from "wagmi/connectors";
-
+import { fallback, http, WagmiProvider, webSocket } from "wagmi";
+import { mainnet, arbitrumSepolia, gnosisChiado, type AppKitNetwork } from "@reown/appkit/networks";
+import { createAppKit } from "@reown/appkit/react";
+import { WagmiAdapter } from "@reown/appkit-adapter-wagmi";
 import { lightTheme } from "styles/themes";
 
 export const alchemyApiKey = import.meta.env.ALCHEMY_API_KEY ?? "";
@@ -17,11 +15,11 @@ const alchemyToViemChain = {
 
 type AlchemyProtocol = "https" | "wss";
 
-const alchemyURL = (protocol: AlchemyProtocol, chainId: number) =>
+const alchemyURL = (protocol: AlchemyProtocol, chainId: number | string) =>
   `${protocol}://${alchemyToViemChain[chainId]}.g.alchemy.com/v2/${alchemyApiKey}`;
 
 const getTransports = () => {
-  const alchemyTransport = (chain: Chain) =>
+  const alchemyTransport = (chain: AppKitNetwork) =>
     fallback([http(alchemyURL("https", chain.id)), webSocket(alchemyURL("wss", chain.id))]);
   const chiadoTransport = () =>
     fallback([http("https://rpc.chiadochain.net"), webSocket("wss://rpc.chiadochain.net/wss")]);
@@ -33,26 +31,30 @@ const getTransports = () => {
   };
 };
 
-const chains = [arbitrumSepolia, mainnet, gnosisChiado] as [Chain, ...Chain[]];
+const chains = [arbitrumSepolia, mainnet, gnosisChiado] as [AppKitNetwork, ...AppKitNetwork[]];
 const transports = getTransports();
 const projectId = import.meta.env.WALLETCONNECT_PROJECT_ID ?? "";
-const wagmiConfig = createConfig({
-  chains,
+
+const wagmiAdapter = new WagmiAdapter({
+  networks: chains,
+  projectId,
   transports,
-  connectors: [walletConnect({ projectId, showQrModal: false })],
 });
 
-createWeb3Modal({
-  wagmiConfig,
+createAppKit({
+  adapters: [wagmiAdapter],
+  networks: chains,
+  defaultNetwork: arbitrumSepolia,
   projectId,
   themeVariables: {
     "--w3m-color-mix": lightTheme.primaryPurple,
     "--w3m-color-mix-strength": 20,
+    // overlay portal is at 9999
+    "--w3m-z-index": 10000,
   },
 });
-
 const Web3Provider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  return <WagmiProvider config={wagmiConfig}> {children} </WagmiProvider>;
+  return <WagmiProvider config={wagmiAdapter.wagmiConfig}> {children} </WagmiProvider>;
 };
 
 export default Web3Provider;

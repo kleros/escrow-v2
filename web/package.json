@@ -68,10 +68,11 @@
     "@cyntler/react-doc-viewer": "^1.16.3",
     "@kleros/kleros-app": "^2.0.2",
     "@kleros/ui-components-library": "^2.19.0",
+    "@reown/appkit": "^1.6.6",
+    "@reown/appkit-adapter-wagmi": "^1.6.6",
     "@sentry/react": "^7.93.0",
     "@sentry/tracing": "^7.93.0",
-    "@tanstack/react-query": "^5.61.5",
-    "@web3modal/wagmi": "^5.1.4",
+    "@tanstack/react-query": "^5.66.0",
     "@yornaath/batshit": "^0.9.0",
     "alchemy-sdk": "^3.3.1",
     "chart.js": "^3.9.1",
@@ -98,7 +99,7 @@
     "react-use": "^17.4.3",
     "styled-components": "^5.3.11",
     "subgraph-status": "^1.2.3",
-    "viem": "^2.21.51",
-    "wagmi": "^2.13.2"
+    "viem": "^2.22.22",
+    "wagmi": "^2.14.10"
   }
 }
