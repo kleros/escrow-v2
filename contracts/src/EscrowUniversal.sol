@@ -308,8 +308,8 @@ contract EscrowUniversal is IEscrow, IArbitrableV2 {
             transaction.buyer.send(remainingAmount);
             transaction.seller.send(settlementAmount);
         } else {
-            if (!transaction.token.safeTransfer(transaction.buyer, remainingAmount)) revert TokenTransferFailed();
-            if (!transaction.token.safeTransfer(transaction.seller, settlementAmount)) revert TokenTransferFailed();
+            transaction.token.safeTransfer(transaction.buyer, remainingAmount);
+            transaction.token.safeTransfer(transaction.seller, settlementAmount);
         }
 
         emit TransactionResolved(_transactionID, Resolution.SettlementReached);

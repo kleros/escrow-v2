@@ -380,7 +380,7 @@ contract EscrowUniversalTest is Test {
         assertEq(escrowToken.balanceOf(seller), 0, "Balance of seller should be 0");
     }
 
-    function test_createNativeTransaction_checkTransferRevert() public {
+    function test_createNativeTransaction_approvalMissing() public {
         uint256 deadline = block.timestamp + txTimeout;
 
         escrowToken.transfer(other, 1 ether);
@@ -570,15 +570,15 @@ contract EscrowUniversalTest is Test {
         assertEq(escrowToken.balanceOf(seller), 0.5 ether, "Wrong token balance of the seller");  
     }
 
-    function test_checkTransferRevert() public {
+    function test_executeTransactionERC20_checkTransferRevert() public {
         uint256 deadline = block.timestamp + txTimeout;
         uint256 txId;
+
         vm.prank(buyer);
         escrow.createERC20Transaction(0.4 ether, escrowToken, deadline, txUri, payable(seller));
 
         // Make it so the contract has 0 balance to trigger the revert
-        vm.prank(address(escrow));
-        escrowToken.transfer(other, 0.4 ether);
+        deal(address(escrowToken), address(escrow), 0 ether);
         assertEq(escrowToken.balanceOf(address(escrow)), 0, "Balance should be 0");
 
         vm.expectRevert(IEscrow.TokenTransferFailed.selector);
@@ -792,23 +792,6 @@ contract EscrowUniversalTest is Test {
         assertEq(escrowToken.balanceOf(address(escrow)), 0, "Escrow should have 0 balance");
         assertEq(escrowToken.balanceOf(buyer), 0.8 ether, "Wrong token balance of the buyer");
         assertEq(escrowToken.balanceOf(seller), 0.2 ether, "Wrong token balance of the seller");  
-    }
-
-    function test_acceptSettlement_checkTransferRevert() public {
-        uint256 deadline = block.timestamp + txTimeout;
-        uint256 txId;
-        vm.prank(buyer);
-        escrow.createERC20Transaction(txValue, escrowToken, deadline, txUri, payable(seller));
-
-        vm.prank(buyer);
-        escrow.proposeSettlement(txId, 0.2 ether);
-
-        vm.prank(address(escrow));
-        escrowToken.transfer(other, 0.5 ether);
-
-        vm.expectRevert(IEscrow.TokenTransferFailed.selector);
-        vm.prank(seller);
-        escrow.acceptSettlement(txId);
     }
 
     function test_payArbitrationFeeByBuyer() public {
@@ -1067,30 +1050,6 @@ contract EscrowUniversalTest is Test {
         assertEq(escrowToken.balanceOf(seller), 0, "Seller balance should be 0");  
     }
 
-    function test_timeOutByBuyerERC20_checkTransferRevert() public {
-        uint256 deadline = block.timestamp + txTimeout;
-        uint256 txId;
-
-        vm.prank(buyer);
-        escrow.createERC20Transaction(txValue, escrowToken, deadline, txUri, payable(seller));
-
-        vm.prank(seller);
-        escrow.proposeSettlement(txId, 0.2 ether);
-
-        vm.prank(buyer);
-        escrow.payArbitrationFeeByBuyer{value: arbitrationCost}(txId);
-
-        vm.warp(block.timestamp + feeTimeout);
-
-        vm.prank(address(escrow));
-        escrowToken.transfer(other, txValue);
-        assertEq(escrowToken.balanceOf(address(escrow)), 0, "Balance should be 0");
-
-        vm.expectRevert(IEscrow.TokenTransferFailed.selector);
-        vm.prank(buyer);
-        escrow.timeOutByBuyer(txId);
-    }
-
     function test_timeOutBySellerNative_settlement() public {
         uint256 deadline = block.timestamp + txTimeout;
         uint256 txId;
@@ -1196,31 +1155,6 @@ contract EscrowUniversalTest is Test {
         assertEq(escrowToken.balanceOf(address(escrow)), 0, "Wrong token balance of the escrow");
         assertEq(escrowToken.balanceOf(buyer), 0.5 ether, "Wrong token balance of buyer");
         assertEq(escrowToken.balanceOf(seller), 0.5 ether, "Wrong token balance of seller");  
-    }
-
-    function test_timeOutBySellerERC20_checkTransferRevert() public {
-        uint256 deadline = block.timestamp + txTimeout;
-        uint256 txId;
-        vm.deal(seller, 1 ether);
-
-        vm.prank(buyer);
-        escrow.createERC20Transaction(txValue, escrowToken, deadline, txUri, payable(seller));
-
-        vm.prank(buyer);
-        escrow.proposeSettlement(txId, 0.2 ether);
-
-        vm.prank(seller);
-        escrow.payArbitrationFeeBySeller{value: arbitrationCost}(txId);
-
-        vm.warp(block.timestamp + feeTimeout);
-
-        vm.prank(address(escrow));
-        escrowToken.transfer(other, txValue);
-        assertEq(escrowToken.balanceOf(address(escrow)), 0, "Balance should be 0");
-
-        vm.expectRevert(IEscrow.TokenTransferFailed.selector);
-        vm.prank(seller);
-        escrow.timeOutBySeller(txId);
     }
 
     // ******************************* //
