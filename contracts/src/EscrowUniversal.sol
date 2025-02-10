@@ -427,6 +427,7 @@ contract EscrowUniversal is IEscrow, IArbitrableV2 {
         if (transaction.status != Status.DisputeCreated) revert DisputeAlreadyResolved();
 
         emit Ruling(arbitrator, _disputeID, _ruling);
+        emit TransactionResolved(transactionID, Resolution.RulingEnforced);
         executeRuling(transactionID, _ruling);
     }
 
@@ -534,8 +535,6 @@ contract EscrowUniversal is IEscrow, IArbitrableV2 {
                 transaction.token.safeTransfer(transaction.seller, splitAmount);
             }
         }
-
-        emit TransactionResolved(_transactionID, Resolution.RulingEnforced);
     }
 
     // ************************************* //
