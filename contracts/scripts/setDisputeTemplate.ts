@@ -1,6 +1,7 @@
 // import { BigNumber, utils } from "ethers";
 import { task } from "hardhat/config";
-import { EscrowUniversal } from "../typechain-types";
+import { EscrowUniversal, EscrowView } from "../typechain-types";
+import { Addressable } from "ethers/lib.commonjs/address";
 
 const parameters = {
   arbitrumSepoliaDevnet: {
@@ -25,17 +26,22 @@ const disputeTemplateFn = (chainId: number, klerosCore: string) => `{
   "question": "Which party abided by the terms of the contract?",
   "answers": [
     {
-      "id":"0x1",
-      "title": "Refund the Buyer",
-      "description": "Select this to return the funds to the Buyer."
+      "id": "0x00",
+      "title": "Refuse to Arbitrate / Invalid.",
+      "description": "{{noWinner}}"
     },
     {
-      "id":"0x2",
+      "id": "0x01",
+      "title": "Refund the Buyer",
+      "description": "{{buyerWins}}"
+    },
+    {
+      "id": "0x02",
       "title": "Pay the Seller",
-      "description": "Select this to release the funds to the Seller."
+      "description": "{{sellerWins}}"
     }
   ],
-  "policyURI": "/ipfs/QmTaZuQjJT9NZCYsqyRmEwLb1Vt3gme1a6BS4NQLiWXtH2", // General policy for escrows in progress
+  "policyURI": "/ipfs/QmTaZuQjJT9NZCYsqyRmEwLb1Vt3gme1a6BS4NQLiWXtH2",
   "attachment": { 
     "label": "Transaction Terms",
     "uri": "{{{extraDescriptionUri}}}"
@@ -60,10 +66,10 @@ const disputeTemplateFn = (chainId: number, klerosCore: string) => `{
 }
 `;
 
-const mappingFn = (subgraphEndpoint: string) => `[
+const mappingFn = (subgraphEndpoint: string, view: string | Addressable) => `[
   {
     "type": "graphql",
-    "endpoint": "${subgraphEndpoint}", // we need to create a subgraph in arbitrum one, then change the id here.
+    "endpoint": "${subgraphEndpoint}",
     "query": "query GetTransaction($transactionId: ID!) { escrow(id: $transactionId) { transactionUri buyer seller amount token deadline } }",
     "variables": {
       "transactionId": "{{externalDisputeID}}"
@@ -76,12 +82,22 @@ const mappingFn = (subgraphEndpoint: string) => `[
     "ipfsUri": "{{{transactionUri}}}",
     "seek": ["title", "description", "extraDescriptionUri"],
     "populate": ["escrowTitle", "deliverableText", "extraDescriptionUri"]
+  },
+  {
+    "type": "abi/call",
+    "abi": "function getPayoutMessages(uint256) returns (string, string, string)",
+    "functionName": "getPayoutMessages",
+    "address": "${view}",
+    "args": ["0"],
+    "seek": ["0", "1", "2"],
+    "populate": ["noWinner", "buyerWins", "sellerWins"]
   }
 ]`;
 
 task("set-dispute-template", "Sets the dispute template").setAction(async (args, hre) => {
   const { ethers, config, deployments } = hre;
   const escrow = (await ethers.getContract("EscrowUniversal")) as EscrowUniversal;
+  const view = (await ethers.getContract("EscrowView")) as EscrowView;
   const networkName = await deployments.getNetworkName();
   const { arbitrator, subgraphEndpoint } = parameters[networkName];
   const klerosCore = await deployments.get(arbitrator).then((c) => c.address);
@@ -94,7 +110,7 @@ task("set-dispute-template", "Sets the dispute template").setAction(async (args,
   const disputeTemplate = disputeTemplateFn(chainId, klerosCore);
   console.log("New disputeTemplate", disputeTemplate);
 
-  const mapping = mappingFn(subgraphEndpoint);
+  const mapping = mappingFn(subgraphEndpoint, view.target);
   console.log("New mapping", mapping);
 
   const tx = await escrow.changeDisputeTemplate(disputeTemplate, mapping);
