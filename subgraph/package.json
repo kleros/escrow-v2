@@ -1,6 +1,6 @@
 {
   "name": "@kleros/escrow-v2-subgraph",
-  "version": "2.0.7",
+  "version": "2.0.8",
   "license": "MIT",
   "scripts": {
     "update:arbitrum-sepolia-devnet": "./scripts/update.sh arbitrumSepoliaDevnet arbitrum-sepolia",
@@ -10,9 +10,9 @@
     "clean": "graph clean && rm subgraph.yaml.bak.*",
     "codegen": "graph codegen",
     "build": "graph build",
-    "deploy:arbitrum-sepolia-devnet": "graph deploy --studio escrow-v2-devnet -l v$npm_package_version",
-    "deploy:arbitrum-sepolia": "graph deploy --studio escrow-v2-testnet -l v$npm_package_version",
-    "deploy:arbitrum": "graph deploy --studio escrow-v2-mainnet -l v$npm_package_version",
+    "deploy:arbitrum-sepolia-devnet": "graph deploy escrow-v2-devnet -l v$npm_package_version",
+    "deploy:arbitrum-sepolia": "graph deploy escrow-v2-testnet -l v$npm_package_version",
+    "deploy:arbitrum": "graph deploy escrow-v2-mainnet -l v$npm_package_version",
     "create-local": "graph create --node http://localhost:8020/ kleros/escrow-v2-local",
     "remove-local": "graph remove --node http://localhost:8020/ kleros/escrow-v2-local",
     "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 kleros/escrow-v2-local --version-label v$(date +%s)",
@@ -21,13 +21,13 @@
     "stop-local-indexer": "docker compose -f ../services/graph-node/docker-compose.yml down && rm -rf ../services/graph-node/data"
   },
   "volta": {
-    "node": "20.11.0"
+    "node": "20.18.3"
   },
   "dependencies": {
-    "@graphprotocol/graph-ts": "^0.32.0"
+    "@graphprotocol/graph-ts": "^0.37.0"
   },
   "devDependencies": {
-    "@graphprotocol/graph-cli": "0.64.0",
+    "@graphprotocol/graph-cli": "0.95.0",
     "@kleros/escrow-v2-eslint-config": "workspace:^",
     "@kleros/escrow-v2-prettier-config": "workspace:^",
     "gluegun": "^5.1.2",

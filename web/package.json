@@ -23,7 +23,7 @@
     "svgs": "./src/assets/svgs"
   },
   "volta": {
-    "node": "20.11.0"
+    "node": "20.18.3"
   },
   "scripts": {
     "start": "yarn start-devnet",
@@ -44,7 +44,7 @@
   "prettier": "@kleros/escrow-v2-prettier-config",
   "devDependencies": {
     "@graphql-codegen/cli": "^4.0.1",
-    "@graphql-codegen/client-preset": "^4.1.0",
+    "@graphql-codegen/client-preset": "^4.6.2",
     "@types/react": "^18.2.59",
     "@types/react-dom": "^18.2.18",
     "@types/react-modal": "^3.16.3",
@@ -58,7 +58,7 @@
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "lru-cache": "^7.18.3",
-    "typescript": "^5.7.2",
+    "typescript": "^5.7.3",
     "vite": "^5.4.2",
     "vite-plugin-node-polyfills": "^0.21.0",
     "vite-plugin-svgr": "^4.2.0",
