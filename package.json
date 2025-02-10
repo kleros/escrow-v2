@@ -2,7 +2,6 @@
   "name": "escrow-v2",
   "version": "2.0.0",
   "description": "Escrow version 2",
-  "type": "commonjs",
   "main": "index.js",
   "repository": "git@github.com:kleros/escrow-v2.git",
   "author": {
@@ -24,9 +23,10 @@
     "prettier-config",
     "tsconfig"
   ],
-  "packageManager": "yarn@4.2.2",
+  "packageManager": "yarn@4.6.0",
   "volta": {
-    "node": "20.11.0"
+    "node": "20.11.0",
+    "yarn": "4.6.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.7.2",

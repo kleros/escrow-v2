@@ -13,13 +13,18 @@ import "hardhat-docgen";
 // import "hardhat-contract-sizer"; // prevents hardhat-deploy from finding chalk...
 // import "hardhat-tracer"; // prevents hardhat-deploy from finding chalk...
 require("./scripts/setDisputeTemplate");
+require("./scripts/getPayoutMessages");
 
 dotenv.config();
+
+const sellerAccount = process.env.PRIVATE_KEY_SELLER ? [process.env.PRIVATE_KEY_SELLER] : [];
+const accounts = process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY, ...sellerAccount] : [];
 
 const config: HardhatUserConfig = {
   solidity: {
     version: "0.8.18",
     settings: {
+      viaIR: true,
       optimizer: {
         enabled: true,
         runs: 100,
@@ -60,7 +65,7 @@ const config: HardhatUserConfig = {
     arbitrumSepolia: {
       chainId: 421614,
       url: process.env.ARBITRUM_SEPOLIA_RPC ?? "https://sepolia-rollup.arbitrum.io/rpc",
-      accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+      accounts,
       live: true,
       saveDeployments: true,
       tags: ["staging", "home", "layer2"],
@@ -74,7 +79,7 @@ const config: HardhatUserConfig = {
     arbitrumSepoliaDevnet: {
       chainId: 421614,
       url: process.env.ARBITRUM_SEPOLIA_RPC ?? "https://sepolia-rollup.arbitrum.io/rpc",
-      accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+      accounts,
       live: true,
       saveDeployments: true,
       tags: ["staging", "home", "layer2"],
@@ -88,7 +93,7 @@ const config: HardhatUserConfig = {
     arbitrum: {
       chainId: 42161,
       url: "https://arb1.arbitrum.io/rpc",
-      accounts: process.env.MAINNET_PRIVATE_KEY !== undefined ? [process.env.MAINNET_PRIVATE_KEY] : [],
+      accounts,
       live: true,
       saveDeployments: true,
       tags: ["production", "home", "layer2"],
@@ -102,7 +107,7 @@ const config: HardhatUserConfig = {
     sepolia: {
       chainId: 11155111,
       url: `https://sepolia.infura.io/v3/${process.env.INFURA_API_KEY}`,
-      accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+      accounts,
       live: true,
       saveDeployments: true,
       tags: ["staging", "foreign", "layer1"],
@@ -110,7 +115,7 @@ const config: HardhatUserConfig = {
     sepoliaDevnet: {
       chainId: 11155111,
       url: `https://sepolia.infura.io/v3/${process.env.INFURA_API_KEY}`,
-      accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+      accounts,
       live: true,
       saveDeployments: true,
       tags: ["staging", "foreign", "layer1"],
@@ -118,7 +123,7 @@ const config: HardhatUserConfig = {
     mainnet: {
       chainId: 1,
       url: `https://mainnet.infura.io/v3/${process.env.INFURA_API_KEY}`,
-      accounts: process.env.MAINNET_PRIVATE_KEY !== undefined ? [process.env.MAINNET_PRIVATE_KEY] : [],
+      accounts,
       live: true,
       saveDeployments: true,
       tags: ["production", "foreign", "layer1"],
@@ -126,7 +131,7 @@ const config: HardhatUserConfig = {
     gnosischain: {
       chainId: 100,
       url: `https://rpc.gnosis.gateway.fm`,
-      accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+      accounts,
       live: true,
       saveDeployments: true,
       tags: ["production", "foreign", "layer1"],
@@ -141,14 +146,8 @@ const config: HardhatUserConfig = {
     deployer: {
       default: 0,
     },
-    relayer: {
+    seller: {
       default: 1,
-    },
-    bridger: {
-      default: 2,
-    },
-    challenger: {
-      default: 3,
     },
   },
   gasReporter: {

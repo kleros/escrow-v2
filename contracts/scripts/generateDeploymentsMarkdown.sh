@@ -6,6 +6,8 @@ IGNORED_ARTIFACTS=(
     "CREATE3Factory.json"
     "MetaEvidence_*"
     "PNK.json"
+    "DAI.json"
+    "WETH.json"
     "RandomizerOracle.json"
     "_Implementation.json"
     "_Proxy.json"

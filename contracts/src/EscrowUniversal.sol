@@ -308,8 +308,8 @@ contract EscrowUniversal is IEscrow, IArbitrableV2 {
             transaction.buyer.send(remainingAmount);
             transaction.seller.send(settlementAmount);
         } else {
-            if (!transaction.token.safeTransfer(transaction.buyer, remainingAmount)) revert TokenTransferFailed();
-            if (!transaction.token.safeTransfer(transaction.seller, settlementAmount)) revert TokenTransferFailed();
+            transaction.token.safeTransfer(transaction.buyer, remainingAmount);
+            transaction.token.safeTransfer(transaction.seller, settlementAmount);
         }
 
         emit TransactionResolved(_transactionID, Resolution.SettlementReached);
@@ -468,12 +468,13 @@ contract EscrowUniversal is IEscrow, IArbitrableV2 {
     /// @param _ruling Ruling given by the arbitrator. 1 : Reimburse the seller. 2 : Pay the buyer.
     function executeRuling(uint256 _transactionID, uint256 _ruling) internal {
         Transaction storage transaction = transactions[_transactionID];
-        uint256 amount = transaction.amount;
-        uint256 settlementBuyer = transaction.settlementBuyer;
-        uint256 settlementSeller = transaction.settlementSeller;
-        uint256 buyerFee = transaction.buyerFee;
-        uint256 sellerFee = transaction.sellerFee;
-        bool nativePayment = transaction.token == NATIVE;
+        address payable buyer = transaction.buyer;
+        address payable seller = transaction.seller;
+
+        (uint256 buyerPayout, uint256 buyerPayoutToken, uint256 sellerPayout, uint256 sellerPayoutToken) = getPayouts(
+            _transactionID,
+            Party(_ruling)
+        );
 
         transaction.amount = 0;
         transaction.settlementBuyer = 0;
@@ -482,58 +483,17 @@ contract EscrowUniversal is IEscrow, IArbitrableV2 {
         transaction.sellerFee = 0;
         transaction.status = Status.TransactionResolved;
 
-        // Give the arbitration fee back.
-        if (_ruling == uint256(Party.Buyer)) {
-            transaction.buyer.send(buyerFee);
-            // If there was a settlement amount proposed, we use that to make the partial payment and refund the rest.
-            if (settlementBuyer != 0) {
-                if (nativePayment) {
-                    transaction.buyer.send(amount - settlementBuyer); // It is the user responsibility to accept ETH.
-                    transaction.seller.send(settlementBuyer);
-                } else {
-                    transaction.token.safeTransfer(transaction.buyer, amount - settlementBuyer);
-                    transaction.token.safeTransfer(transaction.seller, settlementBuyer);
-                }
-            } else {
-                if (nativePayment) {
-                    transaction.buyer.send(amount); // It is the user responsibility to accept ETH.
-                } else {
-                    if (!transaction.token.safeTransfer(transaction.buyer, amount)) revert TokenTransferFailed();
-                }
-            }
-        } else if (_ruling == uint256(Party.Seller)) {
-            transaction.seller.send(sellerFee);
-            // If there was a settlement amount proposed, we use that to make the partial payment and refund the rest to buyer.
-            if (settlementSeller != 0) {
-                if (nativePayment) {
-                    transaction.buyer.send(amount - settlementSeller); // It is the user responsibility to accept ETH.
-                    transaction.seller.send(settlementSeller);
-                } else {
-                    transaction.token.safeTransfer(transaction.buyer, amount - settlementSeller);
-                    transaction.token.safeTransfer(transaction.seller, settlementSeller);
-                }
-            } else {
-                if (nativePayment) {
-                    transaction.seller.send(amount); // It is the user responsibility to accept ETH.
-                } else {
-                    if (!transaction.token.safeTransfer(transaction.seller, amount)) revert TokenTransferFailed();
-                }
-            }
-        } else {
-            uint256 splitArbitrationFee = buyerFee / 2;
-            transaction.buyer.send(splitArbitrationFee);
-            transaction.seller.send(splitArbitrationFee);
-
-            // Tokens should not reenter or allow recipients to refuse the transfer.
-            // In case of an uneven token amount, one basic token unit can be burnt.
-            uint256 splitAmount = amount / 2;
-            if (nativePayment) {
-                transaction.buyer.send(splitAmount); // It is the user responsibility to accept ETH.
-                transaction.seller.send(splitAmount);
-            } else {
-                transaction.token.safeTransfer(transaction.buyer, splitAmount);
-                transaction.token.safeTransfer(transaction.seller, splitAmount);
-            }
+        if (buyerPayout > 0) {
+            buyer.send(buyerPayout); // It is the user responsibility to accept ETH.
+        }
+        if (sellerPayout > 0) {
+            seller.send(sellerPayout); // It is the user responsibility to accept ETH.
+        }
+        if (buyerPayoutToken > 0) {
+            transaction.token.safeTransfer(buyer, buyerPayoutToken); // Tokens should not reenter or allow recipients to refuse the transfer.
+        }
+        if (sellerPayoutToken > 0) {
+            transaction.token.safeTransfer(seller, sellerPayoutToken); // Tokens should not reenter or allow recipients to refuse the transfer.
         }
     }
 
@@ -544,5 +504,72 @@ contract EscrowUniversal is IEscrow, IArbitrableV2 {
     /// @inheritdoc IEscrow
     function getTransactionCount() external view override returns (uint256) {
         return transactions.length;
+    }
+
+    /// @dev Get the payout depending on the winning party.
+    /// @dev The cost for the buyer is the seller payout non-inclusive of any arbitration fees.
+    /// @param _transactionID The index of the transaction.
+    /// @param _winningParty The winning party.
+    /// @return buyerPayout The payout for the buyer.
+    /// @return buyerPayoutToken The payout for the buyer in tokens.
+    /// @return sellerPayout The payout for the seller.
+    /// @return sellerPayoutToken The payout for the seller in tokens.
+    function getPayouts(
+        uint256 _transactionID,
+        Party _winningParty
+    )
+        public
+        view
+        returns (uint256 buyerPayout, uint256 buyerPayoutToken, uint256 sellerPayout, uint256 sellerPayoutToken)
+    {
+        Transaction storage transaction = transactions[_transactionID];
+        uint256 amount = transaction.amount;
+        uint256 settlementBuyer = transaction.settlementBuyer;
+        uint256 settlementSeller = transaction.settlementSeller;
+        uint256 buyerFee = transaction.buyerFee;
+        uint256 sellerFee = transaction.sellerFee;
+        bool nativePayment = transaction.token == NATIVE;
+        if (_winningParty == Party.Buyer) {
+            // The Seller gets the settlement amount proposed by the Buyer if any, otherwise nothing.
+            // The Buyer gets the remaining amount of the transaction back if any.
+            // The Buyer gets the arbitration fee back.
+            uint256 settledAmount = settlementBuyer;
+            if (nativePayment) {
+                buyerPayout = buyerFee + amount - settledAmount;
+                sellerPayout = settledAmount;
+            } else {
+                buyerPayout = buyerFee;
+                buyerPayoutToken = amount - settledAmount;
+                sellerPayoutToken = settledAmount;
+            }
+        } else if (_winningParty == Party.Seller) {
+            // The Seller gets his proposed settlement amount if any, otherwise the transaction amount.
+            // The Buyer gets the remaining amount of the transaction back if any.
+            // The Seller gets the arbitration fee back.
+            uint256 settledAmount = settlementSeller != 0 ? settlementSeller : amount;
+            if (nativePayment) {
+                buyerPayout = amount - settledAmount;
+                sellerPayout = sellerFee + settledAmount;
+            } else {
+                buyerPayoutToken = amount - settledAmount;
+                sellerPayout = sellerFee;
+                sellerPayoutToken = settledAmount;
+            }
+        } else {
+            // No party wins, we split the arbitration fee and the transaction amount.
+            // The arbitration fee has been paid twice, once by the Buyer and once by the Seller in equal amount once arbitration starts.
+            // In case of an uneven token amount, one basic token unit can be burnt.
+            uint256 splitArbitrationFee = buyerFee / 2; // buyerFee equals sellerFee.
+            buyerPayout = splitArbitrationFee;
+            sellerPayout = splitArbitrationFee;
+            uint256 splitAmount = amount / 2;
+            if (nativePayment) {
+                buyerPayout += splitAmount;
+                sellerPayout += splitAmount;
+            } else {
+                buyerPayoutToken = splitAmount;
+                sellerPayoutToken = splitAmount;
+            }
+        }
     }
 }

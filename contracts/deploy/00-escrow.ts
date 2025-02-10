@@ -1,6 +1,7 @@
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { DeployFunction } from "hardhat-deploy/types";
 import { HomeChains, isSkipped } from "./utils";
+import { EscrowUniversal } from "../typechain-types";
 
 const deploy: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
   const { deployments, getNamedAccounts, getChainId, ethers } = hre;
@@ -34,7 +35,7 @@ const deploy: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
   });
 
   // Set the value cap to about USD 1000
-  const escrow = await deployments.get("EscrowUniversal");
+  const escrow = (await ethers.getContract("EscrowUniversal")) as EscrowUniversal;
   const WETH = await deployments.get("WETH");
   const DAI = await deployments.get("DAI");
   const caps = {
@@ -46,6 +47,14 @@ const deploy: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
     console.log("Setting cap for", token, cap);
     await escrow.changeAmountCap(token, cap);
   }
+
+  await deploy("EscrowView", {
+    from: deployer,
+    args: [escrow.target],
+    gasLimit: 50000000,
+    log: true,
+  });
+  
 };
 
 deploy.tags = ["Escrow"];
