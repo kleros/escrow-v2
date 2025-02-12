@@ -534,7 +534,7 @@ contract EscrowUniversalTest is Test {
 
         vm.prank(other);
         vm.expectEmit(true, true, true, true);
-        emit Payment(txId, txValue, other);
+        emit Payment(txId, txValue, buyer);
         vm.expectEmit(true, true, true, true);
         emit TransactionResolved(txId, Resolution.TransactionExecuted);
         escrow.executeTransaction(txId);

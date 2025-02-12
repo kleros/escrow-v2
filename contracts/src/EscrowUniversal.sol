@@ -193,7 +193,7 @@ contract EscrowUniversal is IEscrow, IArbitrableV2 {
         if (transaction.status != Status.NoDispute) revert TransactionDisputed();
         if (_amount > transaction.amount) revert MaximumPaymentAmountExceeded();
 
-        emit Payment(_transactionID, _amount, msg.sender);
+        emit Payment(_transactionID, _amount, transaction.buyer);
 
         transaction.amount -= _amount;
         if (transaction.amount == 0) {
@@ -215,7 +215,7 @@ contract EscrowUniversal is IEscrow, IArbitrableV2 {
         if (transaction.status != Status.NoDispute) revert TransactionDisputed();
         if (_amountReimbursed > transaction.amount) revert MaximumPaymentAmountExceeded();
 
-        emit Payment(_transactionID, _amountReimbursed, msg.sender);
+        emit Payment(_transactionID, _amountReimbursed, transaction.seller);
 
         transaction.amount -= _amountReimbursed;
         if (transaction.amount == 0) {
@@ -246,7 +246,7 @@ contract EscrowUniversal is IEscrow, IArbitrableV2 {
             if (!transaction.token.safeTransfer(transaction.seller, amount)) revert TokenTransferFailed();
         }
 
-        emit Payment(_transactionID, amount, msg.sender);
+        emit Payment(_transactionID, amount, transaction.buyer);
         emit TransactionResolved(_transactionID, Resolution.TransactionExecuted);
     }
 
