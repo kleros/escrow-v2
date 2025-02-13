@@ -7,7 +7,7 @@ const parameters = {
   arbitrumSepoliaDevnet: {
     arbitrator: "KlerosCore",
     subgraphEndpoint:
-      "https://gateway-arbitrum.network.thegraph.com/api/{{{graphApiKey}}}/subgraphs/id/3aZxYcZpZL5BuVhuUupqVrCV8VeNyZEvjmPXibyPHDFQ",
+      "https://gateway.thegraph.com/api/{{{graphApiKey}}}/subgraphs/id/3aZxYcZpZL5BuVhuUupqVrCV8VeNyZEvjmPXibyPHDFQ",
   },
   arbitrumSepoliaTestnet: {
     arbitrator: "KlerosCore",
@@ -15,7 +15,8 @@ const parameters = {
   },
   arbitrum: {
     arbitrator: "KlerosCoreNeo",
-    subgraphEndpoint: "TODO",
+    subgraphEndpoint:
+      "https://gateway.thegraph.com/api/{{{graphApiKey}}}/subgraphs/id/96vpnRJbRVkzF6usMNYMMoziSZEfSwGEDpXNi2h9WBSW",
   },
 };
 
