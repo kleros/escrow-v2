@@ -4,11 +4,11 @@ schema:
 dataSources:
   - kind: ethereum
     name: EscrowUniversal
-    network: arbitrum-sepolia
+    network: arbitrum-one
     source:
-      address: '0x11aB737EDB1c6b181919a95ccD07c8DAA3e8E687'
+      address: '0x79530E7Bb3950A3a4b5a167816154715681F2f6c'
       abi: EscrowUniversal
-      startBlock: 122734130
+      startBlock: 305434342
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -22,7 +22,7 @@ dataSources:
         - SettlementProposal
       abis:
         - name: EscrowUniversal
-          file: ../contracts/deployments/arbitrumSepoliaDevnet/EscrowUniversal.json
+          file: ../contracts/deployments/arbitrum/EscrowUniversal.json
       eventHandlers:
         - event: Payment(indexed uint256,uint256,address)
           handler: handlePayment
