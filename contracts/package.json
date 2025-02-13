@@ -84,6 +84,6 @@
   },
   "dependencies": {
     "@kleros/kleros-v2-contracts": "^0.7.0",
-    "@openzeppelin/contracts": "^5.2.0"
+    "@openzeppelin/contracts": "^4.9.6"
   }
 }
