@@ -22,7 +22,7 @@ const accounts = process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY, ...sellerAc
 
 const config: HardhatUserConfig = {
   solidity: {
-    version: "0.8.18",
+    version: "0.8.24",
     settings: {
       viaIR: true,
       optimizer: {
@@ -92,7 +92,7 @@ const config: HardhatUserConfig = {
     },
     arbitrum: {
       chainId: 42161,
-      url: "https://arb1.arbitrum.io/rpc",
+      url: process.env.ARBITRUM_RPC ?? `https://arbitrum-mainnet.infura.io/v3/${process.env.INFURA_API_KEY}`,
       accounts,
       live: true,
       saveDeployments: true,

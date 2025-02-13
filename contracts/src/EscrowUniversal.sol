@@ -5,7 +5,7 @@
 /// @auditors: []
 /// @bounties: []
 
-pragma solidity 0.8.18;
+pragma solidity 0.8.24;
 
 import {IArbitrableV2, IArbitratorV2} from "@kleros/kleros-v2-contracts/arbitration/interfaces/IArbitrableV2.sol";
 import "@kleros/kleros-v2-contracts/arbitration/interfaces/IDisputeTemplateRegistry.sol";
