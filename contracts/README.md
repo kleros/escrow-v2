@@ -19,8 +19,8 @@ Refresh the list of deployed contracts by running `./scripts/generateDeployments
 ### Devnet
 #### Arbitrum Sepolia
 
-- [EscrowUniversal](https://sepolia.arbiscan.io/address/0x11aB737EDB1c6b181919a95ccD07c8DAA3e8E687)
-- [EscrowView](https://sepolia.arbiscan.io/address/0x7aea8849539a23b25E1681041308aA90175aF026)
+- [EscrowUniversal](https://sepolia.arbiscan.io/address/0x5ef185810BCe41c03c9E5ca271B8C91F1024F953)
+- [EscrowView](https://sepolia.arbiscan.io/address/0x6451046caB9291a919FCba045bf6Bb8E0Bb71467)
 
 ## Getting Started
 
