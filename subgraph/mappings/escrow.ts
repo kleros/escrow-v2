@@ -241,7 +241,7 @@ export function handleTransactionResolved(event: TransactionResolvedEvent): void
 
 export function handleDisputeRequest(event: DisputeRequestEvent): void {
   let transactionID = event.params._externalDisputeID.toString();
-  let disputeID = event.params._arbitrableDisputeID.toString();
+  let disputeID = event.params._arbitratorDisputeID.toString();
 
   let disputeRequest = new DisputeRequest(disputeID);
 

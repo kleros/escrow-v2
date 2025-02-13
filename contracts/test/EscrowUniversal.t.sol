@@ -55,7 +55,7 @@ contract EscrowUniversalTest is Test {
 
     event DisputeRequest(
         IArbitratorV2 indexed _arbitrator,
-        uint256 indexed _arbitrableDisputeID,
+        uint256 indexed _arbitratorDisputeID,
         uint256 _externalDisputeID,
         uint256 _templateId,
         string _templateUri
