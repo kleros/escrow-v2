@@ -16,6 +16,7 @@ IGNORED_ARTIFACTS=(
 function generate() { #deploymentDir #explorerUrl
     deploymentDir=$1
     explorerUrl=$2
+    # shellcheck disable=SC2068
     for f in $(ls -1 $deploymentDir/*.json 2>/dev/null | grep -v ${IGNORED_ARTIFACTS[@]/#/-e } | sort); do
         contractName=$(basename $f .json)
         address=$(cat $f | jq -r .address)
@@ -29,21 +30,17 @@ function generate() { #deploymentDir #explorerUrl
     done
 }
 
+echo "### Production"
+echo "#### Arbitrum One"
+echo
+generate "$SCRIPT_DIR/../deployments/arbitrum" "https://arbiscan.io/address/"
+echo
 echo "### Official Testnet"
 echo "#### Arbitrum Sepolia"
 echo
 generate "$SCRIPT_DIR/../deployments/arbitrumSepolia" "https://sepolia.arbiscan.io/address/"
 echo
-echo "#### Sepolia"
-echo
-generate "$SCRIPT_DIR/../deployments/sepolia" "https://sepolia.etherscan.io/address/"
-echo
-
 echo "### Devnet"
 echo "#### Arbitrum Sepolia"
 echo
 generate "$SCRIPT_DIR/../deployments/arbitrumSepoliaDevnet" "https://sepolia.arbiscan.io/address/"
-echo
-echo "#### Sepolia"
-echo
-generate "$SCRIPT_DIR/../deployments/sepoliaDevnet" "https://sepolia.etherscan.io/address/"

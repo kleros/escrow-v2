@@ -6,11 +6,14 @@ Smart contracts for the Escrow v2
 
 Refresh the list of deployed contracts by running `./scripts/generateDeploymentsMarkdown.sh` or `./scripts/populateReadme.sh`.
 
+### Production
+#### Arbitrum One
+
+- [EscrowUniversal](https://arbiscan.io/address/0x79530E7Bb3950A3a4b5a167816154715681F2f6c)
+- [EscrowView](https://arbiscan.io/address/0x3Fed94ee4FA1B5665DB84489f913E2c7e1290459)
+
 ### Official Testnet
 #### Arbitrum Sepolia
-
-
-#### Sepolia
 
 
 ### Devnet
@@ -18,8 +21,6 @@ Refresh the list of deployed contracts by running `./scripts/generateDeployments
 
 - [EscrowUniversal](https://sepolia.arbiscan.io/address/0x11aB737EDB1c6b181919a95ccD07c8DAA3e8E687)
 - [EscrowView](https://sepolia.arbiscan.io/address/0x7aea8849539a23b25E1681041308aA90175aF026)
-
-#### Sepolia
 
 ## Getting Started
 

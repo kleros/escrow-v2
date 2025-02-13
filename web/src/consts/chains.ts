@@ -24,6 +24,6 @@ export const QUERY_CHAIN_IDS = Object.keys(QUERY_CHAINS);
 
 export const getChain = (chainId: number): Chain | null =>
   extractChain({
-    chains: ALL_CHAINS,
+    chains: ALL_CHAINS as Chain[],
     id: chainId,
   });

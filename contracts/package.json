@@ -67,7 +67,7 @@
     "dotenv": "^16.4.5",
     "ethereumjs-util": "^7.1.5",
     "ethers": "^6.13.5",
-    "graphql": "^16.8.1",
+    "graphql": "^16.10.0",
     "graphql-request": "^6.1.0",
     "hardhat": "2.22.18",
     "hardhat-deploy": "^0.14.0",

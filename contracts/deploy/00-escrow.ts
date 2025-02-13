@@ -2,9 +2,25 @@ import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { DeployFunction } from "hardhat-deploy/types";
 import { HomeChains, isSkipped } from "./utils";
 import { EscrowUniversal } from "../typechain-types";
+import { getContracts } from "./utils/getContracts";
+
+const config = {
+  arbitrumSepoliaDevnet: {
+    feeTimeout: 600, // 10 minutes
+    settlementTimeout: 600, // 10 minutes
+    jurors: 1,
+    courtId: 1,
+  },
+  arbitrum: {
+    feeTimeout: 302400, // 84 hours
+    settlementTimeout: 172800, // 48 hours
+    jurors: 3,
+    courtId: 1,
+  },
+};
 
 const deploy: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
-  const { deployments, getNamedAccounts, getChainId, ethers } = hre;
+  const { deployments, getNamedAccounts, getChainId, ethers, network } = hre;
   const { deploy } = deployments;
 
   // fallback to hardhat node signers on local network
@@ -12,22 +28,18 @@ const deploy: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
   const chainId = Number(await getChainId());
   console.log("deploying to %s with deployer %s", HomeChains[chainId], deployer);
 
-  const klerosCore = await deployments.get("KlerosCore");
-  const disputeTemplateRegistry = await deployments.get("DisputeTemplateRegistry");
-  const feeTimeout = 600; // 10 minutes
-  const settlementTimeout = 600; // 10 minutes
-  
-  // General court, 3 jurors
-  const extraData = ethers.AbiCoder.defaultAbiCoder().encode(["uint96", "uint96"], [1, 3]);
+  const { disputeTemplateRegistry, klerosCore } = await getContracts(hre);
+  const { feeTimeout, settlementTimeout, jurors, courtId } = config[network.name];
+  const extraData = ethers.AbiCoder.defaultAbiCoder().encode(["uint96", "uint96"], [courtId, jurors]);
 
   await deploy("EscrowUniversal", {
     from: deployer,
     args: [
-      klerosCore.address,
+      klerosCore.target,
       extraData,
       "", // configured in the next step by setDisputeTemplate
       "", // configured in the next step by setDisputeTemplate
-      disputeTemplateRegistry.address,
+      disputeTemplateRegistry.target,
       feeTimeout,
       settlementTimeout,
     ],
@@ -54,7 +66,6 @@ const deploy: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
     gasLimit: 50000000,
     log: true,
   });
-  
 };
 
 deploy.tags = ["Escrow"];

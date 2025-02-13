@@ -1,11 +1,10 @@
 // import { BigNumber, utils } from "ethers";
 import { task } from "hardhat/config";
-import { EscrowUniversal, EscrowView } from "../typechain-types";
+import { getContracts } from "../deploy/utils/getContracts";
 
 task("testPayoutMessages", "Tests the payout messages").setAction(async (args, hre) => {
   const { ethers } = hre;
-  const escrow = (await ethers.getContract("EscrowUniversal")) as EscrowUniversal;
-  const view = (await ethers.getContract("EscrowView")) as EscrowView;
+  const { escrow, view, klerosCore } = await getContracts(hre);
 
   const seller = (await hre.ethers.getSigners())[1];
   const deadline = Math.floor(Date.now() / 1000) + 10;
@@ -49,8 +48,7 @@ task("testPayoutMessages", "Tests the payout messages").setAction(async (args, h
     // console.log(await escrow.transactions(txId));
 
     const extraData = ethers.AbiCoder.defaultAbiCoder().encode(["uint96", "uint96"], [1, 3]);
-    const core = await ethers.getContract("KlerosCore");
-    console.log("Arbitration fees", await core.arbitrationCost(extraData), "\n");
+    console.log("Arbitration fees", await klerosCore["arbitrationCost(bytes)"](extraData), "\n");
 
     // console.log(await escrow.getPayouts(txId, 0));
     // console.log(await escrow.getPayouts(txId, 1));

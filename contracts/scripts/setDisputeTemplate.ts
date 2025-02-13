@@ -1,20 +1,16 @@
 // import { BigNumber, utils } from "ethers";
 import { task } from "hardhat/config";
-import { EscrowUniversal, EscrowView } from "../typechain-types";
-import { Addressable } from "ethers/lib.commonjs/address";
+import { getContracts } from "../deploy/utils/getContracts";
 
 const parameters = {
   arbitrumSepoliaDevnet: {
-    arbitrator: "KlerosCore",
     subgraphEndpoint:
       "https://gateway.thegraph.com/api/{{{graphApiKey}}}/subgraphs/id/3aZxYcZpZL5BuVhuUupqVrCV8VeNyZEvjmPXibyPHDFQ",
   },
   arbitrumSepoliaTestnet: {
-    arbitrator: "KlerosCore",
     subgraphEndpoint: "TODO",
   },
   arbitrum: {
-    arbitrator: "KlerosCoreNeo",
     subgraphEndpoint:
       "https://gateway.thegraph.com/api/{{{graphApiKey}}}/subgraphs/id/96vpnRJbRVkzF6usMNYMMoziSZEfSwGEDpXNi2h9WBSW",
   },
@@ -67,7 +63,7 @@ const disputeTemplateFn = (chainId: number, klerosCore: string) => `{
 }
 `;
 
-const mappingFn = (subgraphEndpoint: string, view: string | Addressable) => `[
+const mappingFn = (subgraphEndpoint: string, view: string) => `[
   {
     "type": "graphql",
     "endpoint": "${subgraphEndpoint}",
@@ -96,22 +92,20 @@ const mappingFn = (subgraphEndpoint: string, view: string | Addressable) => `[
 ]`;
 
 task("set-dispute-template", "Sets the dispute template").setAction(async (args, hre) => {
-  const { ethers, config, deployments } = hre;
-  const escrow = (await ethers.getContract("EscrowUniversal")) as EscrowUniversal;
-  const view = (await ethers.getContract("EscrowView")) as EscrowView;
+  const { config, deployments } = hre;
+  const { escrow, view, klerosCore } = await getContracts(hre);
   const networkName = await deployments.getNetworkName();
-  const { arbitrator, subgraphEndpoint } = parameters[networkName];
-  const klerosCore = await deployments.get(arbitrator).then((c) => c.address);
+  const { subgraphEndpoint } = parameters[networkName];
   const chainId = config.networks[networkName].chainId;
 
   if (!chainId || !klerosCore || !subgraphEndpoint) {
     throw new Error("Missing parameters");
   }
 
-  const disputeTemplate = disputeTemplateFn(chainId, klerosCore);
+  const disputeTemplate = disputeTemplateFn(chainId, klerosCore.target.toString());
   console.log("New disputeTemplate", disputeTemplate);
 
-  const mapping = mappingFn(subgraphEndpoint, view.target);
+  const mapping = mappingFn(subgraphEndpoint, view.target.toString());
   console.log("New mapping", mapping);
 
   const tx = await escrow.changeDisputeTemplate(disputeTemplate, mapping);
