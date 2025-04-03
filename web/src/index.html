@@ -7,12 +7,23 @@
       name="description"
       content="Kleros is a decentralized, blockchain-based dispute resolution platform that offers fast and affordable arbitration for various type of dispute. Join the future of dispute resolution with Kleros Court."
     />
-    <meta
-      name="keywords"
-      content="dispute resolution, decentralized arbitration, Kleros, blockchain court"
-    />
+    <meta name="keywords" content="dispute resolution, decentralized arbitration, Kleros, blockchain court" />
     <link rel="shortcut icon" type="image/svg+xml" href="./favicon.ico" />
     <title>Kleros · Escrow</title>
+    <script>
+      try {
+        const storedTheme = localStorage.getItem("theme");
+        const theme = storedTheme ? JSON.parse(storedTheme) : "dark";
+
+        if (theme === "light") {
+          document.documentElement.classList.remove("dark");
+        } else {
+          document.documentElement.classList.add("dark");
+        }
+      } catch (e) {
+        document.documentElement.classList.add("dark");
+      }
+    </script>
   </head>
   <body>
     <div id="app"></div>
