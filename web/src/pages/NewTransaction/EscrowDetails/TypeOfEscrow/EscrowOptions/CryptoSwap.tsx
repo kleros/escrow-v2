@@ -3,6 +3,7 @@ import styled from "styled-components";
 import Logo from "svgs/icons/crypto-swap.svg";
 import { useNewTransactionContext } from "context/NewTransactionContext";
 import { StyledCard } from ".";
+import { StyledP } from "components/StyledTags";
 
 const Container = styled.div`
   display: flex;
@@ -17,7 +18,7 @@ const StyledLogo = styled(Logo)`
   }
 `;
 
-const Title = styled.p`
+const Title = styled(StyledP)`
   display: flex;
   width: 100%;
   width: 96px;

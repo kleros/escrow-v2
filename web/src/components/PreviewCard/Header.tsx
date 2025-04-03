@@ -8,6 +8,7 @@ import { mapStatusToEnum } from "utils/mapStatusToEnum";
 import { StyledSkeleton } from "../StyledSkeleton";
 import StatusBanner from "../TransactionCard/StatusBanner";
 import EtherscanIcon from "svgs/icons/etherscan.svg";
+import { StyledH1, StyledLabel as Label, StyledA } from "../StyledTags";
 
 const Container = styled.div`
   display: flex;
@@ -17,11 +18,11 @@ const Container = styled.div`
   gap: 12px;
 `;
 
-const StyledLabel = styled.label`
+const StyledLabel = styled(Label)`
   color: ${({ theme }) => theme.secondaryPurple};
 `;
 
-const StyledHeader = styled.h1`
+const StyledHeader = styled(StyledH1)`
   margin: 0;
   flex-wrap: wrap;
   word-break: break-word;
@@ -75,9 +76,9 @@ const Header: React.FC<IHeader> = ({ escrowType, escrowTitle, id, status, transa
       </LeftContent>
       <RightContent>
         {transactionHash ? (
-          <a href={etherscanUrl} target="_blank" rel="noreferrer">
+          <StyledA href={etherscanUrl} target="_blank" rel="noreferrer">
             <StyledEtherscanIcon />
-          </a>
+          </StyledA>
         ) : null}
         <StatusBanner status={currentStatusEnum} isPreview={true} />
       </RightContent>

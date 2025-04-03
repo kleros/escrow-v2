@@ -5,8 +5,9 @@ import PNKIcon from "svgs/icons/pnk.svg";
 import SnapshotIcon from "svgs/icons/snapshot-color.svg";
 import FrenchFlagIcon from "svgs/icons/french-flag.svg";
 import TelegramIcon from "svgs/socialmedia/telegram.svg";
+import { StyledLabel as Label } from "components/StyledTags";
 
-const StyledLabel = styled.label`
+const StyledLabel = styled(Label)`
   color: ${({ theme }) => theme.primaryBlue};
   :hover {
     cursor: pointer;

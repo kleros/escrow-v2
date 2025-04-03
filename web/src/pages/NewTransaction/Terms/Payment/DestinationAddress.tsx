@@ -2,14 +2,14 @@ import React, { useState, useEffect, useMemo } from "react";
 import styled, { css } from "styled-components";
 import { responsiveSize } from "styles/responsiveSize";
 import { landscapeStyle } from "styles/landscapeStyle";
-import { Field } from "@kleros/ui-components-library";
+import { TextField } from "@kleros/ui-components-library";
 import { useDebounce } from "react-use";
 import { useEnsAddress } from "wagmi";
 import { useNewTransactionContext } from "context/NewTransactionContext";
 import { ensDomainPattern, validateAddress } from "utils/validateAddress";
 import { isEmpty } from "src/utils";
 
-const StyledField = styled(Field)`
+const StyledField = styled(TextField)`
   margin-bottom: ${responsiveSize(68, 40)};
 
   small {
@@ -54,9 +54,8 @@ const DestinationAddress: React.FC<IDestinationAddress> = ({ recipientAddress, s
     }
   }, [debouncedRecipientAddress, ensResult.data, setIsRecipientAddressResolved]);
 
-  const handleWrite = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const input = event.target.value;
-    setRecipientAddress(input);
+  const handleWrite = (val: string) => {
+    setRecipientAddress(val);
   };
 
   const message = useMemo(() => {

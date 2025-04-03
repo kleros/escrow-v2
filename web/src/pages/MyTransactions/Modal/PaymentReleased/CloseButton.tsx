@@ -6,6 +6,6 @@ interface ICloseButton {
 }
 
 const CloseButton: React.FC<ICloseButton> = ({ toggleModal }) => {
-  return <Button variant="secondary" text="Close" onClick={toggleModal} />;
+  return <Button variant="secondary" text="Close" onPress={toggleModal} />;
 };
 export default CloseButton;

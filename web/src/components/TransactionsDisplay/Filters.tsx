@@ -12,6 +12,7 @@ import { decodeURIFilter, encodeURIFilter, useRootPath } from "utils/uri";
 
 import ListIcon from "svgs/icons/list.svg";
 import GridIcon from "svgs/icons/grid.svg";
+import { IItem } from "@kleros/ui-components-library/dist/lib/dropdown/select/item";
 
 const Container = styled.div`
   display: flex;
@@ -54,9 +55,9 @@ const Filters: React.FC = () => {
   const navigate = useNavigate();
   const location = useRootPath();
 
-  const handleOrderChange = (value: string | number) => {
+  const handleOrderChange = (item: IItem) => {
     const encodedFilter = encodeURIFilter({ ...filterObject });
-    navigate(`${location}/1/${value}/${encodedFilter}`);
+    navigate(`${location}/1/${item.itemValue}/${encodedFilter}`);
   };
 
   const { isList, setIsList } = useIsList();
@@ -68,10 +69,10 @@ const Filters: React.FC = () => {
         smallButton
         simpleButton
         items={[
-          { value: "desc", text: "Newest" },
-          { value: "asc", text: "Oldest" },
+          { id: "desc", itemValue: "desc", text: "Newest" },
+          { id: "asc", itemValue: "asc", text: "Oldest" },
         ]}
-        defaultValue={order}
+        defaultSelectedKey={order}
         callback={handleOrderChange}
       />
       {isDesktop ? (

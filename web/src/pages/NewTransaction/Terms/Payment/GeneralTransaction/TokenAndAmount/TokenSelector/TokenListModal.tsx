@@ -9,6 +9,7 @@ import { StyledModal } from "pages/MyTransactions/Modal/StyledModal";
 import { useFilteredTokens } from "hooks/useFilteredTokens";
 import { landscapeStyle } from "styles/landscapeStyle";
 import { responsiveSize } from "styles/responsiveSize";
+import { StyledP as P } from "components/StyledTags";
 
 const ReStyledModal = styled(StyledModal)`
   display: flex;
@@ -34,7 +35,7 @@ const ItemsContainer = styled.div`
   margin-top: 24px;
 `;
 
-const StyledP = styled.p`
+const StyledP = styled(P)`
   display: flex;
   align-self: flex-start;
   font-weight: 600;
@@ -54,9 +55,9 @@ export const TokenListModal = ({ setIsOpen, tokens, setTokens, handleSelectToken
       <ReStyledModal ref={containerRef}>
         <StyledP>Select a token</StyledP>
         <StyledSearchbar
-          placeholder="Search by name or paste address"
+          inputProps={{ placeholder: "Search by name or paste address" }}
           value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
+          onChange={(val) => setSearchQuery(val)}
         />
         <ItemsContainer>
           {filteredTokens.map((token) => (

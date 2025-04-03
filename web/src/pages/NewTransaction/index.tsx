@@ -18,6 +18,7 @@ import ConnectWallet from "components/ConnectWallet";
 import { ConnectWalletContainer } from "../MyTransactions";
 import { DEFAULT_CHAIN } from "consts/chains";
 import { EnsureAuth } from "components/EnsureAuth";
+import { StyledHr } from "components/StyledTags";
 
 const Container = styled.div`
   width: 100%;
@@ -69,7 +70,7 @@ const NewTransaction: React.FC = () => {
         ) : (
           <ConnectWalletContainer>
             To create a new escrow transaction, connect first and switch to the supported chain
-            <hr />
+            <StyledHr />
             <ConnectWallet />
           </ConnectWalletContainer>
         )}

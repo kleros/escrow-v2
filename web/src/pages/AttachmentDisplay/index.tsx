@@ -8,6 +8,7 @@ import NewTabIcon from "svgs/icons/new-tab.svg";
 import Loader from "components/Loader";
 
 import Header from "./Header";
+import { StyledA } from "components/StyledTags";
 
 const FileViewer = lazy(() => import("components/FileViewer"));
 
@@ -24,7 +25,7 @@ const LoaderContainer = styled.div`
   justify-content: center;
 `;
 
-const NewTabInfo = styled.a`
+const NewTabInfo = styled(StyledA)`
   align-self: flex-end;
   display: flex;
   gap: 8px;

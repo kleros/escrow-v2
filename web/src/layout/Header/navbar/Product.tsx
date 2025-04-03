@@ -4,8 +4,8 @@ import styled from "styled-components";
 import { responsiveSize } from "styles/responsiveSize";
 
 import Skeleton from "react-loading-skeleton";
-
-const Container = styled.a`
+import { StyledSmall as Small, StyledA } from "components/StyledTags";
+const Container = styled(StyledA)`
   cursor: pointer;
   display: flex;
   flex-direction: column;
@@ -14,9 +14,7 @@ const Container = styled.a`
   max-width: 100px;
   border-radius: 3px;
   :hover {
-    transition:
-      transform 0.15s,
-      background-color 0.3s;
+    transition: transform 0.15s, background-color 0.3s;
     transform: scale(1.02);
     background-color: ${({ theme }) => theme.lightGrey};
   }
@@ -36,7 +34,7 @@ const StyledImg = styled.img<{ isLoaded: boolean }>`
   display: ${({ isLoaded }) => (isLoaded ? "block" : "none")};
 `;
 
-const StyledSmall = styled.small`
+const StyledSmall = styled(Small)`
   display: flex;
   font-weight: 400;
   line-height: 19px;

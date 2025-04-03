@@ -14,6 +14,7 @@ import { landscapeStyle } from "styles/landscapeStyle";
 
 import Loader from "components/Loader";
 import { useAtlasProvider } from "@kleros/kleros-app";
+import { StyledH1, StyledH3 } from "components/StyledTags";
 
 const Container = styled.div`
   display: flex;
@@ -56,14 +57,14 @@ const textCss = css`
   )}
 `;
 
-const Header = styled.h1<{ fontColor: string }>`
+const Header = styled(StyledH1)<{ fontColor: string }>`
   ${textCss}
   ${({ fontColor }) => css`
     color: ${({ theme }) => theme[fontColor]};
   `};
 `;
 
-const Subtitle = styled.h3`
+const Subtitle = styled(StyledH3)`
   ${textCss}
   max-width: 735px;
 `;

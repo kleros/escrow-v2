@@ -2,7 +2,7 @@ import React from "react";
 import styled, { css } from "styled-components";
 import { landscapeStyle } from "styles/landscapeStyle";
 import { errorToast } from "utils/wrapWithToast";
-import { FileUploader, Textarea } from "@kleros/ui-components-library";
+import { FileUploader, TextArea } from "@kleros/ui-components-library";
 import { useNewTransactionContext } from "context/NewTransactionContext";
 import { responsiveSize } from "styles/responsiveSize";
 import NavigationButtons from "../../NavigationButtons";
@@ -18,12 +18,14 @@ const Container = styled.div`
   align-items: center;
 `;
 
-const StyledTextArea = styled(Textarea)`
+const StyledTextArea = styled(TextArea)`
   width: 84vw;
   height: 200px;
   margin-bottom: 16px;
   textarea {
     font-size: 16px;
+    width: 100%;
+    height: 100%;
   }
 
   ${landscapeStyle(
@@ -37,9 +39,9 @@ const StyledFileUploader = styled(FileUploader)`
   width: 84vw;
   margin-bottom: ${responsiveSize(130, 72)};
 
-  small {
+  > small {
     white-space: pre-line;
-    text-align: start;
+    text-align: center;
   }
 
   ${landscapeStyle(
@@ -65,8 +67,8 @@ const Deliverable: React.FC = () => {
   const { roleRestrictions } = useAtlasProvider();
 
   const isDesktop = useIsDesktop();
-  const handleWrite = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setDeliverableText(event.target.value);
+  const handleWrite = (val: string) => {
+    setDeliverableText(val);
   };
 
   const handleAttachFile = (file: File) => {
@@ -93,6 +95,7 @@ const Deliverable: React.FC = () => {
           />
           <StyledFileUploader
             callback={handleAttachFile}
+            acceptedFileTypes={["application/pdf"]}
             variant={isDesktop ? "info" : undefined}
             msg={fileFootMessage}
           />

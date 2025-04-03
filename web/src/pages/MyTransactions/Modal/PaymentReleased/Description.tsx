@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { shortenAddress } from "utils/shortenAddress";
 import { useTransactionDetailsContext } from "context/TransactionDetailsContext";
+import { StyledP } from "components/StyledTags";
 
 const Container = styled.div`
   flex-direction: column;
@@ -10,11 +11,11 @@ const Container = styled.div`
   text-align: center;
 `;
 
-const StyledEscrowConcluded = styled.p`
+const StyledEscrowConcluded = styled(StyledP)`
   margin: 0;
 `;
 
-const StyledThanks = styled.p`
+const StyledThanks = styled(StyledP)`
   margin: 0;
   font-weight: 600;
 `;

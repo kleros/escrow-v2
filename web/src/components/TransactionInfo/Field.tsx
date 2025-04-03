@@ -2,6 +2,7 @@ import React from "react";
 import styled, { css } from "styled-components";
 import { landscapeStyle } from "styles/landscapeStyle";
 import { Link } from "react-router-dom";
+import { StyledLabel } from "../StyledTags";
 
 type FieldContainerProps = {
   width?: string;
@@ -43,7 +44,7 @@ const FieldContainer = styled.div<FieldContainerProps>`
     `};
 `;
 
-const StyledValue = styled.label<{ isPreview?: boolean }>`
+const StyledValue = styled(StyledLabel)<{ isPreview?: boolean }>`
   flex-grow: 1;
   text-align: end;
   color: ${({ theme }) => theme.primaryText};
@@ -64,7 +65,7 @@ const StyledLink = styled(Link)`
   }
 `;
 
-const NameLabel = styled.label<{ isList?: boolean; name: string; isPreview?: boolean }>`
+const NameLabel = styled(StyledLabel)<{ isList?: boolean; name: string; isPreview?: boolean }>`
   ${({ isList, name }) =>
     isList &&
     css`

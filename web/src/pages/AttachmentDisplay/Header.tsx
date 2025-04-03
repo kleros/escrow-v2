@@ -9,6 +9,7 @@ import Arrow from "svgs/icons/arrow-left.svg";
 import PaperClip from "svgs/icons/paperclip.svg";
 
 import { responsiveSize } from "styles/responsiveSize";
+import { StyledH1 } from "components/StyledTags";
 
 const Container = styled.div`
   width: 100%;
@@ -25,7 +26,7 @@ const TitleContainer = styled.div`
   gap: 8px;
 `;
 
-const Title = styled.h1`
+const Title = styled(StyledH1)`
   margin: 0px;
   font-size: ${responsiveSize(16, 24)};
 `;
@@ -65,7 +66,7 @@ const Header: React.FC = () => {
         <StyledPaperClip />
         <Title>Attachment File</Title>{" "}
       </TitleContainer>
-      <StyledButton text="Return" Icon={Arrow} onClick={() => navigate(-1)} />
+      <StyledButton text="Return" Icon={Arrow} onPress={() => navigate(-1)} />
     </Container>
   );
 };

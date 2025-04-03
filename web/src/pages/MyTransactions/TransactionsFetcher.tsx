@@ -16,6 +16,7 @@ import { OrderDirection, TransactionDetailsFragment } from "src/graphql/graphql"
 import TransactionsDisplay from "components/TransactionsDisplay";
 import ConnectWallet from "components/ConnectWallet";
 import { ConnectWalletContainer } from "./index";
+import { StyledHr } from "components/StyledTags";
 
 const TransactionsFetcher: React.FC = () => {
   const { page, order, filter } = useParams();
@@ -91,7 +92,7 @@ const TransactionsFetcher: React.FC = () => {
   ) : (
     <ConnectWalletContainer>
       To see your transactions, connect first and switch to the supported chain
-      <hr />
+      <StyledHr />
       <ConnectWallet />
     </ConnectWalletContainer>
   );

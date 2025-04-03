@@ -1,8 +1,9 @@
 import React from "react";
 import styled from "styled-components";
 import { responsiveSize } from "styles/responsiveSize";
+import { StyledH1 } from "components/StyledTags";
 
-const StyledHeader = styled.h1`
+const StyledHeader = styled(StyledH1)`
   margin: 0;
   color: ${({ theme }) => theme.secondaryPurple};
   font-weight: 400;

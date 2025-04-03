@@ -28,62 +28,8 @@ export const GlobalStyle = createGlobalStyle`
     box-sizing: inherit;
   }
 
-  *:focus {
-    outline: none;
-  }
-
   .ReactModal__Overlay {
     background-color: #1b003fcc !important;
-  }
-
-  h1 {
-    margin: 0 0 16px 0;
-    font-weight: 600;
-    font-size: 24px;
-    line-height: 32px;
-    color: ${({ theme }) => theme.primaryText};
-  }
-
-  h2 {
-    margin: 0 0 16px 0;
-    font-weight: 400;
-    font-size: 24px;
-    line-height: 32px;
-    color: ${({ theme }) => theme.primaryText};
-  }
-
-  h3 {
-    margin: 0 0 16px 0;
-    font-weight: 600;
-    font-size: 16px;
-    line-height: 24px;
-    color: ${({ theme }) => theme.primaryText};
-  }
-
-  p {
-    font-weight: 400;
-    font-size: 16px;
-    line-height: 24px;
-    color: ${({ theme }) => theme.primaryText};
-  }
-
-  textarea {
-    font-family: "Open Sans";
-    font-size: 14px;
-  }
-
-  small {
-    font-weight: 600;
-    font-size: 14px;
-    line-height: 18px;
-    color: ${({ theme }) => theme.primaryText};
-  }
-
-  label {
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 18px;
-    color: ${({ theme }) => theme.secondaryText};
   }
 
   a {
@@ -91,18 +37,6 @@ export const GlobalStyle = createGlobalStyle`
     font-size: 14px;
     text-decoration: none;
     color: ${({ theme }) => theme.primaryBlue};
-  }
-
-  hr {
-    opacity: 1;
-    border: 1px solid ${({ theme }) => theme.stroke};
-  }
-
-  svg, img {
-    display: inline-block;
-    vertical-align: middle;
-  visibility: visible;
-
   }
 
   ul {

@@ -19,7 +19,7 @@ interface IButtons {
 const Buttons: React.FC<IButtons> = ({ toggleModal, arbitrationCost }) => {
   return (
     <Container>
-      <Button variant="secondary" text="Return" onClick={toggleModal} />
+      <Button variant="secondary" text="Return" onPress={toggleModal} />
       <RaiseDisputeButton buttonText="Raise a dispute" {...{ toggleModal, arbitrationCost }} />
     </Container>
   );

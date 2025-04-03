@@ -66,8 +66,9 @@
   },
   "dependencies": {
     "@cyntler/react-doc-viewer": "^1.16.3",
+    "@internationalized/date": "^3.7.0",
     "@kleros/kleros-app": "^2.0.2",
-    "@kleros/ui-components-library": "^2.19.0",
+    "@kleros/ui-components-library": "3.0.0-rc1",
     "@reown/appkit": "^1.6.6",
     "@reown/appkit-adapter-wagmi": "^1.6.6",
     "@sentry/react": "^7.93.0",

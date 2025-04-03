@@ -6,8 +6,9 @@ import { IToken } from "context/NewTransactionContext";
 import { isUndefined } from "utils/index";
 import { getFormattedBalance } from "utils/getFormattedBalance";
 import { erc20Abi } from "viem";
+import { StyledP } from "components/StyledTags";
 
-const Container = styled.p`
+const Container = styled(StyledP)`
   color: ${({ theme }) => theme.primaryText};
   margin: 0;
 `;

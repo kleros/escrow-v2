@@ -7,6 +7,7 @@ import { Button } from "@kleros/ui-components-library";
 import styled from "styled-components";
 import { useAtlasProvider } from "@kleros/kleros-app";
 import { errorToast, infoToast, successToast } from "utils/wrapWithToast";
+import { StyledP } from "./StyledTags";
 
 const Container = styled.div`
   display: flex;
@@ -16,7 +17,7 @@ const Container = styled.div`
   align-items: center;
 `;
 
-const StyledInfo = styled.p`
+const StyledInfo = styled(StyledP)`
   margin: 0;
   padding: 0;
 `;
@@ -49,8 +50,8 @@ export const EnsureAuth: React.FC<IEnsureAuth> = ({ children, message, buttonTex
       {message ? <StyledInfo>{message}</StyledInfo> : null}
       <Button
         text={buttonText ?? "Sign In"}
-        onClick={handleClick}
-        disabled={isSigningIn || !address}
+        onPress={handleClick}
+        isDisabled={isSigningIn || !address}
         isLoading={isSigningIn}
         {...{ className }}
       />

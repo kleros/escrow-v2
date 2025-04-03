@@ -104,7 +104,7 @@ const RaiseDisputeButton: React.FC<IRaiseDisputeButton> = ({ toggleModal, button
     <div>
       <Button
         isLoading={!insufficientBalance && (isSending || isLoadingBuyerConfig || isLoadingSellerConfig)}
-        disabled={
+        isDisabled={
           isSending ||
           insufficientBalance ||
           isLoadingBuyerConfig ||
@@ -113,7 +113,7 @@ const RaiseDisputeButton: React.FC<IRaiseDisputeButton> = ({ toggleModal, button
           isErrorSellerConfig
         }
         text={buttonText}
-        onClick={handleRaiseDispute}
+        onPress={handleRaiseDispute}
       />
       {insufficientBalance && (
         <ErrorButtonMessage>

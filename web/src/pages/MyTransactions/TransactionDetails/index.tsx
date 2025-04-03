@@ -14,6 +14,7 @@ import { useArbitrationCost } from "queries/useArbitrationCostFromKlerosCore";
 import { useNativeTokenSymbol } from "hooks/useNativeTokenSymbol";
 import useFetchIpfsJson from "hooks/useFetchIpfsJson";
 import { useTokenMetadata } from "hooks/useTokenMetadata";
+import { StyledH1 } from "components/StyledTags";
 
 const Container = styled.div``;
 
@@ -23,7 +24,7 @@ const OverviewContainer = styled.div`
   gap: 32px;
 `;
 
-const Header = styled.h1`
+const Header = styled(StyledH1)`
   margin-bottom: ${responsiveSize(12, 24)};
   font-size: ${responsiveSize(20, 24)};
 `;

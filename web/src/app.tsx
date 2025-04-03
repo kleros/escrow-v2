@@ -3,6 +3,7 @@ import { Navigate, Route } from "react-router-dom";
 import { SentryRoutes } from "./utils/sentry";
 import "react-loading-skeleton/dist/skeleton.css";
 import "react-toastify/dist/ReactToastify.css";
+import "@kleros/ui-components-library/dist/ui-components-library.css";
 import Web3Provider from "context/Web3Provider";
 import IsListProvider from "context/IsListProvider";
 import QueryClientProvider from "context/QueryClientProvider";
@@ -15,6 +16,7 @@ import { NewTransactionProvider } from "./context/NewTransactionContext";
 import AttachmentDisplay from "./pages/AttachmentDisplay";
 import AtlasProvider from "./context/AtlasProvider";
 import Settings from "./pages/Settings";
+import { StyledH1 } from "./components/StyledTags";
 
 const App: React.FC = () => {
   return (
@@ -32,7 +34,7 @@ const App: React.FC = () => {
                       <Route path="transactions/*" element={<MyTransactions />} />
                       <Route path="attachment/*" element={<AttachmentDisplay />} />
                       <Route path="settings/*" element={<Settings />} />
-                      <Route path="*" element={<h1>404 not found</h1>} />
+                      <Route path="*" element={<StyledH1>404 not found</StyledH1>} />
                     </Route>
                   </SentryRoutes>
                 </NewTransactionProvider>

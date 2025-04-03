@@ -15,6 +15,7 @@ import POH from "svgs/icons/poh-image.png";
 import Vea from "svgs/icons/vea.svg";
 
 import Product from "./Product";
+import { StyledH1 } from "components/StyledTags";
 
 const Container = styled.div`
   display: flex;
@@ -51,7 +52,7 @@ const Container = styled.div`
   )}
 `;
 
-const Header = styled.h1`
+const Header = styled(StyledH1)`
   padding-top: 24px;
   font-size: 24px;
   font-weight: 600;

@@ -4,6 +4,7 @@ import { useAccount, useDisconnect } from "wagmi";
 import { Button } from "@kleros/ui-components-library";
 import { AddressOrName, ChainDisplay, IdenticonOrAvatar } from "components/ConnectWallet/AccountDisplay";
 import { EnsureChain } from "components/EnsureChain";
+import { StyledA as A } from "components/StyledTags";
 
 const Container = styled.div`
   display: flex;
@@ -64,7 +65,7 @@ const UserContainer = styled.div`
   gap: 12px;
 `;
 
-const StyledA = styled.a`
+const StyledA = styled(A)`
   text-decoration: none;
   label {
     cursor: pointer;
@@ -77,7 +78,7 @@ const StyledA = styled.a`
 
 export const DisconnectWalletButton: React.FC = () => {
   const { disconnect } = useDisconnect();
-  return <Button text="Disconnect" onClick={() => disconnect()} />;
+  return <Button text="Disconnect" onPress={() => disconnect()} />;
 };
 
 const General: React.FC = () => {
