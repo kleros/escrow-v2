@@ -20,6 +20,7 @@ import { TransactionDetailsFragment } from "src/graphql/graphql";
 import { StyledSkeleton, StyledSkeletonTitle } from "../StyledSkeleton";
 import TransactionInfo from "../TransactionInfo";
 import StatusBanner from "./StatusBanner";
+import { StyledH3 } from "../StyledTags";
 
 const StyledCard = styled(Card)`
   width: 100%;
@@ -55,7 +56,7 @@ const ListContainer = styled.div`
 
 const ListTitle = styled.div``;
 
-const StyledTitle = styled.h3`
+const StyledTitle = styled(StyledH3)`
   margin: 0;
 `;
 

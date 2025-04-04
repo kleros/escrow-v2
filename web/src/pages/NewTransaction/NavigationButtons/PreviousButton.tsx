@@ -18,7 +18,7 @@ const ReturnButton: React.FC<IReturnButton> = ({ prevRoute }) => {
   return (
     <StyledButton
       prevRoute={prevRoute}
-      onClick={() => navigate(prevRoute)}
+      onPress={() => navigate(prevRoute)}
       text="Return"
       variant="secondary"
     ></StyledButton>

@@ -4,6 +4,7 @@ import { landscapeStyle } from "styles/landscapeStyle";
 import { hoverShortTransitionTiming } from "styles/commonStyles";
 
 import { Button } from "@kleros/ui-components-library";
+import { type ButtonProps } from "@kleros/ui-components-library/dist/lib/button";
 
 const StyledButton = styled(Button)<{ isMobileNavbar?: boolean }>`
   ${hoverShortTransitionTiming}
@@ -38,14 +39,14 @@ const StyledButton = styled(Button)<{ isMobileNavbar?: boolean }>`
 interface ILightButton {
   text: string;
   Icon?: React.FC<React.SVGAttributes<SVGElement>>;
-  onClick?: React.MouseEventHandler<HTMLButtonElement>;
+  onClick?: ButtonProps["onPress"];
   disabled?: boolean;
   className?: string;
   isMobileNavbar?: boolean;
 }
 
 const LightButton: React.FC<ILightButton> = ({ text, Icon, onClick, disabled, className, isMobileNavbar }) => (
-  <StyledButton variant="primary" small {...{ text, Icon, onClick, disabled, className, isMobileNavbar }} />
+  <StyledButton variant="primary" small {...{ text, Icon, onPress: onClick, disabled, className, isMobileNavbar }} />
 );
 
 export default LightButton;

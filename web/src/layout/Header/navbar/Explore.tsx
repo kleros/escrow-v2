@@ -5,6 +5,7 @@ import { landscapeStyle } from "styles/landscapeStyle";
 import { Link, useLocation } from "react-router-dom";
 
 import { useOpenContext } from "../MobileHeader";
+import { StyledH1 } from "components/StyledTags";
 
 const Container = styled.div`
   display: flex;
@@ -17,7 +18,7 @@ const Container = styled.div`
   )};
 `;
 
-const Title = styled.h1`
+const Title = styled(StyledH1)`
   display: block;
   margin-bottom: 8px;
 
@@ -28,7 +29,7 @@ const Title = styled.h1`
   )};
 `;
 
-const StyledLink = styled(Link) <{ isActive: boolean; isMobileNavbar?: boolean; }>`
+const StyledLink = styled(Link)<{ isActive: boolean; isMobileNavbar?: boolean }>`
   display: flex;
   align-items: center;
   text-decoration: none;

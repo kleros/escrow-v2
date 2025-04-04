@@ -6,6 +6,7 @@ import { useDebounce } from "react-use";
 import { Searchbar, DropdownSelect } from "@kleros/ui-components-library";
 import { decodeURIFilter, encodeURIFilter, useRootPath } from "utils/uri";
 import { isEmpty } from "src/utils";
+import { IItem } from "@kleros/ui-components-library/dist/lib/dropdown/select/item";
 
 const Container = styled.div`
   display: flex;
@@ -13,12 +14,12 @@ const Container = styled.div`
   gap: 8px;
 
   ${landscapeStyle(
-  () =>
-    css`
+    () =>
+      css`
         flex-direction: row;
         gap: 16px;
       `
-)}
+  )}
 `;
 
 const StyledDropdownSelect = styled(DropdownSelect)`
@@ -27,7 +28,7 @@ const StyledDropdownSelect = styled(DropdownSelect)`
       border-left: 1px solid transparent;
     }
   }
-`
+`;
 
 const SearchBarContainer = styled.div`
   width: 100%;
@@ -67,8 +68,11 @@ const Search: React.FC = () => {
     [search]
   );
 
-  const handleStatusChange = (selectedValue) => {
-    const newFilters = { ...filterObject, status: selectedValue === "all" ? undefined : selectedValue };
+  const handleStatusChange = (selectedItem: IItem) => {
+    const newFilters = {
+      ...filterObject,
+      status: selectedItem.itemValue === "all" ? undefined : selectedItem.itemValue,
+    };
     const encodedFilter = encodeURIFilter(newFilters);
     navigate(`${location}/${page}/${order}/${encodedFilter}`);
   };
@@ -77,24 +81,39 @@ const Search: React.FC = () => {
     <Container>
       <StyledDropdownSelect
         items={[
-          { text: "All States", dot: "grey", value: "all" },
-          { text: "In Progress", dot: "blue", value: "NoDispute" },
-          { text: "Settlement - Waiting Buyer", dot: "orange", value: "WaitingSettlementBuyer" },
-          { text: "Settlement - Waiting Seller", dot: "orange", value: "WaitingSettlementSeller" },
-          { text: "Raising a Dispute - Waiting Buyer", dot: "blue", value: "WaitingBuyer" },
-          { text: "Raising a Dispute - Waiting Seller", dot: "blue", value: "WaitingSeller" },
-          { text: "Disputed", dot: "purple", value: "DisputeCreated" },
-          { text: "Concluded", dot: "green", value: "TransactionResolved" },
+          { text: "All States", dot: "grey", itemValue: "all", id: "all" },
+          { text: "In Progress", dot: "blue", itemValue: "NoDispute", id: "NoDispute" },
+          {
+            text: "Settlement - Waiting Buyer",
+            dot: "orange",
+            itemValue: "WaitingSettlementBuyer",
+            id: "WaitingSettlementBuyer",
+          },
+          {
+            text: "Settlement - Waiting Seller",
+            dot: "orange",
+            itemValue: "WaitingSettlementSeller",
+            id: "WaitingSettlementSeller",
+          },
+          { text: "Raising a Dispute - Waiting Buyer", dot: "blue", itemValue: "WaitingBuyer", id: "WaitingBuyer" },
+          {
+            text: "Raising a Dispute - Waiting Seller",
+            dot: "blue",
+            itemValue: "WaitingSeller",
+            id: "WaitingSeller",
+          },
+          { text: "Disputed", dot: "purple", itemValue: "DisputeCreated", id: "DisputeCreated" },
+          { text: "Concluded", dot: "green", itemValue: "TransactionResolved", id: "TransactionResolved" },
         ]}
-        defaultValue={decodedFilter.status ?? "all"}
-        callback={(value) => handleStatusChange(value)}
+        defaultSelectedKey={decodedFilter.status ?? "all"}
+        callback={(item) => handleStatusChange(item)}
       />
       <SearchBarContainer>
         <StyledSearchbar
           type="text"
-          placeholder="Search By ID"
+          inputProps={{ placeholder: "Search By ID" }}
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={(val) => setSearch(val)}
         />
       </SearchBarContainer>
     </Container>

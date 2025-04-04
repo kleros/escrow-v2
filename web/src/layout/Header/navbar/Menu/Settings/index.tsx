@@ -47,11 +47,12 @@ const StyledSettingsText = styled.div`
 `;
 
 const StyledTabs = styled(Tabs)`
-  padding: 0 ${responsiveSize(8, 32, 300)};
   width: 86vw;
   max-width: 660px;
   align-self: center;
-  
+  > div:first-child {
+    padding: 0 ${responsiveSize(8, 32, 300)};
+  }
   ${landscapeStyle(
     () => css`
       width: ${responsiveSize(300, 424, 300)};
@@ -59,19 +60,7 @@ const StyledTabs = styled(Tabs)`
   )}
 `;
 
-const TABS = [
-  {
-    text: "General",
-    value: 0,
-  },
-  {
-    text: "Notifications",
-    value: 1,
-  },
-];
-
 const Settings: React.FC<ISettings> = ({ toggleIsSettingsOpen, initialTab }) => {
-  const [currentTab, setCurrentTab] = useState<number>(initialTab ?? 0);
   const containerRef = useRef(null);
 
   const location = useLocation();
@@ -80,17 +69,25 @@ const Settings: React.FC<ISettings> = ({ toggleIsSettingsOpen, initialTab }) => 
     toggleIsSettingsOpen();
     if (location.hash.includes("#notifications")) navigate("#", { replace: true });
   });
+
+  const TABS = [
+    {
+      text: "General",
+      value: 0,
+      id: 0,
+      content: <General />,
+    },
+    {
+      text: "Notifications",
+      value: 1,
+      id: 1,
+      content: <NotificationSettings {...{ toggleIsSettingsOpen }} />,
+    },
+  ];
   return (
     <Container ref={containerRef}>
       <StyledSettingsText>Settings</StyledSettingsText>
-      <StyledTabs
-        currentValue={currentTab}
-        items={TABS}
-        callback={(n: number) => {
-          setCurrentTab(n);
-        }}
-      />
-      {currentTab === 0 ? <General /> : <NotificationSettings {...{ toggleIsSettingsOpen }} />}
+      <StyledTabs items={TABS} defaultSelectedKey={initialTab ?? 0} />
     </Container>
   );
 };

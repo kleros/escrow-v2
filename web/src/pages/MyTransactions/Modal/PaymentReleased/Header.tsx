@@ -2,8 +2,9 @@ import React from "react";
 import styled from "styled-components";
 import { formatEther } from "viem";
 import { useTransactionDetailsContext } from "context/TransactionDetailsContext";
+import { StyledH1 } from "components/StyledTags";
 
-const StyledHeader = styled.h1`
+const StyledHeader = styled(StyledH1)`
   margin: 0;
   margin-bottom: 24px;
   text-align: center;

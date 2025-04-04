@@ -6,6 +6,7 @@ import { Button } from "@kleros/ui-components-library";
 import HourglassIcon from "svgs/icons/hourglass.svg";
 import { useAtlasProvider } from "@kleros/kleros-app";
 import { errorToast, infoToast, successToast } from "utils/wrapWithToast";
+import { StyledH3, StyledLabel } from "components/StyledTags";
 
 const InfoContainer = styled.div`
   display: flex;
@@ -25,10 +26,10 @@ const InfoInnerContainer = styled.div`
   gap: 8px;
 `;
 
-const InfoTitle = styled.h3`
+const InfoTitle = styled(StyledH3)`
   margin: 0;
 `;
-const InfoSubtitle = styled.label``;
+const InfoSubtitle = styled(StyledLabel)``;
 
 const StyledHourglassIcon = styled(HourglassIcon)`
   width: 32px;
@@ -64,7 +65,7 @@ const EmailVerificationInfo: React.FC<IEmailInfo> = ({ toggleIsSettingsOpen }) =
   const { userExists, user, updateEmail } = useAtlasProvider();
 
   const resendVerificationEmail = useCallback(
-    (e: React.FormEvent<HTMLFormElement>) => {
+    (e) => {
       e.preventDefault();
       if (!user) return;
       infoToast(`Sending verification email ...`);
@@ -90,7 +91,7 @@ const EmailVerificationInfo: React.FC<IEmailInfo> = ({ toggleIsSettingsOpen }) =
         <InfoTitle>Email Verification Pending</InfoTitle>
         <InfoSubtitle>
           We sent you a verification email. Please, verify it.
-          <br /> Didn’t receive the email? <StyledButton text="Resend it" onClick={resendVerificationEmail} />
+          <br /> Didn’t receive the email? <StyledButton text="Resend it" onPress={resendVerificationEmail} />
         </InfoSubtitle>
       </InfoInnerContainer>
     </InfoContainer>

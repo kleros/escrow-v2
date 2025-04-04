@@ -1,24 +1,25 @@
 import React from "react";
 import styled from "styled-components";
+import { StyledSmall, StyledLabel as Label } from "../StyledTags";
 
 const FieldWrapper = styled.div`
   display: inline-flex;
   gap: 8px;
 `;
 
-const SeparatorLabel = styled.label`
+const SeparatorLabel = styled(Label)`
   margin: 0 8px;
   color: ${({ theme }) => theme.primaryText};
 `;
 
-const StyledLabel = styled.label`
+const StyledLabel = styled(Label)`
   color: ${({ theme }) => theme.primaryText};
 `;
 
 const Field: React.FC<{ label: string; value: string }> = ({ label, value }) => (
   <FieldWrapper>
     <StyledLabel>{label}</StyledLabel>
-    <small>{value}</small>
+    <StyledSmall>{value}</StyledSmall>
   </FieldWrapper>
 );
 

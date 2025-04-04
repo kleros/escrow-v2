@@ -29,7 +29,11 @@ const ProposeSettlementButton: React.FC<IProposeSettlementButton> = ({
   const { id } = useTransactionDetailsContext();
   const refetchQuery = useQueryRefetch();
 
-  const { data: proposeSettlementConfig, isLoading, isError } = useSimulateEscrowUniversalProposeSettlement({
+  const {
+    data: proposeSettlementConfig,
+    isLoading,
+    isError,
+  } = useSimulateEscrowUniversalProposeSettlement({
     args: [BigInt(id), parseEther(amountProposed)],
   });
 
@@ -57,9 +61,9 @@ const ProposeSettlementButton: React.FC<IProposeSettlementButton> = ({
   return (
     <Button
       isLoading={isSending || isLoading}
-      disabled={isSending || !isAmountValid || isLoading || isError}
-    text={buttonText}
-      onClick={handleProposeSettlement}
+      isDisabled={isSending || !isAmountValid || isLoading || isError}
+      text={buttonText}
+      onPress={handleProposeSettlement}
     />
   );
 };

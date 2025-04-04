@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Field } from "@kleros/ui-components-library";
+import { TextField } from "@kleros/ui-components-library";
 import { landscapeStyle } from "styles/landscapeStyle";
 import styled, { css } from "styled-components";
 import { responsiveSize } from "styles/responsiveSize";
@@ -10,7 +10,7 @@ import { useAtlasProvider } from "@kleros/kleros-app";
 import InfoCard from "components/InfoCard";
 import { timeLeftUntil } from "utils/date";
 
-const StyledField = styled(Field)`
+const StyledField = styled(TextField)`
   width: 84vw;
   margin-bottom: 48px;
 
@@ -48,10 +48,9 @@ const EmailField: React.FC = () => {
     setNotificationEmail(user.email ?? "");
   }, [user]);
 
-  const handleWrite = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const input = event.target.value;
-    setNotificationEmail(input);
-    setIsEmailValid(isEmpty(input) || EMAIL_REGEX.test(input));
+  const handleWrite = (val: string) => {
+    setNotificationEmail(val);
+    setIsEmailValid(isEmpty(val) || EMAIL_REGEX.test(val));
   };
 
   const variant = isEmpty(notificationEmail) ? "info" : isEmailValid ? "success" : "error";
@@ -73,7 +72,7 @@ const EmailField: React.FC = () => {
         placeholder="youremail@email.com"
         variant={variant}
         message={message}
-        disabled={!isEmailUpdateable}
+        isDisabled={!isEmailUpdateable}
       />
     </>
   );

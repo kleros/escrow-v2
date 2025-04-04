@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 // import { useSortitionModulePhase } from "hooks/contracts/generated";
 import { GIT_BRANCH, GIT_DIRTY, GIT_HASH, GIT_TAGS, GIT_URL, RELEASE_VERSION } from "consts/index";
+import { StyledA, StyledLabel } from "components/StyledTags";
 
 const Container = styled.div`
   label,
@@ -14,15 +15,15 @@ const Container = styled.div`
 `;
 
 const Version = () => (
-  <label>
+  <StyledLabel>
     v{RELEASE_VERSION}{" "}
-    <a href={GIT_URL} target="_blank" rel="noreferrer">
+    <StyledA href={GIT_URL} target="_blank" rel="noreferrer">
       #{GIT_HASH}
-    </a>
+    </StyledA>
     {GIT_BRANCH && GIT_BRANCH !== "HEAD" && ` ${GIT_BRANCH}`}
     {GIT_TAGS && ` ${GIT_TAGS}`}
     {GIT_DIRTY && ` dirty`}
-  </label>
+  </StyledLabel>
 );
 
 enum Phases {

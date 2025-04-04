@@ -3,8 +3,9 @@ import React from "react";
 import styled, { css } from "styled-components";
 import { responsiveSize } from "styles/responsiveSize";
 import { landscapeStyle } from "styles/landscapeStyle";
+import { StyledH1 } from "components/StyledTags";
 
-const Container = styled.h1`
+const Container = styled(StyledH1)`
   margin-bottom: 20px;
   width: 84vw;
   text-align: center;

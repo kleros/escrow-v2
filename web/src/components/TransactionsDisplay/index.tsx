@@ -5,13 +5,14 @@ import StatsAndFilters from "./StatsAndFilters";
 import TransactionsGrid, { ITransactionsGrid } from "./TransactionsGrid";
 import { responsiveSize } from "styles/responsiveSize";
 import { TransactionDetailsFragment } from "src/graphql/graphql";
+import { StyledH1, StyledLabel as Label } from "../StyledTags";
 
-const StyledTitle = styled.h1`
+const StyledTitle = styled(StyledH1)`
   margin-bottom: ${responsiveSize(12, 24)};
   font-size: ${responsiveSize(20, 24)};
 `;
 
-const StyledLabel = styled.label`
+const StyledLabel = styled(Label)`
   font-size: ${responsiveSize(14, 16)};
 `;
 

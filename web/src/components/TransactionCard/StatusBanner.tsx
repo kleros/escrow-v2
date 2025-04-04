@@ -2,6 +2,7 @@ import React, { useMemo } from "react";
 import styled, { Theme, useTheme, css } from "styled-components";
 import { Statuses } from "consts/statuses";
 import { isUndefined } from "utils/index";
+import { StyledLabel as Label } from "../StyledTags";
 
 interface IContainer {
   isCard: boolean;
@@ -34,7 +35,7 @@ const Container = styled.div<IContainer>`
   }};
 `;
 
-const StyledLabel = styled.label<{ frontColor: string; withDot?: boolean; isCard?: boolean }>`
+const StyledLabel = styled(Label)<{ frontColor: string; withDot?: boolean; isCard?: boolean }>`
   display: flex;
   align-items: center;
   color: ${({ frontColor }) => frontColor};
@@ -61,7 +62,7 @@ const StyledLabel = styled.label<{ frontColor: string; withDot?: boolean; isCard
       : null}
 `;
 
-const StyledNumberLabel = styled.label<{ frontColor: string; withDot?: boolean; isCard?: boolean }>`
+const StyledNumberLabel = styled(Label)<{ frontColor: string; withDot?: boolean; isCard?: boolean }>`
   display: flex;
   align-items: center;
   color: ${({ frontColor }) => frontColor};

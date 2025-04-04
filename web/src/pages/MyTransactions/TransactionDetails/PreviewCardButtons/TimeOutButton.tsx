@@ -20,11 +20,19 @@ const TimeOutButton: React.FC = () => {
   const isBuyer = useMemo(() => address?.toLowerCase() === buyer?.toLowerCase(), [address, buyer]);
   const refetchQuery = useQueryRefetch();
 
-  const { data: timeOutByBuyerConfig, isLoading: isLoadingBuyerConfig, isError: isErrorBuyerConfig } = useSimulateEscrowUniversalTimeOutByBuyer({
+  const {
+    data: timeOutByBuyerConfig,
+    isLoading: isLoadingBuyerConfig,
+    isError: isErrorBuyerConfig,
+  } = useSimulateEscrowUniversalTimeOutByBuyer({
     args: [BigInt(id)],
   });
 
-  const { data: timeOutBySellerConfig, isLoading: isLoadingSellerConfig, isError: isErrorSellerConfig } = useSimulateEscrowUniversalTimeOutBySeller({
+  const {
+    data: timeOutBySellerConfig,
+    isLoading: isLoadingSellerConfig,
+    isError: isErrorSellerConfig,
+  } = useSimulateEscrowUniversalTimeOutBySeller({
     args: [BigInt(id)],
   });
 
@@ -64,15 +72,11 @@ const TimeOutButton: React.FC = () => {
   return (
     <Button
       isLoading={isSending || isLoadingBuyerConfig || isLoadingSellerConfig}
-      disabled={
-        isSending ||
-        isLoadingBuyerConfig ||
-        isLoadingSellerConfig ||
-        isErrorBuyerConfig ||
-        isErrorSellerConfig
+      isDisabled={
+        isSending || isLoadingBuyerConfig || isLoadingSellerConfig || isErrorBuyerConfig || isErrorSellerConfig
       }
       text="Claim full payment back"
-      onClick={handleTimeout}
+      onPress={handleTimeout}
     />
   );
 };

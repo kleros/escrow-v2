@@ -3,6 +3,7 @@ import { landscapeStyle } from "styles/landscapeStyle";
 import styled, { css } from "styled-components";
 import Skeleton from "react-loading-skeleton";
 import { isUndefined } from "utils/index";
+import { StyledP } from "components/StyledTags";
 
 const Container = styled.div`
   display: flex;
@@ -23,13 +24,13 @@ const LabelAndBalance = styled.div`
   gap: 4px;
 `;
 
-const Label = styled.p`
+const Label = styled(StyledP)`
   margin: 0;
   color: ${({ theme }) => theme.secondaryText};
   font-size: 12px;
 `;
 
-const Balance = styled.p`
+const Balance = styled(StyledP)`
   margin: 0;
   font-size: 12px;
 `;
@@ -39,7 +40,7 @@ const BalanceSkeleton = styled(Skeleton)`
   height: 16px;
 `;
 
-const MaxButton = styled.p`
+const MaxButton = styled(StyledP)`
   margin: 0;
   color: ${({ theme }) => theme.primaryBlue};
   font-size: 12px;

@@ -1,7 +1,8 @@
 import React from "react";
 import styled from "styled-components";
+import { StyledH1 } from "components/StyledTags";
 
-const Container = styled.h1`
+const Container = styled(StyledH1)`
   margin: 0;
 `;
 

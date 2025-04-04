@@ -1,8 +1,8 @@
 import React from "react";
 import styled from "styled-components";
-import { Field } from "@kleros/ui-components-library";
+import { BigNumberField } from "@kleros/ui-components-library";
 
-const StyledField = styled(Field)`
+const StyledField = styled(BigNumberField)`
   width: 186px;
   input[type="number"]::-webkit-inner-spin-button,
   input[type="number"]::-webkit-outer-spin-button {
@@ -26,15 +26,12 @@ interface IAmountField {
 }
 
 const AmountField: React.FC<IAmountField> = ({ quantity, setQuantity, error }) => {
-  const handleWrite = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setQuantity(event.target.value);
-  };
-
   return (
     <StyledField
       value={quantity}
-      onChange={handleWrite}
-      type="number"
+      onChange={(val) => {
+        setQuantity(val.toString());
+      }}
       placeholder="Amount"
       variant={error ? "error" : undefined}
       message={error}

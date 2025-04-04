@@ -200,7 +200,7 @@ const DepositPaymentButton: React.FC = () => {
     <div>
       <StyledButton
         isLoading={!insufficientBalance && (isSending || isLoadingNativeConfig || isLoadingERC20Config)}
-        disabled={
+        isDisabled={
           isSending ||
           insufficientBalance ||
           isLoadingNativeConfig ||
@@ -209,7 +209,7 @@ const DepositPaymentButton: React.FC = () => {
           isErrorERC20Config
         }
         text={isNativeTransaction || isApproved ? "Deposit the Payment" : "Approve Token"}
-        onClick={isNativeTransaction || isApproved ? handleCreateTransaction : handleApproveToken}
+        onPress={isNativeTransaction || isApproved ? handleCreateTransaction : handleApproveToken}
       />
       {insufficientBalance && (
         <ErrorButtonMessage>

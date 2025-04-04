@@ -14,17 +14,13 @@ interface IToken {
 }
 
 const Token: React.FC<IToken> = ({ token, setToken }) => {
-  const handleTokenChange = (value: string | number) => {
-    setToken(value.toString());
-  };
-
   return (
     <StyledDropdownSelect
       items={[
-        { text: "xDAI", dot: "red", value: "xDAI" },
-        { text: "ETH", dot: "blue", value: "ETH" },
+        { text: "xDAI", dot: "red", itemValue: "xDAI", id: "xDAI" },
+        { text: "ETH", dot: "blue", itemValue: "ETH", id: "ETH" },
       ]}
-      callback={handleTokenChange}
+      callback={(val) => setToken(val.itemValue)}
     />
   );
 };

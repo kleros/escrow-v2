@@ -12,6 +12,7 @@ import CalendarIcon from "svgs/icons/calendar.svg";
 import PileCoinsIcon from "svgs/icons/pile-coins.svg";
 import UserIcon from "svgs/icons/user.svg";
 import Field from "./Field";
+import { StyledA as A } from "../StyledTags";
 
 const Container = styled.div<{ isList: boolean; isPreview?: boolean }>`
   display: flex;
@@ -49,7 +50,7 @@ const RestOfFieldsContainer = styled.div<{ isList?: boolean; isPreview?: boolean
       flex-direction: row;
       flex-wrap: wrap;
       justify-content: flex-start;
-   `};
+    `};
 
   ${({ isList, isPreview }) =>
     isList &&
@@ -71,10 +72,9 @@ const RestOfFieldsContainer = styled.div<{ isList?: boolean; isPreview?: boolean
         `
       )}
     `};
-  
 `;
 
-const StyledA = styled.a`
+const StyledA = styled(A)`
   color: ${({ theme }) => theme.primaryText};
   font-weight: 600;
 
@@ -107,13 +107,13 @@ const TransactionInfo: React.FC<ITransactionInfo> = ({
   const { isList } = useIsList();
   const displayAsList = isList && !overrideIsList;
 
-  const { data: buyerEns } = useEnsName({ 
-    address: buyerAddress as `0x${string}`, 
-    chainId: 1 
+  const { data: buyerEns } = useEnsName({
+    address: buyerAddress as `0x${string}`,
+    chainId: 1,
   });
-  const { data: sellerEns } = useEnsName({ 
-    address: sellerAddress as `0x${string}`, 
-    chainId: 1 
+  const { data: sellerEns } = useEnsName({
+    address: sellerAddress as `0x${string}`,
+    chainId: 1,
   });
 
   const displayBuyerAddress = buyerEns || shortenAddress(buyerAddress);

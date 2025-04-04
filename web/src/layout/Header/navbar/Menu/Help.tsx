@@ -12,6 +12,7 @@ import Telegram from "svgs/socialmedia/telegram.svg";
 
 import Debug from "../Debug";
 import { IHelp } from "../index";
+import { StyledSmall } from "components/StyledTags";
 
 const Container = styled.div`
   display: flex;
@@ -108,13 +109,9 @@ const Help: React.FC<IHelp> = ({ toggleIsHelpOpen }) => {
     <>
       <Container ref={containerRef}>
         {ITEMS.map((item, index) => (
-          <ListItem
-            href={item.url}
-            key={item.text}
-            target="_blank"
-          >
+          <ListItem href={item.url} key={item.text} target="_blank">
             <Icon as={item.Icon} />
-            <small>{item.text}</small>
+            <StyledSmall>{item.text}</StyledSmall>
           </ListItem>
         ))}
         <Debug />

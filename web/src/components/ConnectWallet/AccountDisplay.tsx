@@ -10,6 +10,7 @@ import { getChain } from "consts/chains";
 import { shortenAddress } from "utils/shortenAddress";
 
 import { landscapeStyle } from "styles/landscapeStyle";
+import { StyledLabel } from "../StyledTags";
 
 const Container = styled.div`
   display: flex;
@@ -153,13 +154,13 @@ export const AddressOrName: React.FC<IAddressOrName> = ({ address: propAddress }
     chainId: 1,
   });
 
-  return <label>{data ?? (isAddress(address!) ? shortenAddress(address) : address)}</label>;
+  return <StyledLabel>{data ?? (isAddress(address!) ? shortenAddress(address) : address)}</StyledLabel>;
 };
 
 export const ChainDisplay: React.FC = () => {
   const chainId = useChainId();
   const chain = getChain(chainId);
-  return <label>{chain?.name}</label>;
+  return <StyledLabel>{chain?.name}</StyledLabel>;
 };
 
 const AccountDisplay: React.FC = () => {

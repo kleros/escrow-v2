@@ -2,6 +2,7 @@ import React from "react";
 import { Card } from "@kleros/ui-components-library";
 import styled from "styled-components";
 import { formatEther } from "viem";
+import { StyledP } from "components/StyledTags";
 
 const StyledCard = styled(Card)`
   display: flex;
@@ -16,13 +17,13 @@ const StyledCard = styled(Card)`
   gap: 5px;
 `;
 
-const StyledHeader = styled.p`
+const StyledHeader = styled(StyledP)`
   font-size: 14px;
   margin: 0;
   color: ${({ theme }) => theme.primaryBlue};
 `;
 
-const StyledQuantity = styled.p`
+const StyledQuantity = styled(StyledP)`
   font-size: 24px;
   margin: 0;
   color: ${({ theme }) => theme.primaryBlue};

@@ -20,6 +20,7 @@ import Menu from "./Menu";
 import Help from "./Menu/Help";
 import Settings from "./Menu/Settings";
 import { DisconnectWalletButton } from "./Menu/Settings/General";
+import { StyledHr } from "components/StyledTags";
 
 const Wrapper = styled.div<{ isOpen: boolean }>`
   visibility: ${({ isOpen }) => (isOpen ? "visible" : "hidden")};
@@ -104,9 +105,9 @@ const NavBar: React.FC = () => {
               }}
               Icon={KlerosSolutionsIcon}
             />
-            <hr />
+            <StyledHr />
             <Explore isMobileNavbar={true} />
-            <hr />
+            <StyledHr />
             <WalletContainer>
               <ConnectWallet />
               {isConnected && (
@@ -115,7 +116,7 @@ const NavBar: React.FC = () => {
                 </DisconnectWalletButtonContainer>
               )}
             </WalletContainer>
-            <hr />
+            <StyledHr />
             <Menu {...{ toggleIsHelpOpen, toggleIsSettingsOpen }} isMobileNavbar={true} />
             <br />
           </Container>

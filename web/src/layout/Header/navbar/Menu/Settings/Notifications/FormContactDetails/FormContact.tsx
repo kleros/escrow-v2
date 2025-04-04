@@ -1,16 +1,17 @@
 import React, { Dispatch, SetStateAction, useMemo, useEffect } from "react";
 import styled from "styled-components";
 
-import { Field } from "@kleros/ui-components-library";
+import { TextField } from "@kleros/ui-components-library";
 import { isEmpty } from "src/utils";
+import { StyledLabel as Label } from "components/StyledTags";
 
-const StyledLabel = styled.label`
+const StyledLabel = styled(Label)`
   display: flex;
   justify-content: space-between;
   margin-bottom: 10px;
 `;
 
-const StyledField = styled(Field)`
+const StyledField = styled(TextField)`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -42,9 +43,8 @@ const FormContact: React.FC<IForm> = ({
     setContactIsValid(validator.test(contactInput));
   }, [contactInput, setContactIsValid, validator]);
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    event.preventDefault();
-    setContactInput(event.target.value);
+  const handleInputChange = (val: string) => {
+    setContactInput(val);
   };
 
   const fieldVariant = useMemo(() => {

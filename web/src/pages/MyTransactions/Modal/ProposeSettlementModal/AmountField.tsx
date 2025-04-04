@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { responsiveSize } from "styles/responsiveSize";
-import { Field } from "@kleros/ui-components-library";
+import { BigNumberField } from "@kleros/ui-components-library";
 import { parseEther } from "viem";
 import { useTransactionDetailsContext } from "context/TransactionDetailsContext";
 
-export const StyledField = styled(Field)`
+export const StyledField = styled(BigNumberField)`
   width: 100% !important;
   margin-bottom: ${responsiveSize(64, 36)};
   input[type="number"]::-webkit-inner-spin-button,
@@ -48,8 +48,7 @@ const AmountField: React.FC<IAmountField> = ({ amountProposed, setAmountProposed
   return (
     <StyledField
       value={amountProposed}
-      onChange={(e) => setAmountProposed(e.target.value)}
-      type="number"
+      onChange={(val) => setAmountProposed(val.toString())}
       placeholder="0"
       variant={error ? "error" : undefined}
       message={error}

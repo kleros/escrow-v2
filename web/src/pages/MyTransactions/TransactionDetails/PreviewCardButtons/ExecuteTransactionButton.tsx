@@ -16,11 +16,16 @@ const ExecuteTransactionButton: React.FC = () => {
   const { id } = useTransactionDetailsContext();
   const refetchQuery = useQueryRefetch();
 
-  const { data: executeTransactionConfig, isLoading, isError } = useSimulateEscrowUniversalExecuteTransaction({
+  const {
+    data: executeTransactionConfig,
+    isLoading,
+    isError,
+  } = useSimulateEscrowUniversalExecuteTransaction({
     args: [BigInt(id)],
   });
 
-  const { writeContractAsync: executeTransaction } = useWriteEscrowUniversalExecuteTransaction(executeTransactionConfig);
+  const { writeContractAsync: executeTransaction } =
+    useWriteEscrowUniversalExecuteTransaction(executeTransactionConfig);
 
   const handleExecuteTransaction = () => {
     if (!isUndefined(executeTransaction)) {
@@ -43,9 +48,9 @@ const ExecuteTransactionButton: React.FC = () => {
   return (
     <Button
       isLoading={isSending || isLoading}
-      disabled={isSending || isLoading || isError}
+      isDisabled={isSending || isLoading || isError}
       text="Execute Transaction"
-      onClick={handleExecuteTransaction}
+      onPress={handleExecuteTransaction}
     />
   );
 };

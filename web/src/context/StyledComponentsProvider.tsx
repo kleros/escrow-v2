@@ -9,9 +9,15 @@ const StyledComponentsProvider: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
   const [theme, setTheme] = useLocalStorage<string>("theme", "dark");
+
   const toggleTheme = () => {
-    if (theme === "light") setTheme("dark");
-    else setTheme("light");
+    if (theme === "light") {
+      document.documentElement.classList.add("dark");
+      setTheme("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+      setTheme("light");
+    }
   };
   return (
     <ThemeProvider theme={theme === "light" ? lightTheme : darkTheme}>
