@@ -3,7 +3,7 @@ import { Navigate, Route } from "react-router-dom";
 import { SentryRoutes } from "./utils/sentry";
 import "react-loading-skeleton/dist/skeleton.css";
 import "react-toastify/dist/ReactToastify.css";
-import "@kleros/ui-components-library/dist/ui-components-library.css";
+import "@kleros/ui-components-library/dist/esm/ui-components-library.css";
 import Web3Provider from "context/Web3Provider";
 import IsListProvider from "context/IsListProvider";
 import QueryClientProvider from "context/QueryClientProvider";
