@@ -45,6 +45,7 @@
   "devDependencies": {
     "@graphql-codegen/cli": "^4.0.1",
     "@graphql-codegen/client-preset": "^4.6.2",
+    "@kleros/kleros-v2-contracts": "^0.9.3",
     "@types/react": "^18.2.59",
     "@types/react-dom": "^18.2.18",
     "@types/react-modal": "^3.16.3",

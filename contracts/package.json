@@ -83,7 +83,7 @@
     "typescript": "^5.7.3"
   },
   "dependencies": {
-    "@kleros/kleros-v2-contracts": "^0.9.2",
+    "@kleros/kleros-v2-contracts": "^0.9.3",
     "@openzeppelin/contracts": "^5.3.0"
   }
 }
