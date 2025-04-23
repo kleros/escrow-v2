@@ -6,17 +6,20 @@ const parameters = {
   arbitrumSepoliaDevnet: {
     subgraphEndpoint:
       "https://gateway.thegraph.com/api/{{{graphApiKey}}}/subgraphs/id/3aZxYcZpZL5BuVhuUupqVrCV8VeNyZEvjmPXibyPHDFQ",
+    frontendUrl: "https://dev--kleros-escrow-v2.netlify.app/#/transactions/{{externalDisputeID}}",
   },
   arbitrumSepoliaTestnet: {
     subgraphEndpoint: "TODO",
+    frontendUrl: "TODO",
   },
   arbitrum: {
     subgraphEndpoint:
       "https://gateway.thegraph.com/api/{{{graphApiKey}}}/subgraphs/id/96vpnRJbRVkzF6usMNYMMoziSZEfSwGEDpXNi2h9WBSW",
+    frontendUrl: "https://escrow-v2.kleros.builders/#/transactions/{{externalDisputeID}}",
   },
 };
 
-const disputeTemplateFn = (chainId: number, klerosCore: string) => `{
+const disputeTemplateFn = (chainId: number, klerosCore: string, frontendUrl: string) => `{
   "$schema": "../NewDisputeTemplate.schema.json",
   "title": "Escrow dispute: {{escrowTitle}}", 
   "description": "{{deliverableText}}", 
@@ -43,7 +46,7 @@ const disputeTemplateFn = (chainId: number, klerosCore: string) => `{
     "label": "Transaction Terms",
     "uri": "{{{extraDescriptionUri}}}"
   },
-  "frontendUrl": "https://escrow-v2.kleros.builders/#/transactions/{{externalDisputeID}}", 
+  "frontendUrl": "${frontendUrl}", 
   "arbitratorChainID": "${chainId}",
   "arbitratorAddress": "${klerosCore}", 
   "metadata": {
@@ -95,14 +98,14 @@ task("set-dispute-template", "Sets the dispute template").setAction(async (args,
   const { config, deployments } = hre;
   const { escrow, view, klerosCore } = await getContracts(hre);
   const networkName = await deployments.getNetworkName();
-  const { subgraphEndpoint } = parameters[networkName];
+  const { subgraphEndpoint, frontendUrl } = parameters[networkName];
   const chainId = config.networks[networkName].chainId;
 
   if (!chainId || !klerosCore || !subgraphEndpoint) {
     throw new Error("Missing parameters");
   }
 
-  const disputeTemplate = disputeTemplateFn(chainId, klerosCore.target.toString());
+  const disputeTemplate = disputeTemplateFn(chainId, klerosCore.target.toString(), frontendUrl);
   console.log("New disputeTemplate", disputeTemplate);
 
   const mapping = mappingFn(subgraphEndpoint, view.target.toString());
