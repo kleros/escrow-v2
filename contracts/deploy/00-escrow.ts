@@ -2,7 +2,7 @@ import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { DeployFunction } from "hardhat-deploy/types";
 import { HomeChains, isSkipped } from "./utils";
 import { EscrowUniversal } from "../typechain-types";
-import { getContracts } from "./utils/getContracts";
+import { getArbitratorContracts } from "./utils/getContracts";
 
 const config = {
   arbitrumSepoliaDevnet: {
@@ -28,7 +28,7 @@ const deploy: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
   const chainId = Number(await getChainId());
   console.log("deploying to %s with deployer %s", HomeChains[chainId], deployer);
 
-  const { disputeTemplateRegistry, klerosCore } = await getContracts(hre);
+  const { disputeTemplateRegistry, klerosCore } = await getArbitratorContracts(hre);
   const { feeTimeout, settlementTimeout, jurors, courtId } = config[network.name];
   const extraData = ethers.AbiCoder.defaultAbiCoder().encode(["uint96", "uint96"], [courtId, jurors]);
 

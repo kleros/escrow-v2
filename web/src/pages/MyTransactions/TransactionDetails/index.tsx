@@ -10,7 +10,7 @@ import WasItFulfilled from "./WasItFulfilled";
 import InfoCards from "./InfoCards";
 import { useEscrowParametersQuery } from "queries/useEscrowParametersQuery";
 import { useTransactionDetailsQuery } from "queries/useTransactionsQuery";
-import { useArbitrationCost } from "queries/useArbitrationCostFromKlerosCore";
+import { useReadKlerosCoreArbitrationCost } from "hooks/contracts/generated";
 import { useNativeTokenSymbol } from "hooks/useNativeTokenSymbol";
 import useFetchIpfsJson from "hooks/useFetchIpfsJson";
 import { useTokenMetadata } from "hooks/useTokenMetadata";
@@ -32,7 +32,9 @@ const TransactionDetails: React.FC = () => {
   const { id } = useParams();
   const { data: transactionDetails } = useTransactionDetailsQuery(id);
   const { data: escrowParameters } = useEscrowParametersQuery();
-  const { arbitrationCost } = useArbitrationCost(escrowParameters?.escrowParameters?.arbitratorExtraData);
+  const arbitrationCost = useReadKlerosCoreArbitrationCost({
+    args: [escrowParameters?.escrowParameters?.arbitratorExtraData],
+  });
   const nativeTokenSymbol = useNativeTokenSymbol();
   const { tokenMetadata } = useTokenMetadata(transactionDetails?.escrow?.token);
   const erc20TokenSymbol = tokenMetadata?.symbol;
@@ -88,6 +90,7 @@ const TransactionDetails: React.FC = () => {
           isPreview={false}
           feeTimeout={escrowParameters?.escrowParameters.feeTimeout}
           settlementTimeout={escrowParameters?.escrowParameters.settlementTimeout}
+          arbitrationCost={arbitrationCost?.data}
           {...{
             status,
             token,
@@ -96,7 +99,6 @@ const TransactionDetails: React.FC = () => {
             hasToPayFees,
             disputeRequest,
             resolvedEvents,
-            arbitrationCost,
             assetSymbol,
             transactionHash,
           }}

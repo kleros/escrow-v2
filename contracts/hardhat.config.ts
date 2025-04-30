@@ -187,17 +187,6 @@ const config: HardhatUserConfig = {
   mocha: {
     timeout: 20000,
   },
-  external: {
-    // https://github.com/wighawag/hardhat-deploy#importing-deployment-from-other-projects-with-truffle-support
-    deployments: {
-      localhost: process.env.HARDHAT_FORK
-        ? ["../node_modules/@kleros/kleros-v2-contracts/deployments/" + process.env.HARDHAT_FORK]
-        : [],
-      arbitrumSepoliaDevnet: ["../node_modules/@kleros/kleros-v2-contracts/deployments/arbitrumSepoliaDevnet"],
-      arbitrumSepolia: ["../node_modules/@kleros/kleros-v2-contracts/deployments/arbitrumSepolia"],
-      arbitrum: ["../node_modules/@kleros/kleros-v2-contracts/deployments/arbitrum"],
-    },
-  },
 };
 
 export default config;
