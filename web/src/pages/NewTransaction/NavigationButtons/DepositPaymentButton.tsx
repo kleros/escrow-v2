@@ -128,6 +128,7 @@ const DepositPaymentButton: React.FC = () => {
     data: createNativeTransactionConfig,
     isLoading: isLoadingNativeConfig,
     isError: isErrorNativeConfig,
+    error: nativeSimError,
   } = useSimulateEscrowUniversalCreateNativeTransaction({
     query: {
       enabled: isNativeTransaction && ethAddressPattern.test(finalRecipientAddress) && !insufficientBalance,
@@ -140,6 +141,7 @@ const DepositPaymentButton: React.FC = () => {
     data: createERC20TransactionConfig,
     isLoading: isLoadingERC20Config,
     isError: isErrorERC20Config,
+    error: erc20SimError,
   } = useSimulateEscrowUniversalCreateErc20Transaction({
     query: {
       enabled:
@@ -163,6 +165,8 @@ const DepositPaymentButton: React.FC = () => {
   console.log("isLoadingERC20Config", isLoadingERC20Config);
   console.log("isErrorNativeConfig", isErrorNativeConfig);
   console.log("isErrorERC20Config", isErrorERC20Config);
+  console.log("nativeSimError", nativeSimError);
+  console.log("erc20SimError", erc20SimError);
 
   const { writeContractAsync: createNativeTransaction } =
     useWriteEscrowUniversalCreateNativeTransaction(createNativeTransactionConfig);
