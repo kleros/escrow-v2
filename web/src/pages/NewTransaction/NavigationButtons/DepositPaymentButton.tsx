@@ -60,19 +60,30 @@ const DepositPaymentButton: React.FC = () => {
   const [isApproved, setIsApproved] = useState(false);
   const { address, chain } = useAccount();
   const ensResult = useEnsAddress({ name: normalize(sellerAddress), chainId: 1 });
-  const deadlineTimestamp = useMemo(() => BigInt(Math.floor(new Date(deadline).getTime() / 1000)), [deadline]);
+
+  const deadlineTimestamp = useMemo(() => {
+    const ts = BigInt(Math.floor(new Date(deadline).getTime() / 1000));
+    console.log("deadlineTimestamp", ts);
+    return ts;
+  }, [deadline]);
+
   const isNativeTransaction = sendingToken?.address === "native";
-  const transactionValue = useMemo(
-    () => (isNativeTransaction ? parseEther(sendingQuantity) : parseUnits(sendingQuantity, 18)),
-    [isNativeTransaction, sendingQuantity]
-  );
+  console.log("isNativeTransaction", isNativeTransaction);
+
+  const transactionValue = useMemo(() => {
+    const val = isNativeTransaction ? parseEther(sendingQuantity) : parseUnits(sendingQuantity, 18);
+    console.log("transactionValue", val.toString());
+    return val;
+  }, [isNativeTransaction, sendingQuantity]);
 
   const finalRecipientAddress = ensResult.data || sellerAddress;
+  console.log("finalRecipientAddress", finalRecipientAddress);
 
   const { data: nativeBalance } = useBalance({
     query: { enabled: isNativeTransaction },
     address: address as `0x${string}`,
   });
+  console.log("nativeBalance", nativeBalance);
 
   const { data: tokenBalance } = useReadContract({
     query: { enabled: !isNativeTransaction },
@@ -81,15 +92,21 @@ const DepositPaymentButton: React.FC = () => {
     functionName: "balanceOf",
     args: [address as `0x${string}`],
   });
+  console.log("tokenBalance", tokenBalance?.toString());
 
   const insufficientBalance = useMemo(() => {
     if (isUndefined(sendingQuantity)) return true;
 
-    if (isNativeTransaction) {
-      return nativeBalance ? parseFloat(sendingQuantity) > parseFloat(nativeBalance.value.toString()) : true;
-    }
+    const result = isNativeTransaction
+      ? nativeBalance
+        ? parseFloat(sendingQuantity) > parseFloat(nativeBalance.value.toString())
+        : true
+      : isUndefined(tokenBalance)
+      ? true
+      : parseFloat(sendingQuantity) > parseFloat(tokenBalance.toString());
 
-    return isUndefined(tokenBalance) ? true : parseFloat(sendingQuantity) > parseFloat(tokenBalance.toString());
+    console.log("insufficientBalance", result);
+    return result;
   }, [sendingQuantity, tokenBalance, nativeBalance, isNativeTransaction]);
 
   const { data: allowance, refetch: refetchAllowance } = useReadContract({
@@ -99,11 +116,12 @@ const DepositPaymentButton: React.FC = () => {
     functionName: "allowance",
     args: [address as `0x${string}`, escrowUniversalAddress?.[chain?.id]],
   });
+  console.log("allowance", allowance?.toString());
 
   useEffect(() => {
-    if (!isUndefined(allowance)) {
-      setIsApproved(allowance >= transactionValue);
-    }
+    const approved = !isUndefined(allowance) && allowance >= transactionValue;
+    console.log("setIsApproved", approved);
+    setIsApproved(approved);
   }, [allowance, transactionValue]);
 
   const {
@@ -140,6 +158,12 @@ const DepositPaymentButton: React.FC = () => {
     ],
   });
 
+  console.log("isSending", isSending);
+  console.log("isLoadingNativeConfig", isLoadingNativeConfig);
+  console.log("isLoadingERC20Config", isLoadingERC20Config);
+  console.log("isErrorNativeConfig", isErrorNativeConfig);
+  console.log("isErrorERC20Config", isErrorERC20Config);
+
   const { writeContractAsync: createNativeTransaction } =
     useWriteEscrowUniversalCreateNativeTransaction(createNativeTransactionConfig);
 
@@ -161,6 +185,7 @@ const DepositPaymentButton: React.FC = () => {
       setIsSending(true);
       try {
         const wrapResult = await wrapWithToast(async () => await approve(approveConfig.request), publicClient);
+        console.log("approve wrapResult", wrapResult);
         setIsApproved(wrapResult.status);
         await refetchAllowance();
       } catch (error) {
@@ -183,6 +208,7 @@ const DepositPaymentButton: React.FC = () => {
           async () => await createTransaction(transactionConfig.request),
           publicClient
         );
+        console.log("createTransaction wrapResult", wrapResult);
         if (wrapResult.status) {
           refetchQuery([["refetchOnBlock", "useMyTransactionsQuery"], ["useUserQuery"]]);
           resetContext();
@@ -196,18 +222,21 @@ const DepositPaymentButton: React.FC = () => {
     }
   };
 
+  const buttonDisabled =
+    isSending ||
+    insufficientBalance ||
+    isLoadingNativeConfig ||
+    isLoadingERC20Config ||
+    isErrorNativeConfig ||
+    isErrorERC20Config;
+
+  console.log("buttonDisabled", buttonDisabled);
+
   return (
     <div>
       <StyledButton
         isLoading={!insufficientBalance && (isSending || isLoadingNativeConfig || isLoadingERC20Config)}
-        disabled={
-          isSending ||
-          insufficientBalance ||
-          isLoadingNativeConfig ||
-          isLoadingERC20Config ||
-          isErrorNativeConfig ||
-          isErrorERC20Config
-        }
+        disabled={buttonDisabled}
         text={isNativeTransaction || isApproved ? "Deposit the Payment" : "Approve Token"}
         onClick={isNativeTransaction || isApproved ? handleCreateTransaction : handleApproveToken}
       />
