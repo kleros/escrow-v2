@@ -8,6 +8,8 @@ IGNORED_ARTIFACTS=(
     "PNK.json"
     "DAI.json"
     "WETH.json"
+    "USDC.json"
+    "USDCe.json"
     "RandomizerOracle.json"
     "_Implementation.json"
     "_Proxy.json"

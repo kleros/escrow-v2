@@ -50,11 +50,19 @@ const deploy: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
   const escrow = (await ethers.getContract("EscrowUniversal")) as EscrowUniversal;
   const WETH = await deployments.get("WETH");
   const DAI = await deployments.get("DAI");
+  const USDC = await deployments.getOrNull("USDC");
+  const USDCe = await deployments.getOrNull("USDCe"); // USDC.e (Bridged USDC)
   const caps = {
     [ethers.ZeroAddress]: ethers.parseUnits("0.3"),
     [WETH.address]: ethers.parseUnits("0.3"),
     [DAI.address]: ethers.parseUnits("1000"),
   };
+  if (USDC) {
+    caps[USDC.address] = ethers.parseUnits("1000", 6);
+  }
+  if (USDCe) {
+    caps[USDCe.address] = ethers.parseUnits("1000", 6);
+  }
   for (const [token, cap] of Object.entries(caps)) {
     console.log("Setting cap for", token, cap);
     await escrow.changeAmountCap(token, cap);
