@@ -186,6 +186,7 @@ contract EscrowUniversal is IEscrow, IArbitrableV2 {
         );
     }
 
+    /// @inheritdoc IEscrow
     function createERC20TransactionCustomBuyer(
         uint256 _amount,
         IERC20 _token,
@@ -193,7 +194,7 @@ contract EscrowUniversal is IEscrow, IArbitrableV2 {
         string memory _transactionUri,
         address payable _buyer,
         address payable _seller
-    ) external shouldNotExceedCap(_token, _amount) returns (uint256 transactionID) {
+    ) external override shouldNotExceedCap(_token, _amount) returns (uint256 transactionID) {
         // Transfers token from sender wallet to contract. Note that the amount is provided by the caller, not by the buyer.
         if (!_token.safeTransferFrom(msg.sender, address(this), _amount)) revert TokenTransferFailed();
         Transaction storage transaction = transactions.push();

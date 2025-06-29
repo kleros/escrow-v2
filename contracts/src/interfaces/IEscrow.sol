@@ -99,6 +99,23 @@ interface IEscrow {
         address payable _seller
     ) external returns (uint256 transactionID);
 
+    /// @dev Create an ERC20 transaction with custom buyer address.
+    /// @param _amount The amount of tokens in this transaction.
+    /// @param _token The ERC20 token contract.
+    /// @param _deadline Time after which a party can automatically execute the arbitrable transaction.
+    /// @param _transactionUri The IPFS Uri Hash of the transaction.
+    /// @param _buyer Buyer's address.
+    /// @param _seller The recipient of the transaction.
+    /// @return transactionID The index of the transaction.
+    function createERC20TransactionCustomBuyer(
+        uint256 _amount,
+        IERC20 _token,
+        uint256 _deadline,
+        string memory _transactionUri,
+        address payable _buyer,
+        address payable _seller
+    ) external returns (uint256 transactionID);
+
     /// @dev Pay seller. To be called if the good or service is provided.
     /// @param _transactionID The index of the transaction.
     /// @param _amount Amount to pay in wei.
