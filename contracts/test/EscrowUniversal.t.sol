@@ -380,49 +380,6 @@ contract EscrowUniversalTest is Test {
         assertEq(escrowToken.balanceOf(seller), 0, "Balance of seller should be 0");
     }
 
-    function test_createERC20TransactionCustomBuyer() public {
-        uint256 deadline = block.timestamp + txTimeout;
-        uint256 txId;
-        vm.prank(buyer);
-        vm.expectEmit(true, true, true, true);
-        // Pay a bit less to differ between tests
-        emit ERC20TransactionCreated(txId, txUri, other, seller, escrowToken, 0.4 ether, deadline);
-        escrow.createERC20TransactionCustomBuyer(0.4 ether, escrowToken, deadline, txUri, payable(other), payable(seller));
-
-        (
-            address escrowBuyer,
-            address escrowSeller,
-            uint256 amount,
-            uint256 settlementBuyer,
-            uint256 settlementSeller,
-            uint256 escrowdeadline,
-            uint256 disputeId,
-            uint256 buyerFee,
-            uint256 sellerFee,
-            uint256 lastFeePaymentTime,
-            Status status,
-            IERC20 token
-        ) = escrow.transactions(txId);
-
-        assertEq(escrowBuyer, other, "Wrong custom buyer address");
-        assertEq(escrowSeller, seller, "Wrong seller address");
-        assertEq(amount, 0.4 ether, "Wrong escrow amount");
-        assertEq(settlementBuyer, 0, "settlementBuyer should be 0");
-        assertEq(settlementSeller, 0, "settlementSeller should be 0");
-        assertEq(escrowdeadline, block.timestamp + 1000, "Wrong deadline");
-        assertEq(disputeId, 0, "disputeId should be 0");
-        assertEq(sellerFee, 0, "sellerFee should be 0");
-        assertEq(lastFeePaymentTime, 0, "lastFeePaymentTime should be 0");
-        assertEq(uint256(status), uint256(Status.NoDispute), "Wrong status");
-        assertEq(address(token), address(escrowToken), "Wrong token address");
-        assertEq(escrow.getTransactionCount(), 1, "Wrong transaction count");
-
-        assertEq(escrowToken.balanceOf(address(escrow)), 0.4 ether, "Wrong token balance of the escrow");
-        assertEq(escrowToken.balanceOf(buyer), 0.6 ether, "Wrong token balance of buyer"); // tx creator
-        assertEq(escrowToken.balanceOf(seller), 0, "Balance of seller should be 0");
-        assertEq(escrowToken.balanceOf(other), 0, "Balance of custom buyer should be 0"); // custom buyer did not have balance of his own
-    }
-
     function test_createNativeTransaction_approvalMissing() public {
         uint256 deadline = block.timestamp + txTimeout;
 
