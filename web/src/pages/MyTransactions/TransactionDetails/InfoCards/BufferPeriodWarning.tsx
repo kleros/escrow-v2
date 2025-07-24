@@ -13,15 +13,21 @@ const BufferPeriodWarning: React.FC<Props> = ({ disputeDeadlineMs, deliveryDeadl
   const nowMs = Date.now();
   const [now, setNow] = useState(nowMs);
   const { address } = useAccount();
-  const { seller, buyer } = useTransactionDetailsContext();
+  const { buyer, seller, status } = useTransactionDetailsContext();
+
+  const hidePermanently = status !== "NoDispute";
 
   useEffect(() => {
+    if (hidePermanently) return;
     const id = setInterval(() => setNow(Date.now()), 1000);
     return () => clearInterval(id);
-  }, []);
+  }, [hidePermanently]);
 
-  const inBuffer = now > deliveryDeadlineMs && now < disputeDeadlineMs;
-  const secondsLeft = useMemo(() => Math.max(0, Math.floor((disputeDeadlineMs - now) / 1000)), [disputeDeadlineMs, now]);
+  const inBuffer = !hidePermanently && now > deliveryDeadlineMs && now < disputeDeadlineMs;
+  const secondsLeft = useMemo(
+    () => Math.max(0, Math.floor((disputeDeadlineMs - now) / 1000)),
+    [disputeDeadlineMs, now]
+  );
 
   if (!inBuffer) return null;
 
