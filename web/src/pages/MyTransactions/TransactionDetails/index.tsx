@@ -75,7 +75,6 @@ const TransactionDetails: React.FC = () => {
   const disputeDeadlineMs = deadline * 1000;
   const bufferSecNumber = transactionInfo?.bufferSec ?? pickBufferFor(timestamp);
   const deliveryDeadlineMs = disputeDeadlineMs - bufferSecNumber * 1000;
-  const now = Date.now();
 
   return (
     <Container>
