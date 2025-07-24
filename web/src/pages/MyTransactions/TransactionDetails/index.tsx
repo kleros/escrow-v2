@@ -5,7 +5,6 @@ import { useParams } from "react-router-dom";
 import { formatEther } from "viem";
 import { useTransactionDetailsContext } from "context/TransactionDetailsContext";
 import { isUndefined } from "utils/index";
-import { formatTimeoutDuration } from "utils/formatTimeoutDuration";
 import { pickBufferFor } from "utils/bufferRules";
 import PreviewCard from "components/PreviewCard";
 import WasItFulfilled from "./WasItFulfilled";
@@ -77,18 +76,12 @@ const TransactionDetails: React.FC = () => {
   const bufferSecNumber = transactionInfo?.bufferSec ?? pickBufferFor(timestamp);
   const deliveryDeadlineMs = disputeDeadlineMs - bufferSecNumber * 1000;
   const now = Date.now();
-  const inBuffer = now > deliveryDeadlineMs && now < disputeDeadlineMs;
-  const secondsLeft = Math.max(0, Math.floor((disputeDeadlineMs - now) / 1000));
 
   return (
     <Container>
       <Header>Transaction #{id}</Header>
       <OverviewContainer>
-        {inBuffer && (
-          <BufferPeriodWarning
-            message={`Delivery deadline is over. You have ${formatTimeoutDuration(secondsLeft)} to either reach a settlement with the other party or raise a dispute.`}
-          />
-        )}
+        <BufferPeriodWarning disputeDeadlineMs={disputeDeadlineMs} deliveryDeadlineMs={deliveryDeadlineMs} />
         <PreviewCard
           escrowType={"general"}
           escrowTitle={transactionInfo?.title}
