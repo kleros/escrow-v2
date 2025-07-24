@@ -22,6 +22,7 @@ import {
 import { parseEther, parseUnits } from "viem";
 import { normalize } from "viem/ens";
 import { isUndefined } from "utils/index";
+import { pickBufferFor } from "utils/bufferRules";
 import { wrapWithToast } from "utils/wrapWithToast";
 import { ethAddressPattern } from "utils/validateAddress";
 import { useQueryRefetch } from "hooks/useQueryRefetch";
@@ -60,7 +61,13 @@ const DepositPaymentButton: React.FC = () => {
   const [isApproved, setIsApproved] = useState(false);
   const { address, chain } = useAccount();
   const ensResult = useEnsAddress({ name: normalize(sellerAddress), chainId: 1 });
-  const deadlineTimestamp = useMemo(() => BigInt(Math.floor(new Date(deadline).getTime() / 1000)), [deadline]);
+  const deliveryDeadlineTimestamp = useMemo(
+    () => BigInt(Math.floor(new Date(deadline).getTime() / 1000)),
+    [deadline]
+  );
+
+  const bufferSec = useMemo(() => BigInt(pickBufferFor(Number(deliveryDeadlineTimestamp))), [deliveryDeadlineTimestamp]);
+  const disputeDeadlineTimestamp = useMemo(() => deliveryDeadlineTimestamp + bufferSec, [deliveryDeadlineTimestamp, bufferSec]);
   const isNativeTransaction = sendingToken?.address === "native";
   const transactionValue = useMemo(
     () => (isNativeTransaction ? parseEther(sendingQuantity) : parseUnits(sendingQuantity, 18)),
@@ -114,7 +121,7 @@ const DepositPaymentButton: React.FC = () => {
     query: {
       enabled: isNativeTransaction && ethAddressPattern.test(finalRecipientAddress) && !insufficientBalance,
     },
-    args: [deadlineTimestamp, transactionUri, finalRecipientAddress],
+    args: [disputeDeadlineTimestamp, transactionUri, finalRecipientAddress],
     value: transactionValue,
   });
 
@@ -134,7 +141,7 @@ const DepositPaymentButton: React.FC = () => {
     args: [
       transactionValue,
       sendingToken?.address as `0x${string}`,
-      deadlineTimestamp,
+      disputeDeadlineTimestamp,
       transactionUri,
       finalRecipientAddress as `0x${string}`,
     ],
