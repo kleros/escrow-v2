@@ -66,7 +66,7 @@ const DepositPaymentButton: React.FC = () => {
     [deadline]
   );
 
-  const bufferSec = useMemo(() => BigInt(pickBufferFor(Number(deliveryDeadlineTimestamp))), [deliveryDeadlineTimestamp]);
+  const bufferSec = useMemo(() => BigInt(pickBufferFor(Math.floor(Date.now() / 1000))), []);
   const disputeDeadlineTimestamp = useMemo(() => deliveryDeadlineTimestamp + bufferSec, [deliveryDeadlineTimestamp, bufferSec]);
   const isNativeTransaction = sendingToken?.address === "native";
   const transactionValue = useMemo(
