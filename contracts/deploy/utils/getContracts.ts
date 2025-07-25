@@ -1,6 +1,6 @@
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { DeploymentName, getContractsEthers as _getArbitratorContracts } from "@kleros/kleros-v2-contracts";
-import { EscrowView, EscrowUniversal } from "../../typechain-types";
+import { EscrowView, EscrowUniversal, EscrowCustomBuyer } from "../../typechain-types";
 
 const NETWORK_TO_DEPLOYMENT: Record<string, DeploymentName> = {
   arbitrumSepoliaDevnet: "devnet",
@@ -24,5 +24,7 @@ export const getContracts = async (hre: HardhatRuntimeEnvironment) => {
   const { klerosCore, disputeTemplateRegistry } = await getArbitratorContracts(hre);
   const escrow = await ethers.getContract<EscrowUniversal>("EscrowUniversal");
   const view = await ethers.getContract<EscrowView>("EscrowView");
-  return { escrow, view, disputeTemplateRegistry, klerosCore };
+  const escrowCustomBuyer = await ethers.getContract<EscrowCustomBuyer>("EscrowCustomBuyer");
+  const customBuyerView = await ethers.getContract<EscrowView>("EscrowViewCustomBuyer");
+  return { escrow, view, escrowCustomBuyer, customBuyerView, disputeTemplateRegistry, klerosCore };
 };

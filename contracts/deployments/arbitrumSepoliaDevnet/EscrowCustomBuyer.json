@@ -1,0 +1,1651 @@
+{
+  "address": "0xA01e6B988aeDae1fD4a748D6bfBcB8A438601DeE",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "contract IArbitratorV2",
+          "name": "_arbitrator",
+          "type": "address"
+        },
+        {
+          "internalType": "bytes",
+          "name": "_arbitratorExtraData",
+          "type": "bytes"
+        },
+        {
+          "internalType": "string",
+          "name": "_templateData",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "_templateDataMappings",
+          "type": "string"
+        },
+        {
+          "internalType": "contract IDisputeTemplateRegistry",
+          "name": "_templateRegistry",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_feeTimeout",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_settlementTimeout",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "inputs": [],
+      "name": "AmountExceedsCap",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "ArbitratorOnly",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "BuyerFeeNotCoverArbitrationCosts",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "BuyerOnly",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "BuyerOrSellerOnly",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "DeadlineNotPassed",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "DisputeAlreadyResolved",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "GovernorOnly",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "InvalidRuling",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "MaximumPaymentAmountExceeded",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "NoSettlementProposedOrTransactionMovedOnAcceptSettlement",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "NoSettlementProposedOrTransactionMovedOnPayFeeBuyer",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "NoSettlementProposedOrTransactionMovedOnPayFeeSeller",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "NotSupported",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "NotWaitingForBuyerFees",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "NotWaitingForSellerFees",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "SellerFeeNotCoverArbitrationCosts",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "SellerOnly",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "SettlementPeriodNotOver",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "TimeoutNotPassed",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "TokenTransferFailed",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "TransactionDisputed",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "TransactionEscalatedForArbitration",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "TransactionExpired",
+      "type": "error"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "contract IArbitratorV2",
+          "name": "_arbitrator",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "_arbitratorDisputeID",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "_externalDisputeID",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "_templateId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "_templateUri",
+          "type": "string"
+        }
+      ],
+      "name": "DisputeRequest",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "_transactionID",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "_transactionUri",
+          "type": "string"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "_buyer",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "_seller",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "contract IERC20",
+          "name": "_token",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "_amount",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "_deadline",
+          "type": "uint256"
+        }
+      ],
+      "name": "ERC20TransactionCreated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "_transactionID",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "enum Party",
+          "name": "_party",
+          "type": "uint8"
+        }
+      ],
+      "name": "HasToPayFee",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "_transactionID",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "_transactionUri",
+          "type": "string"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "_buyer",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "_seller",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "_amount",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "_deadline",
+          "type": "uint256"
+        }
+      ],
+      "name": "NativeTransactionCreated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "_feeTimeout",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "_settlementTimeout",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "bytes",
+          "name": "_arbitratorExtraData",
+          "type": "bytes"
+        }
+      ],
+      "name": "ParameterUpdated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "_transactionID",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "_amount",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "_party",
+          "type": "address"
+        }
+      ],
+      "name": "Payment",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "contract IArbitratorV2",
+          "name": "_arbitrator",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "_disputeID",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "_ruling",
+          "type": "uint256"
+        }
+      ],
+      "name": "Ruling",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "_transactionID",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "enum Party",
+          "name": "_party",
+          "type": "uint8"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "_amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "SettlementProposed",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "_transactionID",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "enum Resolution",
+          "name": "_resolution",
+          "type": "uint8"
+        }
+      ],
+      "name": "TransactionResolved",
+      "type": "event"
+    },
+    {
+      "inputs": [],
+      "name": "AMOUNT_OF_CHOICES",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_transactionID",
+          "type": "uint256"
+        }
+      ],
+      "name": "acceptSettlement",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract IERC20",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "amountCaps",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "arbitrator",
+      "outputs": [
+        {
+          "internalType": "contract IArbitratorV2",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "arbitratorExtraData",
+      "outputs": [
+        {
+          "internalType": "bytes",
+          "name": "",
+          "type": "bytes"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract IERC20",
+          "name": "_token",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_amountCap",
+          "type": "uint256"
+        }
+      ],
+      "name": "changeAmountCap",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract IArbitratorV2",
+          "name": "_arbitrator",
+          "type": "address"
+        }
+      ],
+      "name": "changeArbitrator",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes",
+          "name": "_arbitratorExtraData",
+          "type": "bytes"
+        }
+      ],
+      "name": "changeArbitratorExtraData",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "_templateData",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "_templateDataMappings",
+          "type": "string"
+        }
+      ],
+      "name": "changeDisputeTemplate",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_feeTimeout",
+          "type": "uint256"
+        }
+      ],
+      "name": "changeFeeTimeout",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_governor",
+          "type": "address"
+        }
+      ],
+      "name": "changeGovernor",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_settlementTimeout",
+          "type": "uint256"
+        }
+      ],
+      "name": "changeSettlementTimeout",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract IDisputeTemplateRegistry",
+          "name": "_templateRegistry",
+          "type": "address"
+        }
+      ],
+      "name": "changeTemplateRegistry",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_amount",
+          "type": "uint256"
+        },
+        {
+          "internalType": "contract IERC20",
+          "name": "_token",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_deadline",
+          "type": "uint256"
+        },
+        {
+          "internalType": "string",
+          "name": "_transactionUri",
+          "type": "string"
+        },
+        {
+          "internalType": "address payable",
+          "name": "_seller",
+          "type": "address"
+        }
+      ],
+      "name": "createERC20Transaction",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "transactionID",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_amount",
+          "type": "uint256"
+        },
+        {
+          "internalType": "contract IERC20",
+          "name": "_token",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_deadline",
+          "type": "uint256"
+        },
+        {
+          "internalType": "string",
+          "name": "_transactionUri",
+          "type": "string"
+        },
+        {
+          "internalType": "address payable",
+          "name": "_buyer",
+          "type": "address"
+        },
+        {
+          "internalType": "address payable",
+          "name": "_seller",
+          "type": "address"
+        }
+      ],
+      "name": "createERC20TransactionCustomBuyer",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "transactionID",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_deadline",
+          "type": "uint256"
+        },
+        {
+          "internalType": "string",
+          "name": "_transactionUri",
+          "type": "string"
+        },
+        {
+          "internalType": "address payable",
+          "name": "_seller",
+          "type": "address"
+        }
+      ],
+      "name": "createNativeTransaction",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "transactionID",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_deadline",
+          "type": "uint256"
+        },
+        {
+          "internalType": "string",
+          "name": "_transactionUri",
+          "type": "string"
+        },
+        {
+          "internalType": "address payable",
+          "name": "_buyer",
+          "type": "address"
+        },
+        {
+          "internalType": "address payable",
+          "name": "_seller",
+          "type": "address"
+        }
+      ],
+      "name": "createNativeTransactionCustomBuyer",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "transactionID",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "disputeIDtoTransactionID",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_transactionID",
+          "type": "uint256"
+        }
+      ],
+      "name": "executeTransaction",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "feeTimeout",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_transactionID",
+          "type": "uint256"
+        },
+        {
+          "internalType": "enum Party",
+          "name": "_winningParty",
+          "type": "uint8"
+        }
+      ],
+      "name": "getPayouts",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "buyerPayout",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "buyerPayoutToken",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "sellerPayout",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "sellerPayoutToken",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getTransactionCount",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "governor",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_transactionID",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "pay",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_transactionID",
+          "type": "uint256"
+        }
+      ],
+      "name": "payArbitrationFeeByBuyer",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_transactionID",
+          "type": "uint256"
+        }
+      ],
+      "name": "payArbitrationFeeBySeller",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_transactionID",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "proposeSettlement",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_transactionID",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_amountReimbursed",
+          "type": "uint256"
+        }
+      ],
+      "name": "reimburse",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_disputeID",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_ruling",
+          "type": "uint256"
+        }
+      ],
+      "name": "rule",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "settlementTimeout",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "templateId",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "templateRegistry",
+      "outputs": [
+        {
+          "internalType": "contract IDisputeTemplateRegistry",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_transactionID",
+          "type": "uint256"
+        }
+      ],
+      "name": "timeOutByBuyer",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_transactionID",
+          "type": "uint256"
+        }
+      ],
+      "name": "timeOutBySeller",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "transactions",
+      "outputs": [
+        {
+          "internalType": "address payable",
+          "name": "buyer",
+          "type": "address"
+        },
+        {
+          "internalType": "address payable",
+          "name": "seller",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "settlementBuyer",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "settlementSeller",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "deadline",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "disputeID",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "buyerFee",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "sellerFee",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "lastFeePaymentTime",
+          "type": "uint256"
+        },
+        {
+          "internalType": "enum Status",
+          "name": "status",
+          "type": "uint8"
+        },
+        {
+          "internalType": "contract IERC20",
+          "name": "token",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "transactionHash": "0x5bdf3d51ed9eff9c0a9b239d779ade148b777355eb3a703026342c74840efe8d",
+  "receipt": {
+    "to": null,
+    "from": "0xf1C7c037891525E360C59f708739Ac09A7670c59",
+    "contractAddress": "0xA01e6B988aeDae1fD4a748D6bfBcB8A438601DeE",
+    "transactionIndex": 5,
+    "gasUsed": "2495336",
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000040000000000008000080000000000000000000000000400001000000000000000001000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000020000080040000000000000000000000000000000080000000000002000000000000000000000000000000000000002000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000400000000000100000000000000000000000000000000080000",
+    "blockHash": "0x69e7d8ce5eef784d5cec9796e7286710cf5ee535aee8971a969dcdd88aabe113",
+    "transactionHash": "0x5bdf3d51ed9eff9c0a9b239d779ade148b777355eb3a703026342c74840efe8d",
+    "logs": [
+      {
+        "transactionIndex": 5,
+        "blockNumber": 177253521,
+        "transactionHash": "0x5bdf3d51ed9eff9c0a9b239d779ade148b777355eb3a703026342c74840efe8d",
+        "address": "0xc852F94f90E3B06Da6eCfB61d76561ECfb94613f",
+        "topics": [
+          "0x00f7cd7255d1073b4e136dd477c38ea0020c051ab17110cc5bfab0c840ff9924",
+          "0x0000000000000000000000000000000000000000000000000000000000000017",
+          "0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470"
+        ],
+        "data": "0x0000000000000000000000000000000000000000000000000000000000000040000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+        "logIndex": 13,
+        "blockHash": "0x69e7d8ce5eef784d5cec9796e7286710cf5ee535aee8971a969dcdd88aabe113"
+      },
+      {
+        "transactionIndex": 5,
+        "blockNumber": 177253521,
+        "transactionHash": "0x5bdf3d51ed9eff9c0a9b239d779ade148b777355eb3a703026342c74840efe8d",
+        "address": "0xA01e6B988aeDae1fD4a748D6bfBcB8A438601DeE",
+        "topics": [
+          "0xf0d0a0b363c32316c3e6e7e797bbc126af09c634db439ed65a3f96afe7ae2367"
+        ],
+        "data": "0x000000000000000000000000000000000000000000000000000000000000025800000000000000000000000000000000000000000000000000000000000002580000000000000000000000000000000000000000000000000000000000000060000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000001",
+        "logIndex": 14,
+        "blockHash": "0x69e7d8ce5eef784d5cec9796e7286710cf5ee535aee8971a969dcdd88aabe113"
+      }
+    ],
+    "blockNumber": 177253521,
+    "cumulativeGasUsed": "2883768",
+    "status": 1,
+    "byzantium": true
+  },
+  "args": [
+    "0x1Bd44c4a4511DbFa7DC1d5BC201635596E7200f9",
+    "0x00000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000001",
+    "",
+    "",
+    "0xc852F94f90E3B06Da6eCfB61d76561ECfb94613f",
+    600,
+    600
+  ],
+  "numDeployments": 1,
+  "solcInputHash": "fab05c4d500438ef529c26fabe219229",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.24+commit.e11b9ed9\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"contract IArbitratorV2\",\"name\":\"_arbitrator\",\"type\":\"address\"},{\"internalType\":\"bytes\",\"name\":\"_arbitratorExtraData\",\"type\":\"bytes\"},{\"internalType\":\"string\",\"name\":\"_templateData\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_templateDataMappings\",\"type\":\"string\"},{\"internalType\":\"contract IDisputeTemplateRegistry\",\"name\":\"_templateRegistry\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_feeTimeout\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_settlementTimeout\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[],\"name\":\"AmountExceedsCap\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ArbitratorOnly\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"BuyerFeeNotCoverArbitrationCosts\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"BuyerOnly\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"BuyerOrSellerOnly\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"DeadlineNotPassed\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"DisputeAlreadyResolved\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"GovernorOnly\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidRuling\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"MaximumPaymentAmountExceeded\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NoSettlementProposedOrTransactionMovedOnAcceptSettlement\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NoSettlementProposedOrTransactionMovedOnPayFeeBuyer\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NoSettlementProposedOrTransactionMovedOnPayFeeSeller\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NotSupported\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NotWaitingForBuyerFees\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NotWaitingForSellerFees\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"SellerFeeNotCoverArbitrationCosts\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"SellerOnly\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"SettlementPeriodNotOver\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"TimeoutNotPassed\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"TokenTransferFailed\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"TransactionDisputed\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"TransactionEscalatedForArbitration\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"TransactionExpired\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"contract IArbitratorV2\",\"name\":\"_arbitrator\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"_arbitratorDisputeID\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_externalDisputeID\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_templateId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"_templateUri\",\"type\":\"string\"}],\"name\":\"DisputeRequest\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"_transactionID\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"_transactionUri\",\"type\":\"string\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"_buyer\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"_seller\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"contract IERC20\",\"name\":\"_token\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_deadline\",\"type\":\"uint256\"}],\"name\":\"ERC20TransactionCreated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"_transactionID\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"enum Party\",\"name\":\"_party\",\"type\":\"uint8\"}],\"name\":\"HasToPayFee\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"_transactionID\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"_transactionUri\",\"type\":\"string\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"_buyer\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"_seller\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_deadline\",\"type\":\"uint256\"}],\"name\":\"NativeTransactionCreated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_feeTimeout\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_settlementTimeout\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"_arbitratorExtraData\",\"type\":\"bytes\"}],\"name\":\"ParameterUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"_transactionID\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_party\",\"type\":\"address\"}],\"name\":\"Payment\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"contract IArbitratorV2\",\"name\":\"_arbitrator\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"_disputeID\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_ruling\",\"type\":\"uint256\"}],\"name\":\"Ruling\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"_transactionID\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"enum Party\",\"name\":\"_party\",\"type\":\"uint8\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"}],\"name\":\"SettlementProposed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"_transactionID\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"enum Resolution\",\"name\":\"_resolution\",\"type\":\"uint8\"}],\"name\":\"TransactionResolved\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"AMOUNT_OF_CHOICES\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_transactionID\",\"type\":\"uint256\"}],\"name\":\"acceptSettlement\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"contract IERC20\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"amountCaps\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"arbitrator\",\"outputs\":[{\"internalType\":\"contract IArbitratorV2\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"arbitratorExtraData\",\"outputs\":[{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"contract IERC20\",\"name\":\"_token\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_amountCap\",\"type\":\"uint256\"}],\"name\":\"changeAmountCap\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"contract IArbitratorV2\",\"name\":\"_arbitrator\",\"type\":\"address\"}],\"name\":\"changeArbitrator\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"_arbitratorExtraData\",\"type\":\"bytes\"}],\"name\":\"changeArbitratorExtraData\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"_templateData\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_templateDataMappings\",\"type\":\"string\"}],\"name\":\"changeDisputeTemplate\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_feeTimeout\",\"type\":\"uint256\"}],\"name\":\"changeFeeTimeout\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_governor\",\"type\":\"address\"}],\"name\":\"changeGovernor\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_settlementTimeout\",\"type\":\"uint256\"}],\"name\":\"changeSettlementTimeout\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"contract IDisputeTemplateRegistry\",\"name\":\"_templateRegistry\",\"type\":\"address\"}],\"name\":\"changeTemplateRegistry\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"},{\"internalType\":\"contract IERC20\",\"name\":\"_token\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_deadline\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"_transactionUri\",\"type\":\"string\"},{\"internalType\":\"address payable\",\"name\":\"_seller\",\"type\":\"address\"}],\"name\":\"createERC20Transaction\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"transactionID\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"},{\"internalType\":\"contract IERC20\",\"name\":\"_token\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_deadline\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"_transactionUri\",\"type\":\"string\"},{\"internalType\":\"address payable\",\"name\":\"_buyer\",\"type\":\"address\"},{\"internalType\":\"address payable\",\"name\":\"_seller\",\"type\":\"address\"}],\"name\":\"createERC20TransactionCustomBuyer\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"transactionID\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_deadline\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"_transactionUri\",\"type\":\"string\"},{\"internalType\":\"address payable\",\"name\":\"_seller\",\"type\":\"address\"}],\"name\":\"createNativeTransaction\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"transactionID\",\"type\":\"uint256\"}],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_deadline\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"_transactionUri\",\"type\":\"string\"},{\"internalType\":\"address payable\",\"name\":\"_buyer\",\"type\":\"address\"},{\"internalType\":\"address payable\",\"name\":\"_seller\",\"type\":\"address\"}],\"name\":\"createNativeTransactionCustomBuyer\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"transactionID\",\"type\":\"uint256\"}],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"disputeIDtoTransactionID\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_transactionID\",\"type\":\"uint256\"}],\"name\":\"executeTransaction\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"feeTimeout\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_transactionID\",\"type\":\"uint256\"},{\"internalType\":\"enum Party\",\"name\":\"_winningParty\",\"type\":\"uint8\"}],\"name\":\"getPayouts\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"buyerPayout\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"buyerPayoutToken\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"sellerPayout\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"sellerPayoutToken\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getTransactionCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"governor\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_transactionID\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"}],\"name\":\"pay\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_transactionID\",\"type\":\"uint256\"}],\"name\":\"payArbitrationFeeByBuyer\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_transactionID\",\"type\":\"uint256\"}],\"name\":\"payArbitrationFeeBySeller\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_transactionID\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"}],\"name\":\"proposeSettlement\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_transactionID\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_amountReimbursed\",\"type\":\"uint256\"}],\"name\":\"reimburse\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_disputeID\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_ruling\",\"type\":\"uint256\"}],\"name\":\"rule\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"settlementTimeout\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"templateId\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"templateRegistry\",\"outputs\":[{\"internalType\":\"contract IDisputeTemplateRegistry\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_transactionID\",\"type\":\"uint256\"}],\"name\":\"timeOutByBuyer\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_transactionID\",\"type\":\"uint256\"}],\"name\":\"timeOutBySeller\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"transactions\",\"outputs\":[{\"internalType\":\"address payable\",\"name\":\"buyer\",\"type\":\"address\"},{\"internalType\":\"address payable\",\"name\":\"seller\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"settlementBuyer\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"settlementSeller\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"deadline\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"disputeID\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"buyerFee\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"sellerFee\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"lastFeePaymentTime\",\"type\":\"uint256\"},{\"internalType\":\"enum Status\",\"name\":\"status\",\"type\":\"uint8\"},{\"internalType\":\"contract IERC20\",\"name\":\"token\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"details\":\"Version of Escrow that allows to specify a buyer when transaction is created.\",\"events\":{\"DisputeRequest(address,uint256,uint256,uint256,string)\":{\"details\":\"To be emitted when a dispute is created to link the correct meta-evidence to the disputeID.\",\"params\":{\"_arbitrator\":\"The arbitrator of the contract.\",\"_arbitratorDisputeID\":\"The identifier of the dispute in the Arbitrator contract.\",\"_externalDisputeID\":\"An identifier created outside Kleros by the protocol requesting arbitration.\",\"_templateId\":\"The identifier of the dispute template. Should not be used with _templateUri.\",\"_templateUri\":\"The URI to the dispute template. For example on IPFS: starting with '/ipfs/'. Should not be used with _templateId.\"}},\"ERC20TransactionCreated(uint256,string,address,address,address,uint256,uint256)\":{\"details\":\"Emitted when a transaction paid in ERC20 token is created.\",\"params\":{\"_amount\":\"The initial amount in the transaction.\",\"_buyer\":\"The address of the buyer.\",\"_deadline\":\"The deadline of the transaction.\",\"_seller\":\"The address of the seller.\",\"_token\":\"The token address.\",\"_transactionID\":\"The index of the transaction.\",\"_transactionUri\":\"The IPFS Uri Hash of the transaction.\"}},\"HasToPayFee(uint256,uint8)\":{\"details\":\"Indicate that a party has to pay a fee or would otherwise be considered as losing.\",\"params\":{\"_party\":\"The party who has to pay.\",\"_transactionID\":\"The index of the transaction.\"}},\"NativeTransactionCreated(uint256,string,address,address,uint256,uint256)\":{\"details\":\"Emitted when a transaction paid in native currency is created.\",\"params\":{\"_amount\":\"The initial amount in the transaction.\",\"_buyer\":\"The address of the buyer.\",\"_deadline\":\"The deadline of the transaction.\",\"_seller\":\"The address of the seller.\",\"_transactionID\":\"The index of the transaction.\",\"_transactionUri\":\"The IPFS Uri Hash of the transaction.\"}},\"ParameterUpdated(uint256,uint256,bytes)\":{\"details\":\"To be emitted when Escrow parameters are updated.\"},\"Payment(uint256,uint256,address)\":{\"details\":\"To be emitted when a party pays or reimburses the other.\",\"params\":{\"_amount\":\"The amount paid.\",\"_party\":\"The party that paid.\",\"_transactionID\":\"The index of the transaction.\"}},\"Ruling(address,uint256,uint256)\":{\"details\":\"To be raised when a ruling is given.\",\"params\":{\"_arbitrator\":\"The arbitrator giving the ruling.\",\"_disputeID\":\"The identifier of the dispute in the Arbitrator contract.\",\"_ruling\":\"The ruling which was given.\"}},\"SettlementProposed(uint256,uint8,uint256)\":{\"details\":\"Emitted when a party proposes a settlement.\",\"params\":{\"_amount\":\"The amount proposed.\",\"_party\":\"The party that proposed a settlement.\",\"_transactionID\":\"The index of the transaction.\"}},\"TransactionResolved(uint256,uint8)\":{\"details\":\"To be emitted when a transaction is resolved, either by its      execution, a timeout or because a ruling was enforced.\",\"params\":{\"_resolution\":\"Short description of what caused the transaction to be solved.\",\"_transactionID\":\"The ID of the respective transaction.\"}}},\"kind\":\"dev\",\"methods\":{\"acceptSettlement(uint256)\":{\"details\":\"Accept a settlement proposed by the other party.\",\"params\":{\"_transactionID\":\"The index of the transaction.\"}},\"constructor\":{\"details\":\"Constructor.\",\"params\":{\"_arbitrator\":\"The arbitrator of the contract.\",\"_arbitratorExtraData\":\"Extra data for the arbitrator.\",\"_feeTimeout\":\"Arbitration fee timeout for the parties.\",\"_settlementTimeout\":\"Settlement timeout for the parties.\",\"_templateData\":\"The dispute template data.\",\"_templateDataMappings\":\"The dispute template data mappings.\",\"_templateRegistry\":\"The dispute template registry.\"}},\"createERC20Transaction(uint256,address,uint256,string,address)\":{\"details\":\"Create a transaction.\",\"params\":{\"_amount\":\"The amount of tokens in this transaction.\",\"_deadline\":\"Time after which a party can automatically execute the arbitrable transaction.\",\"_seller\":\"The recipient of the transaction.\",\"_token\":\"The ERC20 token contract.\",\"_transactionUri\":\"The IPFS Uri Hash of the transaction.\"},\"returns\":{\"transactionID\":\"The index of the transaction.\"}},\"createERC20TransactionCustomBuyer(uint256,address,uint256,string,address,address)\":{\"details\":\"Create an ERC20 transaction with custom buyer address.\",\"params\":{\"_amount\":\"The amount of tokens in this transaction.\",\"_buyer\":\"Buyer's address.\",\"_deadline\":\"Time after which a party can automatically execute the arbitrable transaction.\",\"_seller\":\"The recipient of the transaction.\",\"_token\":\"The ERC20 token contract.\",\"_transactionUri\":\"The IPFS Uri Hash of the transaction.\"},\"returns\":{\"transactionID\":\"The index of the transaction.\"}},\"createNativeTransaction(uint256,string,address)\":{\"details\":\"Create a transaction.\",\"params\":{\"_deadline\":\"Time after which a party can automatically execute the arbitrable transaction.\",\"_seller\":\"The recipient of the transaction.\",\"_transactionUri\":\"The IPFS Uri Hash of the transaction.\"},\"returns\":{\"transactionID\":\"The index of the transaction.\"}},\"createNativeTransactionCustomBuyer(uint256,string,address,address)\":{\"details\":\"Create a native transaction with custom buyer.\",\"params\":{\"_buyer\":\"Buyer's address.\",\"_deadline\":\"Time after which a party can automatically execute the arbitrable transaction.\",\"_seller\":\"The recipient of the transaction.\",\"_transactionUri\":\"The IPFS Uri Hash of the transaction.\"},\"returns\":{\"transactionID\":\"The index of the transaction.\"}},\"executeTransaction(uint256)\":{\"details\":\"Transfer the transaction's amount to the seller if the timeout has passed.\",\"params\":{\"_transactionID\":\"The index of the transaction.\"}},\"getPayouts(uint256,uint8)\":{\"details\":\"Get the payout depending on the winning party.The cost for the buyer is the seller payout non-inclusive of any arbitration fees.\",\"params\":{\"_transactionID\":\"The index of the transaction.\",\"_winningParty\":\"The winning party.\"},\"returns\":{\"buyerPayout\":\"The payout for the buyer.\",\"buyerPayoutToken\":\"The payout for the buyer in tokens.\",\"sellerPayout\":\"The payout for the seller.\",\"sellerPayoutToken\":\"The payout for the seller in tokens.\"}},\"getTransactionCount()\":{\"details\":\"Getter to know the count of transactions.\",\"returns\":{\"_0\":\"The count of transactions.\"}},\"pay(uint256,uint256)\":{\"details\":\"Pay seller. To be called if the good or service is provided.\",\"params\":{\"_amount\":\"Amount to pay in wei.\",\"_transactionID\":\"The index of the transaction.\"}},\"payArbitrationFeeByBuyer(uint256)\":{\"details\":\"Pay the arbitration fee to raise a dispute. To be called by the buyer. Note that it can only be called after settlement proposition. Also note that the arbitrator can have createDispute throw, which will make      this function throw and therefore lead to a party being timed-out.      This is not a vulnerability as the arbitrator can rule in favor of one party anyway.\",\"params\":{\"_transactionID\":\"The index of the transaction.\"}},\"payArbitrationFeeBySeller(uint256)\":{\"details\":\"Pay the arbitration fee to raise a dispute. To be called by the seller. Note that this function mirrors payArbitrationFeeByBuyer.\",\"params\":{\"_transactionID\":\"The index of the transaction.\"}},\"proposeSettlement(uint256,uint256)\":{\"details\":\"Propose a settlement as a compromise from the initial terms to the other party.  Note that a party can only propose a settlement again after the other party has  done so as well to prevent front running/griefing issues.\",\"params\":{\"_amount\":\"The settlement amount.\",\"_transactionID\":\"The index of the transaction.\"}},\"reimburse(uint256,uint256)\":{\"details\":\"Reimburse buyer. To be called if the good or service can't be fully provided.\",\"params\":{\"_amountReimbursed\":\"Amount to reimburse in wei.\",\"_transactionID\":\"The index of the transaction.\"}},\"rule(uint256,uint256)\":{\"details\":\"Give a ruling for a dispute.      Must be called by the arbitrator.      The purpose of this function is to ensure that the address calling it has the right to rule on the contract.\",\"params\":{\"_disputeID\":\"The identifier of the dispute in the Arbitrator contract.\",\"_ruling\":\"Ruling given by the arbitrator. Note that 0 is reserved for \\\"Not able/wanting to make a decision\\\".\"}},\"timeOutByBuyer(uint256)\":{\"details\":\"Reimburse buyer if seller fails to pay the fee.\",\"params\":{\"_transactionID\":\"The index of the transaction.\"}},\"timeOutBySeller(uint256)\":{\"details\":\"Pay seller if buyer fails to pay the fee.\",\"params\":{\"_transactionID\":\"The index of the transaction.\"}}},\"title\":\"EscrowCustomBuyer.\",\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"src/EscrowCustomBuyer.sol\":\"EscrowCustomBuyer\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":true,\"runs\":100},\"remappings\":[],\"viaIR\":true},\"sources\":{\"@kleros/kleros-v2-contracts/arbitration/interfaces/IArbitrableV2.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity ^0.8.24;\\n\\nimport \\\"./IArbitratorV2.sol\\\";\\n\\n/// @title IArbitrableV2\\n/// @notice Arbitrable interface.\\n/// @dev When developing arbitrable contracts, we need to:\\n/// - Define the action taken when a ruling is received by the contract.\\n/// - Allow dispute creation. For this a function must call arbitrator.createDispute{value: _fee}(_choices,_extraData);\\ninterface IArbitrableV2 {\\n    /// @dev To be emitted when a dispute is created to link the correct meta-evidence to the disputeID.\\n    /// @param _arbitrator The arbitrator of the contract.\\n    /// @param _arbitratorDisputeID The identifier of the dispute in the Arbitrator contract.\\n    /// @param _externalDisputeID An identifier created outside Kleros by the protocol requesting arbitration.\\n    /// @param _templateId The identifier of the dispute template. Should not be used with _templateUri.\\n    /// @param _templateUri The URI to the dispute template. For example on IPFS: starting with '/ipfs/'. Should not be used with _templateId.\\n    event DisputeRequest(\\n        IArbitratorV2 indexed _arbitrator,\\n        uint256 indexed _arbitratorDisputeID,\\n        uint256 _externalDisputeID,\\n        uint256 _templateId,\\n        string _templateUri\\n    );\\n\\n    /// @dev To be raised when a ruling is given.\\n    /// @param _arbitrator The arbitrator giving the ruling.\\n    /// @param _disputeID The identifier of the dispute in the Arbitrator contract.\\n    /// @param _ruling The ruling which was given.\\n    event Ruling(IArbitratorV2 indexed _arbitrator, uint256 indexed _disputeID, uint256 _ruling);\\n\\n    /// @dev Give a ruling for a dispute.\\n    ///      Must be called by the arbitrator.\\n    ///      The purpose of this function is to ensure that the address calling it has the right to rule on the contract.\\n    /// @param _disputeID The identifier of the dispute in the Arbitrator contract.\\n    /// @param _ruling Ruling given by the arbitrator.\\n    /// Note that 0 is reserved for \\\"Not able/wanting to make a decision\\\".\\n    function rule(uint256 _disputeID, uint256 _ruling) external;\\n}\\n\",\"keccak256\":\"0x054fd09cc201ddca3d92a07169fb86b9db21a510a2a0f15ac4b6dffd900079fe\",\"license\":\"MIT\"},\"@kleros/kleros-v2-contracts/arbitration/interfaces/IArbitratorV2.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity ^0.8.24;\\n\\nimport \\\"@openzeppelin/contracts/token/ERC20/IERC20.sol\\\";\\nimport \\\"./IArbitrableV2.sol\\\";\\n\\n/// @title Arbitrator\\n/// Arbitrator interface that implements the new arbitration standard.\\n/// Unlike the ERC-792 this standard is not concerned with appeals, so each arbitrator can implement an appeal system that suits it the most.\\n/// When developing arbitrator contracts we need to:\\n/// - Define the functions for dispute creation (createDispute). Don't forget to store the arbitrated contract and the disputeID (which should be unique, may nbDisputes).\\n/// - Define the functions for cost display (arbitrationCost).\\n/// - Allow giving rulings. For this a function must call arbitrable.rule(disputeID, ruling).\\ninterface IArbitratorV2 {\\n    /// @dev To be emitted when a dispute is created.\\n    /// @param _disputeID The identifier of the dispute in the Arbitrator contract.\\n    /// @param _arbitrable The contract which created the dispute.\\n    event DisputeCreation(uint256 indexed _disputeID, IArbitrableV2 indexed _arbitrable);\\n\\n    /// @dev To be raised when a ruling is given.\\n    /// @param _arbitrable The arbitrable receiving the ruling.\\n    /// @param _disputeID The identifier of the dispute in the Arbitrator contract.\\n    /// @param _ruling The ruling which was given.\\n    event Ruling(IArbitrableV2 indexed _arbitrable, uint256 indexed _disputeID, uint256 _ruling);\\n\\n    /// @dev To be emitted when an ERC20 token is added or removed as a method to pay fees.\\n    /// @param _token The ERC20 token.\\n    /// @param _accepted Whether the token is accepted or not.\\n    event AcceptedFeeToken(IERC20 indexed _token, bool indexed _accepted);\\n\\n    /// @dev To be emitted when the fee for a particular ERC20 token is updated.\\n    /// @param _feeToken The ERC20 token.\\n    /// @param _rateInEth The new rate of the fee token in ETH.\\n    /// @param _rateDecimals The new decimals of the fee token rate.\\n    event NewCurrencyRate(IERC20 indexed _feeToken, uint64 _rateInEth, uint8 _rateDecimals);\\n\\n    /// @dev Create a dispute and pay for the fees in the native currency, typically ETH.\\n    ///      Must be called by the arbitrable contract.\\n    ///      Must pay at least arbitrationCost(_extraData).\\n    /// @param _numberOfChoices The number of choices the arbitrator can choose from in this dispute.\\n    /// @param _extraData Additional info about the dispute. We use it to pass the ID of the dispute's court (first 32 bytes), the minimum number of jurors required (next 32 bytes) and the ID of the specific dispute kit (last 32 bytes).\\n    /// @return disputeID The identifier of the dispute created.\\n    function createDispute(\\n        uint256 _numberOfChoices,\\n        bytes calldata _extraData\\n    ) external payable returns (uint256 disputeID);\\n\\n    /// @dev Create a dispute and pay for the fees in a supported ERC20 token.\\n    ///      Must be called by the arbitrable contract.\\n    ///      Must pay at least arbitrationCost(_extraData).\\n    /// @param _numberOfChoices The number of choices the arbitrator can choose from in this dispute.\\n    /// @param _extraData Additional info about the dispute. We use it to pass the ID of the dispute's court (first 32 bytes), the minimum number of jurors required (next 32 bytes) and the ID of the specific dispute kit (last 32 bytes).\\n    /// @param _feeToken The ERC20 token used to pay fees.\\n    /// @param _feeAmount Amount of the ERC20 token used to pay fees.\\n    /// @return disputeID The identifier of the dispute created.\\n    function createDispute(\\n        uint256 _numberOfChoices,\\n        bytes calldata _extraData,\\n        IERC20 _feeToken,\\n        uint256 _feeAmount\\n    ) external returns (uint256 disputeID);\\n\\n    /// @dev Compute the cost of arbitration denominated in the native currency, typically ETH.\\n    ///      It is recommended not to increase it often, as it can be highly time and gas consuming for the arbitrated contracts to cope with fee augmentation.\\n    /// @param _extraData Additional info about the dispute. We use it to pass the ID of the dispute's court (first 32 bytes), the minimum number of jurors required (next 32 bytes) and the ID of the specific dispute kit (last 32 bytes).\\n    /// @return cost The arbitration cost in ETH.\\n    function arbitrationCost(bytes calldata _extraData) external view returns (uint256 cost);\\n\\n    /// @dev Compute the cost of arbitration denominated in `_feeToken`.\\n    ///      It is recommended not to increase it often, as it can be highly time and gas consuming for the arbitrated contracts to cope with fee augmentation.\\n    /// @param _extraData Additional info about the dispute. We use it to pass the ID of the dispute's court (first 32 bytes), the minimum number of jurors required (next 32 bytes) and the ID of the specific dispute kit (last 32 bytes).\\n    /// @param _feeToken The ERC20 token used to pay fees.\\n    /// @return cost The arbitration cost in `_feeToken`.\\n    function arbitrationCost(bytes calldata _extraData, IERC20 _feeToken) external view returns (uint256 cost);\\n\\n    /// @dev Gets the current ruling of a specified dispute.\\n    /// @param _disputeID The ID of the dispute.\\n    /// @return ruling The current ruling.\\n    /// @return tied Whether it's a tie or not.\\n    /// @return overridden Whether the ruling was overridden by appeal funding or not.\\n    function currentRuling(uint256 _disputeID) external view returns (uint256 ruling, bool tied, bool overridden);\\n}\\n\",\"keccak256\":\"0xfc7cc82c1431720da41aeb1a181171f10466b5d0d280db7aa37c451681185493\",\"license\":\"MIT\"},\"@kleros/kleros-v2-contracts/arbitration/interfaces/IDisputeTemplateRegistry.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity ^0.8.24;\\n\\n/// @title IDisputeTemplate\\n/// @notice Dispute Template interface.\\ninterface IDisputeTemplateRegistry {\\n    /// @dev To be emitted when a new dispute template is created.\\n    /// @param _templateId The identifier of the dispute template.\\n    /// @param _templateTag An optional tag for the dispute template, such as \\\"registration\\\" or \\\"removal\\\".\\n    /// @param _templateData The template data.\\n    /// @param _templateDataMappings The data mappings.\\n    event DisputeTemplate(\\n        uint256 indexed _templateId,\\n        string indexed _templateTag,\\n        string _templateData,\\n        string _templateDataMappings\\n    );\\n\\n    function setDisputeTemplate(\\n        string memory _templateTag,\\n        string memory _templateData,\\n        string memory _templateDataMappings\\n    ) external returns (uint256 templateId);\\n}\\n\",\"keccak256\":\"0xd8122941175d1d5c2983e71717a2fdcc6fe94aa9de08f87eb7c44e3a5f1c2030\",\"license\":\"MIT\"},\"@openzeppelin/contracts/token/ERC20/IERC20.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts (last updated v5.1.0) (token/ERC20/IERC20.sol)\\n\\npragma solidity ^0.8.20;\\n\\n/**\\n * @dev Interface of the ERC-20 standard as defined in the ERC.\\n */\\ninterface IERC20 {\\n    /**\\n     * @dev Emitted when `value` tokens are moved from one account (`from`) to\\n     * another (`to`).\\n     *\\n     * Note that `value` may be zero.\\n     */\\n    event Transfer(address indexed from, address indexed to, uint256 value);\\n\\n    /**\\n     * @dev Emitted when the allowance of a `spender` for an `owner` is set by\\n     * a call to {approve}. `value` is the new allowance.\\n     */\\n    event Approval(address indexed owner, address indexed spender, uint256 value);\\n\\n    /**\\n     * @dev Returns the value of tokens in existence.\\n     */\\n    function totalSupply() external view returns (uint256);\\n\\n    /**\\n     * @dev Returns the value of tokens owned by `account`.\\n     */\\n    function balanceOf(address account) external view returns (uint256);\\n\\n    /**\\n     * @dev Moves a `value` amount of tokens from the caller's account to `to`.\\n     *\\n     * Returns a boolean value indicating whether the operation succeeded.\\n     *\\n     * Emits a {Transfer} event.\\n     */\\n    function transfer(address to, uint256 value) external returns (bool);\\n\\n    /**\\n     * @dev Returns the remaining number of tokens that `spender` will be\\n     * allowed to spend on behalf of `owner` through {transferFrom}. This is\\n     * zero by default.\\n     *\\n     * This value changes when {approve} or {transferFrom} are called.\\n     */\\n    function allowance(address owner, address spender) external view returns (uint256);\\n\\n    /**\\n     * @dev Sets a `value` amount of tokens as the allowance of `spender` over the\\n     * caller's tokens.\\n     *\\n     * Returns a boolean value indicating whether the operation succeeded.\\n     *\\n     * IMPORTANT: Beware that changing an allowance with this method brings the risk\\n     * that someone may use both the old and the new allowance by unfortunate\\n     * transaction ordering. One possible solution to mitigate this race\\n     * condition is to first reduce the spender's allowance to 0 and set the\\n     * desired value afterwards:\\n     * https://github.com/ethereum/EIPs/issues/20#issuecomment-263524729\\n     *\\n     * Emits an {Approval} event.\\n     */\\n    function approve(address spender, uint256 value) external returns (bool);\\n\\n    /**\\n     * @dev Moves a `value` amount of tokens from `from` to `to` using the\\n     * allowance mechanism. `value` is then deducted from the caller's\\n     * allowance.\\n     *\\n     * Returns a boolean value indicating whether the operation succeeded.\\n     *\\n     * Emits a {Transfer} event.\\n     */\\n    function transferFrom(address from, address to, uint256 value) external returns (bool);\\n}\\n\",\"keccak256\":\"0xe06a3f08a987af6ad2e1c1e774405d4fe08f1694b67517438b467cecf0da0ef7\",\"license\":\"MIT\"},\"src/EscrowCustomBuyer.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\n/// @authors: [@unknownunknown1, @jaybuidl]\\n/// @reviewers: []\\n/// @auditors: []\\n/// @bounties: []\\n\\npragma solidity 0.8.24;\\n\\nimport {EscrowUniversal, SafeERC20, IERC20, IArbitratorV2, IDisputeTemplateRegistry, NATIVE, Transaction} from \\\"./EscrowUniversal.sol\\\";\\n\\n/// @title EscrowCustomBuyer.\\n/// @dev Version of Escrow that allows to specify a buyer when transaction is created.\\ncontract EscrowCustomBuyer is EscrowUniversal {\\n    using SafeERC20 for IERC20;\\n\\n    /// @dev Constructor.\\n    /// @param _arbitrator The arbitrator of the contract.\\n    /// @param _arbitratorExtraData Extra data for the arbitrator.\\n    /// @param _templateData The dispute template data.\\n    /// @param _templateDataMappings The dispute template data mappings.\\n    /// @param _templateRegistry The dispute template registry.\\n    /// @param _feeTimeout Arbitration fee timeout for the parties.\\n    /// @param _settlementTimeout Settlement timeout for the parties.\\n    constructor(\\n        IArbitratorV2 _arbitrator,\\n        bytes memory _arbitratorExtraData,\\n        string memory _templateData,\\n        string memory _templateDataMappings,\\n        IDisputeTemplateRegistry _templateRegistry,\\n        uint256 _feeTimeout,\\n        uint256 _settlementTimeout\\n    )\\n        EscrowUniversal(\\n            _arbitrator,\\n            _arbitratorExtraData,\\n            _templateData,\\n            _templateDataMappings,\\n            _templateRegistry,\\n            _feeTimeout,\\n            _settlementTimeout\\n        )\\n    {}\\n\\n    /// @dev Create a native transaction with custom buyer.\\n    /// @param _deadline Time after which a party can automatically execute the arbitrable transaction.\\n    /// @param _transactionUri The IPFS Uri Hash of the transaction.\\n    /// @param _buyer Buyer's address.\\n    /// @param _seller The recipient of the transaction.\\n    /// @return transactionID The index of the transaction.\\n    function createNativeTransactionCustomBuyer(\\n        uint256 _deadline,\\n        string memory _transactionUri,\\n        address payable _buyer,\\n        address payable _seller\\n    ) external payable shouldNotExceedCap(NATIVE, msg.value) returns (uint256 transactionID) {\\n        Transaction storage transaction = transactions.push();\\n        transaction.buyer = _buyer;\\n        transaction.seller = _seller;\\n        /// Note that in this version of the contract the amount is provided by the caller, not by the buyer.\\n        transaction.amount = msg.value;\\n        transaction.token = NATIVE;\\n        transaction.deadline = _deadline;\\n\\n        transactionID = transactions.length - 1;\\n\\n        emit NativeTransactionCreated(transactionID, _transactionUri, _buyer, _seller, msg.value, transaction.deadline);\\n    }\\n\\n    /// @dev Create an ERC20 transaction with custom buyer address.\\n    /// @param _amount The amount of tokens in this transaction.\\n    /// @param _token The ERC20 token contract.\\n    /// @param _deadline Time after which a party can automatically execute the arbitrable transaction.\\n    /// @param _transactionUri The IPFS Uri Hash of the transaction.\\n    /// @param _buyer Buyer's address.\\n    /// @param _seller The recipient of the transaction.\\n    /// @return transactionID The index of the transaction.\\n    function createERC20TransactionCustomBuyer(\\n        uint256 _amount,\\n        IERC20 _token,\\n        uint256 _deadline,\\n        string memory _transactionUri,\\n        address payable _buyer,\\n        address payable _seller\\n    ) external shouldNotExceedCap(_token, _amount) returns (uint256 transactionID) {\\n        // Transfers token from sender wallet to contract. Note that in this version of the contract the amount is provided by the caller, not by the buyer.\\n        if (!_token.safeTransferFrom(msg.sender, address(this), _amount)) revert TokenTransferFailed();\\n        Transaction storage transaction = transactions.push();\\n        transaction.buyer = _buyer;\\n        transaction.seller = _seller;\\n        transaction.amount = _amount;\\n        transaction.token = _token;\\n        transaction.deadline = _deadline;\\n\\n        transactionID = transactions.length - 1;\\n\\n        emit ERC20TransactionCreated(\\n            transactionID,\\n            _transactionUri,\\n            _buyer,\\n            _seller,\\n            _token,\\n            _amount,\\n            transaction.deadline\\n        );\\n    }\\n}\\n\",\"keccak256\":\"0x8ef448221eb93f2f9b1f0ba30b964614c79505fc0abcecb3a2d9c974ce6d4590\",\"license\":\"MIT\"},\"src/EscrowUniversal.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\n/// @authors: [@unknownunknown1, @jaybuidl]\\n/// @reviewers: []\\n/// @auditors: []\\n/// @bounties: []\\n\\npragma solidity 0.8.24;\\n\\nimport {IArbitrableV2, IArbitratorV2} from \\\"@kleros/kleros-v2-contracts/arbitration/interfaces/IArbitrableV2.sol\\\";\\nimport \\\"@kleros/kleros-v2-contracts/arbitration/interfaces/IDisputeTemplateRegistry.sol\\\";\\nimport {SafeERC20, IERC20} from \\\"./libraries/SafeERC20.sol\\\";\\nimport \\\"./interfaces/IEscrow.sol\\\";\\n\\n/// @title EscrowUniversal for a sale paid in native currency or ERC20 tokens without platform fees.\\n/// @dev Adapted from MultipleArbitrableTokenTransaction contract: https://github.com/kleros/kleros-interaction/blob/master/contracts/standard/arbitration/MultipleArbitrableTokenTransaction.sol\\n/// and from MultipleArbitrableTransaction contract: https://github.com/kleros/kleros-interaction/blob/master/contracts/standard/arbitration/MultipleArbitrableTransaction.sol\\n/// Note that the contract expects the tokens to have standard ERC20 behaviour.\\n/// The tokens that don't conform to this type of behaviour should be filtered by the UI.\\n/// Tokens should not reenter or allow recipients to refuse the transfer.\\n/// Also note that arbitration fees are still paid in ETH.\\ncontract EscrowUniversal is IEscrow, IArbitrableV2 {\\n    // Use safe transfers when both parties are paid simultaneously (save for acceptSettlement) to prevent griefing.\\n    using SafeERC20 for IERC20;\\n\\n    // ************************************* //\\n    // *             Storage               * //\\n    // ************************************* //\\n\\n    uint256 public constant AMOUNT_OF_CHOICES = 2;\\n    address public governor;\\n    IArbitratorV2 public arbitrator; // Address of the arbitrator contract.\\n    bytes public arbitratorExtraData; // Extra data to set up the arbitration.\\n    IDisputeTemplateRegistry public templateRegistry; // The dispute template registry.\\n    uint256 public templateId; // The current dispute template identifier.\\n    uint256 public feeTimeout; // Time in seconds a party can take to pay arbitration fees before being considered unresponsive and lose the dispute.\\n    uint256 public settlementTimeout; // Time in seconds a party can take to accept or propose a settlement before being considered unresponsive.\\n    Transaction[] public transactions; // List of all created transactions.\\n    mapping(uint256 => uint256) public disputeIDtoTransactionID; // Naps dispute ID to tx ID.\\n    mapping(IERC20 => uint256) public amountCaps; // Caps the amount of the respective token for the Escrow transaction.\\n\\n    // ************************************* //\\n    // *        Function Modifiers         * //\\n    // ************************************* //\\n\\n    modifier onlyByGovernor() {\\n        if (governor != msg.sender) revert GovernorOnly();\\n        _;\\n    }\\n\\n    modifier shouldNotExceedCap(IERC20 _token, uint256 _amount) {\\n        if (_amount > amountCaps[_token]) revert AmountExceedsCap();\\n        _;\\n    }\\n\\n    // ************************************* //\\n    // *            Constructor            * //\\n    // ************************************* //\\n\\n    /// @dev Constructor.\\n    /// @param _arbitrator The arbitrator of the contract.\\n    /// @param _arbitratorExtraData Extra data for the arbitrator.\\n    /// @param _templateData The dispute template data.\\n    /// @param _templateDataMappings The dispute template data mappings.\\n    /// @param _templateRegistry The dispute template registry.\\n    /// @param _feeTimeout Arbitration fee timeout for the parties.\\n    /// @param _settlementTimeout Settlement timeout for the parties.\\n    constructor(\\n        IArbitratorV2 _arbitrator,\\n        bytes memory _arbitratorExtraData,\\n        string memory _templateData,\\n        string memory _templateDataMappings,\\n        IDisputeTemplateRegistry _templateRegistry,\\n        uint256 _feeTimeout,\\n        uint256 _settlementTimeout\\n    ) {\\n        governor = msg.sender;\\n        arbitrator = _arbitrator;\\n        arbitratorExtraData = _arbitratorExtraData;\\n        templateRegistry = _templateRegistry;\\n        feeTimeout = _feeTimeout;\\n        settlementTimeout = _settlementTimeout;\\n        templateId = templateRegistry.setDisputeTemplate(\\\"\\\", _templateData, _templateDataMappings);\\n\\n        emit ParameterUpdated(_feeTimeout, _settlementTimeout, _arbitratorExtraData);\\n    }\\n\\n    // ************************************* //\\n    // *             Governance            * //\\n    // ************************************* //\\n\\n    function changeGovernor(address _governor) external onlyByGovernor {\\n        governor = _governor;\\n    }\\n\\n    function changeArbitrator(IArbitratorV2 _arbitrator) external onlyByGovernor {\\n        arbitrator = _arbitrator;\\n    }\\n\\n    function changeArbitratorExtraData(bytes calldata _arbitratorExtraData) external onlyByGovernor {\\n        arbitratorExtraData = _arbitratorExtraData;\\n        emit ParameterUpdated(feeTimeout, settlementTimeout, _arbitratorExtraData);\\n    }\\n\\n    function changeTemplateRegistry(IDisputeTemplateRegistry _templateRegistry) external onlyByGovernor {\\n        templateRegistry = _templateRegistry;\\n    }\\n\\n    function changeDisputeTemplate(\\n        string memory _templateData,\\n        string memory _templateDataMappings\\n    ) external onlyByGovernor {\\n        templateId = templateRegistry.setDisputeTemplate(\\\"\\\", _templateData, _templateDataMappings);\\n    }\\n\\n    function changeFeeTimeout(uint256 _feeTimeout) external onlyByGovernor {\\n        feeTimeout = _feeTimeout;\\n        emit ParameterUpdated(_feeTimeout, settlementTimeout, arbitratorExtraData);\\n    }\\n\\n    function changeSettlementTimeout(uint256 _settlementTimeout) external onlyByGovernor {\\n        settlementTimeout = _settlementTimeout;\\n        emit ParameterUpdated(feeTimeout, _settlementTimeout, arbitratorExtraData);\\n    }\\n\\n    function changeAmountCap(IERC20 _token, uint256 _amountCap) external onlyByGovernor {\\n        amountCaps[_token] = _amountCap;\\n    }\\n\\n    // ************************************* //\\n    // *         State Modifiers           * //\\n    // ************************************* //\\n\\n    /// @inheritdoc IEscrow\\n    function createNativeTransaction(\\n        uint256 _deadline,\\n        string memory _transactionUri,\\n        address payable _seller\\n    ) external payable override shouldNotExceedCap(NATIVE, msg.value) returns (uint256 transactionID) {\\n        Transaction storage transaction = transactions.push();\\n        transaction.buyer = payable(msg.sender);\\n        transaction.seller = _seller;\\n        transaction.amount = msg.value;\\n        transaction.token = NATIVE;\\n        transaction.deadline = _deadline;\\n\\n        transactionID = transactions.length - 1;\\n\\n        emit NativeTransactionCreated(\\n            transactionID,\\n            _transactionUri,\\n            msg.sender,\\n            _seller,\\n            msg.value,\\n            transaction.deadline\\n        );\\n    }\\n\\n    /// @inheritdoc IEscrow\\n    function createERC20Transaction(\\n        uint256 _amount,\\n        IERC20 _token,\\n        uint256 _deadline,\\n        string memory _transactionUri,\\n        address payable _seller\\n    ) external override shouldNotExceedCap(_token, _amount) returns (uint256 transactionID) {\\n        // Transfers token from sender wallet to contract.\\n        if (!_token.safeTransferFrom(msg.sender, address(this), _amount)) revert TokenTransferFailed();\\n        Transaction storage transaction = transactions.push();\\n        transaction.buyer = payable(msg.sender);\\n        transaction.seller = _seller;\\n        transaction.amount = _amount;\\n        transaction.token = _token;\\n        transaction.deadline = _deadline;\\n\\n        transactionID = transactions.length - 1;\\n\\n        emit ERC20TransactionCreated(\\n            transactionID,\\n            _transactionUri,\\n            msg.sender,\\n            _seller,\\n            _token,\\n            _amount,\\n            transaction.deadline\\n        );\\n    }\\n\\n    /// @inheritdoc IEscrow\\n    function pay(uint256 _transactionID, uint256 _amount) external override {\\n        Transaction storage transaction = transactions[_transactionID];\\n        if (transaction.buyer != msg.sender) revert BuyerOnly();\\n        if (transaction.status != Status.NoDispute) revert TransactionDisputed();\\n        if (_amount > transaction.amount) revert MaximumPaymentAmountExceeded();\\n\\n        emit Payment(_transactionID, _amount, transaction.buyer);\\n\\n        transaction.amount -= _amount;\\n        if (transaction.amount == 0) {\\n            transaction.status = Status.TransactionResolved;\\n            emit TransactionResolved(_transactionID, Resolution.TransactionExecuted);\\n        }\\n\\n        if (transaction.token == NATIVE) {\\n            transaction.seller.send(_amount); // It is the user responsibility to accept ETH.\\n        } else {\\n            if (!transaction.token.safeTransfer(transaction.seller, _amount)) revert TokenTransferFailed();\\n        }\\n    }\\n\\n    /// @inheritdoc IEscrow\\n    function reimburse(uint256 _transactionID, uint256 _amountReimbursed) external override {\\n        Transaction storage transaction = transactions[_transactionID];\\n        if (transaction.seller != msg.sender) revert SellerOnly();\\n        if (transaction.status != Status.NoDispute) revert TransactionDisputed();\\n        if (_amountReimbursed > transaction.amount) revert MaximumPaymentAmountExceeded();\\n\\n        emit Payment(_transactionID, _amountReimbursed, transaction.seller);\\n\\n        transaction.amount -= _amountReimbursed;\\n        if (transaction.amount == 0) {\\n            transaction.status = Status.TransactionResolved;\\n            emit TransactionResolved(_transactionID, Resolution.TransactionExecuted);\\n        }\\n\\n        if (transaction.token == NATIVE) {\\n            transaction.buyer.send(_amountReimbursed); // It is the user responsibility to accept ETH.\\n        } else {\\n            if (!transaction.token.safeTransfer(transaction.buyer, _amountReimbursed)) revert TokenTransferFailed();\\n        }\\n    }\\n\\n    /// @inheritdoc IEscrow\\n    function executeTransaction(uint256 _transactionID) external override {\\n        Transaction storage transaction = transactions[_transactionID];\\n        if (block.timestamp < transaction.deadline) revert DeadlineNotPassed();\\n        if (transaction.status != Status.NoDispute) revert TransactionDisputed();\\n\\n        uint256 amount = transaction.amount;\\n        transaction.amount = 0;\\n        transaction.status = Status.TransactionResolved;\\n\\n        if (transaction.token == NATIVE) {\\n            transaction.seller.send(amount); // It is the user responsibility to accept ETH.\\n        } else {\\n            if (!transaction.token.safeTransfer(transaction.seller, amount)) revert TokenTransferFailed();\\n        }\\n\\n        emit Payment(_transactionID, amount, transaction.buyer);\\n        emit TransactionResolved(_transactionID, Resolution.TransactionExecuted);\\n    }\\n\\n    /// @inheritdoc IEscrow\\n    function proposeSettlement(uint256 _transactionID, uint256 _amount) external override {\\n        Transaction storage transaction = transactions[_transactionID];\\n        if (transaction.status == Status.NoDispute && block.timestamp >= transaction.deadline)\\n            revert TransactionExpired();\\n        if (transaction.status >= Status.WaitingBuyer) revert TransactionEscalatedForArbitration();\\n        if (_amount > transaction.amount) revert MaximumPaymentAmountExceeded();\\n\\n        Party party;\\n        transaction.lastFeePaymentTime = block.timestamp;\\n        if (transaction.status == Status.WaitingSettlementBuyer) {\\n            if (msg.sender != transaction.buyer) revert BuyerOnly();\\n            transaction.settlementBuyer = _amount;\\n            transaction.status = Status.WaitingSettlementSeller;\\n            party = Party.Buyer;\\n        } else if (transaction.status == Status.WaitingSettlementSeller) {\\n            if (msg.sender != transaction.seller) revert SellerOnly();\\n            transaction.settlementSeller = _amount;\\n            transaction.status = Status.WaitingSettlementBuyer;\\n            party = Party.Seller;\\n        } else {\\n            if (msg.sender == transaction.buyer) {\\n                transaction.settlementBuyer = _amount;\\n                transaction.status = Status.WaitingSettlementSeller;\\n                party = Party.Buyer;\\n            } else if (msg.sender == transaction.seller) {\\n                transaction.settlementSeller = _amount;\\n                transaction.status = Status.WaitingSettlementBuyer;\\n                party = Party.Seller;\\n            } else revert BuyerOrSellerOnly();\\n        }\\n        emit SettlementProposed(_transactionID, party, _amount);\\n    }\\n\\n    /// @inheritdoc IEscrow\\n    function acceptSettlement(uint256 _transactionID) external override {\\n        Transaction storage transaction = transactions[_transactionID];\\n        uint256 settlementAmount;\\n        if (transaction.status == Status.WaitingSettlementBuyer) {\\n            if (msg.sender != transaction.buyer) revert BuyerOnly();\\n            settlementAmount = transaction.settlementSeller;\\n        } else if (transaction.status == Status.WaitingSettlementSeller) {\\n            if (msg.sender != transaction.seller) revert SellerOnly();\\n            settlementAmount = transaction.settlementBuyer;\\n        } else revert NoSettlementProposedOrTransactionMovedOnAcceptSettlement();\\n\\n        uint256 remainingAmount = transaction.amount - settlementAmount;\\n\\n        transaction.amount = 0;\\n        transaction.settlementBuyer = 0;\\n        transaction.settlementSeller = 0;\\n        transaction.status = Status.TransactionResolved;\\n\\n        if (transaction.token == NATIVE) {\\n            // It is the users' responsibility to accept ETH.\\n            transaction.buyer.send(remainingAmount);\\n            transaction.seller.send(settlementAmount);\\n        } else {\\n            transaction.token.safeTransfer(transaction.buyer, remainingAmount);\\n            transaction.token.safeTransfer(transaction.seller, settlementAmount);\\n        }\\n\\n        emit TransactionResolved(_transactionID, Resolution.SettlementReached);\\n    }\\n\\n    /// @inheritdoc IEscrow\\n    function payArbitrationFeeByBuyer(uint256 _transactionID) external payable override {\\n        Transaction storage transaction = transactions[_transactionID];\\n        if (\\n            transaction.status != Status.WaitingSettlementBuyer &&\\n            transaction.status != Status.WaitingSettlementSeller &&\\n            transaction.status != Status.WaitingBuyer\\n        ) revert NoSettlementProposedOrTransactionMovedOnPayFeeBuyer();\\n\\n        // Allow the other party enough time to respond to a settlement before allowing the proposer to raise a dispute.\\n        if (\\n            transaction.status == Status.WaitingSettlementSeller &&\\n            block.timestamp - transaction.lastFeePaymentTime < settlementTimeout\\n        ) revert SettlementPeriodNotOver();\\n\\n        if (msg.sender != transaction.buyer) revert BuyerOnly();\\n\\n        transaction.buyerFee += msg.value;\\n        uint256 arbitrationCost = arbitrator.arbitrationCost(arbitratorExtraData);\\n        if (transaction.buyerFee < arbitrationCost) revert BuyerFeeNotCoverArbitrationCosts();\\n\\n        transaction.lastFeePaymentTime = block.timestamp;\\n\\n        if (transaction.sellerFee < arbitrationCost) {\\n            // The seller still has to pay. This can also happen if he has paid, but arbitrationCost has increased.\\n            transaction.status = Status.WaitingSeller;\\n            emit HasToPayFee(_transactionID, Party.Seller);\\n        } else {\\n            // The seller has also paid the fee. We create the dispute.\\n            raiseDispute(_transactionID, arbitrationCost);\\n        }\\n    }\\n\\n    /// @inheritdoc IEscrow\\n    function payArbitrationFeeBySeller(uint256 _transactionID) external payable override {\\n        Transaction storage transaction = transactions[_transactionID];\\n        if (\\n            transaction.status != Status.WaitingSettlementBuyer &&\\n            transaction.status != Status.WaitingSettlementSeller &&\\n            transaction.status != Status.WaitingSeller\\n        ) revert NoSettlementProposedOrTransactionMovedOnPayFeeSeller();\\n\\n        // Allow the other party enough time to respond to a settlement before allowing the proposer to raise a dispute.\\n        if (\\n            transaction.status == Status.WaitingSettlementBuyer &&\\n            block.timestamp - transaction.lastFeePaymentTime < settlementTimeout\\n        ) revert SettlementPeriodNotOver();\\n\\n        if (msg.sender != transaction.seller) revert SellerOnly();\\n\\n        transaction.sellerFee += msg.value;\\n        uint256 arbitrationCost = arbitrator.arbitrationCost(arbitratorExtraData);\\n        if (transaction.sellerFee < arbitrationCost) revert SellerFeeNotCoverArbitrationCosts();\\n\\n        transaction.lastFeePaymentTime = block.timestamp;\\n\\n        if (transaction.buyerFee < arbitrationCost) {\\n            // The buyer still has to pay. This can also happen if he has paid, but arbitrationCost has increased.\\n            transaction.status = Status.WaitingBuyer;\\n            emit HasToPayFee(_transactionID, Party.Buyer);\\n        } else {\\n            // The buyer has also paid the fee. We create the dispute.\\n            raiseDispute(_transactionID, arbitrationCost);\\n        }\\n    }\\n\\n    /// @inheritdoc IEscrow\\n    function timeOutByBuyer(uint256 _transactionID) external override {\\n        Transaction storage transaction = transactions[_transactionID];\\n        if (transaction.status != Status.WaitingSeller) revert NotWaitingForSellerFees();\\n        if (block.timestamp - transaction.lastFeePaymentTime < feeTimeout) revert TimeoutNotPassed();\\n\\n        uint256 amount = transaction.sellerFee;\\n        transaction.sellerFee = 0;\\n\\n        executeRuling(_transactionID, uint256(Party.Buyer));\\n\\n        if (amount != 0) {\\n            transaction.seller.send(amount); // It is the user responsibility to accept ETH.\\n        }\\n\\n        emit TransactionResolved(_transactionID, Resolution.TimeoutByBuyer);\\n    }\\n\\n    /// @inheritdoc IEscrow\\n    function timeOutBySeller(uint256 _transactionID) external override {\\n        Transaction storage transaction = transactions[_transactionID];\\n        if (transaction.status != Status.WaitingBuyer) revert NotWaitingForBuyerFees();\\n        if (block.timestamp - transaction.lastFeePaymentTime < feeTimeout) revert TimeoutNotPassed();\\n\\n        uint256 amount = transaction.buyerFee;\\n        transaction.buyerFee = 0;\\n\\n        executeRuling(_transactionID, uint256(Party.Seller));\\n\\n        if (amount != 0) {\\n            transaction.buyer.send(amount); // It is the user responsibility to accept ETH.\\n        }\\n\\n        emit TransactionResolved(_transactionID, Resolution.TimeoutBySeller);\\n    }\\n\\n    /// @inheritdoc IArbitrableV2\\n    function rule(uint256 _disputeID, uint256 _ruling) external override {\\n        if (msg.sender != address(arbitrator)) revert ArbitratorOnly();\\n        if (_ruling > AMOUNT_OF_CHOICES) revert InvalidRuling();\\n\\n        uint256 transactionID = disputeIDtoTransactionID[_disputeID];\\n        Transaction storage transaction = transactions[transactionID];\\n        if (transaction.status != Status.DisputeCreated) revert DisputeAlreadyResolved();\\n\\n        emit Ruling(arbitrator, _disputeID, _ruling);\\n        emit TransactionResolved(transactionID, Resolution.RulingEnforced);\\n        executeRuling(transactionID, _ruling);\\n    }\\n\\n    // ************************************* //\\n    // *            Internal               * //\\n    // ************************************* //\\n\\n    /// @dev Create a dispute.\\n    /// @param _transactionID The index of the transaction.\\n    /// @param _arbitrationCost Amount to pay the arbitrator.\\n    function raiseDispute(uint256 _transactionID, uint256 _arbitrationCost) internal {\\n        Transaction storage transaction = transactions[_transactionID];\\n        transaction.status = Status.DisputeCreated;\\n        transaction.disputeID = arbitrator.createDispute{value: _arbitrationCost}(\\n            AMOUNT_OF_CHOICES,\\n            arbitratorExtraData\\n        );\\n        disputeIDtoTransactionID[transaction.disputeID] = _transactionID;\\n        emit DisputeRequest(arbitrator, transaction.disputeID, _transactionID, templateId, \\\"\\\");\\n\\n        // Refund buyer if he overpaid.\\n        if (transaction.buyerFee > _arbitrationCost) {\\n            uint256 extraFeeBuyer = transaction.buyerFee - _arbitrationCost;\\n            transaction.buyerFee = _arbitrationCost;\\n            transaction.buyer.send(extraFeeBuyer); // It is the user responsibility to accept ETH.\\n        }\\n\\n        // Refund seller if he overpaid.\\n        if (transaction.sellerFee > _arbitrationCost) {\\n            uint256 extraFeeSeller = transaction.sellerFee - _arbitrationCost;\\n            transaction.sellerFee = _arbitrationCost;\\n            transaction.seller.send(extraFeeSeller); // It is the user responsibility to accept ETH.\\n        }\\n    }\\n\\n    /// @dev Execute a ruling of a dispute. It reimburses the fee to the winning party.\\n    /// @param _transactionID The index of the transaction.\\n    /// @param _ruling Ruling given by the arbitrator. 1 : Reimburse the seller. 2 : Pay the buyer.\\n    function executeRuling(uint256 _transactionID, uint256 _ruling) internal {\\n        Transaction storage transaction = transactions[_transactionID];\\n        address payable buyer = transaction.buyer;\\n        address payable seller = transaction.seller;\\n\\n        (uint256 buyerPayout, uint256 buyerPayoutToken, uint256 sellerPayout, uint256 sellerPayoutToken) = getPayouts(\\n            _transactionID,\\n            Party(_ruling)\\n        );\\n\\n        transaction.amount = 0;\\n        transaction.settlementBuyer = 0;\\n        transaction.settlementSeller = 0;\\n        transaction.buyerFee = 0;\\n        transaction.sellerFee = 0;\\n        transaction.status = Status.TransactionResolved;\\n\\n        if (buyerPayout > 0) {\\n            buyer.send(buyerPayout); // It is the user responsibility to accept ETH.\\n        }\\n        if (sellerPayout > 0) {\\n            seller.send(sellerPayout); // It is the user responsibility to accept ETH.\\n        }\\n        if (buyerPayoutToken > 0) {\\n            transaction.token.safeTransfer(buyer, buyerPayoutToken); // Tokens should not reenter or allow recipients to refuse the transfer.\\n        }\\n        if (sellerPayoutToken > 0) {\\n            transaction.token.safeTransfer(seller, sellerPayoutToken); // Tokens should not reenter or allow recipients to refuse the transfer.\\n        }\\n    }\\n\\n    // ************************************* //\\n    // *           Public Views            * //\\n    // ************************************* //\\n\\n    /// @inheritdoc IEscrow\\n    function getTransactionCount() external view override returns (uint256) {\\n        return transactions.length;\\n    }\\n\\n    /// @dev Get the payout depending on the winning party.\\n    /// @dev The cost for the buyer is the seller payout non-inclusive of any arbitration fees.\\n    /// @param _transactionID The index of the transaction.\\n    /// @param _winningParty The winning party.\\n    /// @return buyerPayout The payout for the buyer.\\n    /// @return buyerPayoutToken The payout for the buyer in tokens.\\n    /// @return sellerPayout The payout for the seller.\\n    /// @return sellerPayoutToken The payout for the seller in tokens.\\n    function getPayouts(\\n        uint256 _transactionID,\\n        Party _winningParty\\n    )\\n        public\\n        view\\n        returns (uint256 buyerPayout, uint256 buyerPayoutToken, uint256 sellerPayout, uint256 sellerPayoutToken)\\n    {\\n        Transaction storage transaction = transactions[_transactionID];\\n        uint256 amount = transaction.amount;\\n        uint256 settlementBuyer = transaction.settlementBuyer;\\n        uint256 settlementSeller = transaction.settlementSeller;\\n        uint256 buyerFee = transaction.buyerFee;\\n        uint256 sellerFee = transaction.sellerFee;\\n        bool nativePayment = transaction.token == NATIVE;\\n        if (_winningParty == Party.Buyer) {\\n            // The Seller gets the settlement amount proposed by the Buyer if any, otherwise nothing.\\n            // The Buyer gets the remaining amount of the transaction back if any.\\n            // The Buyer gets the arbitration fee back.\\n            uint256 settledAmount = settlementBuyer;\\n            if (nativePayment) {\\n                buyerPayout = buyerFee + amount - settledAmount;\\n                sellerPayout = settledAmount;\\n            } else {\\n                buyerPayout = buyerFee;\\n                buyerPayoutToken = amount - settledAmount;\\n                sellerPayoutToken = settledAmount;\\n            }\\n        } else if (_winningParty == Party.Seller) {\\n            // The Seller gets his proposed settlement amount if any, otherwise the transaction amount.\\n            // The Buyer gets the remaining amount of the transaction back if any.\\n            // The Seller gets the arbitration fee back.\\n            uint256 settledAmount = settlementSeller != 0 ? settlementSeller : amount;\\n            if (nativePayment) {\\n                buyerPayout = amount - settledAmount;\\n                sellerPayout = sellerFee + settledAmount;\\n            } else {\\n                buyerPayoutToken = amount - settledAmount;\\n                sellerPayout = sellerFee;\\n                sellerPayoutToken = settledAmount;\\n            }\\n        } else {\\n            // No party wins, we split the arbitration fee and the transaction amount.\\n            // The arbitration fee has been paid twice, once by the Buyer and once by the Seller in equal amount once arbitration starts.\\n            // In case of an uneven token amount, one basic token unit can be burnt.\\n            uint256 splitArbitrationFee = buyerFee / 2; // buyerFee equals sellerFee.\\n            buyerPayout = splitArbitrationFee;\\n            sellerPayout = splitArbitrationFee;\\n            uint256 splitAmount = amount / 2;\\n            if (nativePayment) {\\n                buyerPayout += splitAmount;\\n                sellerPayout += splitAmount;\\n            } else {\\n                buyerPayoutToken = splitAmount;\\n                sellerPayoutToken = splitAmount;\\n            }\\n        }\\n    }\\n}\\n\",\"keccak256\":\"0xbcd7fe39d1afba3d14cedaffe8449f284e48595808aa33e1fd08be0b933f97fc\",\"license\":\"MIT\"},\"src/interfaces/IEscrow.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity 0.8.24;\\n\\nimport \\\"./Types.sol\\\";\\n\\ninterface IEscrow {\\n    // ************************************* //\\n    // *              Events               * //\\n    // ************************************* //\\n\\n    /// @dev To be emitted when Escrow parameters are updated.\\n    event ParameterUpdated(uint256 _feeTimeout, uint256 _settlementTimeout, bytes _arbitratorExtraData);\\n\\n    /// @dev To be emitted when a party pays or reimburses the other.\\n    /// @param _transactionID The index of the transaction.\\n    /// @param _amount The amount paid.\\n    /// @param _party The party that paid.\\n    event Payment(uint256 indexed _transactionID, uint256 _amount, address _party);\\n\\n    /// @dev Indicate that a party has to pay a fee or would otherwise be considered as losing.\\n    /// @param _transactionID The index of the transaction.\\n    /// @param _party The party who has to pay.\\n    event HasToPayFee(uint256 indexed _transactionID, Party _party);\\n\\n    /// @dev Emitted when a party proposes a settlement.\\n    /// @param _transactionID The index of the transaction.\\n    /// @param _party The party that proposed a settlement.\\n    /// @param _amount The amount proposed.\\n    event SettlementProposed(uint256 indexed _transactionID, Party _party, uint256 _amount);\\n\\n    /// @dev Emitted when a transaction paid in native currency is created.\\n    /// @param _transactionID The index of the transaction.\\n    /// @param _transactionUri The IPFS Uri Hash of the transaction.\\n    /// @param _buyer The address of the buyer.\\n    /// @param _seller The address of the seller.\\n    /// @param _amount The initial amount in the transaction.\\n    /// @param _deadline The deadline of the transaction.\\n    event NativeTransactionCreated(\\n        uint256 indexed _transactionID,\\n        string _transactionUri,\\n        address indexed _buyer,\\n        address indexed _seller,\\n        uint256 _amount,\\n        uint256 _deadline\\n    );\\n\\n    /// @dev Emitted when a transaction paid in ERC20 token is created.\\n    /// @param _transactionID The index of the transaction.\\n    /// @param _transactionUri The IPFS Uri Hash of the transaction.\\n    /// @param _buyer The address of the buyer.\\n    /// @param _seller The address of the seller.\\n    /// @param _token The token address.\\n    /// @param _amount The initial amount in the transaction.\\n    /// @param _deadline The deadline of the transaction.\\n    event ERC20TransactionCreated(\\n        uint256 indexed _transactionID,\\n        string _transactionUri,\\n        address indexed _buyer,\\n        address indexed _seller,\\n        IERC20 _token,\\n        uint256 _amount,\\n        uint256 _deadline\\n    );\\n\\n    /// @dev To be emitted when a transaction is resolved, either by its\\n    ///      execution, a timeout or because a ruling was enforced.\\n    /// @param _transactionID The ID of the respective transaction.\\n    /// @param _resolution Short description of what caused the transaction to be solved.\\n    event TransactionResolved(uint256 indexed _transactionID, Resolution indexed _resolution);\\n\\n    // ************************************* //\\n    // *         State Modifiers           * //\\n    // ************************************* //\\n\\n    /// @dev Create a transaction.\\n    /// @param _deadline Time after which a party can automatically execute the arbitrable transaction.\\n    /// @param _transactionUri The IPFS Uri Hash of the transaction.\\n    /// @param _seller The recipient of the transaction.\\n    /// @return transactionID The index of the transaction.\\n    function createNativeTransaction(\\n        uint256 _deadline,\\n        string memory _transactionUri,\\n        address payable _seller\\n    ) external payable returns (uint256 transactionID);\\n\\n    /// @dev Create a transaction.\\n    /// @param _amount The amount of tokens in this transaction.\\n    /// @param _token The ERC20 token contract.\\n    /// @param _deadline Time after which a party can automatically execute the arbitrable transaction.\\n    /// @param _transactionUri The IPFS Uri Hash of the transaction.\\n    /// @param _seller The recipient of the transaction.\\n    /// @return transactionID The index of the transaction.\\n    function createERC20Transaction(\\n        uint256 _amount,\\n        IERC20 _token,\\n        uint256 _deadline,\\n        string memory _transactionUri,\\n        address payable _seller\\n    ) external returns (uint256 transactionID);\\n\\n    /// @dev Pay seller. To be called if the good or service is provided.\\n    /// @param _transactionID The index of the transaction.\\n    /// @param _amount Amount to pay in wei.\\n    function pay(uint256 _transactionID, uint256 _amount) external;\\n\\n    /// @dev Reimburse buyer. To be called if the good or service can't be fully provided.\\n    /// @param _transactionID The index of the transaction.\\n    /// @param _amountReimbursed Amount to reimburse in wei.\\n    function reimburse(uint256 _transactionID, uint256 _amountReimbursed) external;\\n\\n    /// @dev Transfer the transaction's amount to the seller if the timeout has passed.\\n    /// @param _transactionID The index of the transaction.\\n    function executeTransaction(uint256 _transactionID) external;\\n\\n    ///  @dev Propose a settlement as a compromise from the initial terms to the other party.\\n    ///  Note that a party can only propose a settlement again after the other party has\\n    ///  done so as well to prevent front running/griefing issues.\\n    ///  @param _transactionID The index of the transaction.\\n    ///  @param _amount The settlement amount.\\n    function proposeSettlement(uint256 _transactionID, uint256 _amount) external;\\n\\n    /// @dev Accept a settlement proposed by the other party.\\n    /// @param _transactionID The index of the transaction.\\n    function acceptSettlement(uint256 _transactionID) external;\\n\\n    /// @dev Pay the arbitration fee to raise a dispute. To be called by the buyer.\\n    /// Note that it can only be called after settlement proposition.\\n    /// Also note that the arbitrator can have createDispute throw, which will make\\n    ///      this function throw and therefore lead to a party being timed-out.\\n    ///      This is not a vulnerability as the arbitrator can rule in favor of one party anyway.\\n    /// @param _transactionID The index of the transaction.\\n    function payArbitrationFeeByBuyer(uint256 _transactionID) external payable;\\n\\n    /// @dev Pay the arbitration fee to raise a dispute. To be called by the seller.\\n    /// Note that this function mirrors payArbitrationFeeByBuyer.\\n    /// @param _transactionID The index of the transaction.\\n    function payArbitrationFeeBySeller(uint256 _transactionID) external payable;\\n\\n    /// @dev Reimburse buyer if seller fails to pay the fee.\\n    /// @param _transactionID The index of the transaction.\\n    function timeOutByBuyer(uint256 _transactionID) external;\\n\\n    /// @dev Pay seller if buyer fails to pay the fee.\\n    /// @param _transactionID The index of the transaction.\\n    function timeOutBySeller(uint256 _transactionID) external;\\n\\n    // ************************************* //\\n    // *           Public Views            * //\\n    // ************************************* //\\n\\n    /// @dev Getter to know the count of transactions.\\n    /// @return The count of transactions.\\n    function getTransactionCount() external view returns (uint256);\\n\\n    // ************************************* //\\n    // *              Errors               * //\\n    // ************************************* //\\n\\n    error GovernorOnly();\\n    error BuyerOnly();\\n    error SellerOnly();\\n    error BuyerOrSellerOnly();\\n    error ArbitratorOnly();\\n    error TransactionDisputed();\\n    error MaximumPaymentAmountExceeded();\\n    error DeadlineNotPassed();\\n    error BuyerFeeNotCoverArbitrationCosts();\\n    error SellerFeeNotCoverArbitrationCosts();\\n    error NotWaitingForSellerFees();\\n    error NotWaitingForBuyerFees();\\n    error TimeoutNotPassed();\\n    error InvalidRuling();\\n    error DisputeAlreadyResolved();\\n    error TransactionExpired();\\n    error TransactionEscalatedForArbitration();\\n    error NoSettlementProposedOrTransactionMovedOnAcceptSettlement();\\n    error NoSettlementProposedOrTransactionMovedOnPayFeeBuyer();\\n    error NoSettlementProposedOrTransactionMovedOnPayFeeSeller();\\n    error SettlementPeriodNotOver();\\n    error NotSupported();\\n    error TokenTransferFailed();\\n    error AmountExceedsCap();\\n}\\n\",\"keccak256\":\"0x4dc29ec253ae0e2598846b4721ac03ec85c75c1f7ad8a1920290abbf411eafe2\",\"license\":\"MIT\"},\"src/interfaces/Types.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity 0.8.24;\\n\\nimport {IERC20} from \\\"../libraries/SafeERC20.sol\\\";\\n\\nIERC20 constant NATIVE = IERC20(address(0));\\n\\nenum Party {\\n    None,\\n    Buyer, // Makes a purchase in native currency or ERC20 token.\\n    Seller // Provides a good or service in exchange for native currency or ERC20 token.\\n}\\n\\nenum Status {\\n    NoDispute,\\n    WaitingSettlementBuyer,\\n    WaitingSettlementSeller,\\n    WaitingBuyer,\\n    WaitingSeller,\\n    DisputeCreated,\\n    TransactionResolved\\n}\\n\\nenum Resolution {\\n    TransactionExecuted,\\n    TimeoutByBuyer,\\n    TimeoutBySeller,\\n    RulingEnforced,\\n    SettlementReached\\n}\\n\\nstruct Transaction {\\n    address payable buyer;\\n    address payable seller;\\n    uint256 amount;\\n    uint256 settlementBuyer; // Settlement amount proposed by the buyer.\\n    uint256 settlementSeller; // Settlement amount proposed by the seller.\\n    uint256 deadline; // Timestamp at which the transaction can be automatically executed if not disputed.\\n    uint256 disputeID; // If dispute exists, the ID of the dispute.\\n    uint256 buyerFee; // Total fees paid by the buyer.\\n    uint256 sellerFee; // Total fees paid by the seller.\\n    uint256 lastFeePaymentTime; // Last time the dispute fees were paid by either party or settlement proposed.\\n    Status status;\\n    IERC20 token; // Token to pay the seller with.\\n}\\n\",\"keccak256\":\"0xa35119fdfdeb0f514e8c996d115303f916a95eff6003fdb9c1a8540f64d21ddb\",\"license\":\"MIT\"},\"src/libraries/SafeERC20.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// Adapted from https://github.com/OpenZeppelin/openzeppelin-contracts/blob/a7a94c77463acea95d979aae1580fb0ddc3b6a1e/contracts/token/ERC20/utils/SafeERC20.sol\\n\\npragma solidity 0.8.24;\\n\\nimport \\\"@openzeppelin/contracts/token/ERC20/IERC20.sol\\\";\\n\\n/// @title SafeERC20\\n/// @dev Wrappers around ERC20 operations that throw on failure (when the token\\n/// contract returns false). Tokens that return no value (and instead revert or\\n/// throw on failure) are also supported, non-reverting calls are assumed to be\\n/// successful.\\n/// To use this library you can add a `using SafeERC20 for IERC20;` statement to your contract,\\n/// which allows you to call the safe operations as `token.safeTransfer(...)`, etc.\\nlibrary SafeERC20 {\\n    /// @dev Calls transfer() without reverting.\\n    /// @param _token Token to transfer.\\n    /// @param _to Recepient address.\\n    /// @param _value Amount transferred.\\n    /// @return Whether transfer succeeded or not.\\n    function safeTransfer(IERC20 _token, address _to, uint256 _value) internal returns (bool) {\\n        (bool success, bytes memory data) = address(_token).call(abi.encodeCall(IERC20.transfer, (_to, _value)));\\n        return (success && (data.length == 0 || abi.decode(data, (bool))));\\n    }\\n\\n    /// @dev Calls transferFrom() without reverting.\\n    /// @param _token Token to transfer.\\n    /// @param _from Sender address.\\n    /// @param _to Recepient address.\\n    /// @param _value Amount transferred.\\n    /// @return Whether transfer succeeded or not.\\n    function safeTransferFrom(IERC20 _token, address _from, address _to, uint256 _value) internal returns (bool) {\\n        (bool success, bytes memory data) = address(_token).call(\\n            abi.encodeCall(IERC20.transferFrom, (_from, _to, _value))\\n        );\\n        return (success && (data.length == 0 || abi.decode(data, (bool))));\\n    }\\n}\",\"keccak256\":\"0x3a53cfe0db97fcacb3a92c085bd9d7dfe86cc3005021dfd7c372374ab13f8e84\",\"license\":\"MIT\"}},\"version\":1}",
+  "bytecode": "0x60808060405234620002665762002c6a8038038091620000208285620003ad565b833981019060e081830312620002665780516001600160a01b03928382169291839003620002665760208201516001600160401b03908181116200026657830182601f820112156200026657828160206200007e93519101620003f6565b9460408401518281116200026657836200009a91860162000442565b926060850151908382116200026657620000b691860162000442565b926080850151928284168403620002665760c060a0870151960151963360018060a01b0319600054161760005560018060a01b0319600154161760015587519081116200039757600254600181811c911680156200038c575b60208210146200037657601f81116200030c575b506020601f82116001146200028c57620001c695936020959383620001b394600094859162000280575b508160011b9185199060031b1c1916176002555b600380546001600160a01b031916868416179055600589905560068a90556040516312a6505d60e21b815260606004820152606481018490526080602482015297889687958693608485019062000462565b8381036003190160448501529062000462565b0393165af1908115620002745760009162000228575b5060008051602062002c4a8339815191529362000215916004556040519384938452602084015260606040840152606083019062000462565b0390a16040516127c090816200048a8239f35b90506020813d6020116200026b575b816200024660209383620003ad565b8101031262000266575160008051602062002c4a833981519152620001dc565b600080fd5b3d915062000237565b6040513d6000823e3d90fd5b90508c0151386200014d565b601f1982169060026000528960206000209260005b818110620002f1575084600094620001c69a989460209a9894620001b39860019510620002d8575b505050811b0160025562000161565b0151861960f88460031b161c1916905538808e620002c9565b9183015184556001909301926020928301928c9201620002a1565b60026000527f405787fa12a823e0f2b7631cc41b3ba8828b3321ca811111fa75cd3aa3bb5ace601f830160051c810191602084106200036b575b601f0160051c01905b8181106200035e575062000123565b600081556001016200034f565b909150819062000346565b634e487b7160e01b600052602260045260246000fd5b90607f16906200010f565b634e487b7160e01b600052604160045260246000fd5b601f909101601f19168101906001600160401b038211908210176200039757604052565b60005b838110620003e55750506000910152565b8181015183820152602001620003d4565b919291906001600160401b03811162000397576040519162000423601f8301601f191660200184620003ad565b8294828452828201116200026657602062000440930190620003d1565b565b9080601f83011215620002665781516200045f92602001620003f6565b90565b906020916200047d81518092818552858086019101620003d1565b601f01601f191601019056fe6040608081526004908136101561001557600080fd5b600090813560e01c8063040c488814611f045780630c340a2414611edd5780630c7ac7b614611e0d5780631bd1823a14611bf65780632a7027de14611aee5780632be6d005146119115780632e0b6422146118f65780632e7700f0146118d85780632fbe3b03146118b0578063311a6c56146116d257806334e2672d146115005780633bf547241461130f578063441080fe146112f15780634660ebbe146112a65780634ab162e2146111465780636cc6cde11461111e5780637aa77f2914611100578063871fbf86146110b857806393ee267814610f305780639ace38c214610e54578063a0af81f014610e2c578063b2b9679214610c44578063b329036b14610c26578063c5d5528814610b11578063cb44c3fa14610ab3578063d2b8ae9c14610a64578063e3f07e9014610904578063e4c0aaf4146108ba578063e77d0bd31461068e578063e98c579b1461061b578063ee22610b146104c7578063ef48eee6146103ac578063f05a59f914610375578063fc548f08146103155763fe43a992146101a257600080fd5b34610311576101b036612162565b9190936101bc856121a4565b5060018101546001600160a01b039391929190841633810361030357600a84019081549060ff821660078110156102f0576102e0576002860190815490818a116102d05785518a81526001600160a01b039091166020820152999a8b9a8995948c949293909291610249918d91869060008051602061276b8339815191529080604081015b0390a26121fc565b809155156102ad575b5050505460081c16801560001461028457505050839283928392541682821561027b575bf15080f35b506108fc610276565b919550939192610296935416906126cd565b156102a057505080f35b5163022e258160e11b8152fd5b60ff1916600617835560008051602061272b8339815191528280a3873880610252565b85516305aafecf60e01b81528790fd5b50505051634e22597f60e11b8152fd5b634e487b7160e01b8a526021865260248afd5b5051635800797f60e11b8152fd5b5080fd5b5082346103715760203660031901126103715780356001600160a01b03818116939184900361036d578454163303610360575050600180546001600160a01b03191691909117905580f35b5163c383977560e01b8152fd5b8480fd5b8280fd5b50346103115760203660031901126103115760209181906001600160a01b0361039c61218e565b1681526009845220549051908152f35b5034610311576103bb36612162565b9190936103c7856121a4565b5080546001600160a01b03939192919084163381036104b957600a84019081549060ff821660078110156102f0576102e0576002860190815490818a116102d05785518a81526001600160a01b039091166020820152999a8b9a8995948c94929390929161044d918d91869060008051602061276b833981519152908060408101610241565b80915515610496575b5050505460081c16801560001461048157505050839283926001849301541682821561027b57f15080f35b919550939192600161029694015416906126cd565b60ff1916600617835560008051602061272b8339815191528280a3873880610456565b505163e2bc376b60e01b8152fd5b509134610311576020366003190112610311578035906104e6826121a4565b506005810154421061060c57600a81019081549260ff841660078110156105f9576105eb576002820180549087905560ff19909416600617928390556001600160a01b039260081c8316806105a857505094826105878388888080808b9a60008051602061276b8339815191529a829f600101541682821561059f575bf1505b5493519283529092166001600160a01b031660208201529081906040820190565b0390a260008051602061272b8339815191528280a380f35b506108fc610563565b846105ba9185600186015416906126cd565b156105dd575094839261058760008051602061276b833981519152938798610566565b865163022e258160e11b8152fd5b8651634e22597f60e11b8152fd5b634e487b7160e01b875260218252602487fd5b5083516302eb354360e41b8152fd5b50829034610371576020366003190112610371578254823592906001600160a01b03163303610680575090606060008051602061274b833981519152928260065560055492815193845260208401528201528061067a6060820161224e565b0390a180f35b905163c383977560e01b8152fd5b5034610311576020366003190112610311578235906106ac826121a4565b509060ff600a8301541660078110156108a7578503610898576106d36009830154426121fc565b600554116108895750918281946008600195019183835493556106f5856121a4565b5091868060a01b039283815416848983015416908788809581956107188d6121a4565b506002810154906003810154998c600a600784015493015460081c161560001461086b575091846107558b610750600a958497612241565b6121fc565b9a945b8160028401558160038401558201558260078201558260088201550197600660ff198a5416178955858115801561084a575b505050508481158015610829575b5050505080610811575b505084826107f9575b5050505082159283156107d2575b505050508060008051602061272b83398151915291a380f35b849384938885940154169083906107f0575bf15082388080806107b9565b506108fc6107e4565b610807935460081c166126cd565b50388080846107ab565b6108219187865460081c166126cd565b5038806107a2565b8392839283928390610841575bf15088388481610798565b506108fc610836565b8392839283928390610862575bf1508138858161078a565b506108fc610857565b9398508995509184610882600a939b82959c6121fc565b9699610758565b51634799187b60e01b81528490fd5b51638225aba560e01b81528490fd5b634e487b7160e01b855260218652602485fd5b50829034610371576020366003190112610371576001600160a01b0382358181169391929084900361036d5784549233908416036103605750506001600160a01b03191617815580f35b50346103115760a0366003190112610311578235610920612178565b604435916064356001600160401b038111610a60576109429036908801612070565b9161094b6120d2565b6001600160a01b038281168852600960205286882054909591908411610a50576109778430338661263d565b15610a4057600582916109886121d9565b5080546001600160a01b0319908116331782556001820180549091169990921698891790915560028101869055600a81018054610100600160a81b031916600887901b610100600160a81b03161790550155600754600019810197908811610a2d575060209750917fb96ca2c0c34e2ad6384277748b8101f4bddc3cbeaad7086e59cd315bd19aa8c591610a24889488519384933398856122e0565b0390a451908152f35b634e487b7160e01b815260118952602490fd5b865163022e258160e11b81528990fd5b8651631d9c3dff60e31b81528990fd5b8580fd5b508234610371578160031936011261037157610a7e61218e565b83546001600160a01b03929083163303610aa5575016825260096020526024359082205580f35b835163c383977560e01b8152fd5b50829034610371576020366003190112610371578254823592906001600160a01b03163303610680575090606060008051602061274b8339815191529282600555600654815193845260208401528201528061067a6060820161224e565b508234610371576003198281360112610c22576001600160401b038235818111610a6057610b429036908501612070565b90602435908111610a6057610b5a9036908501612070565b85549091906001600160a01b039081163303610c125790610bb187602094936003541692610bc08951978896879586946312a6505d60e21b865260608d870152866064870152608060248701526084860190612122565b91848303016044850152612122565b03925af1928315610c0957508392610bd757505580f35b9091506020813d602011610c01575b81610bf36020938361201e565b810103126103715751905580f35b3d9150610be6565b513d85823e3d90fd5b855163c383977560e01b81528590fd5b8380fd5b50346103115781600319360112610311576020906005549051908152f35b503461031157610c5336612162565b610c5e8293926121a4565b50600a8101805460ff8116926007841015610e1957831580610e0b575b610dfb576003841015610deb5788600292838301548711610ddc578690426009850155600196878114600014610d3257505082546001600160a01b031633039150610d22905057600301849055815460ff1916179055905b8251916003811015610d0f577f10c8b22b69e324b0227c6adfa65183c771304c11385423e93ce99779a7483dbf9495965082526020820152a280f35b634e487b7160e01b865260218752602486fd5b855163e2bc376b60e01b81528990fd5b9496949293928703610d75575050808301546001600160a01b03163303610d665701849055815460ff191617905590610cd3565b508551635800797f60e11b8152fd5b8254949694919390916001600160a01b03903390821603610da65750505060030155815460ff191617905590610cd3565b909291935086829795970154163314600014610dcd570185905560ff191617905590610cd3565b50865163351c18ff60e21b8152fd5b5086516305aafecf60e01b8152fd5b8551630d71592960e31b81528990fd5b85516338e5e54b60e21b81528990fd5b506005810154421015610c7b565b634e487b7160e01b885260218952602488fd5b503461031157816003193601126103115760035490516001600160a01b039091168152602090f35b503461031157602036600319011261031157823560075481101561037157610e7b906121a4565b5090600160a01b60019003918281541693836001830154169160028101546003820154888301546005840154600685015491600786015493600887015495600988015497600a01549a60ff8c169a81519e8f908152602001528d015260608c015260808b015260a08a015260c089015260e08801526101008701526101208601526007821015610f1d5750610180945061014084015260081c16610160820152f35b634e487b7160e01b815260218652602490fd5b5082903461037157602036600319011261037157813590610f50826121a4565b50600a81019182549060ff821660078110156110a5576001810361105d575082546001600160a01b0316330361104e575090859185820154915b6006600282019285610f9d8686546121fc565b94556003830186905588830186905560ff19161780865560081c6001600160a01b03908116959092908661101f575084955091600182868080808099979887829a5416828215611016575bf15001541682821561100d575bf1505b60008051602061272b8339815191528380a380f35b506108fc610ff5565b506108fc610fe8565b82949550611038849261104898846001965416906126cd565b505460081c1692015416906126cd565b50610ff8565b5163e2bc376b60e01b81528590fd5b6002036110965760018301546001600160a01b031633036110875750908591600382015491610f8a565b51635800797f60e11b81528590fd5b51630a7b6ec160e01b81528590fd5b634e487b7160e01b885260218752602488fd5b5082346103715781600319360112610371576024359260038410156110fd57506080926110e59135612312565b92939091815194855260208501528301526060820152f35b80fd5b50823461037157826003193601126103715760209250549051908152f35b503461031157816003193601126103115760015490516001600160a01b039091168152602090f35b50346103115760c0366003190112610311578235611162612178565b604435906064356001600160401b038111610a60576111849036908801612070565b61118c6120d2565b9260a4359460018060a01b038087168097036112a25780851689526009602052878920548211611292576111c28230338861263d565b1561128257600583916111d36121d9565b5080546001600160a01b03199081169290991691821781556001810180549099168a1790985560028801849055600a88018054610100600160a81b031916600889901b610100600160a81b031617905596015560075460001981019890891161126f57506020985091610a248894927fb96ca2c0c34e2ad6384277748b8101f4bddc3cbeaad7086e59cd315bd19aa8c5948951948594856122e0565b634e487b7160e01b815260118a52602490fd5b875163022e258160e11b81528a90fd5b8751631d9c3dff60e31b81528a90fd5b8880fd5b5082346103715760203660031901126103715780356001600160a01b03818116939184900361036d578454163303610360575050600380546001600160a01b03191691909117905580f35b50346103115781600319360112610311576020906006549051908152f35b508290602080600319360112610c225782359161132b836121a4565b50600a81019060ff8254166007811015806114ed576001821491821590816114de575b82826114ba575b50506114aa576110a55780611492575b6114825760018101546001600160a01b03969087163303611474576008820196611390348954612241565b8098556001541696858551809963f7434ea960e01b8252828583015281806113ba6024820161224e565b03915afa97881561146a57899861143b575b50871161142d57504260098201556007015485111561141d577fc74b9f7dedf2887cd3c113b6d8da9cea19e55c1116e25f1f0e1b72d7543179b5939450600360ff198254161790555160018152a280f35b5050509061142a91612438565b80f35b835163818d938f60e01b8152fd5b9097508581813d8311611463575b611453818361201e565b810103126112a2575196896113cc565b503d611449565b85513d8b823e3d90fd5b8351635800797f60e11b8152fd5b8251630627cd6b60e01b81528690fd5b506114a16009820154426121fc565b60065411611365565b845163365105ef60e11b81528890fd5b9091506114cb578814158a82611355565b634e487b7160e01b8a526021895260248afd5b8a92506002811415915061134e565b634e487b7160e01b895260218852602489fd5b50913461031157602090816003193601126103715780356001600160401b039182821161036d573660238301121561036d578181013592831161036d576024903660248585010111610a605785546001600160a01b031633036116c457506115696002546120e8565b601f8111611680575b508490601f84116001146115fd5750918060248697938260809660008051602061274b83398151915299916115f0575b508360011b906000198560031b1c1916176002555b6060600554956006548151998a98895288015286015282606086015201848401378181018301869052601f01601f19168101030190a180f35b83915082010135386115a2565b90601f198416600287528587209287905b82821061166557505060008051602061274b8339815191529697938593849360809760249410611649575b5050600183811b016002556115b7565b8201830135600019600386901b60f8161c191690553880611639565b909293876001819284888a010135815501950193019061160e565b60028652848620601f850160051c8101918686106116ba575b601f0160051c01905b8181106116af5750611572565b8681556001016116a2565b9091508190611699565b865163c383977560e01b8152fd5b5034610311576116e136612162565b6001549092916001600160a01b03918216338190036118a05760028511611890578186526008602052838620549360ff600a61171c876121a4565b500154166007811015610e19576005036118815760207f394027a5fa6e098a1191094d1719d6929b9abc535fcc0c8f448d6a4e756222769151878152a360038260008051602061272b8339815191528680a3611777826121a4565b509281845416908260018601541693600382101561186e57958097816117a18194600a999a612312565b9a929b919690948160028401558160038401558201558260078201558260088201550198600660ff198b5416178a55858115801561184d575b50505050858115801561182c575b5050505080611814575b5050826117fd578480f35b61180b935460081c166126cd565b50388080808480f35b6118249183875460081c166126cd565b5038806117f2565b8392839283928390611844575bf150863885816117e8565b506108fc611839565b8392839283928390611865575bf150813885816117da565b506108fc61185a565b634e487b7160e01b875260218852602487fd5b5163f10068b560e01b81528790fd5b83516309efd47960e41b81528790fd5b8351630955f84760e31b81528790fd5b5082346103715760203660031901126103715760209282913581526008845220549051908152f35b50346103115781600319360112610311576020906007549051908152f35b50346103115781600319360112610311576020905160028152f35b508290602080600319360112610c225782359161192d836121a4565b5093600a85019060ff825416600781101580611ace57600182141580611ae1575b8181611abd575b50611aad57611a9a5760021480611a82575b611a745785546001600160a01b03969087163303611a6557600781019661198f348954612241565b8098556001541696858551809963f7434ea960e01b8252828683015281806119b96024820161224e565b03915afa97881561146a578998611a36575b508711611a275742600982015560080154861115611a19577fc74b9f7dedf2887cd3c113b6d8da9cea19e55c1116e25f1f0e1b72d7543179b594955060ff198254161790555160028152a280f35b505050509061142a91612438565b508251631a48f3db60e11b8152fd5b9097508581813d8311611a5e575b611a4e818361201e565b810103126112a2575196896119cb565b503d611a44565b50825163e2bc376b60e01b8152fd5b8251630627cd6b60e01b8152fd5b50611a916009870154426121fc565b60065411611967565b634e487b7160e01b885260218252602488fd5b845163376af24960e21b81528390fd5b9050611ace57600382141581611955565b634e487b7160e01b895260218352602489fd5b505087600282141561194e565b5060603660031901126103115782356024356001600160401b038111610c2257611b1b9036908601612070565b611b236120bc565b918480526009602052838520543411611be657806005611b416121d9565b5080546001600160a01b0319908116331782556001820180549091166001600160a01b03979097169687179055346002820155600a81018054610100600160a81b03191690550155600754600019810195908611611bd35750602095507f0a7ca50c43ec865fdc8519822762f88432e18409024b9c036d6507b9c8f79d80610a2486928651918291339634908461221f565b634e487b7160e01b815260118752602490fd5b8351631d9c3dff60e31b81528690fd5b503461031157602036600319011261031157823590611c14826121a4565b509060ff600a8301541660078110156108a757600303611dfe57611c3c6009830154426121fc565b60055411610889575091828194600760029501918383549355611c5e856121a4565b50805460018201546001600160a01b039487938493928716928716918491829190611c888d6121a4565b50978e890154838a0154918c600a60088d01549c015460081c161592801515600014611df657925b15611dd857509184611ccf83611cc9600a9584976121fc565b9c612241565b945b600282908401558160038401558201558260078201558260088201550197600660ff198a54161789558581158015611db7575b505050508481158015611d96575b5050505080611d7e575b50508482611d66575b505050508215928315611d4b57505050508060008051602061272b83398151915291a380f35b84938493849354169083906107f057f15082388080806107b9565b611d74935460081c166126cd565b5038808084611d25565b611d8e9187865460081c166126cd565b503880611d1c565b8392839283928390611dae575bf15088388481611d12565b506108fc611da3565b8392839283928390611dcf575bf15081388581611d04565b506108fc611dc4565b999550819398509184611dee600a9382956121fc565b969499611cd1565b508192611cb0565b51635ed7670b60e11b81528490fd5b5090346110fd57806003193601126110fd578151918282600254611e30816120e8565b9081845260209560019187600182169182600014611eb6575050600114611e78575b505050611e749291611e6591038561201e565b51928284938452830190612122565b0390f35b9190869350600283528383205b828410611e9e5750505082010181611e65611e74611e52565b8054848a018601528895508794909301928101611e85565b60ff19168782015293151560051b86019093019350849250611e659150611e749050611e52565b5034610311578160031936011261031157905490516001600160a01b039091168152602090f35b5060803660031901126103115782356024356001600160401b038111610c2257611f319036908601612070565b90611f3a6120bc565b906064359260018060a01b0380851680950361201a57868052600960205285872054341161200a5760058391611f6e6121d9565b508054969091166001600160a01b0319968716811782556001820180549097168817909655346002820155600a81018054610100600160a81b03191690550155600754600019810196908711611ff757506020965085917f0a7ca50c43ec865fdc8519822762f88432e18409024b9c036d6507b9c8f79d8091610a24875192839234908461221f565b634e487b7160e01b815260118852602490fd5b8551631d9c3dff60e31b81528890fd5b8680fd5b90601f801991011681019081106001600160401b0382111761203f57604052565b634e487b7160e01b600052604160045260246000fd5b6001600160401b03811161203f57601f01601f191660200190565b81601f820112156120b75780359061208782612055565b92612095604051948561201e565b828452602083830101116120b757816000926020809301838601378301015290565b600080fd5b604435906001600160a01b03821682036120b757565b608435906001600160a01b03821682036120b757565b90600182811c92168015612118575b602083101461210257565b634e487b7160e01b600052602260045260246000fd5b91607f16916120f7565b919082519283825260005b84811061214e575050826000602080949584010152601f8019910116010190565b60208183018101518483018201520161212d565b60409060031901126120b7576004359060243590565b602435906001600160a01b03821682036120b757565b600435906001600160a01b03821682036120b757565b6007548110156121c3576007600052600b602060002091020190600090565b634e487b7160e01b600052603260045260246000fd5b600754600160401b81101561203f578060016121f892016007556121a4565b9091565b9190820391821161220957565b634e487b7160e01b600052601160045260246000fd5b61223760409295949395606083526060830190612122565b9460208201520152565b9190820180921161220957565b6002546000929161225e826120e8565b908181526020926001906001811690816000146122c35750600114612284575b50505050565b929394509060026000528360002092846000945b8386106122af57505050500101903880808061227e565b805485870183015294019385908201612298565b60ff191685840152505090151560051b010191503880808061227e565b90926122f9606093969594608084526080840190612122565b6001600160a01b03909616602083015260408201520152565b91600092600092838061232582946121a4565b50926002840154936003810154986004820154600783015495600884015493600a60018060a01b0391015460081c1615946003811015612424576001810361239a5750505050506000146123865750610750612382928792612241565b9391565b93925085945094612396916121fc565b9290565b939b5093969591945092916002036123f157505080156123e957925b156123d35750906123ca816123d0936121fc565b95612241565b91565b95945081939250906123e4916121fc565b929190565b5081926123b6565b93985050505060011c8095819060011c926000146124185750906123ca816123d093612241565b93925094508093509290565b634e487b7160e01b82526021600452602482fd5b90612442826121a4565b50600a8101805460ff191660051790556001546040805163c13517e160e01b815260026004820152602481018290526001600160a01b0395602093919290918490849089168189816124966044820161224e565b03925af19283156125ea5760009361259b575b507f8bd32f430ff060e6bd204709b3790c9807987263d3230c580dc80b5f89e27186916060608092600688019580875560005260088752828160002055896001541695549660045490825194855284015282015260006060820152a36007810180549083808311612567575b505050600881019182549281841161252f575b5050505050565b60009460018695948461254588979688976121fc565b945501541682821561255e575bf1503880808080612528565b506108fc612552565b60008093928261257a83959484956121fc565b915587865416828215612592575bf150388083612515565b506108fc612588565b9092508381813d83116125e3575b6125b3818361201e565b810103126120b75751917f8bd32f430ff060e6bd204709b3790c9807987263d3230c580dc80b5f89e271866124a9565b503d6125a9565b50513d6000823e3d90fd5b3d15612620573d9061260682612055565b91612614604051938461201e565b82523d6000602084013e565b606090565b908160209103126120b7575180151581036120b75790565b9060018060a01b039384604051948160208701946323b872dd60e01b865216602487015216604485015260648401526064835260a083018381106001600160401b0382111761203f57600094859485926040525193165af161269d6125f5565b816126a6575090565b80518015925082156126b757505090565b6126ca9250602080918301019101612625565b90565b60405163a9059cbb60e01b602082019081526001600160a01b0393841660248301526044808301959095529381529192608083016001600160401b0381118482101761203f57600094859485926040525193165af161269d6125f556fe89e6168584e1de3ec704ff46376271b5481b0d9b2b0ef0ae102f0d001093e000f0d0a0b363c32316c3e6e7e797bbc126af09c634db439ed65a3f96afe7ae2367d1432ca9a38d944f01b256a411861b109bc4bfe200c40d7144e919a16b86a8a8a26469706673582212205b2f8a11e2887439a1f7713cbd67d4ed2d8739faa61061ca66daa3e5c240117964736f6c63430008180033f0d0a0b363c32316c3e6e7e797bbc126af09c634db439ed65a3f96afe7ae2367",
+  "deployedBytecode": "0x6040608081526004908136101561001557600080fd5b600090813560e01c8063040c488814611f045780630c340a2414611edd5780630c7ac7b614611e0d5780631bd1823a14611bf65780632a7027de14611aee5780632be6d005146119115780632e0b6422146118f65780632e7700f0146118d85780632fbe3b03146118b0578063311a6c56146116d257806334e2672d146115005780633bf547241461130f578063441080fe146112f15780634660ebbe146112a65780634ab162e2146111465780636cc6cde11461111e5780637aa77f2914611100578063871fbf86146110b857806393ee267814610f305780639ace38c214610e54578063a0af81f014610e2c578063b2b9679214610c44578063b329036b14610c26578063c5d5528814610b11578063cb44c3fa14610ab3578063d2b8ae9c14610a64578063e3f07e9014610904578063e4c0aaf4146108ba578063e77d0bd31461068e578063e98c579b1461061b578063ee22610b146104c7578063ef48eee6146103ac578063f05a59f914610375578063fc548f08146103155763fe43a992146101a257600080fd5b34610311576101b036612162565b9190936101bc856121a4565b5060018101546001600160a01b039391929190841633810361030357600a84019081549060ff821660078110156102f0576102e0576002860190815490818a116102d05785518a81526001600160a01b039091166020820152999a8b9a8995948c949293909291610249918d91869060008051602061276b8339815191529080604081015b0390a26121fc565b809155156102ad575b5050505460081c16801560001461028457505050839283928392541682821561027b575bf15080f35b506108fc610276565b919550939192610296935416906126cd565b156102a057505080f35b5163022e258160e11b8152fd5b60ff1916600617835560008051602061272b8339815191528280a3873880610252565b85516305aafecf60e01b81528790fd5b50505051634e22597f60e11b8152fd5b634e487b7160e01b8a526021865260248afd5b5051635800797f60e11b8152fd5b5080fd5b5082346103715760203660031901126103715780356001600160a01b03818116939184900361036d578454163303610360575050600180546001600160a01b03191691909117905580f35b5163c383977560e01b8152fd5b8480fd5b8280fd5b50346103115760203660031901126103115760209181906001600160a01b0361039c61218e565b1681526009845220549051908152f35b5034610311576103bb36612162565b9190936103c7856121a4565b5080546001600160a01b03939192919084163381036104b957600a84019081549060ff821660078110156102f0576102e0576002860190815490818a116102d05785518a81526001600160a01b039091166020820152999a8b9a8995948c94929390929161044d918d91869060008051602061276b833981519152908060408101610241565b80915515610496575b5050505460081c16801560001461048157505050839283926001849301541682821561027b57f15080f35b919550939192600161029694015416906126cd565b60ff1916600617835560008051602061272b8339815191528280a3873880610456565b505163e2bc376b60e01b8152fd5b509134610311576020366003190112610311578035906104e6826121a4565b506005810154421061060c57600a81019081549260ff841660078110156105f9576105eb576002820180549087905560ff19909416600617928390556001600160a01b039260081c8316806105a857505094826105878388888080808b9a60008051602061276b8339815191529a829f600101541682821561059f575bf1505b5493519283529092166001600160a01b031660208201529081906040820190565b0390a260008051602061272b8339815191528280a380f35b506108fc610563565b846105ba9185600186015416906126cd565b156105dd575094839261058760008051602061276b833981519152938798610566565b865163022e258160e11b8152fd5b8651634e22597f60e11b8152fd5b634e487b7160e01b875260218252602487fd5b5083516302eb354360e41b8152fd5b50829034610371576020366003190112610371578254823592906001600160a01b03163303610680575090606060008051602061274b833981519152928260065560055492815193845260208401528201528061067a6060820161224e565b0390a180f35b905163c383977560e01b8152fd5b5034610311576020366003190112610311578235906106ac826121a4565b509060ff600a8301541660078110156108a7578503610898576106d36009830154426121fc565b600554116108895750918281946008600195019183835493556106f5856121a4565b5091868060a01b039283815416848983015416908788809581956107188d6121a4565b506002810154906003810154998c600a600784015493015460081c161560001461086b575091846107558b610750600a958497612241565b6121fc565b9a945b8160028401558160038401558201558260078201558260088201550197600660ff198a5416178955858115801561084a575b505050508481158015610829575b5050505080610811575b505084826107f9575b5050505082159283156107d2575b505050508060008051602061272b83398151915291a380f35b849384938885940154169083906107f0575bf15082388080806107b9565b506108fc6107e4565b610807935460081c166126cd565b50388080846107ab565b6108219187865460081c166126cd565b5038806107a2565b8392839283928390610841575bf15088388481610798565b506108fc610836565b8392839283928390610862575bf1508138858161078a565b506108fc610857565b9398508995509184610882600a939b82959c6121fc565b9699610758565b51634799187b60e01b81528490fd5b51638225aba560e01b81528490fd5b634e487b7160e01b855260218652602485fd5b50829034610371576020366003190112610371576001600160a01b0382358181169391929084900361036d5784549233908416036103605750506001600160a01b03191617815580f35b50346103115760a0366003190112610311578235610920612178565b604435916064356001600160401b038111610a60576109429036908801612070565b9161094b6120d2565b6001600160a01b038281168852600960205286882054909591908411610a50576109778430338661263d565b15610a4057600582916109886121d9565b5080546001600160a01b0319908116331782556001820180549091169990921698891790915560028101869055600a81018054610100600160a81b031916600887901b610100600160a81b03161790550155600754600019810197908811610a2d575060209750917fb96ca2c0c34e2ad6384277748b8101f4bddc3cbeaad7086e59cd315bd19aa8c591610a24889488519384933398856122e0565b0390a451908152f35b634e487b7160e01b815260118952602490fd5b865163022e258160e11b81528990fd5b8651631d9c3dff60e31b81528990fd5b8580fd5b508234610371578160031936011261037157610a7e61218e565b83546001600160a01b03929083163303610aa5575016825260096020526024359082205580f35b835163c383977560e01b8152fd5b50829034610371576020366003190112610371578254823592906001600160a01b03163303610680575090606060008051602061274b8339815191529282600555600654815193845260208401528201528061067a6060820161224e565b508234610371576003198281360112610c22576001600160401b038235818111610a6057610b429036908501612070565b90602435908111610a6057610b5a9036908501612070565b85549091906001600160a01b039081163303610c125790610bb187602094936003541692610bc08951978896879586946312a6505d60e21b865260608d870152866064870152608060248701526084860190612122565b91848303016044850152612122565b03925af1928315610c0957508392610bd757505580f35b9091506020813d602011610c01575b81610bf36020938361201e565b810103126103715751905580f35b3d9150610be6565b513d85823e3d90fd5b855163c383977560e01b81528590fd5b8380fd5b50346103115781600319360112610311576020906005549051908152f35b503461031157610c5336612162565b610c5e8293926121a4565b50600a8101805460ff8116926007841015610e1957831580610e0b575b610dfb576003841015610deb5788600292838301548711610ddc578690426009850155600196878114600014610d3257505082546001600160a01b031633039150610d22905057600301849055815460ff1916179055905b8251916003811015610d0f577f10c8b22b69e324b0227c6adfa65183c771304c11385423e93ce99779a7483dbf9495965082526020820152a280f35b634e487b7160e01b865260218752602486fd5b855163e2bc376b60e01b81528990fd5b9496949293928703610d75575050808301546001600160a01b03163303610d665701849055815460ff191617905590610cd3565b508551635800797f60e11b8152fd5b8254949694919390916001600160a01b03903390821603610da65750505060030155815460ff191617905590610cd3565b909291935086829795970154163314600014610dcd570185905560ff191617905590610cd3565b50865163351c18ff60e21b8152fd5b5086516305aafecf60e01b8152fd5b8551630d71592960e31b81528990fd5b85516338e5e54b60e21b81528990fd5b506005810154421015610c7b565b634e487b7160e01b885260218952602488fd5b503461031157816003193601126103115760035490516001600160a01b039091168152602090f35b503461031157602036600319011261031157823560075481101561037157610e7b906121a4565b5090600160a01b60019003918281541693836001830154169160028101546003820154888301546005840154600685015491600786015493600887015495600988015497600a01549a60ff8c169a81519e8f908152602001528d015260608c015260808b015260a08a015260c089015260e08801526101008701526101208601526007821015610f1d5750610180945061014084015260081c16610160820152f35b634e487b7160e01b815260218652602490fd5b5082903461037157602036600319011261037157813590610f50826121a4565b50600a81019182549060ff821660078110156110a5576001810361105d575082546001600160a01b0316330361104e575090859185820154915b6006600282019285610f9d8686546121fc565b94556003830186905588830186905560ff19161780865560081c6001600160a01b03908116959092908661101f575084955091600182868080808099979887829a5416828215611016575bf15001541682821561100d575bf1505b60008051602061272b8339815191528380a380f35b506108fc610ff5565b506108fc610fe8565b82949550611038849261104898846001965416906126cd565b505460081c1692015416906126cd565b50610ff8565b5163e2bc376b60e01b81528590fd5b6002036110965760018301546001600160a01b031633036110875750908591600382015491610f8a565b51635800797f60e11b81528590fd5b51630a7b6ec160e01b81528590fd5b634e487b7160e01b885260218752602488fd5b5082346103715781600319360112610371576024359260038410156110fd57506080926110e59135612312565b92939091815194855260208501528301526060820152f35b80fd5b50823461037157826003193601126103715760209250549051908152f35b503461031157816003193601126103115760015490516001600160a01b039091168152602090f35b50346103115760c0366003190112610311578235611162612178565b604435906064356001600160401b038111610a60576111849036908801612070565b61118c6120d2565b9260a4359460018060a01b038087168097036112a25780851689526009602052878920548211611292576111c28230338861263d565b1561128257600583916111d36121d9565b5080546001600160a01b03199081169290991691821781556001810180549099168a1790985560028801849055600a88018054610100600160a81b031916600889901b610100600160a81b031617905596015560075460001981019890891161126f57506020985091610a248894927fb96ca2c0c34e2ad6384277748b8101f4bddc3cbeaad7086e59cd315bd19aa8c5948951948594856122e0565b634e487b7160e01b815260118a52602490fd5b875163022e258160e11b81528a90fd5b8751631d9c3dff60e31b81528a90fd5b8880fd5b5082346103715760203660031901126103715780356001600160a01b03818116939184900361036d578454163303610360575050600380546001600160a01b03191691909117905580f35b50346103115781600319360112610311576020906006549051908152f35b508290602080600319360112610c225782359161132b836121a4565b50600a81019060ff8254166007811015806114ed576001821491821590816114de575b82826114ba575b50506114aa576110a55780611492575b6114825760018101546001600160a01b03969087163303611474576008820196611390348954612241565b8098556001541696858551809963f7434ea960e01b8252828583015281806113ba6024820161224e565b03915afa97881561146a57899861143b575b50871161142d57504260098201556007015485111561141d577fc74b9f7dedf2887cd3c113b6d8da9cea19e55c1116e25f1f0e1b72d7543179b5939450600360ff198254161790555160018152a280f35b5050509061142a91612438565b80f35b835163818d938f60e01b8152fd5b9097508581813d8311611463575b611453818361201e565b810103126112a2575196896113cc565b503d611449565b85513d8b823e3d90fd5b8351635800797f60e11b8152fd5b8251630627cd6b60e01b81528690fd5b506114a16009820154426121fc565b60065411611365565b845163365105ef60e11b81528890fd5b9091506114cb578814158a82611355565b634e487b7160e01b8a526021895260248afd5b8a92506002811415915061134e565b634e487b7160e01b895260218852602489fd5b50913461031157602090816003193601126103715780356001600160401b039182821161036d573660238301121561036d578181013592831161036d576024903660248585010111610a605785546001600160a01b031633036116c457506115696002546120e8565b601f8111611680575b508490601f84116001146115fd5750918060248697938260809660008051602061274b83398151915299916115f0575b508360011b906000198560031b1c1916176002555b6060600554956006548151998a98895288015286015282606086015201848401378181018301869052601f01601f19168101030190a180f35b83915082010135386115a2565b90601f198416600287528587209287905b82821061166557505060008051602061274b8339815191529697938593849360809760249410611649575b5050600183811b016002556115b7565b8201830135600019600386901b60f8161c191690553880611639565b909293876001819284888a010135815501950193019061160e565b60028652848620601f850160051c8101918686106116ba575b601f0160051c01905b8181106116af5750611572565b8681556001016116a2565b9091508190611699565b865163c383977560e01b8152fd5b5034610311576116e136612162565b6001549092916001600160a01b03918216338190036118a05760028511611890578186526008602052838620549360ff600a61171c876121a4565b500154166007811015610e19576005036118815760207f394027a5fa6e098a1191094d1719d6929b9abc535fcc0c8f448d6a4e756222769151878152a360038260008051602061272b8339815191528680a3611777826121a4565b509281845416908260018601541693600382101561186e57958097816117a18194600a999a612312565b9a929b919690948160028401558160038401558201558260078201558260088201550198600660ff198b5416178a55858115801561184d575b50505050858115801561182c575b5050505080611814575b5050826117fd578480f35b61180b935460081c166126cd565b50388080808480f35b6118249183875460081c166126cd565b5038806117f2565b8392839283928390611844575bf150863885816117e8565b506108fc611839565b8392839283928390611865575bf150813885816117da565b506108fc61185a565b634e487b7160e01b875260218852602487fd5b5163f10068b560e01b81528790fd5b83516309efd47960e41b81528790fd5b8351630955f84760e31b81528790fd5b5082346103715760203660031901126103715760209282913581526008845220549051908152f35b50346103115781600319360112610311576020906007549051908152f35b50346103115781600319360112610311576020905160028152f35b508290602080600319360112610c225782359161192d836121a4565b5093600a85019060ff825416600781101580611ace57600182141580611ae1575b8181611abd575b50611aad57611a9a5760021480611a82575b611a745785546001600160a01b03969087163303611a6557600781019661198f348954612241565b8098556001541696858551809963f7434ea960e01b8252828683015281806119b96024820161224e565b03915afa97881561146a578998611a36575b508711611a275742600982015560080154861115611a19577fc74b9f7dedf2887cd3c113b6d8da9cea19e55c1116e25f1f0e1b72d7543179b594955060ff198254161790555160028152a280f35b505050509061142a91612438565b508251631a48f3db60e11b8152fd5b9097508581813d8311611a5e575b611a4e818361201e565b810103126112a2575196896119cb565b503d611a44565b50825163e2bc376b60e01b8152fd5b8251630627cd6b60e01b8152fd5b50611a916009870154426121fc565b60065411611967565b634e487b7160e01b885260218252602488fd5b845163376af24960e21b81528390fd5b9050611ace57600382141581611955565b634e487b7160e01b895260218352602489fd5b505087600282141561194e565b5060603660031901126103115782356024356001600160401b038111610c2257611b1b9036908601612070565b611b236120bc565b918480526009602052838520543411611be657806005611b416121d9565b5080546001600160a01b0319908116331782556001820180549091166001600160a01b03979097169687179055346002820155600a81018054610100600160a81b03191690550155600754600019810195908611611bd35750602095507f0a7ca50c43ec865fdc8519822762f88432e18409024b9c036d6507b9c8f79d80610a2486928651918291339634908461221f565b634e487b7160e01b815260118752602490fd5b8351631d9c3dff60e31b81528690fd5b503461031157602036600319011261031157823590611c14826121a4565b509060ff600a8301541660078110156108a757600303611dfe57611c3c6009830154426121fc565b60055411610889575091828194600760029501918383549355611c5e856121a4565b50805460018201546001600160a01b039487938493928716928716918491829190611c888d6121a4565b50978e890154838a0154918c600a60088d01549c015460081c161592801515600014611df657925b15611dd857509184611ccf83611cc9600a9584976121fc565b9c612241565b945b600282908401558160038401558201558260078201558260088201550197600660ff198a54161789558581158015611db7575b505050508481158015611d96575b5050505080611d7e575b50508482611d66575b505050508215928315611d4b57505050508060008051602061272b83398151915291a380f35b84938493849354169083906107f057f15082388080806107b9565b611d74935460081c166126cd565b5038808084611d25565b611d8e9187865460081c166126cd565b503880611d1c565b8392839283928390611dae575bf15088388481611d12565b506108fc611da3565b8392839283928390611dcf575bf15081388581611d04565b506108fc611dc4565b999550819398509184611dee600a9382956121fc565b969499611cd1565b508192611cb0565b51635ed7670b60e11b81528490fd5b5090346110fd57806003193601126110fd578151918282600254611e30816120e8565b9081845260209560019187600182169182600014611eb6575050600114611e78575b505050611e749291611e6591038561201e565b51928284938452830190612122565b0390f35b9190869350600283528383205b828410611e9e5750505082010181611e65611e74611e52565b8054848a018601528895508794909301928101611e85565b60ff19168782015293151560051b86019093019350849250611e659150611e749050611e52565b5034610311578160031936011261031157905490516001600160a01b039091168152602090f35b5060803660031901126103115782356024356001600160401b038111610c2257611f319036908601612070565b90611f3a6120bc565b906064359260018060a01b0380851680950361201a57868052600960205285872054341161200a5760058391611f6e6121d9565b508054969091166001600160a01b0319968716811782556001820180549097168817909655346002820155600a81018054610100600160a81b03191690550155600754600019810196908711611ff757506020965085917f0a7ca50c43ec865fdc8519822762f88432e18409024b9c036d6507b9c8f79d8091610a24875192839234908461221f565b634e487b7160e01b815260118852602490fd5b8551631d9c3dff60e31b81528890fd5b8680fd5b90601f801991011681019081106001600160401b0382111761203f57604052565b634e487b7160e01b600052604160045260246000fd5b6001600160401b03811161203f57601f01601f191660200190565b81601f820112156120b75780359061208782612055565b92612095604051948561201e565b828452602083830101116120b757816000926020809301838601378301015290565b600080fd5b604435906001600160a01b03821682036120b757565b608435906001600160a01b03821682036120b757565b90600182811c92168015612118575b602083101461210257565b634e487b7160e01b600052602260045260246000fd5b91607f16916120f7565b919082519283825260005b84811061214e575050826000602080949584010152601f8019910116010190565b60208183018101518483018201520161212d565b60409060031901126120b7576004359060243590565b602435906001600160a01b03821682036120b757565b600435906001600160a01b03821682036120b757565b6007548110156121c3576007600052600b602060002091020190600090565b634e487b7160e01b600052603260045260246000fd5b600754600160401b81101561203f578060016121f892016007556121a4565b9091565b9190820391821161220957565b634e487b7160e01b600052601160045260246000fd5b61223760409295949395606083526060830190612122565b9460208201520152565b9190820180921161220957565b6002546000929161225e826120e8565b908181526020926001906001811690816000146122c35750600114612284575b50505050565b929394509060026000528360002092846000945b8386106122af57505050500101903880808061227e565b805485870183015294019385908201612298565b60ff191685840152505090151560051b010191503880808061227e565b90926122f9606093969594608084526080840190612122565b6001600160a01b03909616602083015260408201520152565b91600092600092838061232582946121a4565b50926002840154936003810154986004820154600783015495600884015493600a60018060a01b0391015460081c1615946003811015612424576001810361239a5750505050506000146123865750610750612382928792612241565b9391565b93925085945094612396916121fc565b9290565b939b5093969591945092916002036123f157505080156123e957925b156123d35750906123ca816123d0936121fc565b95612241565b91565b95945081939250906123e4916121fc565b929190565b5081926123b6565b93985050505060011c8095819060011c926000146124185750906123ca816123d093612241565b93925094508093509290565b634e487b7160e01b82526021600452602482fd5b90612442826121a4565b50600a8101805460ff191660051790556001546040805163c13517e160e01b815260026004820152602481018290526001600160a01b0395602093919290918490849089168189816124966044820161224e565b03925af19283156125ea5760009361259b575b507f8bd32f430ff060e6bd204709b3790c9807987263d3230c580dc80b5f89e27186916060608092600688019580875560005260088752828160002055896001541695549660045490825194855284015282015260006060820152a36007810180549083808311612567575b505050600881019182549281841161252f575b5050505050565b60009460018695948461254588979688976121fc565b945501541682821561255e575bf1503880808080612528565b506108fc612552565b60008093928261257a83959484956121fc565b915587865416828215612592575bf150388083612515565b506108fc612588565b9092508381813d83116125e3575b6125b3818361201e565b810103126120b75751917f8bd32f430ff060e6bd204709b3790c9807987263d3230c580dc80b5f89e271866124a9565b503d6125a9565b50513d6000823e3d90fd5b3d15612620573d9061260682612055565b91612614604051938461201e565b82523d6000602084013e565b606090565b908160209103126120b7575180151581036120b75790565b9060018060a01b039384604051948160208701946323b872dd60e01b865216602487015216604485015260648401526064835260a083018381106001600160401b0382111761203f57600094859485926040525193165af161269d6125f5565b816126a6575090565b80518015925082156126b757505090565b6126ca9250602080918301019101612625565b90565b60405163a9059cbb60e01b602082019081526001600160a01b0393841660248301526044808301959095529381529192608083016001600160401b0381118482101761203f57600094859485926040525193165af161269d6125f556fe89e6168584e1de3ec704ff46376271b5481b0d9b2b0ef0ae102f0d001093e000f0d0a0b363c32316c3e6e7e797bbc126af09c634db439ed65a3f96afe7ae2367d1432ca9a38d944f01b256a411861b109bc4bfe200c40d7144e919a16b86a8a8a26469706673582212205b2f8a11e2887439a1f7713cbd67d4ed2d8739faa61061ca66daa3e5c240117964736f6c63430008180033",
+  "devdoc": {
+    "details": "Version of Escrow that allows to specify a buyer when transaction is created.",
+    "events": {
+      "DisputeRequest(address,uint256,uint256,uint256,string)": {
+        "details": "To be emitted when a dispute is created to link the correct meta-evidence to the disputeID.",
+        "params": {
+          "_arbitrator": "The arbitrator of the contract.",
+          "_arbitratorDisputeID": "The identifier of the dispute in the Arbitrator contract.",
+          "_externalDisputeID": "An identifier created outside Kleros by the protocol requesting arbitration.",
+          "_templateId": "The identifier of the dispute template. Should not be used with _templateUri.",
+          "_templateUri": "The URI to the dispute template. For example on IPFS: starting with '/ipfs/'. Should not be used with _templateId."
+        }
+      },
+      "ERC20TransactionCreated(uint256,string,address,address,address,uint256,uint256)": {
+        "details": "Emitted when a transaction paid in ERC20 token is created.",
+        "params": {
+          "_amount": "The initial amount in the transaction.",
+          "_buyer": "The address of the buyer.",
+          "_deadline": "The deadline of the transaction.",
+          "_seller": "The address of the seller.",
+          "_token": "The token address.",
+          "_transactionID": "The index of the transaction.",
+          "_transactionUri": "The IPFS Uri Hash of the transaction."
+        }
+      },
+      "HasToPayFee(uint256,uint8)": {
+        "details": "Indicate that a party has to pay a fee or would otherwise be considered as losing.",
+        "params": {
+          "_party": "The party who has to pay.",
+          "_transactionID": "The index of the transaction."
+        }
+      },
+      "NativeTransactionCreated(uint256,string,address,address,uint256,uint256)": {
+        "details": "Emitted when a transaction paid in native currency is created.",
+        "params": {
+          "_amount": "The initial amount in the transaction.",
+          "_buyer": "The address of the buyer.",
+          "_deadline": "The deadline of the transaction.",
+          "_seller": "The address of the seller.",
+          "_transactionID": "The index of the transaction.",
+          "_transactionUri": "The IPFS Uri Hash of the transaction."
+        }
+      },
+      "ParameterUpdated(uint256,uint256,bytes)": {
+        "details": "To be emitted when Escrow parameters are updated."
+      },
+      "Payment(uint256,uint256,address)": {
+        "details": "To be emitted when a party pays or reimburses the other.",
+        "params": {
+          "_amount": "The amount paid.",
+          "_party": "The party that paid.",
+          "_transactionID": "The index of the transaction."
+        }
+      },
+      "Ruling(address,uint256,uint256)": {
+        "details": "To be raised when a ruling is given.",
+        "params": {
+          "_arbitrator": "The arbitrator giving the ruling.",
+          "_disputeID": "The identifier of the dispute in the Arbitrator contract.",
+          "_ruling": "The ruling which was given."
+        }
+      },
+      "SettlementProposed(uint256,uint8,uint256)": {
+        "details": "Emitted when a party proposes a settlement.",
+        "params": {
+          "_amount": "The amount proposed.",
+          "_party": "The party that proposed a settlement.",
+          "_transactionID": "The index of the transaction."
+        }
+      },
+      "TransactionResolved(uint256,uint8)": {
+        "details": "To be emitted when a transaction is resolved, either by its      execution, a timeout or because a ruling was enforced.",
+        "params": {
+          "_resolution": "Short description of what caused the transaction to be solved.",
+          "_transactionID": "The ID of the respective transaction."
+        }
+      }
+    },
+    "kind": "dev",
+    "methods": {
+      "acceptSettlement(uint256)": {
+        "details": "Accept a settlement proposed by the other party.",
+        "params": {
+          "_transactionID": "The index of the transaction."
+        }
+      },
+      "constructor": {
+        "details": "Constructor.",
+        "params": {
+          "_arbitrator": "The arbitrator of the contract.",
+          "_arbitratorExtraData": "Extra data for the arbitrator.",
+          "_feeTimeout": "Arbitration fee timeout for the parties.",
+          "_settlementTimeout": "Settlement timeout for the parties.",
+          "_templateData": "The dispute template data.",
+          "_templateDataMappings": "The dispute template data mappings.",
+          "_templateRegistry": "The dispute template registry."
+        }
+      },
+      "createERC20Transaction(uint256,address,uint256,string,address)": {
+        "details": "Create a transaction.",
+        "params": {
+          "_amount": "The amount of tokens in this transaction.",
+          "_deadline": "Time after which a party can automatically execute the arbitrable transaction.",
+          "_seller": "The recipient of the transaction.",
+          "_token": "The ERC20 token contract.",
+          "_transactionUri": "The IPFS Uri Hash of the transaction."
+        },
+        "returns": {
+          "transactionID": "The index of the transaction."
+        }
+      },
+      "createERC20TransactionCustomBuyer(uint256,address,uint256,string,address,address)": {
+        "details": "Create an ERC20 transaction with custom buyer address.",
+        "params": {
+          "_amount": "The amount of tokens in this transaction.",
+          "_buyer": "Buyer's address.",
+          "_deadline": "Time after which a party can automatically execute the arbitrable transaction.",
+          "_seller": "The recipient of the transaction.",
+          "_token": "The ERC20 token contract.",
+          "_transactionUri": "The IPFS Uri Hash of the transaction."
+        },
+        "returns": {
+          "transactionID": "The index of the transaction."
+        }
+      },
+      "createNativeTransaction(uint256,string,address)": {
+        "details": "Create a transaction.",
+        "params": {
+          "_deadline": "Time after which a party can automatically execute the arbitrable transaction.",
+          "_seller": "The recipient of the transaction.",
+          "_transactionUri": "The IPFS Uri Hash of the transaction."
+        },
+        "returns": {
+          "transactionID": "The index of the transaction."
+        }
+      },
+      "createNativeTransactionCustomBuyer(uint256,string,address,address)": {
+        "details": "Create a native transaction with custom buyer.",
+        "params": {
+          "_buyer": "Buyer's address.",
+          "_deadline": "Time after which a party can automatically execute the arbitrable transaction.",
+          "_seller": "The recipient of the transaction.",
+          "_transactionUri": "The IPFS Uri Hash of the transaction."
+        },
+        "returns": {
+          "transactionID": "The index of the transaction."
+        }
+      },
+      "executeTransaction(uint256)": {
+        "details": "Transfer the transaction's amount to the seller if the timeout has passed.",
+        "params": {
+          "_transactionID": "The index of the transaction."
+        }
+      },
+      "getPayouts(uint256,uint8)": {
+        "details": "Get the payout depending on the winning party.The cost for the buyer is the seller payout non-inclusive of any arbitration fees.",
+        "params": {
+          "_transactionID": "The index of the transaction.",
+          "_winningParty": "The winning party."
+        },
+        "returns": {
+          "buyerPayout": "The payout for the buyer.",
+          "buyerPayoutToken": "The payout for the buyer in tokens.",
+          "sellerPayout": "The payout for the seller.",
+          "sellerPayoutToken": "The payout for the seller in tokens."
+        }
+      },
+      "getTransactionCount()": {
+        "details": "Getter to know the count of transactions.",
+        "returns": {
+          "_0": "The count of transactions."
+        }
+      },
+      "pay(uint256,uint256)": {
+        "details": "Pay seller. To be called if the good or service is provided.",
+        "params": {
+          "_amount": "Amount to pay in wei.",
+          "_transactionID": "The index of the transaction."
+        }
+      },
+      "payArbitrationFeeByBuyer(uint256)": {
+        "details": "Pay the arbitration fee to raise a dispute. To be called by the buyer. Note that it can only be called after settlement proposition. Also note that the arbitrator can have createDispute throw, which will make      this function throw and therefore lead to a party being timed-out.      This is not a vulnerability as the arbitrator can rule in favor of one party anyway.",
+        "params": {
+          "_transactionID": "The index of the transaction."
+        }
+      },
+      "payArbitrationFeeBySeller(uint256)": {
+        "details": "Pay the arbitration fee to raise a dispute. To be called by the seller. Note that this function mirrors payArbitrationFeeByBuyer.",
+        "params": {
+          "_transactionID": "The index of the transaction."
+        }
+      },
+      "proposeSettlement(uint256,uint256)": {
+        "details": "Propose a settlement as a compromise from the initial terms to the other party.  Note that a party can only propose a settlement again after the other party has  done so as well to prevent front running/griefing issues.",
+        "params": {
+          "_amount": "The settlement amount.",
+          "_transactionID": "The index of the transaction."
+        }
+      },
+      "reimburse(uint256,uint256)": {
+        "details": "Reimburse buyer. To be called if the good or service can't be fully provided.",
+        "params": {
+          "_amountReimbursed": "Amount to reimburse in wei.",
+          "_transactionID": "The index of the transaction."
+        }
+      },
+      "rule(uint256,uint256)": {
+        "details": "Give a ruling for a dispute.      Must be called by the arbitrator.      The purpose of this function is to ensure that the address calling it has the right to rule on the contract.",
+        "params": {
+          "_disputeID": "The identifier of the dispute in the Arbitrator contract.",
+          "_ruling": "Ruling given by the arbitrator. Note that 0 is reserved for \"Not able/wanting to make a decision\"."
+        }
+      },
+      "timeOutByBuyer(uint256)": {
+        "details": "Reimburse buyer if seller fails to pay the fee.",
+        "params": {
+          "_transactionID": "The index of the transaction."
+        }
+      },
+      "timeOutBySeller(uint256)": {
+        "details": "Pay seller if buyer fails to pay the fee.",
+        "params": {
+          "_transactionID": "The index of the transaction."
+        }
+      }
+    },
+    "title": "EscrowCustomBuyer.",
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  },
+  "storageLayout": {
+    "storage": [
+      {
+        "astId": 480,
+        "contract": "src/EscrowCustomBuyer.sol:EscrowCustomBuyer",
+        "label": "governor",
+        "offset": 0,
+        "slot": "0",
+        "type": "t_address"
+      },
+      {
+        "astId": 483,
+        "contract": "src/EscrowCustomBuyer.sol:EscrowCustomBuyer",
+        "label": "arbitrator",
+        "offset": 0,
+        "slot": "1",
+        "type": "t_contract(IArbitratorV2)134"
+      },
+      {
+        "astId": 485,
+        "contract": "src/EscrowCustomBuyer.sol:EscrowCustomBuyer",
+        "label": "arbitratorExtraData",
+        "offset": 0,
+        "slot": "2",
+        "type": "t_bytes_storage"
+      },
+      {
+        "astId": 488,
+        "contract": "src/EscrowCustomBuyer.sol:EscrowCustomBuyer",
+        "label": "templateRegistry",
+        "offset": 0,
+        "slot": "3",
+        "type": "t_contract(IDisputeTemplateRegistry)160"
+      },
+      {
+        "astId": 490,
+        "contract": "src/EscrowCustomBuyer.sol:EscrowCustomBuyer",
+        "label": "templateId",
+        "offset": 0,
+        "slot": "4",
+        "type": "t_uint256"
+      },
+      {
+        "astId": 492,
+        "contract": "src/EscrowCustomBuyer.sol:EscrowCustomBuyer",
+        "label": "feeTimeout",
+        "offset": 0,
+        "slot": "5",
+        "type": "t_uint256"
+      },
+      {
+        "astId": 494,
+        "contract": "src/EscrowCustomBuyer.sol:EscrowCustomBuyer",
+        "label": "settlementTimeout",
+        "offset": 0,
+        "slot": "6",
+        "type": "t_uint256"
+      },
+      {
+        "astId": 498,
+        "contract": "src/EscrowCustomBuyer.sol:EscrowCustomBuyer",
+        "label": "transactions",
+        "offset": 0,
+        "slot": "7",
+        "type": "t_array(t_struct(Transaction)2688_storage)dyn_storage"
+      },
+      {
+        "astId": 502,
+        "contract": "src/EscrowCustomBuyer.sol:EscrowCustomBuyer",
+        "label": "disputeIDtoTransactionID",
+        "offset": 0,
+        "slot": "8",
+        "type": "t_mapping(t_uint256,t_uint256)"
+      },
+      {
+        "astId": 507,
+        "contract": "src/EscrowCustomBuyer.sol:EscrowCustomBuyer",
+        "label": "amountCaps",
+        "offset": 0,
+        "slot": "9",
+        "type": "t_mapping(t_contract(IERC20)238,t_uint256)"
+      }
+    ],
+    "types": {
+      "t_address": {
+        "encoding": "inplace",
+        "label": "address",
+        "numberOfBytes": "20"
+      },
+      "t_address_payable": {
+        "encoding": "inplace",
+        "label": "address payable",
+        "numberOfBytes": "20"
+      },
+      "t_array(t_struct(Transaction)2688_storage)dyn_storage": {
+        "base": "t_struct(Transaction)2688_storage",
+        "encoding": "dynamic_array",
+        "label": "struct Transaction[]",
+        "numberOfBytes": "32"
+      },
+      "t_bytes_storage": {
+        "encoding": "bytes",
+        "label": "bytes",
+        "numberOfBytes": "32"
+      },
+      "t_contract(IArbitratorV2)134": {
+        "encoding": "inplace",
+        "label": "contract IArbitratorV2",
+        "numberOfBytes": "20"
+      },
+      "t_contract(IDisputeTemplateRegistry)160": {
+        "encoding": "inplace",
+        "label": "contract IDisputeTemplateRegistry",
+        "numberOfBytes": "20"
+      },
+      "t_contract(IERC20)238": {
+        "encoding": "inplace",
+        "label": "contract IERC20",
+        "numberOfBytes": "20"
+      },
+      "t_enum(Status)2655": {
+        "encoding": "inplace",
+        "label": "enum Status",
+        "numberOfBytes": "1"
+      },
+      "t_mapping(t_contract(IERC20)238,t_uint256)": {
+        "encoding": "mapping",
+        "key": "t_contract(IERC20)238",
+        "label": "mapping(contract IERC20 => uint256)",
+        "numberOfBytes": "32",
+        "value": "t_uint256"
+      },
+      "t_mapping(t_uint256,t_uint256)": {
+        "encoding": "mapping",
+        "key": "t_uint256",
+        "label": "mapping(uint256 => uint256)",
+        "numberOfBytes": "32",
+        "value": "t_uint256"
+      },
+      "t_struct(Transaction)2688_storage": {
+        "encoding": "inplace",
+        "label": "struct Transaction",
+        "members": [
+          {
+            "astId": 2663,
+            "contract": "src/EscrowCustomBuyer.sol:EscrowCustomBuyer",
+            "label": "buyer",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_address_payable"
+          },
+          {
+            "astId": 2665,
+            "contract": "src/EscrowCustomBuyer.sol:EscrowCustomBuyer",
+            "label": "seller",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_address_payable"
+          },
+          {
+            "astId": 2667,
+            "contract": "src/EscrowCustomBuyer.sol:EscrowCustomBuyer",
+            "label": "amount",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_uint256"
+          },
+          {
+            "astId": 2669,
+            "contract": "src/EscrowCustomBuyer.sol:EscrowCustomBuyer",
+            "label": "settlementBuyer",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_uint256"
+          },
+          {
+            "astId": 2671,
+            "contract": "src/EscrowCustomBuyer.sol:EscrowCustomBuyer",
+            "label": "settlementSeller",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_uint256"
+          },
+          {
+            "astId": 2673,
+            "contract": "src/EscrowCustomBuyer.sol:EscrowCustomBuyer",
+            "label": "deadline",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_uint256"
+          },
+          {
+            "astId": 2675,
+            "contract": "src/EscrowCustomBuyer.sol:EscrowCustomBuyer",
+            "label": "disputeID",
+            "offset": 0,
+            "slot": "6",
+            "type": "t_uint256"
+          },
+          {
+            "astId": 2677,
+            "contract": "src/EscrowCustomBuyer.sol:EscrowCustomBuyer",
+            "label": "buyerFee",
+            "offset": 0,
+            "slot": "7",
+            "type": "t_uint256"
+          },
+          {
+            "astId": 2679,
+            "contract": "src/EscrowCustomBuyer.sol:EscrowCustomBuyer",
+            "label": "sellerFee",
+            "offset": 0,
+            "slot": "8",
+            "type": "t_uint256"
+          },
+          {
+            "astId": 2681,
+            "contract": "src/EscrowCustomBuyer.sol:EscrowCustomBuyer",
+            "label": "lastFeePaymentTime",
+            "offset": 0,
+            "slot": "9",
+            "type": "t_uint256"
+          },
+          {
+            "astId": 2684,
+            "contract": "src/EscrowCustomBuyer.sol:EscrowCustomBuyer",
+            "label": "status",
+            "offset": 0,
+            "slot": "10",
+            "type": "t_enum(Status)2655"
+          },
+          {
+            "astId": 2687,
+            "contract": "src/EscrowCustomBuyer.sol:EscrowCustomBuyer",
+            "label": "token",
+            "offset": 1,
+            "slot": "10",
+            "type": "t_contract(IERC20)238"
+          }
+        ],
+        "numberOfBytes": "352"
+      },
+      "t_uint256": {
+        "encoding": "inplace",
+        "label": "uint256",
+        "numberOfBytes": "32"
+      }
+    }
+  }
+}
