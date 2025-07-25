@@ -7,7 +7,7 @@
 
 pragma solidity 0.8.24;
 
-import "./EscrowUniversal.sol";
+import {EscrowUniversal, SafeERC20, IERC20, IArbitratorV2, IDisputeTemplateRegistry, NATIVE, Transaction} from "./EscrowUniversal.sol";
 
 /// @title EscrowCustomBuyer.
 /// @dev Version of Escrow that allows to specify a buyer when transaction is created.
@@ -30,15 +30,17 @@ contract EscrowCustomBuyer is EscrowUniversal {
         IDisputeTemplateRegistry _templateRegistry,
         uint256 _feeTimeout,
         uint256 _settlementTimeout
-    ) EscrowUniversal(
-        _arbitrator,
-        _arbitratorExtraData,
-        _templateData,
-        _templateDataMappings,
-        _templateRegistry,
-        _feeTimeout,
-        _settlementTimeout
-    ) {}
+    )
+        EscrowUniversal(
+            _arbitrator,
+            _arbitratorExtraData,
+            _templateData,
+            _templateDataMappings,
+            _templateRegistry,
+            _feeTimeout,
+            _settlementTimeout
+        )
+    {}
 
     /// @dev Create a native transaction with custom buyer.
     /// @param _deadline Time after which a party can automatically execute the arbitrable transaction.
@@ -62,16 +64,9 @@ contract EscrowCustomBuyer is EscrowUniversal {
 
         transactionID = transactions.length - 1;
 
-        emit NativeTransactionCreated(
-            transactionID,
-            _transactionUri,
-            _buyer,
-            _seller,
-            msg.value,
-            transaction.deadline
-        );
+        emit NativeTransactionCreated(transactionID, _transactionUri, _buyer, _seller, msg.value, transaction.deadline);
     }
-    
+
     /// @dev Create an ERC20 transaction with custom buyer address.
     /// @param _amount The amount of tokens in this transaction.
     /// @param _token The ERC20 token contract.
