@@ -14,6 +14,7 @@ import "hardhat-docgen";
 // import "hardhat-tracer"; // prevents hardhat-deploy from finding chalk...
 require("./scripts/setDisputeTemplate");
 require("./scripts/getPayoutMessages");
+require("./scripts/changeArbitrator");
 
 dotenv.config();
 
