@@ -1,6 +1,7 @@
 // import { BigNumber, utils } from "ethers";
 import { task } from "hardhat/config";
 import { getContracts } from "../deploy/utils/getContracts";
+import { EscrowCustomBuyer, EscrowUniversal, EscrowView } from "../typechain-types";
 
 const parameters = {
   arbitrumSepoliaDevnet: {
@@ -96,7 +97,13 @@ const mappingFn = (subgraphEndpoint: string, view: string) => `[
 
 task("set-dispute-template", "Sets the dispute template").setAction(async (args, hre) => {
   const { config, deployments } = hre;
-  const { escrow, view, klerosCore } = await getContracts(hre);
+  const {
+    escrow: escrowUniversal,
+    view: viewUniversal,
+    escrowCustomBuyer,
+    customBuyerView,
+    klerosCore,
+  } = await getContracts(hre);
   const networkName = await deployments.getNetworkName();
   const { subgraphEndpoint, frontendUrl } = parameters[networkName];
   const chainId = config.networks[networkName].chainId;
@@ -105,14 +112,22 @@ task("set-dispute-template", "Sets the dispute template").setAction(async (args,
     throw new Error("Missing parameters");
   }
 
-  const disputeTemplate = disputeTemplateFn(chainId, klerosCore.target.toString(), frontendUrl);
-  console.log("New disputeTemplate", disputeTemplate);
+  const setDisputeTemplate = async (escrow: EscrowUniversal | EscrowCustomBuyer, view: EscrowView) => {
+    const disputeTemplate = disputeTemplateFn(chainId, klerosCore.target.toString(), frontendUrl);
+    console.log("New disputeTemplate", disputeTemplate);
 
-  const mapping = mappingFn(subgraphEndpoint, view.target.toString());
-  console.log("New mapping", mapping);
+    const mapping = mappingFn(subgraphEndpoint, view.target.toString());
+    console.log("New mapping", mapping);
 
-  const tx = await escrow.changeDisputeTemplate(disputeTemplate, mapping);
-  await tx.wait().then((receipt) => {
-    console.log(`Transaction receipt: ${JSON.stringify(receipt)}`);
-  });
+    const tx = await escrow.changeDisputeTemplate(disputeTemplate, mapping);
+    await tx.wait().then((receipt) => {
+      console.log(`Transaction receipt: ${JSON.stringify(receipt)}`);
+    });
+  };
+
+  await setDisputeTemplate(escrowUniversal, viewUniversal);
+
+  if (escrowCustomBuyer) {
+    await setDisputeTemplate(escrowCustomBuyer, customBuyerView);
+  }
 });

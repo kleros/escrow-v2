@@ -19,8 +19,10 @@ Refresh the list of deployed contracts by running `./scripts/generateDeployments
 ### Devnet
 #### Arbitrum Sepolia
 
+- [EscrowCustomBuyer](https://sepolia.arbiscan.io/address/0xA01e6B988aeDae1fD4a748D6bfBcB8A438601DeE)
 - [EscrowUniversal](https://sepolia.arbiscan.io/address/0x5ef185810BCe41c03c9E5ca271B8C91F1024F953)
 - [EscrowView](https://sepolia.arbiscan.io/address/0x6451046caB9291a919FCba045bf6Bb8E0Bb71467)
+- [EscrowViewCustomBuyer](https://sepolia.arbiscan.io/address/0xe0892815E8958f0ad6Dab876995987c4F439954D)
 
 ## Getting Started
 
@@ -91,7 +93,8 @@ yarn hardhat node --tags nothing
 **Shell 2: the deploy script**
 
 ```bash
-yarn deploy --network localhost --tags Escrow>
+yarn deploy --network localhost --tags EscrowUniversal
+yarn deploy --network localhost --tags EscrowCustomBuyer
 ```
 
 #### 2. Deploy to a Public Network Fork
@@ -115,7 +118,8 @@ yarn deploy-testnet-fork
 #### 3. Deploy to Public Testnets
 
 ```bash
-yarn deploy --network arbitrumSepolia --tags Escrow
+yarn deploy --network arbitrumSepolia --tags EscrowUniversal
+yarn deploy --network arbitrumSepolia --tags EscrowCustomBuyer
 ```
 
 The deployed addresses should be displayed to the screen after the deployment is complete. If you missed them, you can always go to the `deployments/<network>` directory and look for the respective file.
@@ -129,7 +133,7 @@ Same steps as above but append `Devnet` to the `--network` parameter.
 **Shell 1: the node**
 
 ```bash
-yarn hardhat node --tags Escrow
+yarn hardhat node --tags EscrowUniversal
 ```
 
 **Shell 2: the test scripts**
