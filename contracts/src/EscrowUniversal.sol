@@ -135,10 +135,11 @@ contract EscrowUniversal is IEscrow, IArbitrableV2 {
     function createNativeTransaction(
         uint256 _deadline,
         string memory _transactionUri,
+        address payable _buyer,
         address payable _seller
     ) external payable override shouldNotExceedCap(NATIVE, msg.value) returns (uint256 transactionID) {
         Transaction storage transaction = transactions.push();
-        transaction.buyer = payable(msg.sender);
+        transaction.buyer = _buyer;
         transaction.seller = _seller;
         transaction.amount = msg.value;
         transaction.token = NATIVE;
@@ -149,7 +150,7 @@ contract EscrowUniversal is IEscrow, IArbitrableV2 {
         emit NativeTransactionCreated(
             transactionID,
             _transactionUri,
-            msg.sender,
+            _buyer,
             _seller,
             msg.value,
             transaction.deadline
@@ -162,12 +163,13 @@ contract EscrowUniversal is IEscrow, IArbitrableV2 {
         IERC20 _token,
         uint256 _deadline,
         string memory _transactionUri,
+        address payable _buyer,
         address payable _seller
     ) external override shouldNotExceedCap(_token, _amount) returns (uint256 transactionID) {
         // Transfers token from sender wallet to contract.
         if (!_token.safeTransferFrom(msg.sender, address(this), _amount)) revert TokenTransferFailed();
         Transaction storage transaction = transactions.push();
-        transaction.buyer = payable(msg.sender);
+        transaction.buyer = _buyer;
         transaction.seller = _seller;
         transaction.amount = _amount;
         transaction.token = _token;
@@ -178,7 +180,7 @@ contract EscrowUniversal is IEscrow, IArbitrableV2 {
         emit ERC20TransactionCreated(
             transactionID,
             _transactionUri,
-            msg.sender,
+            _buyer,
             _seller,
             _token,
             _amount,
@@ -446,7 +448,8 @@ contract EscrowUniversal is IEscrow, IArbitrableV2 {
             arbitratorExtraData
         );
         disputeIDtoTransactionID[transaction.disputeID] = _transactionID;
-        emit DisputeRequest(arbitrator, transaction.disputeID, _transactionID, templateId, "");
+        uint256 externalDisputeID = uint256(keccak256(abi.encodePacked(address(this), _transactionID)));
+        emit DisputeRequest(arbitrator, transaction.disputeID, externalDisputeID, templateId, "");
 
         // Refund buyer if he overpaid.
         if (transaction.buyerFee > _arbitrationCost) {

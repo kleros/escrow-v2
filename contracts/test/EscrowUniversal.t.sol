@@ -287,7 +287,7 @@ contract EscrowUniversalTest is Test {
         vm.prank(buyer);
         vm.expectEmit(true, true, true, true);
         emit NativeTransactionCreated(txId, txUri, buyer, seller, 0.5 ether, deadline);
-        escrow.createNativeTransaction{value: txValue}(deadline, txUri, payable(seller));
+        escrow.createNativeTransaction{value: txValue}(deadline, txUri, payable(buyer), payable(seller));
 
         (
             address escrowBuyer,
@@ -322,6 +322,47 @@ contract EscrowUniversalTest is Test {
         assertEq(seller.balance, 0, "Seller balance should be 0");
     }
 
+    function test_createNativeTransactionCustomBuyer() public {
+        uint256 deadline = block.timestamp + txTimeout;
+        uint256 txId;
+        vm.prank(buyer);
+        vm.expectEmit(true, true, true, true);
+        emit NativeTransactionCreated(txId, txUri, other, seller, 0.5 ether, deadline);
+        escrow.createNativeTransaction{value: txValue}(deadline, txUri, payable(other), payable(seller));
+
+        (
+            address escrowBuyer,
+            address escrowSeller,
+            uint256 amount,
+            uint256 settlementBuyer,
+            uint256 settlementSeller,
+            uint256 escrowdeadline,
+            uint256 disputeId,
+            uint256 buyerFee,
+            uint256 sellerFee,
+            uint256 lastFeePaymentTime,
+            Status status,
+            IERC20 token
+        ) = escrow.transactions(txId);
+
+        assertEq(escrowBuyer, other, "Wrong buyer address");
+        assertEq(escrowSeller, seller, "Wrong seller address");
+        assertEq(amount, 0.5 ether, "Wrong escrow amount");
+        assertEq(settlementBuyer, 0, "settlementBuyer should be 0");
+        assertEq(settlementSeller, 0, "settlementSeller should be 0");
+        assertEq(escrowdeadline, block.timestamp + 1000, "Wrong deadline");
+        assertEq(disputeId, 0, "disputeId should be 0");
+        assertEq(sellerFee, 0, "sellerFee should be 0");
+        assertEq(lastFeePaymentTime, 0, "lastFeePaymentTime should be 0");
+        assertEq(uint256(status), uint256(Status.NoDispute), "Wrong status");
+        assertEq(address(token), address(NATIVE), "Should be 0 token");
+        assertEq(escrow.getTransactionCount(), 1, "Wrong transaction count");
+
+        assertEq(address(escrow).balance, 0.5 ether, "Wrong balance of the contract");
+        assertEq(buyer.balance, 9.5 ether, "Wrong balance of the buyer");
+        assertEq(seller.balance, 0, "Seller balance should be 0");
+    }
+
     function test_createNativeTransaction_checkCap() public {
         uint256 deadline = block.timestamp + txTimeout;
 
@@ -329,13 +370,13 @@ contract EscrowUniversalTest is Test {
         escrow.changeAmountCap(NATIVE, 0);
         vm.expectRevert(IEscrow.AmountExceedsCap.selector);
         vm.prank(buyer);        
-        escrow.createNativeTransaction{value: txValue}(deadline, txUri, payable(seller));
+        escrow.createNativeTransaction{value: txValue}(deadline, txUri, payable(buyer), payable(seller));
 
         vm.prank(governor);
         escrow.changeAmountCap(NATIVE, txValue - 1);
         vm.expectRevert(IEscrow.AmountExceedsCap.selector);
         vm.prank(buyer);        
-        escrow.createNativeTransaction{value: txValue}(deadline, txUri, payable(seller));
+        escrow.createNativeTransaction{value: txValue}(deadline, txUri, payable(buyer), payable(seller));
     }
 
     function test_createERC20Transaction() public {
@@ -345,7 +386,7 @@ contract EscrowUniversalTest is Test {
         vm.expectEmit(true, true, true, true);
         // Pay a bit less to differ between tests
         emit ERC20TransactionCreated(txId, txUri, buyer, seller, escrowToken, 0.4 ether, deadline);
-        escrow.createERC20Transaction(0.4 ether, escrowToken, deadline, txUri, payable(seller));
+        escrow.createERC20Transaction(0.4 ether, escrowToken, deadline, txUri, payable(buyer), payable(seller));
 
         (
             address escrowBuyer,
@@ -380,6 +421,48 @@ contract EscrowUniversalTest is Test {
         assertEq(escrowToken.balanceOf(seller), 0, "Balance of seller should be 0");
     }
 
+    function test_createERC20TransactionCustomBuyer() public {
+        uint256 deadline = block.timestamp + txTimeout;
+        uint256 txId;
+        vm.prank(buyer);
+        vm.expectEmit(true, true, true, true);
+        // Pay a bit less to differ between tests
+        emit ERC20TransactionCreated(txId, txUri, other, seller, escrowToken, 0.4 ether, deadline);
+        escrow.createERC20Transaction(0.4 ether, escrowToken, deadline, txUri, payable(other), payable(seller));
+
+        (
+            address escrowBuyer,
+            address escrowSeller,
+            uint256 amount,
+            uint256 settlementBuyer,
+            uint256 settlementSeller,
+            uint256 escrowdeadline,
+            uint256 disputeId,
+            uint256 buyerFee,
+            uint256 sellerFee,
+            uint256 lastFeePaymentTime,
+            Status status,
+            IERC20 token
+        ) = escrow.transactions(txId);
+
+        assertEq(escrowBuyer, other, "Wrong buyer address");
+        assertEq(escrowSeller, seller, "Wrong seller address");
+        assertEq(amount, 0.4 ether, "Wrong escrow amount");
+        assertEq(settlementBuyer, 0, "settlementBuyer should be 0");
+        assertEq(settlementSeller, 0, "settlementSeller should be 0");
+        assertEq(escrowdeadline, block.timestamp + 1000, "Wrong deadline");
+        assertEq(disputeId, 0, "disputeId should be 0");
+        assertEq(sellerFee, 0, "sellerFee should be 0");
+        assertEq(lastFeePaymentTime, 0, "lastFeePaymentTime should be 0");
+        assertEq(uint256(status), uint256(Status.NoDispute), "Wrong status");
+        assertEq(address(token), address(escrowToken), "Wrong token address");
+        assertEq(escrow.getTransactionCount(), 1, "Wrong transaction count");
+
+        assertEq(escrowToken.balanceOf(address(escrow)), 0.4 ether, "Wrong token balance of the escrow");
+        assertEq(escrowToken.balanceOf(buyer), 0.6 ether, "Wrong token balance of buyer");
+        assertEq(escrowToken.balanceOf(seller), 0, "Balance of seller should be 0");
+    }
+
     function test_createNativeTransaction_approvalMissing() public {
         uint256 deadline = block.timestamp + txTimeout;
 
@@ -388,7 +471,7 @@ contract EscrowUniversalTest is Test {
         // Should fail because no approval
         vm.expectRevert(IEscrow.TokenTransferFailed.selector);
         vm.prank(other);        
-        escrow.createERC20Transaction(txValue, escrowToken, deadline, txUri, payable(seller));
+        escrow.createERC20Transaction(txValue, escrowToken, deadline, txUri, payable(other), payable(seller));
     }
 
     function test_payNative() public {
@@ -397,7 +480,7 @@ contract EscrowUniversalTest is Test {
         uint256 txId;
 
         vm.prank(buyer);
-        escrow.createNativeTransaction{value: txValue}(deadline, txUri, payable(seller));
+        escrow.createNativeTransaction{value: txValue}(deadline, txUri, payable(buyer), payable(seller));
 
         vm.expectRevert(IEscrow.BuyerOnly.selector);
         vm.prank(seller);
@@ -441,7 +524,7 @@ contract EscrowUniversalTest is Test {
         uint256 deadline = block.timestamp + txTimeout;
         uint256 txId;
         vm.prank(buyer);
-        escrow.createERC20Transaction(0.4 ether, escrowToken, deadline, txUri, payable(seller));
+        escrow.createERC20Transaction(0.4 ether, escrowToken, deadline, txUri, payable(buyer), payable(seller));
 
         vm.prank(buyer);
         escrow.pay(txId, 0.1 ether);
@@ -461,7 +544,7 @@ contract EscrowUniversalTest is Test {
         uint256 txId;
 
         vm.prank(buyer);
-        escrow.createNativeTransaction{value: txValue}(deadline, txUri, payable(seller));
+        escrow.createNativeTransaction{value: txValue}(deadline, txUri, payable(buyer), payable(seller));
 
         vm.expectRevert(IEscrow.SellerOnly.selector);
         vm.prank(buyer);
@@ -505,7 +588,7 @@ contract EscrowUniversalTest is Test {
         uint256 deadline = block.timestamp + txTimeout;
         uint256 txId;
         vm.prank(buyer);
-        escrow.createERC20Transaction(0.4 ether, escrowToken, deadline, txUri, payable(seller));
+        escrow.createERC20Transaction(0.4 ether, escrowToken, deadline, txUri, payable(buyer), payable(seller));
 
         vm.prank(seller);
         escrow.reimburse(txId, 0.1 ether);
@@ -524,7 +607,7 @@ contract EscrowUniversalTest is Test {
         uint256 txId;
 
         vm.prank(buyer);
-        escrow.createNativeTransaction{value: txValue}(deadline, txUri, payable(seller));
+        escrow.createNativeTransaction{value: txValue}(deadline, txUri, payable(buyer), payable(seller));
 
         vm.expectRevert(IEscrow.DeadlineNotPassed.selector);
         vm.prank(other);
@@ -554,7 +637,7 @@ contract EscrowUniversalTest is Test {
         uint256 txId;
 
         vm.prank(buyer);
-        escrow.createERC20Transaction(txValue, escrowToken, deadline, txUri, payable(seller));
+        escrow.createERC20Transaction(txValue, escrowToken, deadline, txUri, payable(buyer), payable(seller));
 
         vm.warp(deadline);
 
@@ -575,7 +658,7 @@ contract EscrowUniversalTest is Test {
         uint256 txId;
 
         vm.prank(buyer);
-        escrow.createERC20Transaction(0.4 ether, escrowToken, deadline, txUri, payable(seller));
+        escrow.createERC20Transaction(0.4 ether, escrowToken, deadline, txUri, payable(buyer), payable(seller));
 
         // Make it so the contract has 0 balance to trigger the revert
         deal(address(escrowToken), address(escrow), 0 ether);
@@ -601,7 +684,7 @@ contract EscrowUniversalTest is Test {
         uint256 txId;
 
         vm.prank(buyer);
-        escrow.createNativeTransaction{value: txValue}(deadline, txUri, payable(seller));
+        escrow.createNativeTransaction{value: txValue}(deadline, txUri, payable(buyer), payable(seller));
         vm.prank(buyer);
         escrow.pay(txId, txValue);
 
@@ -625,7 +708,7 @@ contract EscrowUniversalTest is Test {
         uint256 txId;
 
         vm.prank(buyer);
-        escrow.createNativeTransaction{value: txValue}(deadline, txUri, payable(seller));
+        escrow.createNativeTransaction{value: txValue}(deadline, txUri, payable(buyer), payable(seller));
 
         vm.expectRevert(IEscrow.BuyerOrSellerOnly.selector);
         vm.prank(other);
@@ -689,7 +772,7 @@ contract EscrowUniversalTest is Test {
         uint256 txId;
 
         vm.prank(buyer);
-        escrow.createNativeTransaction{value: txValue}(deadline, txUri, payable(seller));
+        escrow.createNativeTransaction{value: txValue}(deadline, txUri, payable(buyer), payable(seller));
 
         vm.prank(buyer);
         vm.expectEmit(true, true, true, true);
@@ -709,7 +792,7 @@ contract EscrowUniversalTest is Test {
         uint256 deadline = block.timestamp + txTimeout;
         uint256 txId;
         vm.prank(buyer);
-        escrow.createNativeTransaction{value: txValue}(deadline, txUri, payable(seller));
+        escrow.createNativeTransaction{value: txValue}(deadline, txUri, payable(buyer), payable(seller));
 
         vm.warp(deadline);                       
 
@@ -721,7 +804,7 @@ contract EscrowUniversalTest is Test {
         deadline = block.timestamp + txTimeout;
         txId = 1;
         vm.prank(buyer);
-        escrow.createNativeTransaction{value: txValue}(deadline, txUri, payable(seller));
+        escrow.createNativeTransaction{value: txValue}(deadline, txUri, payable(buyer), payable(seller));
 
         vm.prank(buyer);
         escrow.pay(txId, txValue);
@@ -735,7 +818,7 @@ contract EscrowUniversalTest is Test {
         uint256 deadline = block.timestamp + txTimeout;
         uint256 txId;
         vm.prank(buyer);
-        escrow.createNativeTransaction{value: txValue}(deadline, txUri, payable(seller));
+        escrow.createNativeTransaction{value: txValue}(deadline, txUri, payable(buyer), payable(seller));
 
         vm.expectRevert(IEscrow.NoSettlementProposedOrTransactionMovedOnAcceptSettlement.selector);
         vm.prank(buyer);
@@ -781,7 +864,7 @@ contract EscrowUniversalTest is Test {
         uint256 deadline = block.timestamp + txTimeout;
         uint256 txId;
         vm.prank(buyer);
-        escrow.createERC20Transaction(txValue, escrowToken, deadline, txUri, payable(seller));
+        escrow.createERC20Transaction(txValue, escrowToken, deadline, txUri, payable(buyer), payable(seller));
 
         vm.prank(buyer);
         escrow.proposeSettlement(txId, 0.2 ether);
@@ -799,7 +882,7 @@ contract EscrowUniversalTest is Test {
         uint256 txId;
 
         vm.prank(buyer);
-        escrow.createNativeTransaction{value: txValue}(deadline, txUri, payable(seller));
+        escrow.createNativeTransaction{value: txValue}(deadline, txUri, payable(buyer), payable(seller));
 
         vm.expectRevert(IEscrow.NoSettlementProposedOrTransactionMovedOnPayFeeBuyer.selector);
         vm.prank(buyer);
@@ -844,7 +927,7 @@ contract EscrowUniversalTest is Test {
         uint256 txId;
 
         vm.prank(buyer);
-        escrow.createNativeTransaction{value: txValue}(deadline, txUri, payable(seller));
+        escrow.createNativeTransaction{value: txValue}(deadline, txUri, payable(buyer), payable(seller));
 
         vm.prank(buyer);
         escrow.proposeSettlement(txId, 0.2 ether);
@@ -868,7 +951,7 @@ contract EscrowUniversalTest is Test {
         vm.deal(seller, 1 ether);
 
         vm.prank(buyer);
-        escrow.createNativeTransaction{value: txValue}(deadline, txUri, payable(seller));
+        escrow.createNativeTransaction{value: txValue}(deadline, txUri, payable(buyer), payable(seller));
 
         vm.expectRevert(IEscrow.NoSettlementProposedOrTransactionMovedOnPayFeeSeller.selector);
         vm.prank(seller);
@@ -914,7 +997,7 @@ contract EscrowUniversalTest is Test {
         vm.deal(seller, 1 ether);
 
         vm.prank(buyer);
-        escrow.createNativeTransaction{value: txValue}(deadline, txUri, payable(seller));
+        escrow.createNativeTransaction{value: txValue}(deadline, txUri, payable(buyer), payable(seller));
 
         vm.prank(seller);
         escrow.proposeSettlement(txId, 0.2 ether);
@@ -937,7 +1020,7 @@ contract EscrowUniversalTest is Test {
         uint256 txId;
 
         vm.prank(buyer);
-        escrow.createNativeTransaction{value: txValue}(deadline, txUri, payable(seller));
+        escrow.createNativeTransaction{value: txValue}(deadline, txUri, payable(buyer), payable(seller));
 
         vm.expectRevert(IEscrow.NotWaitingForSellerFees.selector);
         vm.prank(buyer);
@@ -1003,7 +1086,7 @@ contract EscrowUniversalTest is Test {
         uint256 txId;
 
         vm.prank(buyer);
-        escrow.createNativeTransaction{value: txValue}(deadline, txUri, payable(seller));
+        escrow.createNativeTransaction{value: txValue}(deadline, txUri, payable(buyer), payable(seller));
 
         vm.prank(seller);
         escrow.proposeSettlement(txId, 0.2 ether);
@@ -1032,7 +1115,7 @@ contract EscrowUniversalTest is Test {
         uint256 txId;
 
         vm.prank(buyer);
-        escrow.createERC20Transaction(txValue, escrowToken, deadline, txUri, payable(seller));
+        escrow.createERC20Transaction(txValue, escrowToken, deadline, txUri, payable(buyer), payable(seller));
 
         vm.prank(seller);
         escrow.proposeSettlement(txId, 0.2 ether);
@@ -1056,7 +1139,7 @@ contract EscrowUniversalTest is Test {
         vm.deal(seller, 1 ether);
 
         vm.prank(buyer);
-        escrow.createNativeTransaction{value: txValue}(deadline, txUri, payable(seller));
+        escrow.createNativeTransaction{value: txValue}(deadline, txUri, payable(buyer), payable(seller));
 
         vm.expectRevert(IEscrow.NotWaitingForBuyerFees.selector);
         vm.prank(seller);
@@ -1109,7 +1192,7 @@ contract EscrowUniversalTest is Test {
         vm.deal(seller, 1 ether);
 
         vm.prank(buyer);
-        escrow.createNativeTransaction{value: txValue}(deadline, txUri, payable(seller));
+        escrow.createNativeTransaction{value: txValue}(deadline, txUri, payable(buyer), payable(seller));
 
         vm.prank(buyer);
         escrow.proposeSettlement(txId, 0.1 ether);
@@ -1139,7 +1222,7 @@ contract EscrowUniversalTest is Test {
         vm.deal(seller, 1 ether);
 
         vm.prank(buyer);
-        escrow.createERC20Transaction(txValue, escrowToken, deadline, txUri, payable(seller));
+        escrow.createERC20Transaction(txValue, escrowToken, deadline, txUri, payable(buyer), payable(seller));
 
         vm.prank(buyer);
         escrow.proposeSettlement(txId, 0.2 ether);
@@ -1169,11 +1252,11 @@ contract EscrowUniversalTest is Test {
 
         // Create several tx so index is not default.
         vm.prank(buyer);
-        escrow.createNativeTransaction{value: txValue}(deadline, txUri, payable(seller));
+        escrow.createNativeTransaction{value: txValue}(deadline, txUri, payable(buyer), payable(seller));
         vm.prank(buyer);
-        escrow.createNativeTransaction{value: txValue}(deadline, txUri, payable(seller));
+        escrow.createNativeTransaction{value: txValue}(deadline, txUri, payable(buyer), payable(seller));
         vm.prank(buyer);
-        escrow.createNativeTransaction{value: txValue}(deadline, txUri, payable(seller));
+        escrow.createNativeTransaction{value: txValue}(deadline, txUri, payable(buyer), payable(seller));
 
         vm.prank(buyer);
         escrow.proposeSettlement(txId, 0.1 ether);
@@ -1182,11 +1265,13 @@ contract EscrowUniversalTest is Test {
         vm.prank(seller);
         escrow.payArbitrationFeeBySeller{value: 1 ether}(txId); // Overpay to check reimbursement
 
+        uint256 externalDisputeID = uint256(keccak256(abi.encodePacked(address(escrow), txId))); 
+
         vm.prank(buyer);
         vm.expectEmit(true, true, true, true);
         emit DisputeCreation(disputeId, IArbitrableV2(address(escrow)));
         vm.expectEmit(true, true, true, true);
-        emit DisputeRequest(arbitrator, disputeId, txId, templateId, "");
+        emit DisputeRequest(arbitrator, disputeId, externalDisputeID, templateId, "");
         escrow.payArbitrationFeeByBuyer{value: 1 ether}(txId);
 
         (,,,,,,, uint256 buyerFee, uint256 sellerFee,, Status status,) = escrow.transactions(txId);
@@ -1215,7 +1300,7 @@ contract EscrowUniversalTest is Test {
         uint256 disputeId;
 
         vm.prank(buyer);
-        escrow.createNativeTransaction{value: txValue}(deadline, txUri, payable(seller));
+        escrow.createNativeTransaction{value: txValue}(deadline, txUri, payable(buyer), payable(seller));
 
         vm.prank(buyer);
         escrow.proposeSettlement(txId, 0.1 ether);
@@ -1265,7 +1350,7 @@ contract EscrowUniversalTest is Test {
         uint256 disputeId;
 
         vm.prank(buyer);
-        escrow.createERC20Transaction(txValue, escrowToken, deadline, txUri, payable(seller));
+        escrow.createERC20Transaction(txValue, escrowToken, deadline, txUri, payable(buyer), payable(seller));
 
         vm.prank(buyer);
         escrow.proposeSettlement(txId, 0.1 ether);
@@ -1295,7 +1380,7 @@ contract EscrowUniversalTest is Test {
         uint256 disputeId;
 
         vm.prank(buyer);
-        escrow.createERC20Transaction(txValue, escrowToken, deadline, txUri, payable(seller));
+        escrow.createERC20Transaction(txValue, escrowToken, deadline, txUri, payable(buyer), payable(seller));
 
         vm.prank(buyer);
         escrow.proposeSettlement(txId, 0.1 ether);
@@ -1326,7 +1411,7 @@ contract EscrowUniversalTest is Test {
         uint256 disputeId;
 
         vm.prank(buyer);
-        escrow.createERC20Transaction(txValue, escrowToken, deadline, txUri, payable(seller));
+        escrow.createERC20Transaction(txValue, escrowToken, deadline, txUri, payable(buyer), payable(seller));
 
         vm.prank(seller);
         escrow.proposeSettlement(txId, 0.1 ether);
