@@ -37,6 +37,7 @@ const NextButton: React.FC<INextButton> = ({ nextRoute }) => {
     notificationEmail,
     hasSufficientNativeBalance,
     isRecipientAddressResolved,
+    isBuyerAddressResolved,
   } = useNewTransactionContext();
 
   const { user, userExists, updateEmail, addUser, isAddingUser, isUpdatingUser, uploadFile } = useAtlasProvider();
@@ -68,7 +69,12 @@ const NextButton: React.FC<INextButton> = ({ nextRoute }) => {
     (location.pathname.includes("/new-transaction/title") && !escrowTitle) ||
     (location.pathname.includes("/new-transaction/deliverable") && !isDeliverableValid) ||
     (location.pathname.includes("/new-transaction/payment") &&
-      (areSendingFieldsEmpty || !isSellerAddressValid || !isRecipientAddressResolved || !hasSufficientNativeBalance)) ||
+      (areSendingFieldsEmpty ||
+        !isSellerAddressValid ||
+        !isRecipientAddressResolved ||
+        !isBuyerAddressValid ||
+        !isBuyerAddressResolved ||
+        !hasSufficientNativeBalance)) ||
     (location.pathname.includes("/new-transaction/deadline") && (!deadline || isDeadlineInPast)) ||
     (location.pathname.includes("/new-transaction/notifications") &&
       (!isEmailValid || isAddingUser || isUpdatingUser || !user));

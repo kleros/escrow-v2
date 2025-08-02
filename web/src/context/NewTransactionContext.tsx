@@ -33,77 +33,49 @@ interface INewTransactionContext {
   setSendingToken: (token: IToken) => void;
   buyerAddress: string;
   setBuyerAddress: (address: string) => void;
+  isBuyerAddressCustom: boolean;
+  setIsBuyerAddressCustom: (v: boolean) => void;
   deadline: string;
   setDeadline: (deadline: string) => void;
   notificationEmail: string;
   setNotificationEmail: (email: string) => void;
   resetContext: () => void;
   hasSufficientNativeBalance: boolean;
-  setHasSufficientNativeBalance: (hasSufficientNativeBalance: boolean) => void;
+  setHasSufficientNativeBalance: (v: boolean) => void;
   isRecipientAddressResolved: boolean;
-  setIsRecipientAddressResolved: (isRecipientAddressResolved: boolean) => void;
+  setIsRecipientAddressResolved: (v: boolean) => void;
+  isBuyerAddressResolved: boolean;
+  setIsBuyerAddressResolved: (v: boolean) => void;
 }
 
-const NewTransactionContext = createContext<INewTransactionContext>({
-  escrowType: "",
-  setEscrowType: () => {},
-  escrowTitle: "",
-  setEscrowTitle: () => {},
-  deliverableText: "",
-  setDeliverableText: () => {},
-  transactionUri: "",
-  setTransactionUri: () => {},
-  isFileUploading: false,
-  setIsFileUploading: () => {},
-  deliverableFile: undefined,
-  setDeliverableFile: () => {},
-  extraDescriptionUri: "",
-  setExtraDescriptionUri: () => {},
-  receivingQuantity: "",
-  setReceivingQuantity: () => {},
-  receivingToken: "",
-  setReceivingToken: () => {},
-  sellerAddress: "",
-  setSellerAddress: () => {},
-  sendingQuantity: "",
-  setSendingQuantity: () => {},
-  sendingToken: { address: "native", symbol: "", logo: "" },
-  setSendingToken: () => {},
-  buyerAddress: "",
-  setBuyerAddress: () => {},
-  deadline: "",
-  setDeadline: () => {},
-  notificationEmail: "",
-  setNotificationEmail: () => {},
-  resetContext: () => {},
-  hasSufficientNativeBalance: true,
-  setHasSufficientNativeBalance: () => {},
-  isRecipientAddressResolved: false,
-  setIsRecipientAddressResolved: () => {},
-});
+const NewTransactionContext = createContext<INewTransactionContext>({} as INewTransactionContext);
 
 export const useNewTransactionContext = () => useContext(NewTransactionContext);
 
 export const NewTransactionProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [escrowType, setEscrowType] = useState<string>(localStorage.getItem("escrowType") || "general");
-  const [escrowTitle, setEscrowTitle] = useState<string>(localStorage.getItem("escrowTitle") || "");
-  const [deliverableText, setDeliverableText] = useState<string>(localStorage.getItem("deliverableText") || "");
+  const [escrowType, setEscrowType] = useState(localStorage.getItem("escrowType") || "general");
+  const [escrowTitle, setEscrowTitle] = useState(localStorage.getItem("escrowTitle") || "");
+  const [deliverableText, setDeliverableText] = useState(localStorage.getItem("deliverableText") || "");
   const [deliverableFile, setDeliverableFile] = useState<File | undefined>();
-  const [transactionUri, setTransactionUri] = useState<string>(localStorage.getItem("transactionUri") || "");
-  const [extraDescriptionUri, setExtraDescriptionUri] = useState<string>(
-    localStorage.getItem("extraDescriptionUri") || ""
+  const [transactionUri, setTransactionUri] = useState(localStorage.getItem("transactionUri") || "");
+  const [extraDescriptionUri, setExtraDescriptionUri] = useState(localStorage.getItem("extraDescriptionUri") || "");
+  const [isFileUploading, setIsFileUploading] = useState(false);
+  const [hasSufficientNativeBalance, setHasSufficientNativeBalance] = useState(true);
+  const [receivingQuantity, setReceivingQuantity] = useState(localStorage.getItem("receivingQuantity") || "");
+  const [receivingToken, setReceivingToken] = useState(localStorage.getItem("receivingToken") || "");
+  const [sellerAddress, setSellerAddress] = useState(localStorage.getItem("sellerAddress") || "");
+  const [sendingQuantity, setSendingQuantity] = useState(localStorage.getItem("sendingQuantity") || "");
+  const [sendingToken, setSendingToken] = useState<IToken>(
+    JSON.parse(localStorage.getItem("sendingToken") ?? "null") || { address: "native", symbol: "", logo: "" }
   );
-  const [isFileUploading, setIsFileUploading] = useState<boolean>(false);
-  const [hasSufficientNativeBalance, setHasSufficientNativeBalance] = useState<boolean>(true);
-  const [receivingQuantity, setReceivingQuantity] = useState<string>(localStorage.getItem("receivingQuantity") || "");
-  const [receivingToken, setReceivingToken] = useState<string>(localStorage.getItem("receivingToken") || "");
-  const [sellerAddress, setSellerAddress] = useState<string>(localStorage.getItem("sellerAddress") || "");
-  const [sendingQuantity, setSendingQuantity] = useState<string>(localStorage.getItem("sendingQuantity") || "");
-  const [sendingToken, setSendingToken] = useState<IToken>(JSON.parse(localStorage.getItem("sendingToken") ?? "null") || { address: "native", symbol: "", logo: "" });
-  const [buyerAddress, setBuyerAddress] = useState<string>(localStorage.getItem("buyerAddress") ?? "");
+  const [buyerAddress, setBuyerAddress] = useState(localStorage.getItem("buyerAddress") ?? "");
+  const [isBuyerAddressCustom, setIsBuyerAddressCustom] = useState(
+    JSON.parse(localStorage.getItem("isBuyerAddressCustom") ?? "false")
+  );
   const [isRecipientAddressResolved, setIsRecipientAddressResolved] = useState(false);
-  const [deadline, setDeadline] = useState<string>(localStorage.getItem("deadline") || "");
-  const [notificationEmail, setNotificationEmail] = useState<string>(localStorage.getItem("notificationEmail") || "");
+  const [isBuyerAddressResolved, setIsBuyerAddressResolved] = useState(false);
+  const [deadline, setDeadline] = useState(localStorage.getItem("deadline") || "");
+  const [notificationEmail, setNotificationEmail] = useState(localStorage.getItem("notificationEmail") || "");
 
   const resetContext = () => {
     setEscrowType("general");
@@ -119,9 +91,12 @@ export const NewTransactionProvider: React.FC<{ children: React.ReactNode }> = (
     setSendingQuantity("");
     setSendingToken({ address: "native", symbol: "", logo: "" });
     setBuyerAddress("");
+    setIsBuyerAddressCustom(false);
     setDeadline("");
     setNotificationEmail("");
     setHasSufficientNativeBalance(true);
+    setIsRecipientAddressResolved(false);
+    setIsBuyerAddressResolved(false);
   };
 
   useEffect(() => {
@@ -133,6 +108,7 @@ export const NewTransactionProvider: React.FC<{ children: React.ReactNode }> = (
     localStorage.setItem("receivingQuantity", receivingQuantity);
     localStorage.setItem("receivingToken", receivingToken);
     localStorage.setItem("buyerAddress", buyerAddress);
+    localStorage.setItem("isBuyerAddressCustom", JSON.stringify(isBuyerAddressCustom));
     localStorage.setItem("sendingQuantity", sendingQuantity);
     localStorage.setItem("sendingToken", JSON.stringify(sendingToken));
     localStorage.setItem("sellerAddress", sellerAddress);
@@ -147,6 +123,7 @@ export const NewTransactionProvider: React.FC<{ children: React.ReactNode }> = (
     receivingQuantity,
     receivingToken,
     buyerAddress,
+    isBuyerAddressCustom,
     sendingQuantity,
     sendingToken,
     sellerAddress,
@@ -177,6 +154,8 @@ export const NewTransactionProvider: React.FC<{ children: React.ReactNode }> = (
         setReceivingToken,
         buyerAddress,
         setBuyerAddress,
+        isBuyerAddressCustom,
+        setIsBuyerAddressCustom,
         sendingQuantity,
         setSendingQuantity,
         hasSufficientNativeBalance,
@@ -187,6 +166,8 @@ export const NewTransactionProvider: React.FC<{ children: React.ReactNode }> = (
         setSellerAddress,
         isRecipientAddressResolved,
         setIsRecipientAddressResolved,
+        isBuyerAddressResolved,
+        setIsBuyerAddressResolved,
         deadline,
         setDeadline,
         notificationEmail,

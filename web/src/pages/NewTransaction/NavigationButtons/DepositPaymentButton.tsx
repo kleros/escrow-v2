@@ -43,11 +43,9 @@ export const ErrorButtonMessage = styled.div`
 
 const DepositPaymentButton: React.FC = () => {
   const {
-    escrowTitle,
-    deliverableText,
     transactionUri,
-    extraDescriptionUri,
     sendingQuantity,
+    buyerAddress,
     sellerAddress,
     deadline,
     sendingToken,
@@ -60,7 +58,11 @@ const DepositPaymentButton: React.FC = () => {
   const [isSending, setIsSending] = useState(false);
   const [isApproved, setIsApproved] = useState(false);
   const { address, chain } = useAccount();
-  const ensResult = useEnsAddress({ name: normalize(sellerAddress), chainId: 1 });
+  const buyerEnsResult = useEnsAddress({ name: normalize(buyerAddress), chainId: 1 });
+  const sellerEnsResult = useEnsAddress({ name: normalize(sellerAddress), chainId: 1 });
+  const finalBuyerAddress = buyerEnsResult.data || buyerAddress;
+  const finalSellerAddress = sellerEnsResult.data || sellerAddress;
+
   const deliveryDeadlineTimestamp = useMemo(
     () => BigInt(Math.floor(new Date(deadline).getTime() / 1000)),
     [deadline]
@@ -73,8 +75,6 @@ const DepositPaymentButton: React.FC = () => {
     () => (isNativeTransaction ? parseEther(sendingQuantity) : parseUnits(sendingQuantity, 18)),
     [isNativeTransaction, sendingQuantity]
   );
-
-  const finalRecipientAddress = ensResult.data || sellerAddress;
 
   const { data: nativeBalance } = useBalance({
     query: { enabled: isNativeTransaction },
@@ -119,9 +119,12 @@ const DepositPaymentButton: React.FC = () => {
     isError: isErrorNativeConfig,
   } = useSimulateEscrowUniversalCreateNativeTransaction({
     query: {
-      enabled: isNativeTransaction && ethAddressPattern.test(finalRecipientAddress) && !insufficientBalance,
+      enabled: isNativeTransaction && 
+      ethAddressPattern.test(finalBuyerAddress) && 
+      ethAddressPattern.test(finalSellerAddress) && 
+      !insufficientBalance,
     },
-    args: [disputeDeadlineTimestamp, transactionUri, finalRecipientAddress],
+    args: [disputeDeadlineTimestamp, transactionUri, finalBuyerAddress, finalSellerAddress],
     value: transactionValue,
   });
 
@@ -135,7 +138,8 @@ const DepositPaymentButton: React.FC = () => {
         !isNativeTransaction &&
         !isUndefined(allowance) &&
         allowance >= transactionValue &&
-        ethAddressPattern.test(finalRecipientAddress) &&
+        ethAddressPattern.test(finalBuyerAddress) &&
+        ethAddressPattern.test(finalSellerAddress) &&
         !insufficientBalance,
     },
     args: [
@@ -143,7 +147,8 @@ const DepositPaymentButton: React.FC = () => {
       sendingToken?.address as `0x${string}`,
       disputeDeadlineTimestamp,
       transactionUri,
-      finalRecipientAddress as `0x${string}`,
+      finalBuyerAddress as `0x${string}`,
+      finalSellerAddress as `0x${string}`,
     ],
   });
 
