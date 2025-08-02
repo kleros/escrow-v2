@@ -1,7 +1,7 @@
 // import { BigNumber, utils } from "ethers";
 import { task } from "hardhat/config";
 import { getContracts } from "../deploy/utils/getContracts";
-import { EscrowCustomBuyer, EscrowUniversal, EscrowView } from "../typechain-types";
+import { EscrowUniversal, EscrowView } from "../typechain-types";
 
 const parameters = {
   arbitrumSepoliaDevnet: {
@@ -97,13 +97,7 @@ const mappingFn = (subgraphEndpoint: string, view: string) => `[
 
 task("set-dispute-template", "Sets the dispute template").setAction(async (args, hre) => {
   const { config, deployments } = hre;
-  const {
-    escrow: escrowUniversal,
-    view: viewUniversal,
-    escrowCustomBuyer,
-    customBuyerView,
-    klerosCore,
-  } = await getContracts(hre);
+  const { escrow: escrowUniversal, view: viewUniversal, klerosCore } = await getContracts(hre);
   const networkName = await deployments.getNetworkName();
   const { subgraphEndpoint, frontendUrl } = parameters[networkName];
   const chainId = config.networks[networkName].chainId;
@@ -112,7 +106,7 @@ task("set-dispute-template", "Sets the dispute template").setAction(async (args,
     throw new Error("Missing parameters");
   }
 
-  const setDisputeTemplate = async (escrow: EscrowUniversal | EscrowCustomBuyer, view: EscrowView) => {
+  const setDisputeTemplate = async (escrow: EscrowUniversal, view: EscrowView) => {
     const disputeTemplate = disputeTemplateFn(chainId, klerosCore.target.toString(), frontendUrl);
     console.log("New disputeTemplate", disputeTemplate);
 
@@ -126,8 +120,4 @@ task("set-dispute-template", "Sets the dispute template").setAction(async (args,
   };
 
   await setDisputeTemplate(escrowUniversal, viewUniversal);
-
-  if (escrowCustomBuyer) {
-    await setDisputeTemplate(escrowCustomBuyer, customBuyerView);
-  }
 });

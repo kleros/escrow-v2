@@ -10,7 +10,6 @@ export type EscrowDeployment = {
 
 export type EscrowDeployments = {
   universal: EscrowDeployment;
-  customBuyer?: EscrowDeployment;
 };
 
 export const config = {
@@ -24,10 +23,6 @@ export const config = {
         escrow: "EscrowUniversal",
         view: "EscrowView",
       },
-      customBuyer: {
-        escrow: "EscrowCustomBuyer",
-        view: "EscrowViewCustomBuyer",
-      },
     } satisfies EscrowDeployments,
   },
   arbitrum: {
@@ -40,7 +35,6 @@ export const config = {
         escrow: "EscrowUniversal",
         view: "EscrowView",
       },
-      customBuyer: undefined,
     } satisfies EscrowDeployments,
   },
 };
