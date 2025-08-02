@@ -78,7 +78,6 @@ yarn hardhat node --tags nothing
 
 ```bash
 yarn deploy --network localhost --tags EscrowUniversal
-yarn deploy --network localhost --tags EscrowCustomBuyer
 ```
 
 #### 2. Deploy to a Public Network Fork
@@ -103,7 +102,6 @@ yarn deploy-testnet-fork
 
 ```bash
 yarn deploy --network arbitrumSepolia --tags EscrowUniversal
-yarn deploy --network arbitrumSepolia --tags EscrowCustomBuyer
 ```
 
 The deployed addresses should be displayed to the screen after the deployment is complete. If you missed them, you can always go to the `deployments/<network>` directory and look for the respective file.
