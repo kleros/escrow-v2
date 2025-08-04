@@ -61,7 +61,7 @@ const Collapse = styled.div<{ $open: boolean; }>`
   max-height: ${({ $open }) => ($open ? "160px" : "0")};
   opacity: ${({ $open }) => ($open ? 1 : 0)};
   overflow: hidden;
-  transition: max-height 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.6s ease;
+  transition: max-height 0.5s, opacity 0.5s ease;
 `;
 
 const SecondaryLabel = styled.label`
