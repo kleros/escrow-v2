@@ -1,68 +1,64 @@
 import React from "react";
 import styled from "styled-components";
+import { hoverShortTransitionTiming } from "styles/commonStyles";
 import Arrow from "svgs/icons/arrow-down.svg";
 
-const Label = styled.span<{ disabled?: boolean; }>`
-  font-weight: 600;
-  height: 18px;
+const Label = styled.label`
+  ${hoverShortTransitionTiming}
   font-size: 12px;
+  cursor: pointer;
   transition: color 0.2s ease;
-  color: ${({ theme, disabled }) =>
-    disabled ? theme.secondaryText : theme.primaryBlue};
+  color: ${({ theme }) => theme.primaryBlue};
 `;
 
-const StyledArrow = styled(Arrow) <{ isOpen: boolean; disabled?: boolean; }>`
-  margin-left: 8px;
-  width: 8px;
-  height: 8px;
+const StyledArrow = styled(Arrow) <{ isOpen: boolean }>`
+  ${hoverShortTransitionTiming}
+  margin-left: 6px;
+  width: 9px;
+  height: 9px;
   transition: transform 0.25s ease, fill 0.25s ease;
   transform: rotate(${({ isOpen }) => (isOpen ? 180 : 0)}deg);
-  fill: ${({ theme, disabled }) =>
-    disabled ? theme.secondaryText : theme.primaryBlue};
+  fill: ${({ theme }) => theme.primaryBlue};
 `;
 
 const StyledButton = styled.button`
   display: flex;
   align-items: center;
-  margin: 10px 0;
+  justify-content: center;
   border: none;
   background: transparent;
   padding: 0;
   cursor: pointer;
   outline: none;
 
-  &:disabled {
-    cursor: not-allowed;
-  }
-
   &:focus-visible {
     box-shadow: 0 0 0 2px ${({ theme }) => theme.primaryBlue};
   }
 
-  &:hover:not(:disabled) ${Label} {
-    color: ${({ theme }) => theme.secondaryBlue};
-  }
-
-  &:hover:not(:disabled) ${StyledArrow} {
-    fill: ${({ theme }) => theme.secondaryBlue};
+  :hover {
+    label {
+      color: ${({ theme }) => theme.secondaryBlue};
+    }
+    svg {
+      fill: ${({ theme }) => theme.secondaryBlue};
+    }
   }
 `;
 
-interface SimpleToggleButtonProps
+interface ISimpleToggleButton
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   isOpen: boolean;
   label: string;
 }
 
-const SimpleToggleButton: React.FC<SimpleToggleButtonProps> = ({
+const SimpleToggleButton: React.FC<ISimpleToggleButton> = ({
   isOpen,
   label,
-  disabled,
-  ...props
+  onClick
 }) => (
-  <StyledButton disabled={disabled} {...props}>
-    <Label disabled={disabled}>{label}</Label>
-    <StyledArrow isOpen={isOpen} disabled={disabled} />
+  <StyledButton {...{ onClick }}>
+    <Label>{label}</Label>
+    <StyledArrow {...{ isOpen }} />
   </StyledButton>
 );
 

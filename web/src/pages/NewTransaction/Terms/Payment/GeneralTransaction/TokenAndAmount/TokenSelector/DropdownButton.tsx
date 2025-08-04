@@ -1,9 +1,11 @@
 import React from "react";
 import styled from "styled-components";
+import { hoverShortTransitionTiming } from "styles/commonStyles";
 import Skeleton from "react-loading-skeleton";
 import TokenIcon from "./TokenItem/TokenIcon";
 
 const Container = styled.div`
+  ${hoverShortTransitionTiming}
   border: 1px solid ${({ theme }) => theme.stroke};
   border-radius: 3px;
   width: 186px;
@@ -16,6 +18,10 @@ const Container = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+
+  :hover {
+    background-color: ${({ theme }) => theme.lightGrey};
+  }
 `;
 
 const DropdownArrow = styled.span`

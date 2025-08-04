@@ -1,9 +1,11 @@
 import React from "react";
 import styled from "styled-components";
+import { hoverShortTransitionTiming } from "styles/commonStyles";
 import Balance from "./Balance";
 import TokenIcon from "./TokenIcon";
 
 const Container = styled.div<{ selected: boolean }>`
+  ${hoverShortTransitionTiming}
   display: flex;
   align-items: center;
   padding: 10px 16px;

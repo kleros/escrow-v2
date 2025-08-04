@@ -11,15 +11,19 @@ import { isEmpty } from "src/utils";
 import SimpleToggleButton from "components/SimpleToggleButton";
 
 const Container = styled.div`
-  margin-bottom: 12px;
+  margin: 12px 0;
 `;
 
 const InfoRow = styled.div`
   display: flex;
-  align-items: center;
+  align-items: baseline;
   justify-content: center;
+  margin-bottom: 8px;
   gap: 8px;
-  font-size: 14px;
+`;
+
+const SimpleToggleButtonContainer = styled.div`
+  margin-bottom: 8px;
 `;
 
 const StyledField = styled(Field)`
@@ -42,6 +46,12 @@ const StyledField = styled(Field)`
     `
   )};
 `;
+
+const FromConnectedAddress = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 6px;
+`
 
 const Collapse = styled.div<{ $open: boolean; }>`
   display: flex;
@@ -131,8 +141,10 @@ const BuyerAddress: React.FC = () => {
     <Container>
       {!isBuyerAddressCustom && (
         <InfoRow>
-          <SecondaryLabel>from:</SecondaryLabel>
-          <PrimaryLabel>{displayAddress}</PrimaryLabel>
+          <FromConnectedAddress>
+            <SecondaryLabel>from:</SecondaryLabel>
+            <PrimaryLabel>{displayAddress}</PrimaryLabel>
+          </FromConnectedAddress>
           <SimpleToggleButton
             isOpen={false}
             label="Set buyer as different address"
@@ -148,16 +160,17 @@ const BuyerAddress: React.FC = () => {
       )}
 
       <Collapse $open={isBuyerAddressCustom}>
-        <SimpleToggleButton
-          isOpen
-          label={`Set buyer as the current address: ${displayAddress}`}
-          onClick={() => {
-            setIsBuyerAddressCustom(false);
-            setBuyerAddress(walletAddress ?? "");
-            setIsBuyerAddressResolved(true);
-          }}
-        />
-
+        <SimpleToggleButtonContainer>
+          <SimpleToggleButton
+            isOpen
+            label={`Set buyer as the current address: ${displayAddress}`}
+            onClick={() => {
+              setIsBuyerAddressCustom(false);
+              setBuyerAddress(walletAddress ?? "");
+              setIsBuyerAddressResolved(true);
+            }}
+          />
+        </SimpleToggleButtonContainer>
         <StyledField
           type="text"
           value={buyerAddress}
