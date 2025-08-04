@@ -3,7 +3,7 @@ import styled, { css } from "styled-components";
 import { responsiveSize } from "styles/responsiveSize";
 import { landscapeStyle } from "styles/landscapeStyle";
 import { Field } from "@kleros/ui-components-library";
-import { useAccount, useEnsAddress } from "wagmi";
+import { useAccount, useEnsAddress, useEnsName } from "wagmi";
 import { useDebounce } from "react-use";
 import { useNewTransactionContext } from "context/NewTransactionContext";
 import { ensDomainPattern, validateAddress } from "utils/validateAddress";
@@ -66,6 +66,11 @@ const PrimaryLabel = styled.label`
 
 const BuyerAddress: React.FC = () => {
   const { address: walletAddress } = useAccount();
+  const { data: ensName } = useEnsName({
+    address: walletAddress as `0x${string}` | undefined,
+    chainId: 1,
+  });
+
   const {
     buyerAddress,
     setBuyerAddress,
@@ -75,9 +80,10 @@ const BuyerAddress: React.FC = () => {
   } = useNewTransactionContext();
 
   const displayAddress = useMemo(() => {
+    if (ensName) return ensName;
     const addr = walletAddress || "";
     return addr ? `${addr.slice(0, 6)}...${addr.slice(-4)}` : "";
-  }, [walletAddress]);
+  }, [walletAddress, ensName]);
 
   useEffect(() => {
     if (!isBuyerAddressCustom && walletAddress) {
