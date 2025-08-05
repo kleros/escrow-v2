@@ -1,5 +1,6 @@
 import React from "react";
 import { landscapeStyle } from "styles/landscapeStyle";
+import { hoverShortTransitionTiming } from "styles/commonStyles";
 import styled, { css } from "styled-components";
 import Skeleton from "react-loading-skeleton";
 import { isUndefined } from "utils/index";
@@ -40,10 +41,15 @@ const BalanceSkeleton = styled(Skeleton)`
 `;
 
 const MaxButton = styled.p`
+  ${hoverShortTransitionTiming}
   margin: 0;
   color: ${({ theme }) => theme.primaryBlue};
   font-size: 12px;
   cursor: pointer;
+
+  :hover {
+    color: ${({ theme }) => theme.secondaryBlue};
+  }
 `;
 
 interface IMaxBalance {

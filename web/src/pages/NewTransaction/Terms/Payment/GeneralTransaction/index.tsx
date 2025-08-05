@@ -5,6 +5,7 @@ import NavigationButtons from "../../../NavigationButtons";
 import DestinationAddress from "../DestinationAddress";
 import ToDivider from "../ToDivider";
 import TokenAndAmount from "./TokenAndAmount";
+import BuyerAddress from "../BuyerAddress";
 import { useNewTransactionContext } from "context/NewTransactionContext";
 
 const Container = styled.div`
@@ -25,6 +26,7 @@ const GeneralTransaction: React.FC = () => {
     <Container>
       <Header text="I am paying" />
       <TokenAndAmount quantity={sendingQuantity} setQuantity={setSendingQuantity} />
+      <BuyerAddress />
       <ToDivider />
       <DestinationAddress recipientAddress={sellerAddress} setRecipientAddress={setSellerAddress} />
       <NavigationButtons prevRoute="/new-transaction/deliverable" nextRoute="/new-transaction/deadline" />
