@@ -9,8 +9,8 @@ Refresh the list of deployed contracts by running `./scripts/generateDeployments
 ### Production
 #### Arbitrum One
 
-- [EscrowUniversal](https://arbiscan.io/address/0x79530E7Bb3950A3a4b5a167816154715681F2f6c)
-- [EscrowView](https://arbiscan.io/address/0x3Fed94ee4FA1B5665DB84489f913E2c7e1290459)
+- [EscrowUniversal](https://arbiscan.io/address/0x5D64Cb92c351e46615ce427015A2F1E0823A2402)
+- [EscrowView](https://arbiscan.io/address/0xAf36da891c03b8A3a675f08f59355c8ff877330d)
 
 ### Official Testnet
 #### Arbitrum Sepolia
