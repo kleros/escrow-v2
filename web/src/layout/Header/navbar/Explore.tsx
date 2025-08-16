@@ -5,6 +5,7 @@ import { landscapeStyle } from "styles/landscapeStyle";
 import { Link, useLocation } from "react-router-dom";
 
 import { useOpenContext } from "../MobileHeader";
+import Policies from "./Policies";
 
 const Container = styled.div`
   display: flex;
@@ -76,6 +77,7 @@ const Explore: React.FC<IExplore> = ({ isMobileNavbar }) => {
           {text}
         </StyledLink>
       ))}
+      <Policies isMobileNavbar={isMobileNavbar} />
     </Container>
   );
 };

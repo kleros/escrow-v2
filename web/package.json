@@ -23,7 +23,8 @@
     "svgs": "./src/assets/svgs"
   },
   "volta": {
-    "node": "20.18.3"
+    "node": "20.18.3",
+    "yarn": "4.9.2"
   },
   "scripts": {
     "start": "yarn start-devnet",
