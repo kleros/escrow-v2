@@ -54,12 +54,29 @@ const PoliciesButton = styled.button<{ isActive: boolean; isMobileNavbar?: boole
 
 const ChevronIcon = styled.span<{ isOpen: boolean }>`
   display: inline-block;
-  width: 12px;
-  height: 12px;
+  width: 6px;
+  height: 6px;
   border-right: 2px solid currentColor;
   border-bottom: 2px solid currentColor;
-  transform: rotate(${({ isOpen }) => (isOpen ? "45deg" : "-45deg")});
+  transform: rotate(45deg);
   transition: transform 0.2s ease;
+  margin-top: -4px;
+
+  @keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+      transform: rotate(45deg) scale(1);
+    }
+    40% {
+      transform: rotate(45deg) scale(1.2);
+    }
+    60% {
+      transform: rotate(45deg) scale(1.1);
+    }
+  }
+
+  &.bounce {
+    animation: bounce 0.6s ease;
+  }
 `;
 
 const DropdownContainer = styled.div<{ isOpen: boolean; isMobileNavbar?: boolean }>`
@@ -68,9 +85,9 @@ const DropdownContainer = styled.div<{ isOpen: boolean; isMobileNavbar?: boolean
   left: 0;
   background: ${({ theme }) => theme.whiteBackground};
   border: 1px solid ${({ theme }) => theme.stroke};
-  border-radius: 8px;
+  border-radius: 3px;
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
-  min-width: 200px;
+  width: 247px;
   z-index: 1000;
   opacity: ${({ isOpen }) => (isOpen ? 1 : 0)};
   visibility: ${({ isOpen }) => (isOpen ? "visible" : "hidden")};
@@ -93,22 +110,24 @@ const DropdownItem = styled.a<{ isSelected?: boolean }>`
   padding: 12px 16px;
   text-decoration: none;
   color: ${({ theme }) => theme.primaryText};
-  background: ${({ isSelected, theme }) => (isSelected ? theme.lightBlue : "transparent")};
-  border-left: ${({ isSelected, theme }) => (isSelected ? `3px solid ${theme.primaryBlue}` : "none")};
-  transition: background-color 0.2s ease;
+  background: transparent;
+  border-left: 3px solid transparent;
+  height: 45px;
+  transition: all 0.2s ease;
 
   &:hover {
-    background: ${({ theme }) => theme.lightBlue};
+    background: ${({ theme }) => theme.mediumBlue};
+    border-left-color: ${({ theme }) => theme.primaryBlue};
   }
 
   &:first-child {
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
   }
 
   &:last-child {
-    border-bottom-left-radius: 8px;
-    border-bottom-right-radius: 8px;
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
   }
 `;
 
@@ -118,12 +137,12 @@ const ItemIcon = styled.div<{ isSelected?: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
-  color: ${({ isSelected, theme }) => (isSelected ? theme.primaryBlue : theme.secondaryText)};
+  color: ${({ theme }) => theme.primaryBlue};
 `;
 
 const CheckIcon = styled.div`
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
   border: 2px solid currentColor;
   border-radius: 50%;
   position: relative;
@@ -132,9 +151,9 @@ const CheckIcon = styled.div`
     content: "";
     position: absolute;
     top: 2px;
-    left: 4px;
-    width: 4px;
-    height: 6px;
+    left: 5px;
+    width: 5px;
+    height: 8px;
     border: solid currentColor;
     border-width: 0 2px 2px 0;
     transform: rotate(45deg);
@@ -142,8 +161,8 @@ const CheckIcon = styled.div`
 `;
 
 const DocumentIcon = styled.div`
-  width: 16px;
-  height: 20px;
+  width: 18px;
+  height: 22px;
   border: 2px solid currentColor;
   border-radius: 2px;
   position: relative;
@@ -151,9 +170,9 @@ const DocumentIcon = styled.div`
   &::after {
     content: "";
     position: absolute;
-    top: 2px;
-    left: 2px;
-    right: 2px;
+    top: 3px;
+    left: 3px;
+    right: 3px;
     height: 2px;
     background: currentColor;
     border-radius: 1px;
@@ -162,9 +181,9 @@ const DocumentIcon = styled.div`
   &::before {
     content: "";
     position: absolute;
-    top: 6px;
-    left: 2px;
-    right: 2px;
+    top: 8px;
+    left: 3px;
+    right: 3px;
     height: 1px;
     background: currentColor;
     border-radius: 0.5px;
@@ -177,7 +196,8 @@ interface IPolicies {
 
 const Policies: React.FC<IPolicies> = ({ isMobileNavbar }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedItem, setSelectedItem] = useState<string>("General Policy");
+  const [selectedItem, setSelectedItem] = useState<string>("");
+  const [isBouncing, setIsBouncing] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const { toggleIsOpen } = useOpenContext();
 
@@ -218,16 +238,23 @@ const Policies: React.FC<IPolicies> = ({ isMobileNavbar }) => {
     window.open(policy.url, "_blank");
   };
 
+  const handleToggleDropdown = () => {
+    setIsOpen(!isOpen);
+    // Trigger bounce effect
+    setIsBouncing(true);
+    setTimeout(() => setIsBouncing(false), 600); // Match animation duration
+  };
+
   return (
     <Container ref={dropdownRef}>
       <Title>Policies</Title>
       <PoliciesButton
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={handleToggleDropdown}
         isActive={isOpen}
         isMobileNavbar={isMobileNavbar}
       >
         Policies
-        <ChevronIcon isOpen={isOpen} />
+        <ChevronIcon isOpen={isOpen} className={isBouncing ? "bounce" : ""} />
       </PoliciesButton>
       
       <DropdownContainer isOpen={isOpen} isMobileNavbar={isMobileNavbar}>
@@ -239,7 +266,7 @@ const Policies: React.FC<IPolicies> = ({ isMobileNavbar }) => {
               href={policy.url}
               target="_blank"
               rel="noopener noreferrer"
-              isSelected={selectedItem === policy.name}
+              isSelected={false}
               onClick={(e) => {
                 e.preventDefault();
                 handleItemClick(policy);
