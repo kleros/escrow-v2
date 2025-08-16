@@ -46,7 +46,7 @@ const PoliciesButton = styled.button<{ isActive: boolean; isMobileNavbar?: boole
 
   ${landscapeStyle(
     () => css`
-      color: ${({ isActive, theme }) => (isActive ? theme.white : `${theme.white}BA`)};
+      color: ${({ theme }) => theme.white};
       padding: 16px 8px;
     `
   )};
@@ -61,22 +61,6 @@ const ChevronIcon = styled.span<{ isOpen: boolean }>`
   transform: rotate(45deg);
   transition: transform 0.2s ease;
   margin-top: -4px;
-
-  @keyframes bounce {
-    0%, 20%, 50%, 80%, 100% {
-      transform: rotate(45deg) scale(1);
-    }
-    40% {
-      transform: rotate(45deg) scale(1.2);
-    }
-    60% {
-      transform: rotate(45deg) scale(1.1);
-    }
-  }
-
-  &.bounce {
-    animation: bounce 0.6s ease;
-  }
 `;
 
 const DropdownContainer = styled.div<{ isOpen: boolean; isMobileNavbar?: boolean }>`
@@ -98,12 +82,12 @@ const DropdownContainer = styled.div<{ isOpen: boolean; isMobileNavbar?: boolean
     () => css`
       top: calc(100% + 8px);
       left: 50%;
-      transform: translateX(-50%) translateY(${({ isOpen }: { isOpen: boolean }) => (isOpen ? "0" : "-10px")});
+      transform: translateX(-50%) translateY(0);
     `
   )};
 `;
 
-const DropdownItem = styled.a<{ isSelected?: boolean }>`
+const DropdownItem = styled.a`
   display: flex;
   align-items: center;
   gap: 12px;
@@ -131,7 +115,7 @@ const DropdownItem = styled.a<{ isSelected?: boolean }>`
   }
 `;
 
-const ItemIcon = styled.div<{ isSelected?: boolean }>`
+const ItemIcon = styled.div`
   width: 20px;
   height: 20px;
   display: flex;
@@ -191,15 +175,16 @@ const DocumentIcon = styled.div`
 `;
 
 interface IPolicies {
+  /** Whether the component is being used in the mobile navbar */
   isMobileNavbar?: boolean;
 }
 
 const Policies: React.FC<IPolicies> = ({ isMobileNavbar }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedItem, setSelectedItem] = useState<string>("");
-  const [isBouncing, setIsBouncing] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const { toggleIsOpen } = useOpenContext();
+
+  // Policy documents configuration
 
   const policies = [
     {
@@ -230,7 +215,6 @@ const Policies: React.FC<IPolicies> = ({ isMobileNavbar }) => {
   }, []);
 
   const handleItemClick = (policy: typeof policies[0]) => {
-    setSelectedItem(policy.name);
     setIsOpen(false);
     if (isMobileNavbar) {
       toggleIsOpen();
@@ -240,9 +224,6 @@ const Policies: React.FC<IPolicies> = ({ isMobileNavbar }) => {
 
   const handleToggleDropdown = () => {
     setIsOpen(!isOpen);
-    // Trigger bounce effect
-    setIsBouncing(true);
-    setTimeout(() => setIsBouncing(false), 600); // Match animation duration
   };
 
   return (
@@ -254,7 +235,7 @@ const Policies: React.FC<IPolicies> = ({ isMobileNavbar }) => {
         isMobileNavbar={isMobileNavbar}
       >
         Policies
-        <ChevronIcon isOpen={isOpen} className={isBouncing ? "bounce" : ""} />
+        <ChevronIcon isOpen={isOpen} />
       </PoliciesButton>
       
       <DropdownContainer isOpen={isOpen} isMobileNavbar={isMobileNavbar}>
@@ -266,13 +247,12 @@ const Policies: React.FC<IPolicies> = ({ isMobileNavbar }) => {
               href={policy.url}
               target="_blank"
               rel="noopener noreferrer"
-              isSelected={false}
               onClick={(e) => {
                 e.preventDefault();
                 handleItemClick(policy);
               }}
             >
-              <ItemIcon isSelected={selectedItem === policy.name}>
+              <ItemIcon>
                 <IconComponent />
               </ItemIcon>
               {policy.name}
