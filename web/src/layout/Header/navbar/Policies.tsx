@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useId } from "react";
 import styled, { css } from "styled-components";
 import { landscapeStyle } from "styles/landscapeStyle";
 
@@ -63,7 +63,7 @@ const ChevronIcon = styled.span<{ isOpen: boolean }>`
   margin-top: -4px;
 `;
 
-const DropdownContainer = styled.div<{ isOpen: boolean; isMobileNavbar?: boolean }>`
+const DropdownContainer = styled.div<{ isOpen: boolean }>`
   position: absolute;
   top: 100%;
   left: 0;
@@ -183,6 +183,7 @@ const Policies: React.FC<IPolicies> = ({ isMobileNavbar }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const { toggleIsOpen } = useOpenContext();
+  const menuId = useId();
 
   // Policy documents configuration
 
@@ -214,12 +215,12 @@ const Policies: React.FC<IPolicies> = ({ isMobileNavbar }) => {
     };
   }, []);
 
-  const handleItemClick = (policy: typeof policies[0]) => {
+  const handleItemClick = () => {
     setIsOpen(false);
     if (isMobileNavbar) {
       toggleIsOpen();
     }
-    window.open(policy.url, "_blank");
+    // Let the anchor's default behavior open the link in a new tab (with rel attr).
   };
 
   const handleToggleDropdown = () => {
@@ -230,15 +231,19 @@ const Policies: React.FC<IPolicies> = ({ isMobileNavbar }) => {
     <Container ref={dropdownRef}>
       <Title>Policies</Title>
       <PoliciesButton
+        type="button"
         onClick={handleToggleDropdown}
         isActive={isOpen}
         isMobileNavbar={isMobileNavbar}
+        aria-haspopup="menu"
+        aria-expanded={isOpen}
+        aria-controls={menuId}
       >
         Policies
         <ChevronIcon isOpen={isOpen} />
       </PoliciesButton>
       
-      <DropdownContainer isOpen={isOpen} isMobileNavbar={isMobileNavbar}>
+      <DropdownContainer id={menuId} role="menu" isOpen={isOpen}>
         {policies.map((policy) => {
           const IconComponent = policy.icon;
           return (
@@ -247,10 +252,8 @@ const Policies: React.FC<IPolicies> = ({ isMobileNavbar }) => {
               href={policy.url}
               target="_blank"
               rel="noopener noreferrer"
-              onClick={(e) => {
-                e.preventDefault();
-                handleItemClick(policy);
-              }}
+              onClick={handleItemClick}
+              role="menuitem"
             >
               <ItemIcon>
                 <IconComponent />
