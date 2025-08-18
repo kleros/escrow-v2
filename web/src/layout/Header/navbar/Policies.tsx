@@ -1,6 +1,7 @@
-import React, { useState, useRef, useEffect, useId } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import styled, { css } from "styled-components";
 import { landscapeStyle } from "styles/landscapeStyle";
+import { hoverShortTransitionTiming } from "styles/commonStyles";
 
 import { useOpenContext } from "../MobileHeader";
 
@@ -28,6 +29,7 @@ const Title = styled.h1`
 `;
 
 const PoliciesButton = styled.button<{ isActive: boolean; isMobileNavbar?: boolean }>`
+  ${hoverShortTransitionTiming}
   display: flex;
   align-items: center;
   gap: 8px;
@@ -46,10 +48,13 @@ const PoliciesButton = styled.button<{ isActive: boolean; isMobileNavbar?: boole
 
   ${landscapeStyle(
     () => css`
-      color: ${({ theme }) => theme.white};
       padding: 16px 8px;
     `
-  )};
+  )}
+
+  @media (min-width: 900px) {
+    color: ${({ isActive, theme }) => (isActive ? theme.white : `${theme.white}BA`)};
+  }
 `;
 
 const ChevronIcon = styled.span<{ isOpen: boolean }>`
@@ -175,7 +180,6 @@ const DocumentIcon = styled.div`
 `;
 
 interface IPolicies {
-  /** Whether the component is being used in the mobile navbar */
   isMobileNavbar?: boolean;
 }
 
@@ -183,9 +187,6 @@ const Policies: React.FC<IPolicies> = ({ isMobileNavbar }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const { toggleIsOpen } = useOpenContext();
-  const menuId = useId();
-
-  // Policy documents configuration
 
   const policies = [
     {
@@ -210,9 +211,7 @@ const Policies: React.FC<IPolicies> = ({ isMobileNavbar }) => {
     };
 
     document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   const handleItemClick = () => {
@@ -220,11 +219,6 @@ const Policies: React.FC<IPolicies> = ({ isMobileNavbar }) => {
     if (isMobileNavbar) {
       toggleIsOpen();
     }
-    // Let the anchor's default behavior open the link in a new tab (with rel attr).
-  };
-
-  const handleToggleDropdown = () => {
-    setIsOpen(!isOpen);
   };
 
   return (
@@ -232,18 +226,17 @@ const Policies: React.FC<IPolicies> = ({ isMobileNavbar }) => {
       <Title>Policies</Title>
       <PoliciesButton
         type="button"
-        onClick={handleToggleDropdown}
+        onClick={() => setIsOpen(!isOpen)}
         isActive={isOpen}
         isMobileNavbar={isMobileNavbar}
         aria-haspopup="menu"
         aria-expanded={isOpen}
-        aria-controls={menuId}
       >
         Policies
         <ChevronIcon isOpen={isOpen} />
       </PoliciesButton>
       
-      <DropdownContainer id={menuId} role="menu" isOpen={isOpen}>
+      <DropdownContainer isOpen={isOpen}>
         {policies.map((policy) => {
           const IconComponent = policy.icon;
           return (
@@ -253,7 +246,6 @@ const Policies: React.FC<IPolicies> = ({ isMobileNavbar }) => {
               target="_blank"
               rel="noopener noreferrer"
               onClick={handleItemClick}
-              role="menuitem"
             >
               <ItemIcon>
                 <IconComponent />
