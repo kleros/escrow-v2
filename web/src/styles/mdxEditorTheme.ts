@@ -4,7 +4,7 @@ const sharedContentStyles = css`
   .mdxeditor-root-contenteditable {
     transition: background-color 0.1s ease !important;
     :hover {
-      background-color: ${({ theme }) => theme.lightGrey}60 !important;
+      background-color: ${({ theme }) => theme.lightGrey}A0 !important;
     }
   }
 

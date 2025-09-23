@@ -19,9 +19,8 @@ const Container = styled.div`
   align-items: center;
 `;
 
-const StyledMarkdownEditor = styled(MarkdownEditor)`
-  width: 84vw;
-  margin-bottom: 16px;
+const MarkdownEditorContainer = styled.div`
+  width 84vw;
 
   ${landscapeStyle(
     () => css`
@@ -32,6 +31,7 @@ const StyledMarkdownEditor = styled(MarkdownEditor)`
 
 const StyledFileUploader = styled(FileUploader)`
   width: 84vw;
+  margin-top: 16px;
   margin-bottom: ${responsiveSize(130, 72)};
 
   small {
@@ -83,12 +83,13 @@ const Deliverable: React.FC = () => {
       {escrowType === "general" ? (
         <>
           <Header text="Contract Terms" />
-          <StyledMarkdownEditor
+          <MarkdownEditorContainer>
+            <MarkdownEditor
             value={deliverableText}
             onChange={handleWrite}
             placeholder="eg. I should receive a website created in React with the following specification: x,y,z."
-            showMessage={true}
-          />
+            />
+          </MarkdownEditorContainer>
           <StyledFileUploader
             callback={handleAttachFile}
             variant={isDesktop ? "info" : undefined}

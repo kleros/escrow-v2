@@ -26,8 +26,6 @@ import {
   Separator,
 } from "@mdxeditor/editor";
 
-import InfoIcon from "svgs/icons/info-circle.svg";
-
 import { isValidUrl } from "utils/urlValidation";
 
 import { MDXEditorContainer, MDXEditorGlobalStyles } from "styles/mdxEditorTheme";
@@ -36,49 +34,16 @@ import "@mdxeditor/editor/style.css";
 
 const Container = styled(MDXEditorContainer)<{ isEmpty: boolean }>``;
 
-const MessageContainer = styled.div`
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  margin-top: 8px;
-`;
-
-const MessageText = styled.small`
-  font-size: 14px;
-  font-weight: 400;
-  color: ${({ theme }) => theme.secondaryText};
-  hyphens: auto;
-  line-height: 1.4;
-`;
-
-const StyledInfoIcon = styled(InfoIcon)`
-  width: 16px;
-  height: 16px;
-  fill: ${({ theme }) => theme.secondaryText} !important;
-  flex-shrink: 0;
-  margin-top: 2px;
-
-  path {
-    fill: ${({ theme }) => theme.secondaryText} !important;
-  }
-
-  * {
-    fill: ${({ theme }) => theme.secondaryText} !important;
-  }
-`;
-
 interface IMarkdownEditor {
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
-  showMessage?: boolean;
 }
 
 const MarkdownEditor: React.FC<IMarkdownEditor> = ({
   value,
   onChange,
-  placeholder = "Justify your vote...",
-  showMessage = true,
+  placeholder,
 }) => {
   const editorRef = useRef<MDXEditorMethods>(null);
 
@@ -152,16 +117,6 @@ const MarkdownEditor: React.FC<IMarkdownEditor> = ({
       <MDXEditorGlobalStyles />
       <Container isEmpty={isEmpty} onClick={handleContainerClick} role="region" aria-label="Markdown editor">
         <MDXEditor ref={editorRef} {...editorProps} aria-label="Rich text editor for markdown content" />
-        {showMessage && (
-          <MessageContainer>
-            <StyledInfoIcon />
-            <MessageText>
-              Please provide a comprehensive justification for your decision. Quality explanations are essential for the
-              parties involved and may be eligible for additional compensation in accordance with our justification
-              policy.
-            </MessageText>
-          </MessageContainer>
-        )}
       </Container>
     </>
   );
