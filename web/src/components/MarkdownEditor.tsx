@@ -77,8 +77,8 @@ interface IMarkdownEditor {
 const MarkdownEditor: React.FC<IMarkdownEditor> = ({
   value,
   onChange,
-  placeholder = "Enter your text...",
-  showMessage = false,
+  placeholder = "Justify your vote...",
+  showMessage = true,
 }) => {
   const editorRef = useRef<MDXEditorMethods>(null);
 
@@ -156,7 +156,9 @@ const MarkdownEditor: React.FC<IMarkdownEditor> = ({
           <MessageContainer>
             <StyledInfoIcon />
             <MessageText>
-              Please provide comprehensive information. Quality details are essential for all parties involved.
+              Please provide a comprehensive justification for your decision. Quality explanations are essential for the
+              parties involved and may be eligible for additional compensation in accordance with our justification
+              policy.
             </MessageText>
           </MessageContainer>
         )}

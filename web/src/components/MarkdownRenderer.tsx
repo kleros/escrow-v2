@@ -24,7 +24,6 @@ const MarkdownContainer = styled.div`
     pointer-events: none;
     cursor: pointer;
     position: relative;
-    color: ${({ theme }) => theme.primaryBlue};
 
     &::after {
       content: "";
@@ -35,10 +34,6 @@ const MarkdownContainer = styled.div`
       height: 100%;
       pointer-events: auto;
       cursor: pointer;
-    }
-
-    &:hover {
-      text-decoration: underline;
     }
   }
 
