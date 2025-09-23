@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import ReactMarkdown from "react-markdown";
+import MarkdownRenderer from "components/MarkdownRenderer";
 import { StyledSkeleton } from "components/StyledSkeleton";
 import { Copiable } from "@kleros/ui-components-library";
 import { useEnsName } from "wagmi";
@@ -31,7 +31,7 @@ const StyledA = styled.a`
   }
 `;
 
-const StyledReactMarkdown = styled(ReactMarkdown)`
+const StyledMarkdownRenderer = styled(MarkdownRenderer)`
   display: inline;
   & p {
     display: inline;
@@ -95,7 +95,7 @@ const Description: React.FC<IDescription> = ({
           {displayBuyerAddress}
         </StyledA>
       </StyledCopiable>{" "}
-      should receive: <StyledReactMarkdown>{deliverableText}</StyledReactMarkdown> from address{" "}
+      should receive: <StyledMarkdownRenderer content={deliverableText} /> from address{" "}
       <StyledCopiable copiableContent={sellerAddress ?? ""} info="Copy Seller Address">
         <StyledA
           href={`${SUPPORTED_CHAINS[DEFAULT_CHAIN].blockExplorers?.default.url}/address/${sellerAddress}`}
