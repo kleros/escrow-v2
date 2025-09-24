@@ -2,7 +2,7 @@ const DANGEROUS_PROTOCOLS = ["javascript:", "vbscript:", "file:", "about:", "blo
 
 const ALLOWED_PROTOCOLS = ["http:", "https:", "mailto:", "tel:", "ftp:"];
 
-const ALLOWED_DATA_TYPES = ["image/jpeg", "image/png", "image/gif", "image/webp", "image/svg+xml"];
+const ALLOWED_DATA_TYPES = ["image/jpeg", "image/png", "image/gif", "image/webp"];
 
 const isValidDataUri = (url: string): boolean => {
   const dataUriRegex = /^data:([^;,]+)(;base64)?,/i;
