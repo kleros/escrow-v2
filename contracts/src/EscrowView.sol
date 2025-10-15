@@ -4,7 +4,8 @@ pragma solidity 0.8.24;
 
 import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
 import {IERC20Metadata} from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
-import {EscrowUniversal, Transaction, NATIVE, Party, Status, IERC20} from "./EscrowUniversal.sol";
+import {EscrowUniversal} from "./EscrowUniversal.sol";
+import {Transaction, NATIVE, Party, Status, IERC20} from "./interfaces/Types.sol";
 
 /// @title EscrowView
 /// @notice A view contract for EscrowUniversal to facilitate the display of ruling options.
@@ -26,9 +27,20 @@ contract EscrowView {
     function getPayoutMessages(
         uint256 _transactionID
     ) external view returns (string memory noWinner, string memory buyerWins, string memory sellerWins) {
-        (, , uint256 amount, , , , , uint256 buyerFee, uint256 sellerFee, , , IERC20 token) = escrow.transactions(
-            _transactionID
-        );
+        (
+            ,
+            ,
+            uint256 amount,
+            ,
+            ,
+            ,
+            ,
+            uint256 buyerFee,
+            uint256 sellerFee,
+            ,
+            ,
+            IERC20 token
+        ) = escrow.transactions(_transactionID);
 
         (uint256 noWinnerPayout, uint256 noWinnerPayoutToken, , ) = escrow.getPayouts(_transactionID, Party.None);
         (, , uint256 buyerWinsCost, uint256 buyerWinsCostToken) = escrow.getPayouts(_transactionID, Party.Buyer);
