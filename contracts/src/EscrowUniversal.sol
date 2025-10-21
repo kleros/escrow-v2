@@ -10,6 +10,7 @@ pragma solidity 0.8.24;
 import {IArbitrableV2, IArbitratorV2} from "@kleros/kleros-v2-contracts/arbitration/interfaces/IArbitrableV2.sol";
 import "@kleros/kleros-v2-contracts/arbitration/interfaces/IDisputeTemplateRegistry.sol";
 import {SafeERC20, IERC20} from "./libraries/SafeERC20.sol";
+import {NATIVE, Status, Party, Transaction, Resolution} from "./interfaces/Types.sol";
 import "./interfaces/IEscrow.sol";
 
 /// @title EscrowUniversal for a sale paid in native currency or ERC20 tokens without platform fees.
