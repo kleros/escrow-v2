@@ -27,20 +27,9 @@ contract EscrowView {
     function getPayoutMessages(
         uint256 _transactionID
     ) external view returns (string memory noWinner, string memory buyerWins, string memory sellerWins) {
-        (
-            ,
-            ,
-            uint256 amount,
-            ,
-            ,
-            ,
-            ,
-            uint256 buyerFee,
-            uint256 sellerFee,
-            ,
-            ,
-            IERC20 token
-        ) = escrow.transactions(_transactionID);
+        (, , uint256 amount, , , , , uint256 buyerFee, uint256 sellerFee, , , IERC20 token) = escrow.transactions(
+            _transactionID
+        );
 
         (uint256 noWinnerPayout, uint256 noWinnerPayoutToken, , ) = escrow.getPayouts(_transactionID, Party.None);
         (, , uint256 buyerWinsCost, uint256 buyerWinsCostToken) = escrow.getPayouts(_transactionID, Party.Buyer);
