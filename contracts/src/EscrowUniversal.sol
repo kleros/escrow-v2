@@ -37,7 +37,7 @@ contract EscrowUniversal is IEscrow, IArbitrableV2 {
     uint256 public feeTimeout; // Time in seconds a party can take to pay arbitration fees before being considered unresponsive and lose the dispute.
     uint256 public settlementTimeout; // Time in seconds a party can take to accept or propose a settlement before being considered unresponsive.
     Transaction[] public transactions; // List of all created transactions.
-    mapping(uint256 => uint256) public disputeIDtoTransactionID; // Naps dispute ID to tx ID.
+    mapping(uint256 => uint256) public disputeIDtoTransactionID; // Maps dispute ID to tx ID.
     mapping(IERC20 => uint256) public amountCaps; // Caps the amount of the respective token for the Escrow transaction.
 
     // ************************************* //
