@@ -2,7 +2,8 @@ import React from "react";
 import styled, { css } from "styled-components";
 import { landscapeStyle } from "styles/landscapeStyle";
 import { errorToast } from "utils/wrapWithToast";
-import { FileUploader, Textarea } from "@kleros/ui-components-library";
+import { FileUploader } from "@kleros/ui-components-library";
+import MarkdownEditor from "components/MarkdownEditor";
 import { useNewTransactionContext } from "context/NewTransactionContext";
 import { responsiveSize } from "styles/responsiveSize";
 import NavigationButtons from "../../NavigationButtons";
@@ -18,13 +19,8 @@ const Container = styled.div`
   align-items: center;
 `;
 
-const StyledTextArea = styled(Textarea)`
-  width: 84vw;
-  height: 200px;
-  margin-bottom: 16px;
-  textarea {
-    font-size: 16px;
-  }
+const MarkdownEditorContainer = styled.div`
+  width 84vw;
 
   ${landscapeStyle(
     () => css`
@@ -35,6 +31,7 @@ const StyledTextArea = styled(Textarea)`
 
 const StyledFileUploader = styled(FileUploader)`
   width: 84vw;
+  margin-top: 16px;
   margin-bottom: ${responsiveSize(130, 72)};
 
   small {
@@ -65,8 +62,8 @@ const Deliverable: React.FC = () => {
   const { roleRestrictions } = useAtlasProvider();
 
   const isDesktop = useIsDesktop();
-  const handleWrite = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setDeliverableText(event.target.value);
+  const handleWrite = (value: string) => {
+    setDeliverableText(value);
   };
 
   const handleAttachFile = (file: File) => {
@@ -86,11 +83,13 @@ const Deliverable: React.FC = () => {
       {escrowType === "general" ? (
         <>
           <Header text="Contract Terms" />
-          <StyledTextArea
+          <MarkdownEditorContainer>
+            <MarkdownEditor
             value={deliverableText}
             onChange={handleWrite}
             placeholder="eg. I should receive a website created in React with the following specification: x,y,z."
-          />
+            />
+          </MarkdownEditorContainer>
           <StyledFileUploader
             callback={handleAttachFile}
             variant={isDesktop ? "info" : undefined}
