@@ -51,7 +51,6 @@
     "@types/react": "^18.2.59",
     "@types/react-dom": "^18.2.18",
     "@types/react-modal": "^3.16.3",
-    "@types/styled-components": "^5.1.34",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "@typescript-eslint/parser": "^5.62.0",
     "@typescript-eslint/utils": "^5.62.0",
@@ -70,12 +69,13 @@
   "dependencies": {
     "@cyntler/react-doc-viewer": "^1.16.3",
     "@kleros/kleros-app": "^2.1.0",
-    "@kleros/ui-components-library": "^2.19.0",
+    "@kleros/ui-components-library": "^3.6.0",
     "@mdxeditor/editor": "^3.45.0",
     "@reown/appkit": "^1.6.6",
     "@reown/appkit-adapter-wagmi": "^1.6.6",
     "@sentry/react": "^7.93.0",
     "@sentry/tracing": "^7.93.0",
+    "@tailwindcss/vite": "^4.1.17",
     "@tanstack/react-query": "^5.66.0",
     "@yornaath/batshit": "^0.9.0",
     "alchemy-sdk": "^3.3.1",
@@ -103,8 +103,8 @@
     "rehype-raw": "^6.1.1",
     "rehype-sanitize": "^5.0.1",
     "remark-gfm": "^3.0.1",
-    "styled-components": "^5.3.11",
     "subgraph-status": "^1.2.4",
+    "tailwindcss": "^4.1.17",
     "viem": "^2.27.2",
     "wagmi": "^2.14.16"
   }
