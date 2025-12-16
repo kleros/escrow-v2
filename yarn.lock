@@ -5675,6 +5675,7 @@ __metadata:
     alchemy-sdk: "npm:^3.3.1"
     chart.js: "npm:^3.9.1"
     chartjs-adapter-moment: "npm:^1.0.1"
+    clsx: "npm:^2.1.1"
     core-js: "npm:^3.35.0"
     eslint: "npm:^8.56.0"
     eslint-config-prettier: "npm:^8.10.0"
@@ -5703,6 +5704,7 @@ __metadata:
     rehype-sanitize: "npm:^5.0.1"
     remark-gfm: "npm:^3.0.1"
     subgraph-status: "npm:^1.2.4"
+    tailwind-merge: "npm:^3.4.0"
     tailwindcss: "npm:^4.1.17"
     typescript: "npm:^5.7.3"
     viem: "npm:^2.27.2"
@@ -33520,7 +33522,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tailwind-merge@npm:^3.0.2":
+"tailwind-merge@npm:^3.0.2, tailwind-merge@npm:^3.4.0":
   version: 3.4.0
   resolution: "tailwind-merge@npm:3.4.0"
   checksum: 10/d8caeb40ee3ec0eae2996f8a86d77c82a1751fc9c61a31d6153b4252cb734deaf98d351205aff5c204beee7b73497add8492411e75187acb8506b4d981e4ccc2
