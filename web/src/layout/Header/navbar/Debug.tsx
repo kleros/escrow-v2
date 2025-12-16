@@ -1,22 +1,16 @@
 import React from "react";
-import styled from "styled-components";
 // import { useSortitionModulePhase } from "hooks/contracts/generated";
 import { GIT_BRANCH, GIT_DIRTY, GIT_HASH, GIT_TAGS, GIT_URL, RELEASE_VERSION } from "consts/index";
 
-const Container = styled.div`
-  label,
-  a {
-    font-family: "Roboto Mono", monospace;
-    line-height: 10px;
-    font-size: 10px;
-    color: ${({ theme }) => theme.stroke};
-  }
-`;
-
 const Version = () => (
-  <label>
+  <label className="text-[10px] leading-2.5 text-klerosUIComponentsStroke font-[Roboto_Mono,monospace]">
     v{RELEASE_VERSION}{" "}
-    <a href={GIT_URL} target="_blank" rel="noreferrer">
+    <a
+      className="text-inherit text-[10px] leading-2.5 font-[Roboto_Mono,monospace]"
+      href={GIT_URL}
+      target="_blank"
+      rel="noreferrer"
+    >
       #{GIT_HASH}
     </a>
     {GIT_BRANCH && GIT_BRANCH !== "HEAD" && ` ${GIT_BRANCH}`}
@@ -49,10 +43,10 @@ enum Phases {
 
 const Debug: React.FC = () => {
   return (
-    <Container>
+    <div>
       <Version />
       {/* <Phase /> */}
-    </Container>
+    </div>
   );
 };
 

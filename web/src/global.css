@@ -24,6 +24,20 @@
   --max-width-landscape: 87.5rem;
   --shadow-custom: 0px 2px 3px rgba(0, 0, 0, 0.06);
   --leading-18px: 18px;
+
+  /* 
+  * Spacing utils for responsive resizing
+  * Default max screen width is 1250px
+  * Default min screen width is 375px
+  */
+  --spacing-fluid-4-8: clamp(4px, calc(4px + (8 - 4) * (100vw - 375px) / (1250 - 375)), 8px);
+  --spacing-fluid-6-8-300: clamp(6px, calc(6px + (8 - 6) * (100vw - 300px) / (1250 - 300)), 8px);
+  --spacing-fluid-8-24: clamp(8px, calc(8px + (24 - 8) * (100vw - 375px) / (1250 - 375)), 24px);
+  --spacing-fluid-8-32-300: clamp(8px, calc(8px + (32 - 8) * (100vw - 300px) / (1250 - 300)), 32px);
+  --spacing-fluid-12-32-300: clamp(12px, calc(12px + (32 - 12) * (100vw - 300px) / (1250 - 300)), 32px);
+  --spacing-fluid-100-130: clamp(100px, calc(100px + (130 - 100) * (100vw - 375px) / (1250 - 375)), 130px);
+  --spacing-fluid-300-424-300: clamp(300px, calc(300px + (424 - 300) * (100vw - 300px) / (1250 - 300)), 424px);
+  --spacing-fluid-300-480: clamp(300px, calc(300px + (480 - 300) * (100vw - 375px) / (1250 - 375)), 480px);
 }
 
 .dark {

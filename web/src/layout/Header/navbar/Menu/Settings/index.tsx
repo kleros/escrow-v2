@@ -1,8 +1,4 @@
-import React, { useRef, useState } from "react";
-import styled, { css } from "styled-components";
-
-import { landscapeStyle } from "styles/landscapeStyle";
-import { responsiveSize } from "styles/responsiveSize";
+import React, { useRef } from "react";
 
 import { useLocation, useNavigate } from "react-router-dom";
 import { useClickAway } from "react-use";
@@ -11,87 +7,51 @@ import { Tabs } from "@kleros/ui-components-library";
 import General from "./General";
 import NotificationSettings from "./Notifications";
 import { ISettings } from "../../index";
-
-const Container = styled.div`
-  display: flex;
-  position: absolute;
-  max-height: 80vh;
-  overflow-y: auto;
-  background-color: ${({ theme }) => theme.whiteBackground};
-  flex-direction: column;
-  top: 5%;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 1;
-  border: 1px solid ${({ theme }) => theme.stroke};
-  border-radius: 3px;
-  overflow-y: auto;
-
-  ${landscapeStyle(
-    () => css`
-      margin-top: 64px;
-      top: 0;
-      right: 0;
-      left: auto;
-      transform: none;
-    `
-  )}
-`;
-
-const StyledSettingsText = styled.div`
-  display: flex;
-  justify-content: center;
-  font-size: 24px;
-  color: ${({ theme }) => theme.primaryText};
-  margin-top: 24px;
-`;
-
-const StyledTabs = styled(Tabs)`
-  padding: 0 ${responsiveSize(8, 32, 300)};
-  width: 86vw;
-  max-width: 660px;
-  align-self: center;
-  
-  ${landscapeStyle(
-    () => css`
-      width: ${responsiveSize(300, 424, 300)};
-    `
-  )}
-`;
+import clsx from "clsx";
 
 const TABS = [
   {
-    text: "General",
+    id: 0,
     value: 0,
+    text: "General",
+    content: <General />,
   },
   {
-    text: "Notifications",
+    id: 1,
     value: 1,
+    text: "Notifications",
+    content: null,
   },
 ];
 
-const Settings: React.FC<ISettings> = ({ toggleIsSettingsOpen, initialTab }) => {
-  const [currentTab, setCurrentTab] = useState<number>(initialTab ?? 0);
+const Settings: React.FC<ISettings> = ({ toggleIsSettingsOpen }) => {
   const containerRef = useRef(null);
-
   const location = useLocation();
   const navigate = useNavigate();
   useClickAway(containerRef, () => {
     toggleIsSettingsOpen();
     if (location.hash.includes("#notifications")) navigate("#", { replace: true });
   });
+
   return (
-    <Container ref={containerRef}>
-      <StyledSettingsText>Settings</StyledSettingsText>
-      <StyledTabs
-        currentValue={currentTab}
-        items={TABS}
-        callback={(n: number) => {
-          setCurrentTab(n);
-        }}
+    <div
+      ref={containerRef}
+      className={clsx(
+        "flex flex-col absolute max-h-[80vh] overflow-y-auto",
+        "top-[5%] left-1/2 transform -translate-x-1/2 z-1 rounded-[3px]",
+        "bg-klerosUIComponentsWhiteBackground border border-solid border-klerosUIComponentsStroke",
+        "lg:mt-16 lg:top-0 lg:right-0 lg:left-auto lg:transform-none lg:translate-x-0"
+      )}
+    >
+      <div className="flex justify-center text-2xl mt-6 text-klerosUIComponentsPrimaryText">Settings</div>
+      <Tabs
+        className={clsx(
+          "py-0 max-w-[660px] w-[86vw] self-center lg:w-fluid-300-424-300",
+          "[&>div:first-child]:px-fluid-8-32-300"
+        )}
+        items={[TABS[0], { ...TABS[1], content: <NotificationSettings {...{ toggleIsSettingsOpen }} /> }]}
       />
-      {currentTab === 0 ? <General /> : <NotificationSettings {...{ toggleIsSettingsOpen }} />}
-    </Container>
+    </div>
   );
 };
 

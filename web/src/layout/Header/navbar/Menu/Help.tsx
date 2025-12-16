@@ -1,6 +1,4 @@
 import React, { useRef } from "react";
-import styled, { css } from "styled-components";
-import { landscapeStyle } from "styles/landscapeStyle";
 
 import { useClickAway } from "react-use";
 
@@ -12,65 +10,7 @@ import Telegram from "svgs/socialmedia/telegram.svg";
 
 import Debug from "../Debug";
 import { IHelp } from "../index";
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  position: absolute;
-  max-height: 80vh;
-  overflow-y: auto;
-  width: 86vw;
-  max-width: 444px;
-  top: 5%;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 1;
-  padding: 12px 12px 24px 12px;
-  border: 1px solid ${({ theme }) => theme.stroke};
-  background-color: ${({ theme }) => theme.whiteBackground};
-  border-radius: 3px;
-  box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.06);
-
-  ${landscapeStyle(
-    () => css`
-      margin-top: 64px;
-      width: 260px;
-      top: 0;
-      right: 0;
-      left: auto;
-      transform: none;
-    `
-  )}
-`;
-
-const ListItem = styled.a`
-  display: flex;
-  gap: 8px;
-  padding: 12px 8px;
-  cursor: pointer;
-  transition: transform 0.2s;
-
-  small {
-    font-size: 16px;
-    font-weight: 400;
-  }
-
-  :hover {
-    transform: scale(1.02);
-  }
-
-  :hover small {
-    transition: color 0.1s;
-    color: ${({ theme }) => theme.secondaryPurple};
-  }
-`;
-
-const Icon = styled.svg`
-  display: inline-block;
-  width: 16px;
-  height: 16px;
-  fill: ${({ theme }) => theme.secondaryPurple};
-`;
+import clsx from "clsx";
 
 const ITEMS = [
   {
@@ -106,19 +46,42 @@ const Help: React.FC<IHelp> = ({ toggleIsHelpOpen }) => {
 
   return (
     <>
-      <Container ref={containerRef}>
+      <div
+        ref={containerRef}
+        className={clsx(
+          "flex flex-col absolute max-h-[80vh] w-[86vw] max-w-[444px]",
+          "overflow-y-auto z-1 p-3 pb-6",
+          "top-[5%] left-1/2 transform -translate-x-1/2",
+          "border border-klerosUIComponentsStroke rounded-[3px]",
+          "bg-klerosUIComponentsWhiteBackground shadow-custom",
+          "lg:mt-16 lg:top-0 lg:right-0 lg:left-auto lg:transform-none lg:translate-x-0 lg:max-w-[260px]"
+        )}
+      >
         {ITEMS.map((item, index) => (
-          <ListItem
+          <a
             href={item.url}
             key={item.text}
             target="_blank"
+            rel="noopener noreferrer"
+            className={clsx(
+              "flex gap-2 py-3 px-2 cursor-pointer transition-transform duration-200",
+              "hover:scale-[1.02] group"
+            )}
           >
-            <Icon as={item.Icon} />
-            <small>{item.text}</small>
-          </ListItem>
+            <item.Icon className="inline-block w-4 h-4 fill-klerosUIComponentsSecondaryPurple" />
+            <small
+              className={clsx(
+                "text-base leading-18px text-klerosUIComponentsPrimaryText",
+                "transition-colors duration-100",
+                "group-hover:text-klerosUIComponentsSecondaryPurple"
+              )}
+            >
+              {item.text}
+            </small>
+          </a>
         ))}
         <Debug />
-      </Container>
+      </div>
     </>
   );
 };

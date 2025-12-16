@@ -4,7 +4,7 @@ import { SentryRoutes } from "./utils/sentry";
 import "react-loading-skeleton/dist/skeleton.css";
 import "react-toastify/dist/ReactToastify.css";
 import "overlayscrollbars/styles/overlayscrollbars.css";
-import "global.css";
+import "./global.css";
 import Web3Provider from "context/Web3Provider";
 import IsListProvider from "context/IsListProvider";
 import QueryClientProvider from "context/QueryClientProvider";
