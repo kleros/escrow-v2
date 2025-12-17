@@ -51,9 +51,8 @@ const NewTransaction: React.FC = () => {
             </div>
           </EnsureAuth>
         ) : (
-          <div className="flex flex-col items-center text-center text-klerosUIComponentsPrimaryText">
+          <div className="flex flex-col gap-4 items-center text-center text-klerosUIComponentsPrimaryText">
             To create a new escrow transaction, connect first and switch to the supported chain
-            <hr className="my-2" />
             <ConnectWallet />
           </div>
         )}
