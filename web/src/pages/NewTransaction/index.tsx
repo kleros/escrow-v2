@@ -1,8 +1,6 @@
 import React from "react";
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
-import styled, { css } from "styled-components";
 import { useWindowSize } from "react-use";
-import { BREAKPOINT_LANDSCAPE, MAX_WIDTH_LANDSCAPE, landscapeStyle } from "styles/landscapeStyle";
 import Title from "./EscrowDetails/Title";
 import TypeOfEscrow from "./EscrowDetails/TypeOfEscrow";
 import HeroImage from "./HeroImage";
@@ -12,48 +10,34 @@ import Deliverable from "./Terms/Deliverable";
 import Notifications from "./Terms/Notifications";
 import Payment from "./Terms/Payment";
 import Timeline from "./Timeline";
-import { responsiveSize } from "styles/responsiveSize";
 import { useAccount } from "wagmi";
 import ConnectWallet from "components/ConnectWallet";
-import { ConnectWalletContainer } from "../MyTransactions";
 import { DEFAULT_CHAIN } from "consts/chains";
 import { EnsureAuth } from "components/EnsureAuth";
-
-const Container = styled.div`
-  width: 100%;
-  background-color: ${({ theme }) => theme.lightBackground};
-  padding: 24px 16px 40px;
-  max-width: ${MAX_WIDTH_LANDSCAPE};
-  margin: 0 auto;
-
-  ${landscapeStyle(
-    () => css`
-      padding: 32px ${responsiveSize(0, 132)} 60px;
-    `
-  )}
-`;
-
-const MiddleContentContainer = styled.div`
-  display: flex;
-  justify-content: center;
-`;
+import clsx from "clsx";
+import { LG_BREAKPOINT } from "src/styles/breakpoints";
 
 const NewTransaction: React.FC = () => {
   const location = useLocation();
   const { width } = useWindowSize();
   const { isConnected, chain } = useAccount();
   const isPreviewPage = location.pathname.includes("/preview");
-  const isMobileView = width <= BREAKPOINT_LANDSCAPE;
+  const isMobileView = width <= LG_BREAKPOINT;
   const isOnSupportedChain = chain?.id === DEFAULT_CHAIN;
 
   return (
     <>
       {!isPreviewPage || isMobileView ? <HeroImage /> : null}
-      <Container>
+      <div
+        className={clsx(
+          "w-full max-w-landscape mx-auto bg-klerosUIComponentsLightBackground",
+          "px-4 pt-6 pb-10 lg:px-fluid-0-132 lg:pt-8 lg:pb-[60px]"
+        )}
+      >
         {isConnected && isOnSupportedChain && !isPreviewPage ? <Timeline /> : null}
         {isConnected && isOnSupportedChain ? (
           <EnsureAuth message={"Sign a message to verify yourself."} buttonText="Verify">
-            <MiddleContentContainer>
+            <div className="flex justify-center">
               <Routes>
                 <Route index element={<Navigate to="escrow-type" replace />} />
                 <Route path="/escrow-type/*" element={<TypeOfEscrow />} />
@@ -64,16 +48,16 @@ const NewTransaction: React.FC = () => {
                 <Route path="/notifications/*" element={<Notifications />} />
                 <Route path="/preview/*" element={<Preview />} />
               </Routes>
-            </MiddleContentContainer>
+            </div>
           </EnsureAuth>
         ) : (
-          <ConnectWalletContainer>
+          <div className="flex flex-col items-center text-center text-klerosUIComponentsPrimaryText">
             To create a new escrow transaction, connect first and switch to the supported chain
-            <hr />
+            <hr className="my-2" />
             <ConnectWallet />
-          </ConnectWalletContainer>
+          </div>
         )}
-      </Container>
+      </div>
     </>
   );
 };
