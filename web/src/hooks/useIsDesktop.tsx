@@ -1,12 +1,11 @@
 import { useMemo } from "react";
 
 import { useWindowSize } from "react-use";
-
-import { BREAKPOINT_LANDSCAPE } from "styles/landscapeStyle";
+import { LG_BREAKPOINT } from "src/styles/breakpoints";
 
 const useIsDesktop = () => {
   const { width } = useWindowSize();
-  return useMemo(() => width > BREAKPOINT_LANDSCAPE, [width]);
+  return useMemo(() => width > LG_BREAKPOINT, [width]);
 };
 
 export default useIsDesktop;

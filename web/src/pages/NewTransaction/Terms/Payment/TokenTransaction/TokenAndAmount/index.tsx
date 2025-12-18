@@ -1,23 +1,5 @@
 import React from "react";
-import styled, { css } from "styled-components";
-import { landscapeStyle } from "styles/landscapeStyle";
-import { responsiveSize } from "styles/responsiveSize";
-import AmountField from "./AmountField";
-import Token from "./Token";
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  align-items: center;
-  margin-bottom: ${responsiveSize(24, 18)};
-
-  ${landscapeStyle(
-    () => css`
-      flex-direction: row;
-    `
-  )}
-`;
+import { DropdownSelect, NumberField } from "@kleros/ui-components-library";
 
 interface ITokenAndAmount {
   quantity: string;
@@ -28,10 +10,27 @@ interface ITokenAndAmount {
 
 const TokenAndAmount: React.FC<ITokenAndAmount> = ({ quantity, setQuantity, token, setToken }) => {
   return (
-    <Container>
-      <AmountField quantity={quantity} setQuantity={setQuantity} />
-      <Token token={token} setToken={setToken} />
-    </Container>
+    <div className="flex flex-col gap-6 items-center mb-fluid-24-18 lg:flex-row">
+      <NumberField
+        placeholder="eg. 3.6"
+        value={Number(quantity) ?? 0}
+        minValue={0}
+        onChange={(value) => setQuantity(value.toString())}
+        formatOptions={{
+          //Prevent automatic rounding of very small amounts
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 18,
+        }}
+      />
+      <DropdownSelect
+        defaultSelectedKey={token}
+        items={[
+          { id: "xDAI", text: "xDAI", dot: "red", itemValue: "xDAI" },
+          { id: "ETH", text: "ETH", dot: "blue", itemValue: "ETH" },
+        ]}
+        callback={(value) => setToken(value.itemValue)}
+      />
+    </div>
   );
 };
 export default TokenAndAmount;
