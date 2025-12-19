@@ -55,7 +55,7 @@ const Deliverable: React.FC = () => {
             />
           </div>
           <FileUploader
-            className="w-[84vw] lg:w-fluid-342-699 [&_small]:whitespace-pre-line"
+            className="w-[84vw] lg:w-fluid-342-699 [&_small]:whitespace-pre-line [&_small]:text-sm"
             callback={handleAttachFile}
             variant={isDesktop ? "info" : undefined}
             msg={fileFootMessage}
