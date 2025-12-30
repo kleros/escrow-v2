@@ -53,7 +53,6 @@ const DestinationAddress: React.FC<IDestinationAddress> = ({ recipientAddress, s
       placeholder="eg. 0x123ABC... or john.eth"
       variant={variant}
       message={message}
-      maxLength={42}
     />
   );
 };

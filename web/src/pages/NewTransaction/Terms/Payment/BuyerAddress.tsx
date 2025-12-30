@@ -109,7 +109,6 @@ const BuyerAddress: React.FC = () => {
           placeholder="eg. 0x123ABC... or john.eth"
           variant={variant}
           message={message}
-          maxLength={42}
         />
       </div>
     </div>
