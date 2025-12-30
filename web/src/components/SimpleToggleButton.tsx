@@ -12,7 +12,7 @@ const SimpleToggleButton: React.FC<ISimpleToggleButton> = ({ isOpen, label, onCl
     className={cn(
       "flex items-center justify-center p-0",
       "cursor-pointer bg-transparent border-none outline-none",
-      "focus-visible:box-shadow-[0_0_0_2px_var(--klerosUIComponentsPrimaryBlue)]",
+      "focus-visible:shadow-[0_0_0_2px_var(--klerosUIComponentsPrimaryBlue)]",
       "hover:[&_label]:text-klerosUIComponentsSecondaryBlue hover:[&_svg]:fill-klerosUIComponentsSecondaryBlue"
     )}
     {...{ onClick }}

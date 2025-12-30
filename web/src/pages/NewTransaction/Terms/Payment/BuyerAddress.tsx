@@ -86,7 +86,7 @@ const BuyerAddress: React.FC = () => {
       <div
         className={cn(
           "flex flex-col justify-center items-center",
-          "overflow-hidden transition-[max-height_0.5s,opacity_0.5s_ease]",
+          "overflow-hidden transition-[max-height,opacity] duration-500 ease-in-out",
           isBuyerAddressCustom ? "max-h-40 opacity-100" : "max-h-0 opacity-0"
         )}
       >

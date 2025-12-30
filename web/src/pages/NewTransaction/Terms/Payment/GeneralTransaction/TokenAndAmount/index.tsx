@@ -4,7 +4,6 @@ import { useNewTransactionContext } from "context/NewTransactionContext";
 import { getFormattedBalance } from "utils/getFormattedBalance";
 import { erc20Abi } from "viem";
 import { formatUnits } from "viem";
-// import AmountField from "./AmountField";
 import TokenSelector from "./TokenSelector";
 import MaxBalance from "./MaxBalance";
 import { isUndefined } from "utils/index";
