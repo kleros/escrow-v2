@@ -46,6 +46,7 @@ const DestinationAddress: React.FC<IDestinationAddress> = ({ recipientAddress, s
 
   return (
     <TextField
+      aria-label="Destination address"
       className="lg:w-fluid-342-574"
       value={recipientAddress}
       onChange={(value) => setRecipientAddress(value)}

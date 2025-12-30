@@ -1,65 +1,32 @@
 import React from "react";
-import styled from "styled-components";
-import { hoverShortTransitionTiming } from "styles/commonStyles";
 import Arrow from "svgs/icons/arrow-down.svg";
+import { cn } from "~src/utils";
 
-const Label = styled.label`
-  ${hoverShortTransitionTiming}
-  font-size: 12px;
-  cursor: pointer;
-  transition: color 0.2s ease;
-  color: ${({ theme }) => theme.primaryBlue};
-`;
-
-const StyledArrow = styled(Arrow) <{ isOpen: boolean }>`
-  ${hoverShortTransitionTiming}
-  margin-left: 6px;
-  width: 9px;
-  height: 9px;
-  transition: transform 0.25s ease, fill 0.25s ease;
-  transform: rotate(${({ isOpen }) => (isOpen ? 180 : 0)}deg);
-  fill: ${({ theme }) => theme.primaryBlue};
-`;
-
-const StyledButton = styled.button`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  background: transparent;
-  padding: 0;
-  cursor: pointer;
-  outline: none;
-
-  &:focus-visible {
-    box-shadow: 0 0 0 2px ${({ theme }) => theme.primaryBlue};
-  }
-
-  :hover {
-    label {
-      color: ${({ theme }) => theme.secondaryBlue};
-    }
-    svg {
-      fill: ${({ theme }) => theme.secondaryBlue};
-    }
-  }
-`;
-
-interface ISimpleToggleButton
-  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface ISimpleToggleButton extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   isOpen: boolean;
   label: string;
 }
 
-const SimpleToggleButton: React.FC<ISimpleToggleButton> = ({
-  isOpen,
-  label,
-  onClick
-}) => (
-  <StyledButton {...{ onClick }}>
-    <Label>{label}</Label>
-    <StyledArrow {...{ isOpen }} />
-  </StyledButton>
+const SimpleToggleButton: React.FC<ISimpleToggleButton> = ({ isOpen, label, onClick }) => (
+  <button
+    className={cn(
+      "flex items-center justify-center p-0",
+      "cursor-pointer bg-transparent border-none outline-none",
+      "focus-visible:box-shadow-[0_0_0_2px_var(--klerosUIComponentsPrimaryBlue)]",
+      "hover:[&_label]:text-klerosUIComponentsSecondaryBlue hover:[&_svg]:fill-klerosUIComponentsSecondaryBlue"
+    )}
+    {...{ onClick }}
+  >
+    <label className="text-xs text-klerosUIComponentsPrimaryBlue cursor-pointer transition-colors ease-in-out duration-200">
+      {label}
+    </label>
+    <Arrow
+      className={cn(
+        "w-2.5 h-2.5 ml-1.5 transition-transform ease-in-out duration-200 fill-klerosUIComponentsPrimaryBlue",
+        isOpen ? "rotate-180" : "rotate-0"
+      )}
+    />
+  </button>
 );
 
 export default SimpleToggleButton;

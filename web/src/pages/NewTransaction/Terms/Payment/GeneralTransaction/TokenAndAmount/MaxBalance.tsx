@@ -1,74 +1,38 @@
 import React from "react";
-import { landscapeStyle } from "styles/landscapeStyle";
-import { hoverShortTransitionTiming } from "styles/commonStyles";
-import styled, { css } from "styled-components";
 import Skeleton from "react-loading-skeleton";
 import { isUndefined } from "utils/index";
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-self: center;
-  gap: 4px;
-
-  ${landscapeStyle(
-    () => css`
-      align-self: flex-end;
-    `
-  )}
-`;
-
-const LabelAndBalance = styled.div`
-  display: flex;
-  flex-direction: row;
-  gap: 4px;
-`;
-
-const Label = styled.p`
-  margin: 0;
-  color: ${({ theme }) => theme.secondaryText};
-  font-size: 12px;
-`;
-
-const Balance = styled.p`
-  margin: 0;
-  font-size: 12px;
-`;
-
-const BalanceSkeleton = styled(Skeleton)`
-  width: 63px;
-  height: 16px;
-`;
-
-const MaxButton = styled.p`
-  ${hoverShortTransitionTiming}
-  margin: 0;
-  color: ${({ theme }) => theme.primaryBlue};
-  font-size: 12px;
-  cursor: pointer;
-
-  :hover {
-    color: ${({ theme }) => theme.secondaryBlue};
-  }
-`;
+import clsx from "clsx";
 
 interface IMaxBalance {
-  formattedBalance: string;
+  formattedBalance?: string;
   rawBalance: number;
   setQuantity: (value: string) => void;
 }
 
 const MaxBalance: React.FC<IMaxBalance> = ({ formattedBalance, rawBalance, setQuantity }) => {
   return (
-    <Container>
-      <LabelAndBalance>
-        <Label>Balance:</Label>
-        {isUndefined(formattedBalance) ? <BalanceSkeleton /> : <Balance>{formattedBalance}</Balance>}
-      </LabelAndBalance>
+    <div className="flex flex-row self-center gap-1 lg:self-end">
+      <div className="flex flex-row gap-1">
+        <p className="m-0 text-xs text-klerosUIComponentsSecondaryText">Balance:</p>
+        {isUndefined(formattedBalance) ? (
+          <Skeleton width={63} height={16} />
+        ) : (
+          <p className="m-0 text-xs">{formattedBalance}</p>
+        )}
+      </div>
       {!isUndefined(formattedBalance) ? (
-        <MaxButton onClick={() => setQuantity(String(rawBalance))}>Max</MaxButton>
+        <p
+          className={clsx(
+            "cursor-pointer m-0",
+            "text-xs text-klerosUIComponentsPrimaryBlue hover:text-klerosUIComponentsSecondaryBlue",
+            "transition duration-100"
+          )}
+          onClick={() => setQuantity(String(rawBalance))}
+        >
+          Max
+        </p>
       ) : null}
-    </Container>
+    </div>
   );
 };
 export default MaxBalance;

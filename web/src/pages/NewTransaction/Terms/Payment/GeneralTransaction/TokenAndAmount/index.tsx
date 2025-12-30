@@ -1,30 +1,14 @@
 import React, { useMemo, useState, useEffect } from "react";
-import styled from "styled-components";
-import { responsiveSize } from "styles/responsiveSize";
 import { useAccount, useReadContract, useBalance } from "wagmi";
 import { useNewTransactionContext } from "context/NewTransactionContext";
 import { getFormattedBalance } from "utils/getFormattedBalance";
 import { erc20Abi } from "viem";
 import { formatUnits } from "viem";
-import AmountField from "./AmountField";
+// import AmountField from "./AmountField";
 import TokenSelector from "./TokenSelector";
 import MaxBalance from "./MaxBalance";
 import { isUndefined } from "utils/index";
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  gap: 24px;
-  margin-bottom: ${responsiveSize(16, 0)};
-  flex-wrap: wrap;
-`;
-
-const TokenSelectorAndMaxBalance = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-`;
+import { NumberField } from "@kleros/ui-components-library";
 
 interface ITokenAndAmount {
   quantity: string;
@@ -34,7 +18,7 @@ interface ITokenAndAmount {
 const TokenAndAmount: React.FC<ITokenAndAmount> = ({ quantity, setQuantity }) => {
   const { address } = useAccount();
   const { sendingToken, setHasSufficientNativeBalance } = useNewTransactionContext();
-  
+
   const isNativeTransaction = sendingToken?.address === "native";
 
   const { data: nativeBalance } = useBalance({
@@ -88,13 +72,28 @@ const TokenAndAmount: React.FC<ITokenAndAmount> = ({ quantity, setQuantity }) =>
   }, [sendingToken, isNativeTransaction, nativeBalance, tokenBalance]);
 
   return (
-    <Container>
-      <AmountField quantity={quantity} setQuantity={setQuantity} error={error} />
-      <TokenSelectorAndMaxBalance>
+    <div className="flex flex-row flex-wrap justify-center gap-6 mb-fluid-16-0">
+      <NumberField
+        aria-label="Amount"
+        className="w-48"
+        value={Number(quantity)}
+        onChange={(value) => setQuantity(value.toString())}
+        placeholder="Amount"
+        variant={error ? "error" : undefined}
+        message={error}
+        showFieldError
+        minValue={0}
+        formatOptions={{
+          //Prevent automatic rounding of very small amounts
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 18,
+        }}
+      />
+      <div className="flex flex-col gap-1">
         <TokenSelector />
         <MaxBalance rawBalance={balanceAmount} {...{ setQuantity, formattedBalance }} />
-      </TokenSelectorAndMaxBalance>
-    </Container>
+      </div>
+    </div>
   );
 };
 
