@@ -91,13 +91,8 @@
 }
 
 [class*="mdx"] button,
-[class*="select"] button,
-[class*="trigger"],
-[role="button"],
-[data-radix-portal] [role="button"],
-[data-radix-popper-content-wrapper] [role="button"],
-[data-radix-portal] [data-state],
-[data-radix-popper-content-wrapper] [data-state] {
+[class*="mdx"] [role="button"],
+[class*="mdx"] [data-state] {
   cursor: pointer !important;
   transition: all 0.1s ease !important;
   &:hover {

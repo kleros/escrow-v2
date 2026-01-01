@@ -15,6 +15,7 @@ const Title: React.FC = () => {
     <div className="flex flex-col items-center">
       <Header text="Title" />
       <TextField
+        aria-label="Title"
         className="w-[84vw] lg:w-fluid-342-500"
         value={escrowTitle}
         onChange={handleWrite}

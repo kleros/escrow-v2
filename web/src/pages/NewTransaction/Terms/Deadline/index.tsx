@@ -1,31 +1,34 @@
 import React from "react";
-import styled from "styled-components";
 import Header from "pages/NewTransaction/Header";
 import { Datepicker } from "@kleros/ui-components-library";
+import { DateValue, getLocalTimeZone, now, parseAbsoluteToLocal, parseZonedDateTime } from "@internationalized/date";
 import NavigationButtons from "../../NavigationButtons";
 import { useNewTransactionContext } from "context/NewTransactionContext";
 
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-
-const StyledDatepicker = styled(Datepicker)``;
-
 const Deadline: React.FC = () => {
-  const { setDeadline } = useNewTransactionContext();
+  const { deadline, setDeadline } = useNewTransactionContext();
 
-  const handleDateSelect = (date: Date) => {
-    setDeadline(date);
+  const handleDateChange = (value: DateValue | null) => {
+    if (!value) {
+      setDeadline("");
+      return;
+    }
+
+    const formattedDeadline = parseZonedDateTime(value.toString()).toDate().toISOString();
+    setDeadline(formattedDeadline);
   };
 
   return (
-    <Container>
+    <div className="flex flex-col items-center">
       <Header text="Delivery Deadline" />
-      <StyledDatepicker time onSelect={handleDateSelect} />
+      <Datepicker
+        time
+        defaultValue={deadline ? parseAbsoluteToLocal(deadline) : undefined}
+        minValue={now(getLocalTimeZone())}
+        onChange={handleDateChange}
+      />
       <NavigationButtons prevRoute="/new-transaction/payment" nextRoute="/new-transaction/notifications" />
-    </Container>
+    </div>
   );
 };
 
