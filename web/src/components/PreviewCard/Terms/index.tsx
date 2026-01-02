@@ -1,23 +1,6 @@
 import React from "react";
-
-import styled, { css } from "styled-components";
-import { landscapeStyle } from "styles/landscapeStyle";
-
 import AttachedFile from "./AttachedFile";
 import Description from "./Description";
-import Header from "./Header";
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-
-  ${landscapeStyle(
-    () => css`
-        gap: 24px;
-    `
-  )}
-`;
 
 interface ITerms {
   escrowType: string;
@@ -46,8 +29,8 @@ const Terms: React.FC<ITerms> = ({
   extraDescriptionUri,
 }) => {
   return (
-    <Container>
-      <Header />
+    <div className="flex flex-col gap-4 lg:gap-6">
+      <h3 className="m-0 text-klerosUIComponentsPrimaryText font-semibold">Terms</h3>
       <Description
         {...{
           escrowType,
@@ -61,7 +44,7 @@ const Terms: React.FC<ITerms> = ({
         }}
       />
       <AttachedFile {...{ extraDescriptionUri }} />
-    </Container>
+    </div>
   );
 };
 export default Terms;

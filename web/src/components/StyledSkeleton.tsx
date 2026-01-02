@@ -3,10 +3,6 @@ import styled from "styled-components";
 import Skeleton from "react-loading-skeleton";
 import { responsiveSize } from "styles/responsiveSize";
 
-export const StyledSkeleton = styled(Skeleton)`
-  z-index: 0;
-`;
-
 const SkeletonTransactionCardContainer = styled.div`
   width: 100%;
 `;
@@ -24,11 +20,6 @@ const StyledSkeletonEvidenceCard = styled(Skeleton)`
   width: 76vw;
 `;
 
-const StyledSkeletonButton = styled(Skeleton)`
-  width: 168px;
-  height: 45px;
-`;
-
 export const StyledSkeletonTitle = styled(Skeleton)`
   margin-left: 92px;
   width: 200px;
@@ -43,5 +34,3 @@ export const SkeletonTransactionCard = () => (
 export const SkeletonTransactionListItem = () => <StyledSkeletonTransactionListItem />;
 
 export const SkeletonEvidenceCard = () => <StyledSkeletonEvidenceCard />;
-
-export const SkeletonButton = () => <StyledSkeletonButton />;

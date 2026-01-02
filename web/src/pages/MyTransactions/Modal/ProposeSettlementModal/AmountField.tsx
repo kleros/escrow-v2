@@ -1,26 +1,7 @@
 import React, { useState, useEffect } from "react";
-import styled from "styled-components";
-import { responsiveSize } from "styles/responsiveSize";
-import { Field } from "@kleros/ui-components-library";
+import { NumberField } from "@kleros/ui-components-library";
 import { parseEther } from "viem";
 import { useTransactionDetailsContext } from "context/TransactionDetailsContext";
-
-export const StyledField = styled(Field)`
-  width: 100% !important;
-  margin-bottom: ${responsiveSize(64, 36)};
-  input[type="number"]::-webkit-inner-spin-button,
-  input[type="number"]::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    appearance: none;
-  }
-  input[type="number"] {
-    -moz-appearance: textfield;
-  }
-
-  input {
-    font-size: 16px;
-  }
-`;
 
 interface IAmountField {
   amountProposed: string;
@@ -46,10 +27,10 @@ const AmountField: React.FC<IAmountField> = ({ amountProposed, setAmountProposed
   }, [amountProposed, amount, setIsAmountValid]);
 
   return (
-    <StyledField
-      value={amountProposed}
-      onChange={(e) => setAmountProposed(e.target.value)}
-      type="number"
+    <NumberField
+      className="w-full mb-fluid-64-36"
+      value={Number(amountProposed)}
+      onChange={(value) => setAmountProposed(value.toString())}
       placeholder="0"
       variant={error ? "error" : undefined}
       message={error}

@@ -1,11 +1,9 @@
 import React, { useRef, useState } from "react";
 import { useClickAway } from "react-use";
-import Description from "./Description";
 import { Overlay } from "components/Overlay";
-import Header from "./Header";
 import AmountField from "./AmountField";
 import Buttons from "./Buttons";
-import { StyledModal } from "../StyledModal";
+import StyledModal from "../StyledModal";
 
 interface IProposeSettlementModal {
   toggleModal: () => void;
@@ -21,8 +19,8 @@ const ProposeSettlementModal: React.FC<IProposeSettlementModal> = ({ toggleModal
   return (
     <Overlay>
       <StyledModal ref={containerRef}>
-        <Header text={text} />
-        <Description />
+        <h1 className="m-0">{text}</h1>
+        <p className="m-0 mb-8 text-klerosUIComponentsSecondaryText">How much should be paid?</p>
         <AmountField {...{ amountProposed, setAmountProposed, setIsAmountValid }} />
         <Buttons {...{ toggleModal, amountProposed, isAmountValid }} />
       </StyledModal>

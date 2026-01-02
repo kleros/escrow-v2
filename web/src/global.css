@@ -32,6 +32,8 @@
   */
   --spacing-fluid-0-132: clamp(0px, calc(0px + (132 - 0) * (100vw - 375px) / (1250 - 375)), 132px);
   --spacing-fluid-4-8: clamp(4px, calc(4px + (8 - 4) * (100vw - 375px) / (1250 - 375)), 8px);
+  --spacing-fluid-4-20: clamp(4px, calc(4px + (20 - 4) * (100vw - 375px) / (1250 - 375)), 20px);
+  --spacing-fluid-5-6: clamp(5px, calc(5px + (6 - 5) * (100vw - 375px) / (1250 - 375)), 6px);
   --spacing-fluid-6-8-300: clamp(6px, calc(6px + (8 - 6) * (100vw - 300px) / (1250 - 300)), 8px);
   --spacing-fluid-8-24: clamp(8px, calc(8px + (24 - 8) * (100vw - 375px) / (1250 - 375)), 24px);
   --spacing-fluid-8-32-300: clamp(8px, calc(8px + (32 - 8) * (100vw - 300px) / (1250 - 300)), 32px);
@@ -39,10 +41,13 @@
   --spacing-fluid-16-0: clamp(0px, calc(16px + (0 - 16) * (100vw - 375px) / (1250 - 375)), 16px);
   --spacing-fluid-20-24: clamp(20px, calc(20px + (24 - 20) * (100vw - 375px) / (1250 - 375)), 24px);
   --spacing-fluid-24-18: clamp(18px, calc(24px + (18 - 24) * (100vw - 375px) / (1250 - 375)), 24px);
+  --spacing-fluid-24-32-900: clamp(24px, calc(24px + (32 - 24) * (100vw - 900px) / (1250 - 900)), 32px);
+  --spacing-fluid-64-36: clamp(36px, calc(64px + (36 - 64) * (100vw - 375px) / (1250 - 375)), 64px);
   --spacing-fluid-100-130: clamp(100px, calc(100px + (130 - 100) * (100vw - 375px) / (1250 - 375)), 130px);
   --spacing-fluid-300-424-300: clamp(300px, calc(300px + (424 - 300) * (100vw - 300px) / (1250 - 300)), 424px);
   --spacing-fluid-300-480: clamp(300px, calc(300px + (480 - 300) * (100vw - 375px) / (1250 - 375)), 480px);
   --spacing-fluid-320-500: clamp(320px, calc(320px + (500 - 320) * (100vw - 375px) / (1250 - 375)), 500px);
+  --spacing-fluid-342-476: clamp(342px, calc(342px + (476 - 342) * (100vw - 375px) / (1250 - 375)), 476px);
   --spacing-fluid-342-500: clamp(342px, calc(342px + (500 - 342) * (100vw - 375px) / (1250 - 375)), 500px);
   --spacing-fluid-342-574: clamp(342px, calc(342px + (574 - 342) * (100vw - 375px) / (1250 - 375)), 574px);
   --spacing-fluid-342-618: clamp(342px, calc(342px + (618 - 342) * (100vw - 375px) / (1250 - 375)), 618px);

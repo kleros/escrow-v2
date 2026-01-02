@@ -1,21 +1,23 @@
 import React from "react";
 import { useEffect, useMemo, useState } from "react";
-import { DefaultTheme, useTheme } from "styled-components";
 import { formatEther } from "viem";
 import { getFormattedDate } from "utils/getFormattedDate";
 import { resolutionToString } from "utils/resolutionToString";
 import { formatTimeoutDuration } from "utils/formatTimeoutDuration";
 import CheckCircleOutlineIcon from "components/StyledIcons/CheckCircleOutlineIcon";
 import LawBalanceIcon from "components/StyledIcons/LawBalanceIcon";
-import { StyledSkeleton } from "components/StyledSkeleton";
 import { DisputeRequest, HasToPayFee, Payment, SettlementProposal, TransactionResolved } from "src/graphql/graphql";
+import Skeleton from "react-loading-skeleton";
+import { useTheme } from "./useToggleThemeContext";
+
+type Variant = "primaryBlue" | "secondaryBlue" | "warning" | "secondaryPurple" | "success";
 
 interface TimelineItem {
   title: string;
   party?: string;
   subtitle: string;
   rightSided: boolean;
-  variant: keyof DefaultTheme;
+  variant: string;
   Icon?: React.ElementType;
 }
 
@@ -23,11 +25,27 @@ function calculateTimeLeft(timestamp: number, timeout: number, currentTime: numb
   return Math.max(timeout - (currentTime - timestamp), 0);
 }
 
+function mapVariantToThemeColor(isLightTheme: boolean, variant: Variant): string {
+  switch (variant) {
+    case "primaryBlue":
+      return isLightTheme ? "#009aff" : "#6cc5ff";
+    case "secondaryBlue":
+      return isLightTheme ? "#7bcbff" : "#a5dbff";
+    case "warning":
+      return isLightTheme ? "#ff9900" : "#ffc46b";
+    case "secondaryPurple":
+      return isLightTheme ? "#9013fe" : "#b45fff";
+    case "success":
+      return isLightTheme ? "#00c42b" : "#65dc7f";
+  }
+}
+
 function createTimelineItem(
   formattedDate: string,
   title: string,
   party: string,
-  variant: keyof DefaultTheme,
+  isLightTheme: boolean,
+  variant: Variant,
   Icon?: React.ElementType
 ): TimelineItem {
   return {
@@ -35,7 +53,7 @@ function createTimelineItem(
     party,
     subtitle: formattedDate,
     rightSided: true,
-    variant,
+    variant: mapVariantToThemeColor(isLightTheme, variant),
     ...(Icon && { Icon }),
   };
 }
@@ -55,8 +73,9 @@ const useEscrowTimelineItems = (
   feeTimeout: number,
   settlementTimeout: number
 ): TimelineItem[] => {
-  const theme = useTheme();
   const [currentTime, setCurrentTime] = useState<number>(Math.floor(Date.now() / 1000));
+  const [theme] = useTheme();
+  const isLightTheme = theme === "light";
 
   useEffect(() => {
     const interval = setInterval(() => setCurrentTime(Math.floor(Date.now() / 1000)), 1000);
@@ -69,7 +88,7 @@ const useEscrowTimelineItems = (
     const formattedCreationDate = isPreview
       ? getFormattedDate(new Date())
       : getFormattedDate(new Date(transactionCreationTimestamp * 1000));
-    timelineItems.push(createTimelineItem(formattedCreationDate, "Escrow created", "", theme.primaryBlue));
+    timelineItems.push(createTimelineItem(formattedCreationDate, "Escrow created", "", isLightTheme, "primaryBlue"));
 
     if (!isPreview) {
       payments?.forEach((payment) => {
@@ -78,11 +97,11 @@ const useEscrowTimelineItems = (
         const title = (
           <>
             The {isBuyer ? "buyer" : "seller"} paid {formatEther(payment.amount)}{" "}
-            {assetSymbol ? assetSymbol : <StyledSkeleton width={30} />}
+            {assetSymbol ? assetSymbol : <Skeleton className="z-0" width={30} />}
           </>
         );
 
-        timelineItems.push(createTimelineItem(formattedDate, title, "", theme.secondaryBlue));
+        timelineItems.push(createTimelineItem(formattedDate, title, "", isLightTheme, "secondaryBlue"));
       });
 
       settlementProposals?.forEach((proposal, index) => {
@@ -109,10 +128,10 @@ const useEscrowTimelineItems = (
         const title = (
           <>
             The {proposal.party === "1" ? "buyer" : "seller"} proposed: Pay {formatEther(proposal.amount)}{" "}
-            {assetSymbol ? assetSymbol : <StyledSkeleton width={30} />}
+            {assetSymbol ? assetSymbol : <Skeleton className="z-0" width={30} />}
           </>
         );
-        timelineItems.push(createTimelineItem(formattedDate, title, subtitle, theme.warning));
+        timelineItems.push(createTimelineItem(formattedDate, title, subtitle, isLightTheme, "warning"));
       });
 
       hasToPayFees?.forEach((fee) => {
@@ -127,7 +146,7 @@ const useEscrowTimelineItems = (
           ? "Arbitration fees deposited"
           : `${fee.party === "2" ? "Seller" : "Buyer"}${timeoutCountdownMessage}`;
 
-        timelineItems.push(createTimelineItem(formattedDate, title, party, theme.secondaryPurple));
+        timelineItems.push(createTimelineItem(formattedDate, title, party, isLightTheme, "secondaryPurple"));
       });
 
       if (disputeRequest) {
@@ -137,7 +156,8 @@ const useEscrowTimelineItems = (
             formattedDate,
             "Dispute created",
             `Case #${disputeRequest.id}`,
-            theme.secondaryPurple,
+            isLightTheme,
+            "secondaryPurple",
             LawBalanceIcon
           )
         );
@@ -152,7 +172,8 @@ const useEscrowTimelineItems = (
               formattedDate,
               "Concluded",
               resolutionToString(resolutionEvent.resolution),
-              theme.success,
+              isLightTheme,
+              "success",
               CheckCircleOutlineIcon
             )
           );
@@ -173,7 +194,6 @@ const useEscrowTimelineItems = (
     feeTimeout,
     settlementTimeout,
     currentTime,
-    theme,
     assetSymbol,
     buyer,
     seller,

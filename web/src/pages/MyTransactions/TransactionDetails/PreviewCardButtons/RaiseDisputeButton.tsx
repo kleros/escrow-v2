@@ -11,8 +11,7 @@ import { isUndefined } from "utils/index";
 import { wrapWithToast } from "utils/wrapWithToast";
 import { useTransactionDetailsContext } from "context/TransactionDetailsContext";
 import { useQueryRefetch } from "hooks/useQueryRefetch";
-import ClosedCircleIcon from "components/StyledIcons/ClosedCircleIcon";
-import { ErrorButtonMessage } from "pages/NewTransaction/NavigationButtons/DepositPaymentButton";
+import ClosedCircle from "svgs/icons/close-circle.svg";
 
 interface IRaiseDisputeButton {
   toggleModal?: () => void;
@@ -104,7 +103,7 @@ const RaiseDisputeButton: React.FC<IRaiseDisputeButton> = ({ toggleModal, button
     <div>
       <Button
         isLoading={!insufficientBalance && (isSending || isLoadingBuyerConfig || isLoadingSellerConfig)}
-        disabled={
+        isDisabled={
           isSending ||
           insufficientBalance ||
           isLoadingBuyerConfig ||
@@ -113,12 +112,12 @@ const RaiseDisputeButton: React.FC<IRaiseDisputeButton> = ({ toggleModal, button
           isErrorSellerConfig
         }
         text={buttonText}
-        onClick={handleRaiseDispute}
+        onPress={handleRaiseDispute}
       />
       {insufficientBalance && (
-        <ErrorButtonMessage>
-          <ClosedCircleIcon /> Insufficient balance
-        </ErrorButtonMessage>
+        <div className="flex items-center justify-center gap-1 m-3 text-sm text-klerosUIComponentsError">
+          <ClosedCircle className="fill-klerosUIComponentsError" /> Insufficient balance
+        </div>
       )}
     </div>
   );
