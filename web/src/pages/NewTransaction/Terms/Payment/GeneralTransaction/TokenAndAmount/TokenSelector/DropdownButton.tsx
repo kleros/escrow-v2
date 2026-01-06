@@ -18,7 +18,7 @@ export const DropdownButton = ({ loading, sendingToken, onClick }) => {
     >
       <div className="flex items-center gap-2">
         {loading ? (
-          <Skeleton className="rounded-[50%] mb-0.5" width={24} height={24} />
+          <Skeleton className="rounded-full mb-0.5" width={24} height={24} />
         ) : (
           <TokenIcon symbol={sendingToken.symbol} logo={sendingToken.logo} />
         )}

@@ -44,7 +44,7 @@ const General: React.FC = () => {
               <div
                 className={clsx(
                   "flex h-[34px] gap-2 justify-center items-center",
-                  "before:content-[''] before:w-2 before:h-2 before:rounded-[50%] before:bg-klerosUIComponentsSuccess",
+                  "before:content-[''] before:w-2 before:h-2 before:rounded-full before:bg-klerosUIComponentsSuccess",
                   "[&>label]:text-klerosUIComponentsSuccess"
                 )}
               >

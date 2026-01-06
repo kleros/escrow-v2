@@ -29,7 +29,7 @@ export const IdenticonOrAvatar: React.FC<IIdenticonOrAvatar> = ({ size = "16", a
   });
 
   return avatar ? (
-    <img className="object-cover rounded-[50%]" src={avatar} alt="avatar" width={size} height={size} />
+    <img className="object-cover rounded-full" src={avatar} alt="avatar" width={size} height={size} />
   ) : (
     <Identicon size={size} string={address} />
   );
@@ -81,7 +81,7 @@ const AccountDisplay: React.FC = () => {
         className={clsx(
           "flex w-fit min-h-8 items-center pl-0 lg:hidden",
           "[&>label]:text-klerosUIComponentsSuccess [&>label]:text-base [&>label]:font-medium",
-          "before:content-[''] before:w-2 before:h-2 before:rounded-[50%] before:bg-klerosUIComponentsSuccess before:my-0 before:mr-[13px] before:ml-[3px]"
+          "before:content-[''] before:w-2 before:h-2 before:rounded-full before:bg-klerosUIComponentsSuccess before:my-0 before:mr-[13px] before:ml-[3px]"
         )}
       >
         <ChainDisplay />
