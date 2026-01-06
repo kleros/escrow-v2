@@ -1,25 +1,13 @@
 import React from "react";
-import styled from "styled-components";
-
-import { responsiveSize } from "styles/responsiveSize";
 
 import Filters from "./Filters";
 import Stats, { IStats } from "./Stats";
 
-const Container = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: ${responsiveSize(4, 8)};
-  margin-bottom: ${responsiveSize(16, 32)};
-  justify-content: space-between;
-`;
-
 const StatsAndFilters: React.FC<IStats> = ({ totalTransactions, resolvedTransactions }) => (
-  <Container>
+  <div className="flex flex-wrap justify-between items-center gap-2 mt-fluid-4-8 mb-fluid-16-32">
     <Stats {...{ totalTransactions, resolvedTransactions }} />
     <Filters />
-  </Container>
+  </div>
 );
 
 export default StatsAndFilters;

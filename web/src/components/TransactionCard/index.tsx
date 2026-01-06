@@ -1,7 +1,4 @@
 import React from "react";
-import styled, { css } from "styled-components";
-
-import { landscapeStyle } from "styles/landscapeStyle";
 
 import { Card } from "@kleros/ui-components-library";
 import { formatEther } from "viem";
@@ -17,51 +14,13 @@ import { useTokenMetadata } from "hooks/useTokenMetadata";
 
 import { TransactionDetailsFragment } from "src/graphql/graphql";
 
-import { StyledSkeleton, StyledSkeletonTitle } from "../StyledSkeleton";
 import TransactionInfo from "../TransactionInfo";
 import StatusBanner from "./StatusBanner";
-
-const StyledCard = styled(Card)`
-  width: 100%;
-  height: 260px;
-`;
-
-const StyledListItem = styled(Card)`
-  display: flex;
-  flex-grow: 1;
-  width: 100%;
-  height: 82px;
-`;
-
-const CardContainer = styled.div`
-  height: calc(100% - 45px);
-  padding: 20px 16px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-
-  ${landscapeStyle(
-    () => css`
-      padding: 20px 24px;
-    `
-  )}
-`;
-
-const ListContainer = styled.div`
-  display: flex;
-  align-items: center;
-  width: 100%;
-`;
-
-const ListTitle = styled.div``;
-
-const StyledTitle = styled.h3`
-  margin: 0;
-`;
+import Skeleton from "react-loading-skeleton";
 
 const TruncatedTitle = ({ text, maxLength }) => {
   const truncatedText = text.length <= maxLength ? text : text.slice(0, maxLength) + "…";
-  return <StyledTitle>{truncatedText}</StyledTitle>;
+  return <h3 className="m-0 text-klerosUIComponentsPrimaryText font-semibold">{truncatedText}</h3>;
 };
 
 interface ITransactionCard extends TransactionDetailsFragment {
@@ -93,30 +52,13 @@ const TransactionCard: React.FC<ITransactionCard> = ({
   return (
     <>
       {!isList || overrideIsList ? (
-        <StyledCard hover onClick={() => navigateAndScrollTop(`/transactions/${id.toString()}`)}>
+        <Card className="w-full h-[260px]" hover onClick={() => navigateAndScrollTop(`/transactions/${id.toString()}`)}>
           <StatusBanner id={parseInt(id)} status={currentStatusEnum} />
-          <CardContainer>
-            {!isUndefined(title) ? <StyledTitle>{title}</StyledTitle> : <StyledSkeleton />}
-            <TransactionInfo
-              amount={formatEther(amount)}
-              buyerAddress={buyer}
-              sellerAddress={seller}
-              deadlineDate={new Date(deadline * 1000).toLocaleString()}
-              isPreview={false}
-              {...{ assetSymbol }}
-            />
-          </CardContainer>
-        </StyledCard>
-      ) : (
-        <StyledListItem hover onClick={() => navigateAndScrollTop(`/transactions/${id.toString()}`)}>
-          <StatusBanner isCard={false} id={parseInt(id)} status={currentStatusEnum} />
-          <ListContainer>
+          <div className="flex flex-col justify-between h-[calc(100%-45px)] py-5 px-4 lg:px-6">
             {!isUndefined(title) ? (
-              <ListTitle>
-                <TruncatedTitle text={title} maxLength={50} />
-              </ListTitle>
+              <h3 className="m-0 text-klerosUIComponentsPrimaryText font-semibold line-clamp-3">{title}</h3>
             ) : (
-              <StyledSkeletonTitle />
+              <Skeleton className="z-0" />
             )}
             <TransactionInfo
               amount={formatEther(amount)}
@@ -126,8 +68,33 @@ const TransactionCard: React.FC<ITransactionCard> = ({
               isPreview={false}
               {...{ assetSymbol }}
             />
-          </ListContainer>
-        </StyledListItem>
+          </div>
+        </Card>
+      ) : (
+        <Card
+          className="flex grow w-full h-[82px]"
+          hover
+          onClick={() => navigateAndScrollTop(`/transactions/${id.toString()}`)}
+        >
+          <StatusBanner isCard={false} id={parseInt(id)} status={currentStatusEnum} />
+          <div className="flex items-center w-full">
+            {!isUndefined(title) ? (
+              <div>
+                <TruncatedTitle text={title} maxLength={50} />
+              </div>
+            ) : (
+              <Skeleton className="ml-[92px]" width={200} />
+            )}
+            <TransactionInfo
+              amount={formatEther(amount)}
+              buyerAddress={buyer}
+              sellerAddress={seller}
+              deadlineDate={new Date(deadline * 1000).toLocaleString()}
+              isPreview={false}
+              {...{ assetSymbol }}
+            />
+          </div>
+        </Card>
       )}
     </>
   );

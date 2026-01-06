@@ -1,53 +1,30 @@
 import React, { useState } from "react";
-import styled, { css } from "styled-components";
-import { landscapeStyle } from "styles/landscapeStyle";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDebounce } from "react-use";
 import { Searchbar, DropdownSelect } from "@kleros/ui-components-library";
 import { decodeURIFilter, encodeURIFilter, useRootPath } from "utils/uri";
 import { isEmpty } from "src/utils";
 
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-
-  ${landscapeStyle(
-  () =>
-    css`
-        flex-direction: row;
-        gap: 16px;
-      `
-)}
-`;
-
-const StyledDropdownSelect = styled(DropdownSelect)`
-  [class*="button__Container"] {
-    [class*="base-item__Item"] {
-      border-left: 1px solid transparent;
-    }
-  }
-`
-
-const SearchBarContainer = styled.div`
-  width: 100%;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 5px;
-  z-index: 0;
-`;
-
-const StyledSearchbar = styled(Searchbar)`
-  flex: 1;
-  flex-basis: 310px;
-  input {
-    font-size: 16px;
-    height: 45px;
-    padding-top: 0px;
-    padding-bottom: 0px;
-  }
-`;
+const dropdownItems = [
+  { id: "all", text: "All States", dot: "grey", itemValue: "all" },
+  { id: "NoDispute", text: "In Progress", dot: "blue", itemValue: "NoDispute" },
+  {
+    id: "WaitingSettlementBuyer",
+    text: "Settlement - Waiting Buyer",
+    dot: "orange",
+    itemValue: "WaitingSettlementBuyer",
+  },
+  {
+    id: "WaitingSettlementSeller",
+    text: "Settlement - Waiting Seller",
+    dot: "orange",
+    itemValue: "WaitingSettlementSeller",
+  },
+  { id: "WaitingBuyer", text: "Raising a Dispute - Waiting Buyer", dot: "blue", itemValue: "WaitingBuyer" },
+  { id: "WaitingSeller", text: "Raising a Dispute - Waiting Seller", dot: "blue", itemValue: "WaitingSeller" },
+  { id: "DisputeCreated", text: "Disputed", dot: "purple", itemValue: "DisputeCreated" },
+  { id: "TransactionResolved", text: "Concluded", dot: "green", itemValue: "TransactionResolved" },
+];
 
 const Search: React.FC = () => {
   const { page, order, filter } = useParams();
@@ -74,30 +51,23 @@ const Search: React.FC = () => {
   };
 
   return (
-    <Container>
-      <StyledDropdownSelect
-        items={[
-          { text: "All States", dot: "grey", value: "all" },
-          { text: "In Progress", dot: "blue", value: "NoDispute" },
-          { text: "Settlement - Waiting Buyer", dot: "orange", value: "WaitingSettlementBuyer" },
-          { text: "Settlement - Waiting Seller", dot: "orange", value: "WaitingSettlementSeller" },
-          { text: "Raising a Dispute - Waiting Buyer", dot: "blue", value: "WaitingBuyer" },
-          { text: "Raising a Dispute - Waiting Seller", dot: "blue", value: "WaitingSeller" },
-          { text: "Disputed", dot: "purple", value: "DisputeCreated" },
-          { text: "Concluded", dot: "green", value: "TransactionResolved" },
-        ]}
-        defaultValue={decodedFilter.status ?? "all"}
-        callback={(value) => handleStatusChange(value)}
+    <div className="flex flex-col gap-2 lg:flex-row lg:gap-4">
+      <DropdownSelect
+        items={dropdownItems}
+        defaultSelectedKey={decodedFilter.status ?? "all"}
+        callback={(item) => handleStatusChange(item.itemValue)}
       />
-      <SearchBarContainer>
-        <StyledSearchbar
+      <div className="flex flex-wrap gap-2 w-full mb-1.5 z-0">
+        <Searchbar
+          className="flex-1 basis-80"
           type="text"
+          aria-label="Search by ID"
           placeholder="Search By ID"
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={setSearch}
         />
-      </SearchBarContainer>
-    </Container>
+      </div>
+    </div>
   );
 };
 
