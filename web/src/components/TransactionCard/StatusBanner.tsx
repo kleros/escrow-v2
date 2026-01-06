@@ -78,7 +78,7 @@ const StatusBanner: React.FC<IStatusBanner> = ({ id, status, isCard = true, isPr
             ? ["border-t-[5px]", borderStyles[status], bgStyles[status]]
             : ["bg-transparent border-l-[5px]", borderStyles[status]]),
         "[&_.dot::before]:content-[''] [&_.dot::before]:h-2 [&_.dot::before]:w-2 [&_.dot::before]:rounded-full [&_.dot::before]:mr-2",
-        status
+        !isUndefined(status)
           ? dotAndFrontColorStyles[status]
           : "[&_.front-color]:text-klerosUIComponentsLightGrey [&_.dot::before]:bg-klerosUIComponentsLightGrey"
       )}
