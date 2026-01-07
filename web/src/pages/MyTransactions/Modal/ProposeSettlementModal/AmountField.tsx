@@ -32,7 +32,7 @@ const AmountField: React.FC<IAmountField> = ({ amountProposed, setAmountProposed
       className="w-full mb-fluid-64-36"
       value={Number(amountProposed)}
       onChange={(value) => setAmountProposed(value.toString())}
-      placeholder="Amount"
+      placeholder="0"
       variant={error ? "error" : undefined}
       message={error}
       showFieldError

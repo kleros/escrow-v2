@@ -12,6 +12,7 @@ const TokenAndAmount: React.FC<ITokenAndAmount> = ({ quantity, setQuantity, toke
   return (
     <div className="flex flex-col gap-6 items-center mb-fluid-24-18 lg:flex-row">
       <NumberField
+        aria-label="Amount"
         placeholder="eg. 3.6"
         value={Number(quantity) || 0}
         minValue={0}
