@@ -10,7 +10,7 @@ interface IButtons {
 
 const Buttons: React.FC<IButtons> = ({ toggleModal, amountProposed, isAmountValid }) => {
   return (
-    <div className="flex flex-wrap justify-between gap-4 w-full">
+    <div className="flex flex-wrap justify-center md:justify-between gap-4 w-full">
       <Button variant="secondary" text="Return" onPress={toggleModal} />
       <ProposeSettlementButton buttonText="Propose" {...{ toggleModal, amountProposed, isAmountValid }} />
     </div>

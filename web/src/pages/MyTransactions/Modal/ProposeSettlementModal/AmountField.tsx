@@ -28,12 +28,20 @@ const AmountField: React.FC<IAmountField> = ({ amountProposed, setAmountProposed
 
   return (
     <NumberField
+      aria-label="Amount"
       className="w-full mb-fluid-64-36"
       value={Number(amountProposed)}
       onChange={(value) => setAmountProposed(value.toString())}
-      placeholder="0"
+      placeholder="Amount"
       variant={error ? "error" : undefined}
       message={error}
+      showFieldError
+      minValue={0}
+      formatOptions={{
+        //Prevent automatic rounding of very small amounts
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 18,
+      }}
     />
   );
 };
