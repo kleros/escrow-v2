@@ -17,4 +17,4 @@ const OpenModalProposeSettlementButton: React.FC<IOpenModalProposeSettlementButt
     </>
   );
 };
-export default OpenModalProposeSettlementButton;
+export default React.memo(OpenModalProposeSettlementButton);
