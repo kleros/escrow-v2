@@ -1,36 +1,10 @@
-import React from "react";
-import styled, { type CSSProperties, keyframes } from "styled-components";
+import React, { CSSProperties } from "react";
 
 import KlerosIcon from "svgs/icons/kleros.svg";
+import { cn } from "src/utils";
 
 type Width = CSSProperties["width"];
 type Height = CSSProperties["height"];
-
-const breathing = keyframes`
-  0% {
-    transform: scale(1);
-  }
-
-  50% {
-    transform: scale(1.3);
-  }
-
-  100% {
-    transform: scale(1);
-  }
-`;
-
-const StyledKlerosIcon = styled(KlerosIcon)`
-  path {
-    fill: ${({ theme }) => theme.klerosUIComponentsStroke};
-  }
-  animation: ${breathing} 2s ease-out infinite normal;
-`;
-
-const Container = styled.div<{ width?: Width; height?: Height }>`
-  width: ${({ width }) => width ?? "100%"};
-  height: ${({ height }) => height ?? "100%"};
-`;
 
 interface ILoader {
   width?: Width;
@@ -40,9 +14,9 @@ interface ILoader {
 
 const Loader: React.FC<ILoader> = ({ width, height, className }) => {
   return (
-    <Container {...{ width, height, className }}>
-      <StyledKlerosIcon />
-    </Container>
+    <div className={cn(!width && "w-full", !height && "h-full", className)} style={{ width, height }}>
+      <KlerosIcon className="fill-klerosUIComponentsStroke animate-breathing" />
+    </div>
   );
 };
 
