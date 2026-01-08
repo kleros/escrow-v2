@@ -6,9 +6,7 @@ import { DEFAULT_CHAIN, SUPPORTED_CHAINS } from "consts/chains";
 import { isUndefined } from "utils/index";
 import { shortenAddress } from "utils/shortenAddress";
 import Skeleton from "react-loading-skeleton";
-import clsx from "clsx";
 
-const pStyle = "m-0 wrap-break-word";
 const copiableStyle = "mr-0.5 gap-1.5";
 const aStyle = "text-klerosUIComponentsPrimaryBlue text-base hover:underline";
 
@@ -123,10 +121,10 @@ const Description: React.FC<IDescription> = ({
     <Skeleton className="z-0" />
   ) : (
     <div className="flex flex-col gap-4">
-      <div className={clsx("text-klerosUIComponentsPrimaryText", pStyle)}>
+      <div className="text-klerosUIComponentsPrimaryText m-0 wrap-break-word">
         {escrowType === "general" ? generalEscrowSummary : cryptoSwapSummary}
       </div>
-      <p className={pStyle}>
+      <p className="m-0 wrap-break-word">
         After the delivery deadline, you can start a complaint (propose a settlement or raise a dispute). In case of a
         dispute, it will be arbitrated by the Kleros Freelancing Court.
       </p>

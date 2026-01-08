@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { NumberField } from "@kleros/ui-components-library";
 import { parseEther } from "viem";
 import { useTransactionDetailsContext } from "context/TransactionDetailsContext";
+import { formatNumberFieldAmount } from "src/utils/format";
 
 interface IAmountField {
   amountProposed: string;
@@ -26,12 +27,17 @@ const AmountField: React.FC<IAmountField> = ({ amountProposed, setAmountProposed
     }
   }, [amountProposed, amount, setIsAmountValid]);
 
+  const handleChange = (value: number) => {
+    const formattedValue = formatNumberFieldAmount(value);
+    setAmountProposed(formattedValue);
+  };
+
   return (
     <NumberField
       aria-label="Amount"
       className="w-full mb-fluid-64-36"
       value={Number(amountProposed)}
-      onChange={(value) => setAmountProposed(value.toString())}
+      onChange={handleChange}
       placeholder="0"
       variant={error ? "error" : undefined}
       message={error}

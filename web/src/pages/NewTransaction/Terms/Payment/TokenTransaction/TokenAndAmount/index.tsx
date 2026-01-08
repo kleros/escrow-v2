@@ -1,5 +1,6 @@
 import React from "react";
 import { DropdownSelect, NumberField } from "@kleros/ui-components-library";
+import { formatNumberFieldAmount } from "src/utils/format";
 
 interface ITokenAndAmount {
   quantity: string;
@@ -9,6 +10,11 @@ interface ITokenAndAmount {
 }
 
 const TokenAndAmount: React.FC<ITokenAndAmount> = ({ quantity, setQuantity, token, setToken }) => {
+  const handleChange = (value: number) => {
+    const formattedValue = formatNumberFieldAmount(value);
+    setQuantity(formattedValue);
+  };
+
   return (
     <div className="flex flex-col gap-6 items-center mb-fluid-24-18 lg:flex-row">
       <NumberField
@@ -16,7 +22,7 @@ const TokenAndAmount: React.FC<ITokenAndAmount> = ({ quantity, setQuantity, toke
         placeholder="eg. 3.6"
         value={Number(quantity) || 0}
         minValue={0}
-        onChange={(value) => setQuantity(value.toString())}
+        onChange={handleChange}
         formatOptions={{
           //Prevent automatic rounding of very small amounts
           minimumFractionDigits: 0,

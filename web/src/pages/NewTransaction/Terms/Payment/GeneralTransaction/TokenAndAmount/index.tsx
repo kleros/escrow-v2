@@ -8,6 +8,7 @@ import TokenSelector from "./TokenSelector";
 import MaxBalance from "./MaxBalance";
 import { isUndefined } from "utils/index";
 import { NumberField } from "@kleros/ui-components-library";
+import { formatNumberFieldAmount } from "src/utils/format";
 
 interface ITokenAndAmount {
   quantity: string;
@@ -70,13 +71,18 @@ const TokenAndAmount: React.FC<ITokenAndAmount> = ({ quantity, setQuantity }) =>
     return !isUndefined(balance) ? getFormattedBalance(balance, sendingToken) : undefined;
   }, [sendingToken, isNativeTransaction, nativeBalance, tokenBalance]);
 
+  const handleChange = (value: number) => {
+    const formattedValue = formatNumberFieldAmount(value);
+    setQuantity(formattedValue);
+  };
+
   return (
     <div className="flex flex-row flex-wrap justify-center gap-6 mb-fluid-16-0">
       <NumberField
         aria-label="Amount"
         className="w-48"
         value={Number(quantity)}
-        onChange={(value) => setQuantity(value.toString())}
+        onChange={handleChange}
         placeholder="Amount"
         variant={error ? "error" : undefined}
         message={error}

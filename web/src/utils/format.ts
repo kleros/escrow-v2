@@ -23,3 +23,16 @@ export const formatETH = (value: bigint, fractionDigits = 4, roundDown = true) =
 };
 
 export const formatUSD = (value: number, fractionDigits = 2) => "$" + commify(Number(value).toFixed(fractionDigits));
+
+//Use to format amounts received from NumberField components. Particularly useful when the value is in scientific notation.
+export const formatNumberFieldAmount = (value: number) => {
+  if (value === 0) return "0";
+
+  const valueString = value.toString();
+
+  if (valueString.includes("e") || valueString.includes("E")) {
+    return value.toFixed(18).replace(/\.?0+$/, "");
+  }
+
+  return valueString;
+};
