@@ -6,6 +6,7 @@ import { DEFAULT_CHAIN, SUPPORTED_CHAINS } from "consts/chains";
 import { isUndefined } from "utils/index";
 import { shortenAddress } from "utils/shortenAddress";
 import Skeleton from "react-loading-skeleton";
+import clsx from "clsx";
 
 const pStyle = "m-0 wrap-break-word";
 const copiableStyle = "mr-0.5 gap-1.5";
@@ -50,38 +51,44 @@ const Description: React.FC<IDescription> = ({
   const displaySellerAddress = sellerEns || shortenAddress(sellerAddress);
 
   const generalEscrowSummary = (
-    <>
-      By Paying {sendingQuantity}{" "}
-      <span className="inline-block">{assetSymbol ? assetSymbol : <Skeleton className="z-0" width={30} />}</span>,
-      address{" "}
-      <Copiable className={copiableStyle} copiableContent={buyerAddress ?? ""} info="Copy Buyer Address">
-        <a
-          className={aStyle}
-          href={`${SUPPORTED_CHAINS[DEFAULT_CHAIN].blockExplorers?.default.url}/address/${buyerAddress}`}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          {displayBuyerAddress}
-        </a>
-      </Copiable>{" "}
-      should receive:{" "}
+    <div className="flex flex-col gap-4">
+      <div>
+        By Paying {sendingQuantity}{" "}
+        <span className="inline-block">{assetSymbol ? assetSymbol : <Skeleton className="z-0" width={30} />}</span>,
+        address{" "}
+        <Copiable className={copiableStyle} copiableContent={buyerAddress ?? ""} info="Copy Buyer Address">
+          <a
+            className={aStyle}
+            href={`${SUPPORTED_CHAINS[DEFAULT_CHAIN].blockExplorers?.default.url}/address/${buyerAddress}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {displayBuyerAddress}
+          </a>
+        </Copiable>{" "}
+        should receive:
+      </div>
+
       <MarkdownRenderer
         className="inline [&_p]:inline [&_a]:text-base [&_code]:text-klerosUIComponentsSecondaryText"
         content={deliverableText}
-      />{" "}
-      from address{" "}
-      <Copiable className={copiableStyle} copiableContent={sellerAddress ?? ""} info="Copy Seller Address">
-        <a
-          className={aStyle}
-          href={`${SUPPORTED_CHAINS[DEFAULT_CHAIN].blockExplorers?.default.url}/address/${sellerAddress}`}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          {displaySellerAddress}
-        </a>
-      </Copiable>{" "}
-      before the delivery deadline {new Date(deadline).toString()}.
-    </>
+      />
+
+      <div>
+        from address{" "}
+        <Copiable className={copiableStyle} copiableContent={sellerAddress ?? ""} info="Copy Seller Address">
+          <a
+            className={aStyle}
+            href={`${SUPPORTED_CHAINS[DEFAULT_CHAIN].blockExplorers?.default.url}/address/${sellerAddress}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {displaySellerAddress}
+          </a>
+        </Copiable>{" "}
+        before the delivery deadline {new Date(deadline).toString()}.
+      </div>
+    </div>
   );
 
   const cryptoSwapSummary = (
@@ -115,9 +122,10 @@ const Description: React.FC<IDescription> = ({
   return isUndefined(deliverableText) ? (
     <Skeleton className="z-0" />
   ) : (
-    <div>
-      <p className={pStyle}>{escrowType === "general" ? generalEscrowSummary : cryptoSwapSummary}</p>
-      <br />
+    <div className="flex flex-col gap-4">
+      <div className={clsx("text-klerosUIComponentsPrimaryText", pStyle)}>
+        {escrowType === "general" ? generalEscrowSummary : cryptoSwapSummary}
+      </div>
       <p className={pStyle}>
         After the delivery deadline, you can start a complaint (propose a settlement or raise a dispute). In case of a
         dispute, it will be arbitrated by the Kleros Freelancing Court.
