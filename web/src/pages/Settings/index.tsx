@@ -1,28 +1,20 @@
 import React from "react";
-import styled from "styled-components";
-
 import { Route, Routes } from "react-router-dom";
-
-import { responsiveSize } from "styles/responsiveSize";
-import { MAX_WIDTH_LANDSCAPE } from "styles/landscapeStyle";
-
 import EmailConfirmation from "./EmailConfirmation";
-
-const Container = styled.div`
-  width: 100%;
-  background-color: ${({ theme }) => theme.lightBackground};
-  padding: ${responsiveSize(32, 80)} ${responsiveSize(24, 136)} ${responsiveSize(76, 96)};
-  max-width: ${MAX_WIDTH_LANDSCAPE};
-  margin: 0 auto;
-`;
+import clsx from "clsx";
 
 const Settings: React.FC = () => {
   return (
-    <Container>
+    <div
+      className={clsx(
+        "w-full max-w-landscape mx-auto bg-klerosUIComponentsLightBackground",
+        "px-fluid-24-136 pt-fluid-32-80 pb-fluid-76-96"
+      )}
+    >
       <Routes>
         <Route path="email-confirmation" element={<EmailConfirmation />} />
       </Routes>
-    </Container>
+    </div>
   );
 };
 
