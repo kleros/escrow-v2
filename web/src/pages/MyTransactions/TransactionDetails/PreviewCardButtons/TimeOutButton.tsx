@@ -26,6 +26,9 @@ const TimeOutButton: React.FC = () => {
     isError: isErrorBuyerConfig,
   } = useSimulateEscrowUniversalTimeOutByBuyer({
     args: [BigInt(id)],
+    query: {
+      enabled: isBuyer,
+    },
   });
 
   const {
@@ -34,6 +37,9 @@ const TimeOutButton: React.FC = () => {
     isError: isErrorSellerConfig,
   } = useSimulateEscrowUniversalTimeOutBySeller({
     args: [BigInt(id)],
+    query: {
+      enabled: !isBuyer,
+    },
   });
 
   const { writeContractAsync: timeOutByBuyer } = useWriteEscrowUniversalTimeOutByBuyer(timeOutByBuyerConfig);
