@@ -27,7 +27,7 @@ const ViewCaseButton: React.FC = () => {
   return disputeRequest?.id ? (
     <LightButton
       className={clsx(
-        "flex flex-row-reverse flex-wrap-reverse gap-2 w-auto pt-0",
+        "flex flex-row-reverse flex-wrap-reverse gap-2 w-auto",
         "[&_.button-text]:text-klerosUIComponentsPrimaryBlue [&_.button-text]:text-start [&_.button-text]:whitespace-normal"
       )}
       text={buttonText}
