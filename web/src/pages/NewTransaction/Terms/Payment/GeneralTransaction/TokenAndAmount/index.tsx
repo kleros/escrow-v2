@@ -7,8 +7,7 @@ import { formatUnits } from "viem";
 import TokenSelector from "./TokenSelector";
 import MaxBalance from "./MaxBalance";
 import { isUndefined } from "utils/index";
-import { NumberField } from "@kleros/ui-components-library";
-import { formatNumberFieldAmount } from "src/utils/format";
+import { BigNumberField } from "@kleros/ui-components-library";
 
 interface ITokenAndAmount {
   quantity: string;
@@ -71,28 +70,18 @@ const TokenAndAmount: React.FC<ITokenAndAmount> = ({ quantity, setQuantity }) =>
     return !isUndefined(balance) ? getFormattedBalance(balance, sendingToken) : undefined;
   }, [sendingToken, isNativeTransaction, nativeBalance, tokenBalance]);
 
-  const handleChange = (value: number) => {
-    const formattedValue = formatNumberFieldAmount(value);
-    setQuantity(formattedValue);
-  };
-
   return (
     <div className="flex flex-row flex-wrap justify-center gap-6 mb-fluid-16-0">
-      <NumberField
+      <BigNumberField
         aria-label="Amount"
         className="w-48"
-        value={Number(quantity)}
-        onChange={handleChange}
+        value={quantity || "0"}
+        onChange={(value) => setQuantity(value.toString())}
         placeholder="Amount"
         variant={error ? "error" : undefined}
         message={error}
         showFieldError
-        minValue={0}
-        formatOptions={{
-          //Prevent automatic rounding of very small amounts
-          minimumFractionDigits: 0,
-          maximumFractionDigits: 18,
-        }}
+        minValue="0"
       />
       <div className="flex flex-col gap-1">
         <TokenSelector />
