@@ -241,13 +241,13 @@ export function handleTransactionResolved(event: TransactionResolvedEvent): void
 }
 
 export function handleDisputeRequest(event: DisputeRequestEvent): void {
+  let disputeID = event.params._arbitratorDisputeID;
+
   // Get the transactionID by calling the contract
   let contract = EscrowUniversal.bind(event.address);
-  let transactionID = contract.disputeIDtoTransactionID(event.params._arbitratorDisputeID).toString();
+  let transactionID = contract.disputeIDtoTransactionID(disputeID).toString();
 
-  let disputeID = event.params._arbitratorDisputeID.toString();
-
-  let disputeRequest = new DisputeRequest(disputeID);
+  let disputeRequest = new DisputeRequest(disputeID.toString());
 
   let escrow = Escrow.load(transactionID);
   if (!escrow) {
