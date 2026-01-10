@@ -32,7 +32,7 @@ export const EnsureAuth: React.FC<IEnsureAuth> = ({ children, message, buttonTex
     children
   ) : (
     <div className="flex flex-col gap-4 justify-center items-center">
-      {message ? <p className="m-0 p-0">{message}</p> : null}
+      {message ? <p>{message}</p> : null}
       <Button
         text={buttonText ?? "Sign In"}
         onPress={handleClick}
