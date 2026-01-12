@@ -13,7 +13,7 @@ import MarkdownRenderer from "./Viewers/MarkdownViewer";
 const FileViewer: React.FC<{ url: string }> = ({ url }) => {
   const docs = [{ uri: url }];
   return (
-    <div className="bg-klerosUIComponentsWhiteBackground rounded-[3px] shadow-custom max-h-[1050px] overflow-scroll custom-scrollbar">
+    <div className="bg-klerosUIComponentsWhiteBackground rounded-base shadow-custom max-h-[1050px] overflow-scroll custom-scrollbar">
       <DocViewer
         className="bg-klerosUIComponentsWhiteBackground!"
         documents={docs}

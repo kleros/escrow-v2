@@ -9,7 +9,7 @@ const StyledModal = forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<"d
         "fixed flex flex-col items-center overflow-y-auto z-10",
         "custom-scrollbar bg-klerosUIComponentsWhiteBackground max-h-[80vh] w-[86vw] max-w-[600px]",
         "top-[10vh] left-1/2 transform -translate-x-1/2",
-        "border rounded-[3px] border-klerosUIComponentsStroke",
+        "border rounded-base border-klerosUIComponentsStroke",
         "p-8 pl-9 shadow-custom",
         className
       )}

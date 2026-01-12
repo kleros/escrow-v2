@@ -38,7 +38,7 @@ const Settings: React.FC<ISettings> = ({ toggleIsSettingsOpen }) => {
       ref={containerRef}
       className={clsx(
         "flex flex-col absolute max-h-[80vh] overflow-y-auto",
-        "top-[5%] left-1/2 transform -translate-x-1/2 z-1 rounded-[3px]",
+        "top-[5%] left-1/2 transform -translate-x-1/2 z-1 rounded-base",
         "bg-klerosUIComponentsWhiteBackground border border-solid border-klerosUIComponentsStroke",
         "lg:mt-16 lg:top-0 lg:right-0 lg:left-auto lg:transform-none lg:translate-x-0"
       )}

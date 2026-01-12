@@ -17,7 +17,7 @@ const Product: React.FC<IProduct> = ({ text, url, Icon }) => {
       target="_blank"
       rel="noopener noreferrer"
       className={clsx(
-        "flex flex-col items-center pt-4 pb-7 px-2 max-w-[100px] w-fluid-100-130 rounded-[3px] gap-2",
+        "flex flex-col items-center pt-4 pb-7 px-2 max-w-[100px] w-fluid-100-130 rounded-base gap-2",
         "cursor-pointer bg-klerosUIComponentsLightBackground hover:bg-light-grey dark:hover:bg-klerosUIComponentsLightGrey",
         "hover:transition-[transform_0.15s,background-color_0.3s] hover:scale-[1.02]"
       )}

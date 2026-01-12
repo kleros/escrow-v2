@@ -10,7 +10,7 @@ export const DropdownButton = ({ loading, sendingToken, onClick }) => {
         "relative flex items-center justify-between",
         "h-[45px] w-48 py-2.5 px-3.5",
         "cursor-pointer transition duration-100",
-        "border rounded-[3px] border-klerosUIComponentsStroke",
+        "border rounded-base border-klerosUIComponentsStroke",
         "text-klerosUIComponentsPrimaryText",
         "bg-klerosUIComponentsWhiteBackground hover:bg-klerosUIComponentsLightGrey"
       )}

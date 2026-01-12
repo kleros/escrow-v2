@@ -90,7 +90,7 @@ const DappList: React.FC<IDappList> = ({ toggleIsDappListOpen }) => {
       className={clsx(
         "flex flex-col items-center absolute max-h-[340px] w-[86vw] max-w-[480px]",
         "top-[5%] left-1/2 transform -translate-x-1/2 z-1",
-        "border border-klerosUIComponentsStroke rounded-[3px]",
+        "border border-klerosUIComponentsStroke rounded-base",
         "bg-klerosUIComponentsWhiteBackground shadow-custom",
         "[&_svg]:visible",
         "lg:w-fluid-300-480 lg:mt-16 lg:top-0 lg:left-0 lg:right-auto lg:transform-none lg:translate-x-0 lg:max-h-[80vh]"
