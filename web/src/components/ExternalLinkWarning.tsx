@@ -1,66 +1,9 @@
 import React, { useRef } from "react";
-import styled from "styled-components";
 import { useClickAway } from "react-use";
 import { Button } from "@kleros/ui-components-library";
 import { Overlay } from "components/Overlay";
-import { StyledModal } from "pages/MyTransactions/Modal/StyledModal";
-
-const WarningModal = styled(StyledModal)`
-  width: 400px;
-  max-width: 90vw;
-`;
-
-const Title = styled.h3`
-  margin: 0 0 16px 0;
-  color: ${({ theme }) => theme.primaryText};
-  font-size: 20px;
-  font-weight: 600;
-`;
-
-const Message = styled.p`
-  margin: 0 0 24px 0;
-  color: ${({ theme }) => theme.secondaryText};
-  font-size: 16px;
-  line-height: 1.5;
-`;
-
-const UrlContainer = styled.div`
-  background-color: ${({ theme }) => theme.lightBackground};
-  border: 1px solid ${({ theme }) => theme.stroke};
-  border-radius: 4px;
-  padding: 8px 12px;
-  margin: 16px 0 24px 0;
-  word-break: break-all;
-  font-family: monospace;
-  font-size: 14px;
-  color: ${({ theme }) => theme.primaryText};
-`;
-
-const ButtonContainer = styled.div`
-  display: flex;
-  gap: 12px;
-  justify-content: flex-end;
-  width: 100%;
-`;
-
-const CancelButton = styled(Button)`
-  background-color: transparent;
-  color: ${({ theme }) => theme.primaryText};
-  border: 1px solid ${({ theme }) => theme.stroke};
-
-  &:hover {
-    background-color: ${({ theme }) => theme.lightGrey};
-  }
-`;
-
-const ConfirmButton = styled(Button)`
-  background-color: ${({ theme }) => theme.primaryBlue};
-  color: ${({ theme }) => theme.whiteBackground};
-
-  &:hover {
-    background-color: ${({ theme }) => theme.secondaryBlue};
-  }
-`;
+import StyledModal from "pages/MyTransactions/Modal/StyledModal";
+import clsx from "clsx";
 
 interface IExternalLinkWarning {
   isOpen: boolean;
@@ -78,18 +21,28 @@ const ExternalLinkWarning: React.FC<IExternalLinkWarning> = ({ isOpen, url, onCo
 
   return (
     <>
-      <Overlay />
-      <WarningModal ref={modalRef}>
-        <Title>External Link Warning</Title>
-        <Message>
-          You are about to navigate to an external website. Please verify the URL before proceeding to ensure your safety.
-        </Message>
-        <UrlContainer>{url}</UrlContainer>
-        <ButtonContainer>
-          <CancelButton text="Cancel" onClick={onCancel} />
-          <ConfirmButton text="Continue" onClick={onConfirm} />
-        </ButtonContainer>
-      </WarningModal>
+      <Overlay>
+        <StyledModal className="w-[400px] max-w-[90vw] gap-4 items-center" ref={modalRef}>
+          <h3 className="m-0 text-klerosUIComponentsPrimaryText text-xl font-semibold">External Link Warning</h3>
+          <p className="m-0 text-klerosUIComponentsSecondaryText text-base text-justify">
+            You are about to navigate to an external website. Please verify the URL before proceeding to ensure your
+            safety.
+          </p>
+          <div
+            className={clsx(
+              "bg-klerosUIComponentsLightBackground border rounded-sm border-klerosUIComponentsStroke",
+              "text-sm font-mono text-klerosUIComponentsPrimaryText break-all",
+              "w-full py-2 px-3"
+            )}
+          >
+            {url}
+          </div>
+          <div className="flex justify-center w-full gap-3">
+            <Button variant="secondary" text="Cancel" onPress={onCancel} />
+            <Button variant="primary" text="Continue" onPress={onConfirm} />
+          </div>
+        </StyledModal>
+      </Overlay>
     </>
   );
 };

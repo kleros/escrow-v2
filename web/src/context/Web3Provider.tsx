@@ -1,10 +1,17 @@
 import React from "react";
 
 import { fallback, http, WagmiProvider, webSocket } from "wagmi";
-import { mainnet, arbitrumSepolia, gnosisChiado, type AppKitNetwork, arbitrum, sepolia, gnosis } from "@reown/appkit/networks";
+import {
+  mainnet,
+  arbitrumSepolia,
+  gnosisChiado,
+  type AppKitNetwork,
+  arbitrum,
+  sepolia,
+  gnosis,
+} from "@reown/appkit/networks";
 import { createAppKit } from "@reown/appkit/react";
 import { WagmiAdapter } from "@reown/appkit-adapter-wagmi";
-import { lightTheme } from "styles/themes";
 import { isProductionDeployment } from "consts/index";
 import { ALL_CHAINS, DEFAULT_CHAIN } from "consts/chains";
 
@@ -82,7 +89,7 @@ createAppKit({
   projectId,
   allowUnsupportedChain: true,
   themeVariables: {
-    "--w3m-color-mix": lightTheme.primaryPurple,
+    "--w3m-color-mix": "#4D00B4",
     "--w3m-color-mix-strength": 20,
     // overlay portal is at 9999
     "--w3m-z-index": 10000,

@@ -1,22 +1,28 @@
 import React from "react";
 import Header from "pages/NewTransaction/Header";
-import styled from "styled-components";
-import TextField from "./TextField";
 import NavigationButtons from "pages/NewTransaction/NavigationButtons";
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
+import { useNewTransactionContext } from "~src/context/NewTransactionContext";
+import { TextField } from "@kleros/ui-components-library";
 
 const Title: React.FC = () => {
+  const { escrowTitle, setEscrowTitle } = useNewTransactionContext();
+
+  const handleWrite = (value: string) => {
+    setEscrowTitle(value);
+  };
+
   return (
-    <Container>
+    <div className="flex flex-col items-center">
       <Header text="Title" />
-      <TextField />
+      <TextField
+        aria-label="Title"
+        className="w-[84vw] lg:w-fluid-342-500"
+        value={escrowTitle}
+        onChange={handleWrite}
+        placeholder="e.g. Escrow with John"
+      />
       <NavigationButtons prevRoute="/new-transaction/escrow-type" nextRoute="/new-transaction/deliverable" />
-    </Container>
+    </div>
   );
 };
 export default Title;

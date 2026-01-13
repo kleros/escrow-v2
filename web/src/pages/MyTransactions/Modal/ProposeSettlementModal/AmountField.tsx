@@ -1,26 +1,7 @@
 import React, { useState, useEffect } from "react";
-import styled from "styled-components";
-import { responsiveSize } from "styles/responsiveSize";
-import { Field } from "@kleros/ui-components-library";
+import { BigNumberField } from "@kleros/ui-components-library";
 import { parseEther } from "viem";
 import { useTransactionDetailsContext } from "context/TransactionDetailsContext";
-
-export const StyledField = styled(Field)`
-  width: 100% !important;
-  margin-bottom: ${responsiveSize(64, 36)};
-  input[type="number"]::-webkit-inner-spin-button,
-  input[type="number"]::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    appearance: none;
-  }
-  input[type="number"] {
-    -moz-appearance: textfield;
-  }
-
-  input {
-    font-size: 16px;
-  }
-`;
 
 interface IAmountField {
   amountProposed: string;
@@ -46,13 +27,16 @@ const AmountField: React.FC<IAmountField> = ({ amountProposed, setAmountProposed
   }, [amountProposed, amount, setIsAmountValid]);
 
   return (
-    <StyledField
+    <BigNumberField
+      aria-label="Amount"
+      className="w-full mb-fluid-64-36"
       value={amountProposed}
-      onChange={(e) => setAmountProposed(e.target.value)}
-      type="number"
+      onChange={(value) => setAmountProposed(value.toString())}
       placeholder="0"
       variant={error ? "error" : undefined}
       message={error}
+      showFieldError
+      minValue="0"
     />
   );
 };

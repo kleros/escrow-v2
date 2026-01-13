@@ -1,22 +1,22 @@
-import styled from "styled-components";
+import React, { forwardRef } from "react";
+import { cn } from "src/utils";
 
-export const StyledModal = styled.div`
-  display: flex;
-  position: fixed;
-  top: 10vh;
-  left: 50%;
-  transform: translateX(-50%);
-  max-height: 80vh;
-  overflow-y: auto;
-
-  z-index: 10;
-  flex-direction: column;
-  align-items: center;
-  width: 86vw;
-  max-width: 600px;
-  border-radius: 3px;
-  border: 1px solid ${({ theme }) => theme.stroke};
-  background-color: ${({ theme }) => theme.whiteBackground};
-  box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.06);
-  padding: 32px 32px 32px 36px;
-`;
+const StyledModal = forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<"div">>(
+  ({ className, children, ...props }, ref) => (
+    <div
+      ref={ref}
+      className={cn(
+        "fixed flex flex-col items-center overflow-y-auto z-10",
+        "custom-scrollbar bg-klerosUIComponentsWhiteBackground max-h-[80vh] w-[86vw] max-w-[600px]",
+        "top-[10vh] left-1/2 transform -translate-x-1/2",
+        "border rounded-base border-klerosUIComponentsStroke",
+        "p-8 pl-9 shadow-custom",
+        className
+      )}
+      {...props}
+    >
+      {children}
+    </div>
+  )
+);
+export default StyledModal;

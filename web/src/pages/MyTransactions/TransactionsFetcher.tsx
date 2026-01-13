@@ -1,7 +1,5 @@
 import React, { useMemo } from "react";
 
-import { BREAKPOINT_LANDSCAPE } from "styles/landscapeStyle";
-
 import { useParams, useNavigate } from "react-router-dom";
 import { useWindowSize } from "react-use";
 import { useAccount } from "wagmi";
@@ -15,14 +13,14 @@ import { OrderDirection, TransactionDetailsFragment } from "src/graphql/graphql"
 
 import TransactionsDisplay from "components/TransactionsDisplay";
 import ConnectWallet from "components/ConnectWallet";
-import { ConnectWalletContainer } from "./index";
+import { LG_BREAKPOINT } from "src/styles/breakpoints";
 
 const TransactionsFetcher: React.FC = () => {
   const { page, order, filter } = useParams();
   const navigate = useNavigate();
   const { width } = useWindowSize();
   const location = useRootPath();
-  const screenIsBig = width > BREAKPOINT_LANDSCAPE;
+  const screenIsBig = width > LG_BREAKPOINT;
   const transactionsPerPage = screenIsBig ? 9 : 3;
   const pageNumber = parseInt(page ?? "1", 10);
   const transactionSkip = transactionsPerPage * (pageNumber - 1);
@@ -89,11 +87,11 @@ const TransactionsFetcher: React.FC = () => {
       transactionsPerPage={transactionsPerPage}
     />
   ) : (
-    <ConnectWalletContainer>
+    <div className="flex flex-col items-center text-center text-klerosUIComponentsPrimaryText">
       To see your transactions, connect first and switch to the supported chain
       <hr />
       <ConnectWallet />
-    </ConnectWalletContainer>
+    </div>
   );
 };
 

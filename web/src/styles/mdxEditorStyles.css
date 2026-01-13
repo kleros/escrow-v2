@@ -1,0 +1,254 @@
+/* CodeMirror styles - Global (scoped to .cm-* classes) */
+.cm-editor {
+  background-color: var(--color-klerosUIComponentsLightBackground) !important;
+  border: 1px solid var(--color-klerosUIComponentsStroke) !important;
+  border-radius: 6px !important;
+}
+
+.cm-content {
+  color: var(--color-klerosUIComponentsPrimaryText) !important;
+  font-family: "Fira Code", monospace !important;
+  font-size: 14px !important;
+  padding: 12px !important;
+}
+
+.cm-focused {
+  outline: none !important;
+}
+
+[class*="codeMirrorToolbar"] {
+  background-color: transparent !important;
+}
+
+[class*="cm-gutterElement"] {
+  color: var(--color-klerosUIComponentsSecondaryText) !important;
+}
+
+[class*="codeMirrorWrapper"] {
+  border: 1px solid var(--color-klerosUIComponentsStroke) !important;
+  padding: 0 !important;
+}
+
+[class*="activeLineGutter"] {
+  background-color: transparent !important;
+}
+
+/* Global styles for all MDXEditor popups and overlays - These render in portals outside the component tree */
+[class*="linkDialogPopoverContent"],
+[class*="selectTrigger"],
+[class*="selectContent"],
+[class*="tableColumnEditorPopoverContent"],
+[class*="tablePopover"],
+[data-radix-popper-content-wrapper] [class*="linkDialog"],
+[data-radix-popper-content-wrapper] [class*="select"],
+[data-radix-popper-content-wrapper] [class*="table"],
+[data-radix-portal] [class*="linkDialog"],
+[data-radix-portal] [class*="select"],
+[data-radix-portal] [class*="table"],
+[data-radix-portal] div[class*="mdx"],
+[data-radix-popper-content-wrapper] div[class*="mdx"] {
+  background-color: var(--color-klerosUIComponentsWhiteBackground) !important;
+  border: 1px solid var(--color-klerosUIComponentsStroke) !important;
+  color: var(--color-klerosUIComponentsPrimaryText) !important;
+
+  input,
+  select {
+    background-color: var(--color-klerosUIComponentsWhiteBackground) !important;
+    border: 1px solid var(--color-klerosUIComponentsStroke) !important;
+    color: var(--color-klerosUIComponentsPrimaryText) !important;
+
+    &:hover {
+      background-color: var(--color-klerosUIComponentsLightGrey) !important;
+    }
+  }
+
+  button {
+    background-color: var(--color-klerosUIComponentsLightGrey) !important;
+    color: var(--color-klerosUIComponentsPrimaryText) !important;
+    border: 1px solid var(--color-klerosUIComponentsStroke) !important;
+    cursor: pointer !important;
+    transition: background-color 0.2s ease !important;
+
+    &:hover {
+      background-color: var(--color-klerosUIComponentsLightBackground) !important;
+    }
+
+    &:active {
+      background-color: var(--color-klerosUIComponentsStroke) !important;
+    }
+  }
+
+  label,
+  span,
+  div {
+    color: var(--color-klerosUIComponentsPrimaryText) !important;
+  }
+
+  svg,
+  path {
+    color: var(--color-klerosUIComponentsPrimaryText) !important;
+  }
+}
+
+[class*="mdx"] button,
+[class*="mdx"] [role="button"],
+[class*="mdx"] [data-state] {
+  cursor: pointer !important;
+  transition: all 0.1s ease !important;
+  &:hover {
+    background-color: var(--color-klerosUIComponentsLightGrey) !important;
+  }
+}
+
+/* Nested styles - Scoped to .mdx-editor-wrapper container */
+.mdx-editor-wrapper {
+  .mdxeditor-toolbar {
+    display: flex !important;
+    flex-wrap: wrap;
+    background-color: var(--color-klerosUIComponentsLightGrey) !important;
+    border: 1px solid var(--color-klerosUIComponentsStroke) !important;
+    border-radius: 3px;
+    font-family: "Open Sans", sans-serif;
+
+    button {
+      color: var(--color-klerosUIComponentsPrimaryText) !important;
+
+      &:hover {
+        background-color: var(--color-klerosUIComponentsWhiteBackground) !important;
+        cursor: pointer !important;
+      }
+
+      &[data-state="on"],
+      &[aria-pressed="true"] {
+        background-color: var(--color-klerosUIComponentsWhiteBackground) !important;
+      }
+
+      &:disabled,
+      &[data-disabled="true"] {
+        opacity: 0.4 !important;
+        cursor: not-allowed !important;
+
+        svg {
+          color: var(--color-klerosUIComponentsSecondaryText) !important;
+        }
+      }
+
+      svg {
+        color: var(--color-klerosUIComponentsPrimaryText) !important;
+      }
+    }
+  }
+
+  .mdxeditor-root-contenteditable {
+    background-color: var(--color-klerosUIComponentsWhiteBackground) !important;
+    border: 1px solid var(--color-klerosUIComponentsStroke) !important;
+    border-radius: 3px;
+    color: var(--color-klerosUIComponentsPrimaryText) !important;
+    height: 220px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 16px;
+    font-size: 16px;
+    line-height: 1.5;
+    transition: background-color 0.1s ease !important;
+
+    &:hover {
+      background-color: color-mix(in srgb, var(--color-klerosUIComponentsLightGrey) 63%, transparent) !important;
+    }
+
+    p {
+      color: var(--color-klerosUIComponentsPrimaryText) !important;
+      margin: 0 0 12px 0;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      color: var(--color-klerosUIComponentsPrimaryText) !important;
+      font-weight: 600;
+      margin: 16px 0 8px 0;
+    }
+
+    blockquote {
+      color: var(--color-klerosUIComponentsPrimaryText) !important;
+      border-left: 3px solid var(--color-klerosUIComponentsMediumBlue) !important;
+      font-style: italic;
+      margin: 16px 0;
+      padding-left: 12px;
+    }
+
+    pre {
+      background-color: var(--color-klerosUIComponentsLightBackground) !important;
+      color: var(--color-klerosUIComponentsPrimaryText) !important;
+      border: 1px solid var(--color-klerosUIComponentsStroke) !important;
+      border-radius: 6px !important;
+      padding: 12px !important;
+      margin: 12px 0 !important;
+      font-family: "Fira Code", monospace !important;
+      font-size: 14px !important;
+    }
+
+    a {
+      color: var(--color-klerosUIComponentsPrimaryBlue) !important;
+    }
+
+    span[class*="_code_"],
+    code {
+      background-color: var(--color-klerosUIComponentsLightBackground) !important;
+      color: var(--color-klerosUIComponentsPrimaryText) !important;
+      padding: 2px 6px !important;
+      border-radius: 4px !important;
+      font-size: 14px !important;
+      font-family: "Fira Code", monospace !important;
+      border: 1px solid var(--color-klerosUIComponentsStroke) !important;
+    }
+
+    th {
+      background-color: var(--color-klerosUIComponentsLightGrey) !important;
+      color: var(--color-klerosUIComponentsPrimaryText) !important;
+    }
+
+    td {
+      color: var(--color-klerosUIComponentsPrimaryText) !important;
+    }
+
+    ul,
+    ol {
+      padding-left: 40px !important;
+      list-style-type: disc !important;
+
+      li {
+        color: var(--color-klerosUIComponentsPrimaryText) !important;
+      }
+    }
+
+    ol {
+      list-style-type: decimal !important;
+    }
+  }
+
+  [class*="placeholder"] {
+    color: var(--color-klerosUIComponentsSecondaryText) !important;
+    opacity: 0.6 !important;
+    margin-top: 16px;
+  }
+
+  [class*="tableColumnEditorPopoverContent"],
+  [class*="addRowButton"],
+  [class*="addColumnButton"],
+  [class*="deleteRowButton"],
+  [class*="deleteColumnButton"],
+  [class*="tableEditor"],
+  [class*="tableToolbar"],
+  [class*="tablePopover"] {
+    background-color: var(--color-klerosUIComponentsWhiteBackground) !important;
+
+    svg,
+    path {
+      color: var(--color-klerosUIComponentsPrimaryText) !important;
+    }
+  }
+}

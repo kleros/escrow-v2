@@ -1,6 +1,4 @@
 import React, { useEffect } from "react";
-import styled from "styled-components";
-import { responsiveSize } from "styles/responsiveSize";
 import { useParams } from "react-router-dom";
 import { formatEther } from "viem";
 import { useTransactionDetailsContext } from "context/TransactionDetailsContext";
@@ -16,19 +14,6 @@ import { useNativeTokenSymbol } from "hooks/useNativeTokenSymbol";
 import useFetchIpfsJson from "hooks/useFetchIpfsJson";
 import { useTokenMetadata } from "hooks/useTokenMetadata";
 import BufferPeriodWarning from "./InfoCards/BufferPeriodWarning";
-
-const Container = styled.div``;
-
-const OverviewContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 32px;
-`;
-
-const Header = styled.h1`
-  margin-bottom: ${responsiveSize(12, 24)};
-  font-size: ${responsiveSize(20, 24)};
-`;
 
 const TransactionDetails: React.FC = () => {
   const { id } = useParams();
@@ -77,9 +62,9 @@ const TransactionDetails: React.FC = () => {
   const deliveryDeadlineMs = disputeDeadlineMs - bufferSecNumber * 1000;
 
   return (
-    <Container>
-      <Header>Transaction #{id}</Header>
-      <OverviewContainer>
+    <div>
+      <h1 className="mb-fluid-12-24 text-(length:--spacing-fluid-20-24)">Transaction #{id}</h1>
+      <div className="flex flex-col gap-8">
         <BufferPeriodWarning disputeDeadlineMs={disputeDeadlineMs} deliveryDeadlineMs={deliveryDeadlineMs} />
         <PreviewCard
           escrowType={"general"}
@@ -112,8 +97,8 @@ const TransactionDetails: React.FC = () => {
         />
         {status === "NoDispute" && payments?.length === 0 ? <WasItFulfilled /> : null}
         <InfoCards />
-      </OverviewContainer>
-    </Container>
+      </div>
+    </div>
   );
 };
 

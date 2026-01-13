@@ -1,5 +1,4 @@
 import React, { useRef } from "react";
-import styled from "styled-components";
 
 import {
   MDXEditor,
@@ -28,11 +27,8 @@ import {
 
 import { isValidUrl } from "utils/urlValidation";
 
-import { MDXEditorContainer, MDXEditorGlobalStyles } from "styles/mdxEditorTheme";
-
 import "@mdxeditor/editor/style.css";
-
-const Container = styled(MDXEditorContainer)<{ isEmpty: boolean }>``;
+import "styles/mdxEditorStyles.css";
 
 interface IMarkdownEditor {
   value: string;
@@ -40,11 +36,7 @@ interface IMarkdownEditor {
   placeholder?: string;
 }
 
-const MarkdownEditor: React.FC<IMarkdownEditor> = ({
-  value,
-  onChange,
-  placeholder,
-}) => {
+const MarkdownEditor: React.FC<IMarkdownEditor> = ({ value, onChange, placeholder }) => {
   const editorRef = useRef<MDXEditorMethods>(null);
 
   const handleChange = (markdown: string) => {
@@ -113,12 +105,14 @@ const MarkdownEditor: React.FC<IMarkdownEditor> = ({
   };
 
   return (
-    <>
-      <MDXEditorGlobalStyles />
-      <Container isEmpty={isEmpty} onClick={handleContainerClick} role="region" aria-label="Markdown editor">
-        <MDXEditor ref={editorRef} {...editorProps} aria-label="Rich text editor for markdown content" />
-      </Container>
-    </>
+    <div
+      className="w-full mdx-editor-wrapper custom-scrollbar"
+      onClick={handleContainerClick}
+      role="region"
+      aria-label="Markdown editor"
+    >
+      <MDXEditor ref={editorRef} {...editorProps} aria-label="Rich text editor for markdown content" />
+    </div>
   );
 };
 

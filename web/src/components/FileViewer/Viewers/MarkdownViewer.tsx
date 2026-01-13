@@ -1,13 +1,8 @@
 import React from "react";
-import styled from "styled-components";
 
 import { type DocRenderer } from "@cyntler/react-doc-viewer";
 
 import MarkdownRenderer from "../../MarkdownRenderer";
-
-const Container = styled.div`
-  padding: 16px;
-`;
 
 const MarkdownDocRenderer: DocRenderer = ({ mainState: { currentDocument } }) => {
   if (!currentDocument) return null;
@@ -17,9 +12,9 @@ const MarkdownDocRenderer: DocRenderer = ({ mainState: { currentDocument } }) =>
   const decodedData = atob(base64String);
 
   return (
-    <Container id="md-renderer">
+    <div className="p-4" id="md-renderer">
       <MarkdownRenderer content={decodedData} />
-    </Container>
+    </div>
   );
 };
 

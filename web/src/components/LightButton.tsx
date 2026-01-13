@@ -1,51 +1,32 @@
 import React from "react";
-import styled, { css } from "styled-components";
-import { landscapeStyle } from "styles/landscapeStyle";
-import { hoverShortTransitionTiming } from "styles/commonStyles";
-
 import { Button } from "@kleros/ui-components-library";
-
-const StyledButton = styled(Button)<{ isMobileNavbar?: boolean }>`
-  ${hoverShortTransitionTiming}
-  background-color: transparent;
-  padding: 8px !important;
-  border-radius: 7px;
-  .button-text {
-    color: ${({ theme }) => theme.primaryText};
-    font-weight: 400;
-  }
-  .button-svg {
-    fill: ${({ theme, isMobileNavbar }) => (isMobileNavbar ? theme.secondaryText : `${theme.white}BF`)} !important;
-  }
-
-  &:hover {
-    .button-svg {
-      fill: ${({ theme, isMobileNavbar }) => (isMobileNavbar ? theme.primaryText : `${theme.white}`)} !important;
-    }
-    background-color: ${({ theme }) => theme.whiteLowOpacityStrong};
-  }
-
-  ${landscapeStyle(
-    () => css`
-      padding: 8px !important;
-      .button-svg {
-        margin-right: 0;
-      }
-    `
-  )}
-`;
+import { cn } from "src/utils";
 
 interface ILightButton {
   text: string;
   Icon?: React.FC<React.SVGAttributes<SVGElement>>;
-  onClick?: React.MouseEventHandler<HTMLButtonElement>;
+  onPress?: () => void;
   disabled?: boolean;
   className?: string;
   isMobileNavbar?: boolean;
 }
 
-const LightButton: React.FC<ILightButton> = ({ text, Icon, onClick, disabled, className, isMobileNavbar }) => (
-  <StyledButton variant="primary" small {...{ text, Icon, onClick, disabled, className, isMobileNavbar }} />
+const LightButton: React.FC<ILightButton> = ({ text, Icon, onPress, disabled, className, isMobileNavbar }) => (
+  <Button
+    variant="primary"
+    small
+    className={cn(
+      "p-2 rounded-[7px]!",
+      "bg-transparent hover:bg-white-low-opacity-strong transition duration-100",
+      "[&_.button-text]:text-klerosUIComponentsPrimaryText [&_.button-text]:font-normal",
+      "lg:[&_.button-svg]:mr-0",
+      isMobileNavbar
+        ? "[&_.button-svg]:fill-klerosUIComponentsSecondaryText hover:[&_.button-svg]:fill-klerosUIComponentsPrimaryText"
+        : "[&_.button-svg]:fill-white/75 hover:[&_.button-svg]:fill-white",
+      className
+    )}
+    {...{ text, Icon, disabled, onPress }}
+  />
 );
 
 export default LightButton;

@@ -1,21 +1,6 @@
 import React from "react";
-import styled, { css } from "styled-components";
 import { Steps } from "@kleros/ui-components-library";
-import { landscapeStyle } from "styles/landscapeStyle";
 import { useLocation } from "react-router-dom";
-
-const StyledSteps = styled(Steps)`
-  display: none;
-
-  ${landscapeStyle(
-    () => css`
-      display: flex;
-      position: absolute;
-      left: 4%;
-      height: 200px;
-    `
-  )}
-`;
 
 const items = [
   { title: "Escrow Details", subitems: ["Type of Escrow", "Title"] },
@@ -41,7 +26,7 @@ const Timeline: React.FC = () => {
     0
   );
 
-  return <StyledSteps {...{ items, currentItemIndex }} />;
+  return <Steps className="hidden lg:absolute lg:flex lg:left-[4%] lg:h-[200px]" {...{ items, currentItemIndex }} />;
 };
 
 export default Timeline;

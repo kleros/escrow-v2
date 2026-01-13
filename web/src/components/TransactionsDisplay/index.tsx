@@ -1,19 +1,8 @@
 import React from "react";
-import styled from "styled-components";
 import Search from "./Search";
 import StatsAndFilters from "./StatsAndFilters";
 import TransactionsGrid, { ITransactionsGrid } from "./TransactionsGrid";
-import { responsiveSize } from "styles/responsiveSize";
 import { TransactionDetailsFragment } from "src/graphql/graphql";
-
-const StyledTitle = styled.h1`
-  margin-bottom: ${responsiveSize(12, 24)};
-  font-size: ${responsiveSize(20, 24)};
-`;
-
-const StyledLabel = styled.label`
-  font-size: ${responsiveSize(14, 16)};
-`;
 
 interface ITransactionsDisplay extends ITransactionsGrid {
   transactions?: TransactionDetailsFragment[];
@@ -36,12 +25,12 @@ const TransactionsDisplay: React.FC<ITransactionsDisplay> = ({
 }) => {
   return (
     <div {...{ className }}>
-      <StyledTitle>{title}</StyledTitle>
+      <h1 className="mb-fluid-12-24 text-(length:--spacing-fluid-20-24)">{title}</h1>
       <Search />
       <StatsAndFilters totalTransactions={totalTransactions ?? 0} resolvedTransactions={resolvedTransactions ?? 0} />
 
       {transactions?.length === 0 ? (
-        <StyledLabel>No transactions found</StyledLabel>
+        <label className="text-(length:--spacing-fluid-14-16)">No transactions found</label>
       ) : (
         <TransactionsGrid
           transactions={transactions}

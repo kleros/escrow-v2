@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useMemo } from "react";
-import styled from "styled-components";
 import { Button } from "@kleros/ui-components-library";
 import {
   useWriteEscrowUniversalCreateNativeTransaction,
@@ -27,30 +26,11 @@ import { wrapWithToast } from "utils/wrapWithToast";
 import { ethAddressPattern } from "utils/validateAddress";
 import { useQueryRefetch } from "hooks/useQueryRefetch";
 import { useNavigateAndScrollTop } from "hooks/useNavigateAndScrollTop";
-import ClosedCircleIcon from "components/StyledIcons/ClosedCircleIcon";
-
-const StyledButton = styled(Button)``;
-
-export const ErrorButtonMessage = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  justify-content: center;
-  margin: 12px;
-  color: ${({ theme }) => theme.error};
-  font-size: 14px;
-`;
+import ClosedCircle from "svgs/icons/close-circle.svg";
 
 const DepositPaymentButton: React.FC = () => {
-  const {
-    transactionUri,
-    sendingQuantity,
-    buyerAddress,
-    sellerAddress,
-    deadline,
-    sendingToken,
-    resetContext,
-  } = useNewTransactionContext();
+  const { transactionUri, sendingQuantity, buyerAddress, sellerAddress, deadline, sendingToken, resetContext } =
+    useNewTransactionContext();
 
   const publicClient = usePublicClient();
   const navigateAndScrollTop = useNavigateAndScrollTop();
@@ -63,13 +43,13 @@ const DepositPaymentButton: React.FC = () => {
   const finalBuyerAddress = buyerEnsResult.data || buyerAddress;
   const finalSellerAddress = sellerEnsResult.data || sellerAddress;
 
-  const deliveryDeadlineTimestamp = useMemo(
-    () => BigInt(Math.floor(new Date(deadline).getTime() / 1000)),
-    [deadline]
-  );
+  const deliveryDeadlineTimestamp = useMemo(() => BigInt(Math.floor(new Date(deadline).getTime() / 1000)), [deadline]);
 
   const bufferSec = useMemo(() => BigInt(pickBufferFor(Math.floor(Date.now() / 1000))), []);
-  const disputeDeadlineTimestamp = useMemo(() => deliveryDeadlineTimestamp + bufferSec, [deliveryDeadlineTimestamp, bufferSec]);
+  const disputeDeadlineTimestamp = useMemo(
+    () => deliveryDeadlineTimestamp + bufferSec,
+    [deliveryDeadlineTimestamp, bufferSec]
+  );
   const isNativeTransaction = sendingToken?.address === "native";
   const transactionValue = useMemo(
     () => (isNativeTransaction ? parseEther(sendingQuantity) : parseUnits(sendingQuantity, 18)),
@@ -119,10 +99,11 @@ const DepositPaymentButton: React.FC = () => {
     isError: isErrorNativeConfig,
   } = useSimulateEscrowUniversalCreateNativeTransaction({
     query: {
-      enabled: isNativeTransaction && 
-      ethAddressPattern.test(finalBuyerAddress) && 
-      ethAddressPattern.test(finalSellerAddress) && 
-      !insufficientBalance,
+      enabled:
+        isNativeTransaction &&
+        ethAddressPattern.test(finalBuyerAddress) &&
+        ethAddressPattern.test(finalSellerAddress) &&
+        !insufficientBalance,
     },
     args: [disputeDeadlineTimestamp, transactionUri, finalBuyerAddress, finalSellerAddress],
     value: transactionValue,
@@ -210,9 +191,9 @@ const DepositPaymentButton: React.FC = () => {
 
   return (
     <div>
-      <StyledButton
+      <Button
         isLoading={!insufficientBalance && (isSending || isLoadingNativeConfig || isLoadingERC20Config)}
-        disabled={
+        isDisabled={
           isSending ||
           insufficientBalance ||
           isLoadingNativeConfig ||
@@ -221,12 +202,12 @@ const DepositPaymentButton: React.FC = () => {
           isErrorERC20Config
         }
         text={isNativeTransaction || isApproved ? "Deposit the Payment" : "Approve Token"}
-        onClick={isNativeTransaction || isApproved ? handleCreateTransaction : handleApproveToken}
+        onPress={isNativeTransaction || isApproved ? handleCreateTransaction : handleApproveToken}
       />
       {insufficientBalance && (
-        <ErrorButtonMessage>
-          <ClosedCircleIcon /> Insufficient balance
-        </ErrorButtonMessage>
+        <div className="flex items-center justify-center gap-1 m-3 text-sm text-klerosUIComponentsError">
+          <ClosedCircle className="fill-klerosUIComponentsError" /> Insufficient balance
+        </div>
       )}
     </div>
   );

@@ -1,98 +1,41 @@
-import React, { useMemo } from "react";
-import styled, { Theme, useTheme, css } from "styled-components";
+import React from "react";
 import { Statuses } from "consts/statuses";
-import { isUndefined } from "utils/index";
+import { cn, isUndefined } from "utils/index";
 
-interface IContainer {
-  isCard: boolean;
-  frontColor: string;
-  backgroundColor: string;
-  isPreview: boolean;
-}
+const borderStyles: Record<Statuses, string> = {
+  [Statuses.inProgress]: "border-klerosUIComponentsPrimaryBlue",
+  [Statuses.settlementWaitingBuyer]: "border-klerosUIComponentsWarning",
+  [Statuses.settlementWaitingSeller]: "border-klerosUIComponentsWarning",
+  [Statuses.raisingDisputeWaitingBuyer]: "border-klerosUIComponentsWarning",
+  [Statuses.raisingDisputeWaitingSeller]: "border-klerosUIComponentsWarning",
+  [Statuses.disputed]: "border-klerosUIComponentsSecondaryPurple",
+  [Statuses.concluded]: "border-klerosUIComponentsSuccess",
+};
 
-const Container = styled.div<IContainer>`
-  display: flex;
-  height: ${({ isCard }) => (isCard ? "45px" : "100%")};
-  border-top-right-radius: 3px;
-  border-top-left-radius: 3px;
-  align-items: center;
-  padding: ${({ isPreview }) => (isPreview ? "0" : "0 24px")};
-  justify-content: ${({ isCard }) => (isCard ? "space-between" : "start")};
-  ${({ isCard, frontColor, backgroundColor, isPreview }) => {
-    if (isPreview) {
-      return css`
-        border: none;
-        background-color: transparent;
-        height: auto;
-      `;
-    } else {
-      return `
-        ${isCard ? `border-top: 5px solid ${frontColor}` : `border-left: 5px solid ${frontColor}`};
-        ${isCard ? `background-color: ${backgroundColor}` : null};
-      `;
-    }
-  }};
-`;
+const bgStyles: Record<Statuses, string> = {
+  [Statuses.inProgress]: "bg-klerosUIComponentsMediumBlue",
+  [Statuses.settlementWaitingBuyer]: "bg-klerosUIComponentsWarningLight",
+  [Statuses.settlementWaitingSeller]: "bg-klerosUIComponentsWarningLight",
+  [Statuses.raisingDisputeWaitingBuyer]: "bg-klerosUIComponentsWarningLight",
+  [Statuses.raisingDisputeWaitingSeller]: "bg-klerosUIComponentsWarningLight",
+  [Statuses.disputed]: "bg-klerosUIComponentsMediumPurple",
+  [Statuses.concluded]: "bg-klerosUIComponentsSuccessLight",
+};
 
-const StyledLabel = styled.label<{ frontColor: string; withDot?: boolean; isCard?: boolean }>`
-  display: flex;
-  align-items: center;
-  color: ${({ frontColor }) => frontColor};
-
-  ${({ withDot, frontColor }) =>
-    withDot
-      ? css`
-          ::before {
-            content: "";
-            height: 8px;
-            width: 8px;
-            border-radius: 50%;
-            margin-right: 8px;
-            background-color: ${frontColor};
-          }
-        `
-      : null}
-
-  ${({ isCard }) =>
-    !isCard
-      ? css`
-          width: 104px;
-        `
-      : null}
-`;
-
-const StyledNumberLabel = styled.label<{ frontColor: string; withDot?: boolean; isCard?: boolean }>`
-  display: flex;
-  align-items: center;
-  color: ${({ frontColor }) => frontColor};
-
-  ${({ isCard }) =>
-    !isCard
-      ? css`
-          width: 32px;
-        `
-      : null}
-`;
-
-const getStatusColors = (status: Statuses, theme: Theme): [string, string] => {
-  switch (status) {
-    case Statuses.inProgress:
-      return [theme.primaryBlue, theme.mediumBlue];
-    case Statuses.settlementWaitingBuyer:
-      return [theme.warning, theme.warningLight];
-    case Statuses.settlementWaitingSeller:
-      return [theme.warning, theme.warningLight];
-    case Statuses.raisingDisputeWaitingBuyer:
-      return [theme.warning, theme.warningLight];
-    case Statuses.raisingDisputeWaitingSeller:
-      return [theme.warning, theme.warningLight];
-    case Statuses.disputed:
-      return [theme.secondaryPurple, theme.mediumPurple];
-    case Statuses.concluded:
-      return [theme.success, theme.successLight];
-    default:
-      return [theme.lightGrey, theme.lightGrey];
-  }
+const dotAndFrontColorStyles: Record<Statuses, string> = {
+  [Statuses.inProgress]:
+    "[&_.front-color]:text-klerosUIComponentsPrimaryBlue [&_.dot::before]:bg-klerosUIComponentsPrimaryBlue",
+  [Statuses.settlementWaitingBuyer]:
+    "[&_.front-color]:text-klerosUIComponentsWarning [&_.dot::before]:bg-klerosUIComponentsWarning",
+  [Statuses.settlementWaitingSeller]:
+    "[&_.front-color]:text-klerosUIComponentsWarning [&_.dot::before]:bg-klerosUIComponentsWarning",
+  [Statuses.raisingDisputeWaitingBuyer]:
+    "[&_.front-color]:text-klerosUIComponentsWarning [&_.dot::before]:bg-klerosUIComponentsWarning",
+  [Statuses.raisingDisputeWaitingSeller]:
+    "[&_.front-color]:text-klerosUIComponentsWarning [&_.dot::before]:bg-klerosUIComponentsWarning",
+  [Statuses.disputed]:
+    "[&_.front-color]:text-klerosUIComponentsSecondaryPurple [&_.dot::before]:bg-klerosUIComponentsSecondaryPurple",
+  [Statuses.concluded]: "[&_.front-color]:text-klerosUIComponentsSuccess [&_.dot::before]:bg-klerosUIComponentsSuccess",
 };
 
 const getStatusLabel = (status: Statuses): string => {
@@ -124,16 +67,27 @@ export interface IStatusBanner {
 }
 
 const StatusBanner: React.FC<IStatusBanner> = ({ id, status, isCard = true, isPreview = false }) => {
-  const theme = useTheme();
-  const [frontColor, backgroundColor] = useMemo(() => getStatusColors(status, theme), [theme, status]);
-
   return (
-    <Container {...{ isCard, frontColor, backgroundColor, isPreview }}>
-      <StyledLabel withDot {...{ isCard, frontColor }}>
+    <div
+      className={cn(
+        "flex items-center rounded-tr-[3px] rounded-tl-[3px]",
+        isCard ? "h-[45px] justify-between" : "h-full justify-start",
+        isPreview ? "p-0 border-none bg-transparent h-auto" : "py-0 px-6",
+        !isPreview &&
+          (isCard
+            ? ["border-t-[5px]", borderStyles[status], bgStyles[status]]
+            : ["bg-transparent border-l-[5px]", borderStyles[status]]),
+        "[&_.dot::before]:content-[''] [&_.dot::before]:h-2 [&_.dot::before]:w-2 [&_.dot::before]:rounded-full [&_.dot::before]:mr-2",
+        !isUndefined(status)
+          ? dotAndFrontColorStyles[status]
+          : "[&_.front-color]:text-klerosUIComponentsLightGrey [&_.dot::before]:bg-klerosUIComponentsLightGrey"
+      )}
+    >
+      <label className={cn("flex items-center dot front-color", !isCard && "w-[104px]")}>
         {getStatusLabel(status)}
-      </StyledLabel>
-      {!isUndefined(id) ? <StyledNumberLabel {...{ isCard, frontColor }}>#{id}</StyledNumberLabel> : null}
-    </Container>
+      </label>
+      {!isUndefined(id) ? <label className={cn("flex items-center front-color", !isCard && "w-8")}>#{id}</label> : null}
+    </div>
   );
 };
 

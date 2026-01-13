@@ -1,21 +1,14 @@
 import React from "react";
-import styled from "styled-components";
 import { formatEther } from "viem";
 import { useTransactionDetailsContext } from "context/TransactionDetailsContext";
-
-const StyledHeader = styled.h1`
-  margin: 0;
-  margin-bottom: 24px;
-  text-align: center;
-`;
 
 const Header: React.FC = () => {
   const { amount, assetSymbol } = useTransactionDetailsContext();
 
   return (
-    <StyledHeader>
+    <h1 className="m-0 mb-6 text-center">
       Full payment released: {formatEther(amount)} {assetSymbol}
-    </StyledHeader>
+    </h1>
   );
 };
 export default Header;
