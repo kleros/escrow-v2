@@ -1,6 +1,6 @@
 {
   "name": "@kleros/escrow-v2-subgraph",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "license": "MIT",
   "scripts": {
     "update:arbitrum-sepolia-devnet": "./scripts/update.sh arbitrumSepoliaDevnet arbitrum-sepolia",

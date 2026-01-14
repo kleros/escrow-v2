@@ -19,6 +19,7 @@ import {
   DisputeRequest as DisputeRequestEvent,
   ParameterUpdated as ParameterUpdatedEvent,
   SettlementProposed as SettlementProposedEvent,
+  EscrowUniversal,
 } from "../generated/EscrowUniversal/EscrowUniversal";
 import { ZERO, ONE } from "./utils";
 
@@ -240,10 +241,13 @@ export function handleTransactionResolved(event: TransactionResolvedEvent): void
 }
 
 export function handleDisputeRequest(event: DisputeRequestEvent): void {
-  let transactionID = event.params._externalDisputeID.toString();
-  let disputeID = event.params._arbitratorDisputeID.toString();
+  let disputeID = event.params._arbitratorDisputeID;
 
-  let disputeRequest = new DisputeRequest(disputeID);
+  // Get the transactionID by calling the contract
+  let contract = EscrowUniversal.bind(event.address);
+  let transactionID = contract.disputeIDtoTransactionID(disputeID).toString();
+
+  let disputeRequest = new DisputeRequest(disputeID.toString());
 
   let escrow = Escrow.load(transactionID);
   if (!escrow) {
