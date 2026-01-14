@@ -76,7 +76,7 @@ interface IEscrow {
     /// @dev Create a transaction.
     /// @param _deadline Time after which a party can automatically execute the arbitrable transaction.
     /// @param _transactionUri The IPFS Uri Hash of the transaction.
-    /// @param _buyer Party that pays for the transaction. Note that msg.sender can provide finds on their behalf.
+    /// @param _buyer Party that pays for the transaction. Note that msg.sender can provide funds on their behalf.
     /// @param _seller The recipient of the transaction.
     /// @return transactionID The index of the transaction.
     function createNativeTransaction(
@@ -91,7 +91,7 @@ interface IEscrow {
     /// @param _token The ERC20 token contract.
     /// @param _deadline Time after which a party can automatically execute the arbitrable transaction.
     /// @param _transactionUri The IPFS Uri Hash of the transaction.
-    /// @param _buyer Party that pays for the transaction. Note that msg.sender can provide finds on their behalf.
+    /// @param _buyer Party that pays for the transaction. Note that msg.sender can provide funds on their behalf.
     /// @param _seller The recipient of the transaction.
     /// @return transactionID The index of the transaction.
     function createERC20Transaction(
