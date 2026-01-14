@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
-import styled from "styled-components";
 import { useClickAway } from "react-use";
 import { Alchemy } from "alchemy-sdk";
 import { useAccount } from "wagmi";
@@ -9,13 +8,6 @@ import { alchemyConfig } from "utils/alchemyConfig";
 import { useLocalStorage } from "hooks/useLocalStorage";
 import { DropdownButton } from "./DropdownButton";
 import { TokenListModal } from "./TokenListModal";
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  position: relative;
-`;
 
 const TokenSelector: React.FC = () => {
   const { address, chain } = useAccount();
@@ -41,7 +33,9 @@ const TokenSelector: React.FC = () => {
       const nativeToken = tokens.find((token) => token.address === "native");
       setSendingToken(JSON.parse(localStorage.getItem("selectedToken")) || nativeToken);
     }
-  }, [tokens, setSendingToken]);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tokens]);
 
   const handleSelectToken = (token) => {
     setSendingToken(token);
@@ -50,10 +44,10 @@ const TokenSelector: React.FC = () => {
   };
 
   return (
-    <Container>
+    <div className="relative flex flex-col gap-2">
       <DropdownButton {...{ loading, sendingToken }} onClick={() => setIsOpen(!isOpen)} />
       {isOpen && <TokenListModal {...{ setIsOpen, tokens, setTokens, handleSelectToken }} />}
-    </Container>
+    </div>
   );
 };
 

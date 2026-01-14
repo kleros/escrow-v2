@@ -1,105 +1,48 @@
 import React from "react";
-import styled, { css } from "styled-components";
-import { landscapeStyle } from "styles/landscapeStyle";
 import { Link } from "react-router-dom";
-
-type FieldContainerProps = {
-  width?: string;
-  isList?: boolean;
-  isPreview?: boolean;
-};
-
-const FieldContainer = styled.div<FieldContainerProps>`
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  flex-wrap: wrap;
-  word-break: break-word;
-  width: 100%;
-
-  svg {
-    fill: ${({ theme }) => theme.secondaryPurple};
-    margin-right: 8px;
-    width: 14px;
-  }
-
-  ${({ isList }) =>
-    isList &&
-    css`
-      ${landscapeStyle(
-        () => css`
-          width: auto;
-        `
-      )}
-    `};
-  ${({ isPreview }) =>
-    isPreview &&
-    css`
-      width: auto;
-      gap: 8px;
-      svg {
-        margin-right: 0;
-      }
-    `};
-`;
-
-const StyledValue = styled.label<{ isPreview?: boolean }>`
-  flex-grow: 1;
-  text-align: end;
-  color: ${({ theme }) => theme.primaryText};
-  ${({ isPreview }) =>
-    isPreview &&
-    css`
-      font-weight: 600;
-      text-align: start;
-    `}
-`;
-
-const StyledLink = styled(Link)`
-  flex-grow: 1;
-  text-align: end;
-  color: ${({ theme }) => theme.primaryBlue};
-  &:hover {
-    cursor: pointer;
-  }
-`;
-
-const NameLabel = styled.label<{ isList?: boolean; name: string; isPreview?: boolean }>`
-  ${({ isList, name }) =>
-    isList &&
-    css`
-      display: ${name === "Buyer" || name === "Seller" ? "flex" : "none"};
-      margin-right: ${name === "Buyer" || name === "Seller" ? "8px" : "0"};
-    `}
-  ${({ isPreview }) =>
-    isPreview &&
-    css`
-      display: flex;
-      margin-right: 0;
-    `}
-`;
+import { cn } from "src/utils";
 
 interface IField {
   icon: React.FunctionComponent<React.SVGAttributes<SVGElement>>;
   name: string;
-  value: string;
+  value: React.ReactNode | string;
   link?: string;
-  width?: string;
   displayAsList?: boolean;
   isPreview?: boolean;
 }
 
-const Field: React.FC<IField> = ({ icon: Icon, name, value, link, width, displayAsList, isPreview }) => {
+const Field: React.FC<IField> = ({ icon: Icon, name, value, link, displayAsList, isPreview }) => {
   return (
-    <FieldContainer isList={displayAsList} isPreview={isPreview} width={width}>
+    <div
+      className={cn(
+        "flex flex-wrap items-center justify-start wrap-break-word w-full",
+        displayAsList && "lg:w-auto",
+        isPreview && "w-auto gap-2"
+      )}
+    >
       <>
-        <Icon />
-        <NameLabel isList={displayAsList} {...{ name, isPreview }}>
+        <Icon className={cn("fill-klerosUIComponentsSecondaryPurple mr-2 w-3.5", isPreview && "mr-0")} />
+        <label
+          className={cn(
+            displayAsList && [name === "Buyer" || name === "Seller" ? "flex mr-2" : "hidden"],
+            isPreview && "flex mr-0"
+          )}
+        >
           {name}:
-        </NameLabel>
+        </label>
       </>
-      {link ? <StyledLink to={link}>{value}</StyledLink> : <StyledValue isPreview={isPreview}>{value}</StyledValue>}
-    </FieldContainer>
+      {link ? (
+        <Link className="grow text-end text-klerosUIComponentsPrimaryBlue hover:cursor-pointer" to={link}>
+          {value}
+        </Link>
+      ) : (
+        <label
+          className={cn("grow text-end text-klerosUIComponentsPrimaryText", isPreview && "font-semibold text-start")}
+        >
+          {value}
+        </label>
+      )}
+    </div>
   );
 };
 

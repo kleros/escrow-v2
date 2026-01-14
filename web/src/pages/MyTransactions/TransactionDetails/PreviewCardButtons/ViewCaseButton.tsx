@@ -1,23 +1,9 @@
 import React, { useMemo } from "react";
-import styled from "styled-components";
-import { SkeletonButton } from "components/StyledSkeleton";
 import LightButton from "components/LightButton";
 import ArrowIcon from "svgs/icons/arrow.svg";
 import { useTransactionDetailsContext } from "context/TransactionDetailsContext";
-
-const StyledButton = styled(LightButton)`
-  display: flex;
-  width: auto;
-  gap: 8px;
-  flex-direction: row-reverse;
-  flex-wrap: wrap-reverse;
-  > .button-text {
-    color: ${({ theme }) => theme.primaryBlue};
-    white-space: normal;
-    text-align: start;
-  }
-  padding-top: 0px;
-`;
+import Skeleton from "react-loading-skeleton";
+import clsx from "clsx";
 
 const ViewCaseButton: React.FC = () => {
   const { disputeRequest, resolvedEvents } = useTransactionDetailsContext();
@@ -39,9 +25,17 @@ const ViewCaseButton: React.FC = () => {
   };
 
   return disputeRequest?.id ? (
-    <StyledButton text={buttonText} Icon={ArrowIcon} className="reverse-button" onClick={handleButtonClick} />
+    <LightButton
+      className={clsx(
+        "flex flex-row-reverse flex-wrap-reverse gap-2 w-auto",
+        "[&_.button-text]:text-klerosUIComponentsPrimaryBlue [&_.button-text]:text-start [&_.button-text]:whitespace-normal"
+      )}
+      text={buttonText}
+      Icon={ArrowIcon}
+      onPress={handleButtonClick}
+    />
   ) : (
-    <SkeletonButton />
+    <Skeleton width={168} height={45} />
   );
 };
 

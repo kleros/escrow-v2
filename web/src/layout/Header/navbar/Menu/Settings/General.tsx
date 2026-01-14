@@ -1,83 +1,13 @@
 import React, { useMemo } from "react";
-import styled from "styled-components";
 import { useAccount, useDisconnect } from "wagmi";
 import { Button } from "@kleros/ui-components-library";
 import { AddressOrName, ChainDisplay, IdenticonOrAvatar } from "components/ConnectWallet/AccountDisplay";
 import { EnsureChain } from "components/EnsureChain";
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  margin-top: 12px;
-`;
-
-const StyledChainContainer = styled.div`
-  display: flex;
-  height: 34px;
-  gap: 0.5rem;
-  justify-content: center;
-  align-items: center;
-  :before {
-    content: "";
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background-color: ${({ theme }) => theme.success};
-  }
-  > label {
-    color: ${({ theme }) => theme.success};
-  }
-`;
-
-const StyledAddressContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  > label {
-    color: ${({ theme }) => theme.primaryText};
-    font-size: 16px;
-    font-weight: 600;
-  }
-`;
-
-const StyledAvatarContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  margin-top: 12px;
-`;
-
-const StyledButton = styled.div`
-  display: flex;
-  justify-content: center;
-  margin-top: 16px;
-`;
-
-const EnsureChainContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  padding: 16px;
-`;
-
-const UserContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-`;
-
-const StyledA = styled.a`
-  text-decoration: none;
-  label {
-    cursor: pointer;
-    color: ${({ theme }) => theme.primaryBlue};
-  }
-  :hover {
-    text-decoration: underline;
-  }
-`;
+import clsx from "clsx";
 
 export const DisconnectWalletButton: React.FC = () => {
   const { disconnect } = useDisconnect();
-  return <Button text="Disconnect" onClick={() => disconnect()} />;
+  return <Button text="Disconnect" onPress={() => disconnect()} />;
 };
 
 const General: React.FC = () => {
@@ -88,30 +18,46 @@ const General: React.FC = () => {
   }, [address, chain]);
 
   return (
-    <EnsureChainContainer>
+    <div className="flex justify-center p-4">
       <EnsureChain>
-        <Container>
+        <div className="flex flex-col justify-center mt-3">
           {address && (
-            <UserContainer>
-              <StyledAvatarContainer>
+            <div className="flex flex-col gap-3">
+              <div className="flex justify-center mt-3">
                 <IdenticonOrAvatar size="48" />
-              </StyledAvatarContainer>
-              <StyledAddressContainer>
-                <StyledA href={addressExplorerLink} rel="noreferrer" target="_blank">
+              </div>
+              <div
+                className={clsx(
+                  "flex justify-center",
+                  "[&>label]:text-base [&>label]:font-semibold [&>label]:text-klerosUIComponentsPrimaryText"
+                )}
+              >
+                <a
+                  href={addressExplorerLink}
+                  rel="noopener noreferrer"
+                  target="_blank"
+                  className="hover:underline [&_label]:cursor-pointer [&_label]:text-klerosUIComponentsPrimaryBlue"
+                >
                   <AddressOrName />
-                </StyledA>
-              </StyledAddressContainer>
-              <StyledChainContainer>
+                </a>
+              </div>
+              <div
+                className={clsx(
+                  "flex h-[34px] gap-2 justify-center items-center",
+                  "before:content-[''] before:w-2 before:h-2 before:rounded-full before:bg-klerosUIComponentsSuccess",
+                  "[&>label]:text-klerosUIComponentsSuccess"
+                )}
+              >
                 <ChainDisplay />
-              </StyledChainContainer>
-              <StyledButton>
+              </div>
+              <div className="flex justify-center mt-4">
                 <DisconnectWalletButton />
-              </StyledButton>
-            </UserContainer>
+              </div>
+            </div>
           )}
-        </Container>
+        </div>
       </EnsureChain>
-    </EnsureChainContainer>
+    </div>
   );
 };
 

@@ -1,0 +1,168 @@
+@import "../../node_modules/@kleros/ui-components-library/dist/assets/theme.css";
+@tailwind utilities;
+@source "../../node_modules/@kleros/ui-components-library";
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-white: #ffffff;
+  --color-white-73: #ffffffba;
+  --color-black: #000000;
+  --color-light-blue-65: #2a1260a6;
+  --color-light-grey: #f0f0f0;
+  --color-dark-purple: #220050;
+  --color-violet-purple: #6a1dcd;
+  --color-lavender-purple: #bb72ff;
+  --color-pale-cyan: #acffff;
+  --color-lime-green: #f3ffd9;
+  --color-white-low-opacity-subtle: #ffffff0d;
+  --color-white-low-opacity-strong: #ffffff26;
+  --color-black-low-opacity: #00000080;
+  --color-primary-text-73: color-mix(in srgb, var(--klerosUIComponentsPrimaryText) 73%, transparent);
+  --color-skeleton-bg: #ebebeb;
+  --color-skeleton-highlight: #f5f5f5;
+  --max-width-landscape: 87.5rem;
+  --shadow-custom: 0px 2px 3px rgba(0, 0, 0, 0.06);
+  --leading-18px: 18px;
+
+  /* 
+  * Spacing utils for responsive resizing
+  * Default max screen width is 1250px
+  * Default min screen width is 375px
+  */
+  --spacing-fluid-0-132: clamp(0px, calc(0px + (132 - 0) * (100vw - 375px) / (1250 - 375)), 132px);
+  --spacing-fluid-4-8: clamp(4px, calc(4px + (8 - 4) * (100vw - 375px) / (1250 - 375)), 8px);
+  --spacing-fluid-4-20: clamp(4px, calc(4px + (20 - 4) * (100vw - 375px) / (1250 - 375)), 20px);
+  --spacing-fluid-5-6: clamp(5px, calc(5px + (6 - 5) * (100vw - 375px) / (1250 - 375)), 6px);
+  --spacing-fluid-6-8-300: clamp(6px, calc(6px + (8 - 6) * (100vw - 300px) / (1250 - 300)), 8px);
+  --spacing-fluid-8-24: clamp(8px, calc(8px + (24 - 8) * (100vw - 375px) / (1250 - 375)), 24px);
+  --spacing-fluid-8-32-300: clamp(8px, calc(8px + (32 - 8) * (100vw - 300px) / (1250 - 300)), 32px);
+  --spacing-fluid-12-24: clamp(12px, calc(12px + (24 - 12) * (100vw - 375px) / (1250 - 375)), 24px);
+  --spacing-fluid-12-32-300: clamp(12px, calc(12px + (32 - 12) * (100vw - 300px) / (1250 - 300)), 32px);
+  --spacing-fluid-14-16: clamp(14px, calc(14px + (16 - 14) * (100vw - 375px) / (1250 - 375)), 16px);
+  --spacing-fluid-16-0: clamp(0px, calc(16px + (0 - 16) * (100vw - 375px) / (1250 - 375)), 16px);
+  --spacing-fluid-16-24: clamp(16px, calc(16px + (24 - 16) * (100vw - 375px) / (1250 - 375)), 24px);
+  --spacing-fluid-16-32: clamp(16px, calc(16px + (32 - 16) * (100vw - 375px) / (1250 - 375)), 32px);
+  --spacing-fluid-20-24: clamp(20px, calc(20px + (24 - 20) * (100vw - 375px) / (1250 - 375)), 24px);
+  --spacing-fluid-24-18: clamp(18px, calc(24px + (18 - 24) * (100vw - 375px) / (1250 - 375)), 24px);
+  --spacing-fluid-24-136: clamp(24px, calc(24px + (136 - 24) * (100vw - 375px) / (1250 - 375)), 136px);
+  --spacing-fluid-24-32-900: clamp(24px, calc(24px + (32 - 24) * (100vw - 900px) / (1250 - 900)), 32px);
+  --spacing-fluid-32-80: clamp(32px, calc(32px + (80 - 32) * (100vw - 375px) / (1250 - 375)), 80px);
+  --spacing-fluid-64-36: clamp(36px, calc(64px + (36 - 64) * (100vw - 375px) / (1250 - 375)), 64px);
+  --spacing-fluid-76-96: clamp(76px, calc(76px + (96 - 76) * (100vw - 375px) / (1250 - 375)), 96px);
+  --spacing-fluid-100-130: clamp(100px, calc(100px + (130 - 100) * (100vw - 375px) / (1250 - 375)), 130px);
+  --spacing-fluid-270-296: clamp(270px, calc(270px + (296 - 270) * (100vw - 375px) / (1250 - 375)), 296px);
+  --spacing-fluid-300-424-300: clamp(300px, calc(300px + (424 - 300) * (100vw - 300px) / (1250 - 300)), 424px);
+  --spacing-fluid-300-480: clamp(300px, calc(300px + (480 - 300) * (100vw - 375px) / (1250 - 375)), 480px);
+  --spacing-fluid-320-500: clamp(320px, calc(320px + (500 - 320) * (100vw - 375px) / (1250 - 375)), 500px);
+  --spacing-fluid-342-476: clamp(342px, calc(342px + (476 - 342) * (100vw - 375px) / (1250 - 375)), 476px);
+  --spacing-fluid-342-500: clamp(342px, calc(342px + (500 - 342) * (100vw - 375px) / (1250 - 375)), 500px);
+  --spacing-fluid-342-574: clamp(342px, calc(342px + (574 - 342) * (100vw - 375px) / (1250 - 375)), 574px);
+  --spacing-fluid-342-618: clamp(342px, calc(342px + (618 - 342) * (100vw - 375px) / (1250 - 375)), 618px);
+  --spacing-fluid-342-699: clamp(342px, calc(342px + (699 - 342) * (100vw - 375px) / (1250 - 375)), 699px);
+}
+
+.dark {
+  --color-skeleton-bg: #3a2270;
+  --color-skeleton-highlight: #3e307c;
+}
+
+:root {
+  --toastify-color-info: var(--klerosUIComponentsPrimaryBlue);
+  --toastify-color-success: var(--klerosUIComponentsSuccess);
+  --toastify-color-warning: var(--klerosUIComponentsWarning);
+  --toastify-color-error: var(--klerosUIComponentsError);
+}
+
+.react-loading-skeleton {
+  z-index: 0;
+  --base-color: var(--color-skeleton-bg);
+  --highlight-color: var(--color-skeleton-highlight);
+}
+
+body {
+  font-family: "Open Sans", sans-serif;
+  margin: 0;
+  background-color: var(--klerosUIComponentsLightBlue);
+}
+
+html {
+  box-sizing: border-box;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+h1 {
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 32px;
+  color: var(--klerosUIComponentsPrimaryText);
+}
+
+label {
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 18px;
+  color: var(--klerosUIComponentsSecondaryText);
+}
+
+a {
+  font-weight: 400;
+  font-size: 14px;
+  text-decoration: none;
+  color: var(--klerosUIComponentsPrimaryBlue);
+}
+
+hr {
+  opacity: 1;
+  border: 1px solid var(--klerosUIComponentsStroke);
+}
+
+.os-theme-dark {
+  --os-handle-bg: var(--color-violet-purple);
+  --os-handle-bg-hover: var(--klerosUIComponentsSecondaryPurple);
+  --os-handle-bg-active: var(--color-lavender-purple);
+}
+
+.Toastify__toast-container.Toastify__toast-container {
+  top: unset;
+  padding-top: 20px;
+}
+
+/* @cyntler/react-doc-viewer injects a canvas to load pdf, this is alters the height of body tag, so set to hidden */
+.hiddenCanvasElement {
+  display: none;
+}
+
+/* Custom Scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: var(--color-violet-purple);
+  border-radius: 10px;
+  transition: opacity 0.15s, background-color 0.15s, border-color 0.15s, width 0.15s;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: var(--klerosUIComponentsSecondaryPurple);
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:active {
+  background-color: var(--color-lavender-purple);
+}
+
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-violet-purple) transparent;
+}

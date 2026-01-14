@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useMemo } from "react";
-import styled from "styled-components";
 import { useAccount } from "wagmi";
 import { formatEther } from "viem";
 import { useTransactionDetailsContext } from "context/TransactionDetailsContext";
@@ -11,12 +10,7 @@ import RaiseDisputeButton from "./RaiseDisputeButton";
 import TimeOutButton from "./TimeOutButton";
 import ExecuteTransactionButton from "./ExecuteTransactionButton";
 
-const Container = styled.div`
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  gap: 24px;
-`;
+const containerStyle = "flex flex-wrap gap-6";
 
 interface IPreviewCardButtons {
   feeTimeout: number;
@@ -98,39 +92,39 @@ const PreviewCardButtons: React.FC<IPreviewCardButtons> = ({ feeTimeout, settlem
   return (
     <>
       {shouldDisplaySettlementButtons ? (
-        <Container>
+        <div className={containerStyle}>
           <AcceptButton />
           <OpenModalProposeSettlementButton buttonText="Counter-propose" />
           <OpenModalRaiseDisputeButton {...{ arbitrationCost }} />
-        </Container>
+        </div>
       ) : null}
 
       {shouldDisplayRaiseDisputeButton && arbitrationCost ? (
-        <Container>
+        <div className={containerStyle}>
           <RaiseDisputeButton
             buttonText={`Deposit the fee: ${formatEther(arbitrationCost)} ETH`}
             {...{ arbitrationCost }}
           />
-        </Container>
+        </div>
       ) : null}
       {disputeRequest ? (
-        <Container>
+        <div className={containerStyle}>
           <ViewCaseButton />
-        </Container>
+        </div>
       ) : null}
       {settlementTimeLeft <= 0 &&
       ((status === "WaitingSettlementSeller" && isBuyer) || (status === "WaitingSettlementBuyer" && !isBuyer)) ? (
         <OpenModalRaiseDisputeButton {...{ arbitrationCost }} />
       ) : null}
       {feeTimeLeft <= 0 && ((status === "WaitingSeller" && isBuyer) || (status === "WaitingBuyer" && !isBuyer)) ? (
-        <Container>
+        <div className={containerStyle}>
           <TimeOutButton />
-        </Container>
+        </div>
       ) : null}
       {shouldDisplayExecuteTransactionButton ? (
-        <Container>
+        <div className={containerStyle}>
           <ExecuteTransactionButton />
-        </Container>
+        </div>
       ) : null}
     </>
   );

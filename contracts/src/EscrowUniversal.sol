@@ -10,6 +10,7 @@ pragma solidity 0.8.24;
 import {IArbitrableV2, IArbitratorV2} from "@kleros/kleros-v2-contracts/arbitration/interfaces/IArbitrableV2.sol";
 import "@kleros/kleros-v2-contracts/arbitration/interfaces/IDisputeTemplateRegistry.sol";
 import {SafeERC20, IERC20} from "./libraries/SafeERC20.sol";
+import {NATIVE, Status, Party, Transaction, Resolution} from "./interfaces/Types.sol";
 import "./interfaces/IEscrow.sol";
 
 /// @title EscrowUniversal for a sale paid in native currency or ERC20 tokens without platform fees.
@@ -36,7 +37,7 @@ contract EscrowUniversal is IEscrow, IArbitrableV2 {
     uint256 public feeTimeout; // Time in seconds a party can take to pay arbitration fees before being considered unresponsive and lose the dispute.
     uint256 public settlementTimeout; // Time in seconds a party can take to accept or propose a settlement before being considered unresponsive.
     Transaction[] public transactions; // List of all created transactions.
-    mapping(uint256 => uint256) public disputeIDtoTransactionID; // Naps dispute ID to tx ID.
+    mapping(uint256 => uint256) public disputeIDtoTransactionID; // Maps dispute ID to tx ID.
     mapping(IERC20 => uint256) public amountCaps; // Caps the amount of the respective token for the Escrow transaction.
 
     // ************************************* //

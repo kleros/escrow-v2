@@ -12,7 +12,7 @@ const OpenModalRaiseDisputeButton: React.FC<IOpenModalRaiseDisputeButton> = ({ a
 
   return (
     <>
-      <Button variant="secondary" text={"Raise a dispute"} onClick={toggleModal} />
+      <Button variant="secondary" text={"Raise a dispute"} onPress={toggleModal} />
       {isModalOpen ? <RaiseDisputeModal {...{ toggleModal, arbitrationCost }} /> : null}
     </>
   );

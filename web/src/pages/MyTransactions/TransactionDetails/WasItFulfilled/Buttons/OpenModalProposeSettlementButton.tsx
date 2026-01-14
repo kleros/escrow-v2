@@ -12,9 +12,9 @@ const OpenModalProposeSettlementButton: React.FC<IOpenModalProposeSettlementButt
 
   return (
     <>
-      <Button variant="secondary" text={buttonText} onClick={toggleModal} />
+      <Button variant="secondary" text={buttonText} onPress={toggleModal} />
       {isModalOpen ? <ProposeSettlementModal text="Propose a settlement" toggleModal={toggleModal} /> : null}
     </>
   );
 };
-export default OpenModalProposeSettlementButton;
+export default React.memo(OpenModalProposeSettlementButton);

@@ -1,54 +1,32 @@
 import React from "react";
-import styled from "styled-components";
 import { ISettings } from "../../../index";
 
 import FormContactDetails from "./FormContactDetails";
 import { EnsureChain } from "components/EnsureChain";
 import { EnsureAuth } from "components/EnsureAuth";
 
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
-  align-items: center;
-`;
-
-const HeaderContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  font-size: 16px;
-  font-weight: 600;
-  color: ${({ theme }) => theme.primaryText};
-  margin-top: 16px;
-  margin-bottom: 12px;
-`;
-
 const HeaderNotifs: React.FC = () => {
-  return <HeaderContainer>Contact Details</HeaderContainer>;
+  return (
+    <div className="flex justify-center mt-4 mb-3 text-base font-semibold text-klerosUIComponentsPrimaryText">
+      Contact Details
+    </div>
+  );
 };
-
-const EnsureChainContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  padding-top: 16px;
-  padding-bottom: 16px;
-`;
 
 const NotificationSettings: React.FC<ISettings> = ({ toggleIsSettingsOpen }) => {
   return (
-    <EnsureChainContainer>
+    <div className="flex justify-center py-4">
       <EnsureChain>
-        <Container>
+        <div className="flex flex-col w-full h-full items-center">
           <EnsureAuth>
             <>
               <HeaderNotifs />
               <FormContactDetails toggleIsSettingsOpen={toggleIsSettingsOpen} />
             </>
           </EnsureAuth>
-        </Container>
+        </div>
       </EnsureChain>
-    </EnsureChainContainer>
+    </div>
   );
 };
 

@@ -1,46 +1,11 @@
 import React, { useRef, useState } from "react";
-import styled, { css } from "styled-components";
 import { useClickAway } from "react-use";
 import { Searchbar } from "@kleros/ui-components-library";
 import { useNewTransactionContext } from "context/NewTransactionContext";
 import { Overlay } from "components/Overlay";
 import TokenItem from "./TokenItem";
-import { StyledModal } from "pages/MyTransactions/Modal/StyledModal";
+import StyledModal from "pages/MyTransactions/Modal/StyledModal";
 import { useFilteredTokens } from "hooks/useFilteredTokens";
-import { landscapeStyle } from "styles/landscapeStyle";
-import { responsiveSize } from "styles/responsiveSize";
-
-const ReStyledModal = styled(StyledModal)`
-  display: flex;
-  width: ${responsiveSize(320, 500)};
-  ${landscapeStyle(
-    () => css`
-      width: 500px;
-    `
-  )}
-`;
-
-const StyledSearchbar = styled(Searchbar)`
-  width: 100%;
-  input {
-    font-size: 16px;
-  }
-`;
-
-const ItemsContainer = styled.div`
-  display: flex;
-  width: 100%;
-  flex-direction: column;
-  margin-top: 24px;
-`;
-
-const StyledP = styled.p`
-  display: flex;
-  align-self: flex-start;
-  font-weight: 600;
-  margin: 0;
-  margin-bottom: 28px;
-`;
 
 export const TokenListModal = ({ setIsOpen, tokens, setTokens, handleSelectToken }) => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -51,14 +16,16 @@ export const TokenListModal = ({ setIsOpen, tokens, setTokens, handleSelectToken
 
   return (
     <Overlay>
-      <ReStyledModal ref={containerRef}>
-        <StyledP>Select a token</StyledP>
-        <StyledSearchbar
+      <StyledModal className="w-fluid-320-500 lg:w-[500px]" ref={containerRef}>
+        <p className="flex self-start font-semibold m-0 mb-7">Select a token</p>
+        <Searchbar
+          className="w-full"
+          aria-label="Search by name or paste address"
           placeholder="Search by name or paste address"
           value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
+          onChange={(value) => setSearchQuery(value)}
         />
-        <ItemsContainer>
+        <div className="flex flex-col w-full mt-6">
           {filteredTokens.map((token) => (
             <TokenItem
               key={token.address}
@@ -67,8 +34,8 @@ export const TokenListModal = ({ setIsOpen, tokens, setTokens, handleSelectToken
               {...{ token }}
             />
           ))}
-        </ItemsContainer>
-      </ReStyledModal>
+        </div>
+      </StyledModal>
     </Overlay>
   );
 };

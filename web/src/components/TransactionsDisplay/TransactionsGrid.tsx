@@ -1,36 +1,15 @@
 import React, { useMemo } from "react";
-import styled from "styled-components";
 import { useWindowSize } from "react-use";
 import { useParams } from "react-router-dom";
-import { SkeletonTransactionCard, SkeletonTransactionListItem } from "../StyledSkeleton";
 import { StandardPagination } from "@kleros/ui-components-library";
-import { BREAKPOINT_LANDSCAPE } from "styles/landscapeStyle";
 import { useIsList } from "context/IsListProvider";
 import { isUndefined } from "utils/index";
 import { decodeURIFilter } from "utils/uri";
 import TransactionCard from "components/TransactionCard";
 import { TransactionDetailsFragment } from "src/graphql/graphql";
-
-const GridContainer = styled.div`
-  --gap: 16px;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, max(312px, (100% - var(--gap) * 2)/3)), 1fr));
-  align-items: center;
-  gap: var(--gap);
-`;
-
-const ListContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 8px;
-`;
-
-const StyledPagination = styled(StandardPagination)`
-  margin-top: 24px;
-  margin-left: auto;
-  margin-right: auto;
-`;
+import clsx from "clsx";
+import { LG_BREAKPOINT } from "src/styles/breakpoints";
+import Skeleton from "react-loading-skeleton";
 
 export interface ITransactionsGrid {
   transactions?: TransactionDetailsFragment[];
@@ -52,30 +31,36 @@ const TransactionsGrid: React.FC<ITransactionsGrid> = ({
   const { id: searchValue } = decodedFilter;
   const { isList } = useIsList();
   const { width } = useWindowSize();
-  const screenIsBig = useMemo(() => width > BREAKPOINT_LANDSCAPE, [width]);
+  const screenIsBig = useMemo(() => width > LG_BREAKPOINT, [width]);
 
   return (
     <>
       {isList && screenIsBig ? (
-        <ListContainer>
+        <div className="flex flex-col justify-center gap-2">
           {isUndefined(transactions)
-            ? [...Array(transactionsPerPage)].map((_, i) => <SkeletonTransactionListItem key={i} />)
+            ? [...Array(transactionsPerPage)].map((_, i) => <Skeleton key={i} height={80} />)
             : transactions.map((transaction) => {
                 return <TransactionCard key={transaction.id} {...transaction} />;
               })}
-        </ListContainer>
+        </div>
       ) : (
-        <GridContainer>
+        <div
+          className={clsx(
+            "grid grid-cols-[repeat(auto-fill,minmax(min(100%,max(312px,(100%-16px*2)/3)),1fr))]",
+            "gap-4 items-center"
+          )}
+        >
           {isUndefined(transactions)
-            ? [...Array(transactionsPerPage)].map((_, i) => <SkeletonTransactionCard key={i} />)
+            ? [...Array(transactionsPerPage)].map((_, i) => <Skeleton key={i} className="w-full h-fluid-270-296" />)
             : transactions.map((transaction) => {
                 return <TransactionCard key={transaction.id} {...transaction} overrideIsList />;
               })}
-        </GridContainer>
+        </div>
       )}
 
       {isUndefined(searchValue) ? (
-        <StyledPagination
+        <StandardPagination
+          className="mt-6 mx-auto"
           currentPage={currentPage}
           numPages={Math.ceil(totalPages ?? 0)}
           callback={(page: number) => setCurrentPage(page)}

@@ -1,46 +1,31 @@
 import React from "react";
-import styled from "styled-components";
 import Logo from "svgs/icons/crypto-swap.svg";
 import { useNewTransactionContext } from "context/NewTransactionContext";
-import { StyledCard } from ".";
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 26px;
-  justify-content: center;
-`;
-
-const StyledLogo = styled(Logo)`
-  path {
-    fill: ${({ theme }) => theme.secondaryPurple};
-  }
-`;
-
-const Title = styled.p`
-  display: flex;
-  width: 100%;
-  width: 96px;
-  text-align: center;
-  margin: 0;
-  padding: 0 8px;
-  flex-wrap: wrap;
-`;
+import { Card } from "@kleros/ui-components-library";
+import { cn } from "src/utils";
 
 const CryptoSwap: React.FC = () => {
   const { escrowType, setEscrowType } = useNewTransactionContext();
+
+  const selected = escrowType === "swap";
 
   const handleSelect = () => {
     setEscrowType("swap");
   };
 
   return (
-    <Container>
-      <StyledCard onClick={handleSelect} selected={escrowType === "swap"}>
-        <StyledLogo />
-      </StyledCard>
-      <Title>Crypto Swap</Title>
-    </Container>
+    <div className="flex flex-col gap-6 justify-center">
+      <Card
+        className={cn(
+          "flex h-24 w-24 items-center justify-center cursor-pointer rounded-[20px]!",
+          selected && "border border-klerosUIComponentsPrimaryBlue"
+        )}
+        onClick={handleSelect}
+      >
+        <Logo className="fill-klerosUIComponentsSecondaryPurple" />
+      </Card>
+      <p className="flex flex-wrap w-24 m-0 text-center px-2">Crypto Swap</p>
+    </div>
   );
 };
 export default CryptoSwap;

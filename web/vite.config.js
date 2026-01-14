@@ -2,6 +2,7 @@ import { defineConfig } from "vite";
 import { nodePolyfills } from "vite-plugin-node-polyfills";
 import svgr from "vite-plugin-svgr";
 import tsconfigPaths from "vite-tsconfig-paths";
+import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
   root: "src",
@@ -28,5 +29,6 @@ export default defineConfig({
     nodePolyfills({
       include: ["fs", "stream"],
     }),
+    tailwindcss(),
   ],
 });

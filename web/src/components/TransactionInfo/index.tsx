@@ -1,6 +1,4 @@
 import React from "react";
-import styled, { css } from "styled-components";
-import { landscapeStyle } from "styles/landscapeStyle";
 import { Copiable } from "@kleros/ui-components-library";
 import { useEnsName } from "wagmi";
 import Skeleton from "react-loading-skeleton";
@@ -12,77 +10,10 @@ import CalendarIcon from "svgs/icons/calendar.svg";
 import PileCoinsIcon from "svgs/icons/pile-coins.svg";
 import UserIcon from "svgs/icons/user.svg";
 import Field from "./Field";
+import { cn } from "src/utils";
 
-const Container = styled.div<{ isList: boolean; isPreview?: boolean }>`
-  display: flex;
-  width: 100%;
-  gap: 8px;
-  flex-direction: column;
-  justify-content: center;
-
-  ${({ isList }) =>
-    isList &&
-    css`
-      ${landscapeStyle(
-        () => css`
-          gap: 0;
-          height: 100%;
-          flex: 1;
-        `
-      )}
-    `};
-`;
-
-const RestOfFieldsContainer = styled.div<{ isList?: boolean; isPreview?: boolean }>`
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-
-  ${({ isPreview }) =>
-    isPreview &&
-    css`
-      gap: 16px 32px;
-      flex-direction: row;
-      flex-wrap: wrap;
-      justify-content: flex-start;
-   `};
-
-  ${({ isList, isPreview }) =>
-    isList &&
-    !isPreview &&
-    css`
-      ${landscapeStyle(
-        () => css`
-          display: flex;
-          flex-direction: row;
-          justify-content: space-between;
-          align-self: flex-end;
-          width: auto;
-          max-width: 360px;
-          height: auto;
-          flex-wrap: wrap;
-          align-items: center;
-          gap: 8px 32px;
-          margin-right: 35px;
-        `
-      )}
-    `};
-  
-`;
-
-const StyledA = styled.a`
-  color: ${({ theme }) => theme.primaryText};
-  font-weight: 600;
-
-  &:hover {
-    text-decoration: underline;
-    color: ${({ theme }) => theme.primaryBlue};
-  }
-`;
+const aStyle =
+  "text-klerosUIComponentsPrimaryText font-semibold hover:underline hover:text-klerosUIComponentsPrimaryBlue";
 
 export interface ITransactionInfo {
   amount?: string;
@@ -107,21 +38,32 @@ const TransactionInfo: React.FC<ITransactionInfo> = ({
   const { isList } = useIsList();
   const displayAsList = isList && !overrideIsList;
 
-  const { data: buyerEns } = useEnsName({ 
-    address: buyerAddress as `0x${string}`, 
-    chainId: 1 
+  const { data: buyerEns } = useEnsName({
+    address: buyerAddress as `0x${string}`,
+    chainId: 1,
   });
-  const { data: sellerEns } = useEnsName({ 
-    address: sellerAddress as `0x${string}`, 
-    chainId: 1 
+  const { data: sellerEns } = useEnsName({
+    address: sellerAddress as `0x${string}`,
+    chainId: 1,
   });
 
-  const displayBuyerAddress = buyerEns || shortenAddress(buyerAddress);
-  const displaySellerAddress = sellerEns || shortenAddress(sellerAddress);
+  const displayBuyerAddress = buyerEns || shortenAddress(buyerAddress ?? "");
+  const displaySellerAddress = sellerEns || shortenAddress(sellerAddress ?? "");
 
   return (
-    <Container isList={displayAsList} isPreview={isPreview}>
-      <RestOfFieldsContainer isPreview={isPreview} isList={displayAsList}>
+    <div className={cn("flex flex-col gap-2 w-full justify-center", displayAsList && "lg:gap-0 lg:h-full lg:flex-1")}>
+      <div
+        className={cn(
+          "flex flex-col gap-2 justify-center items-center w-full h-full",
+          isPreview && "flex-row flex-wrap justify-start gap-y-4 gap-x-8",
+          displayAsList &&
+            !isPreview && [
+              "lg:flex-row lg:flex-wrap lg:gap-y-2 lg:gap-x-8",
+              "lg:justify-between lg:self-end lg:items-center",
+              "lg:w-auto lg:h-auto lg:max-w-[360px] lg:mr-9",
+            ]
+        )}
+      >
         {amount ? (
           <Field
             icon={PileCoinsIcon}
@@ -150,14 +92,21 @@ const TransactionInfo: React.FC<ITransactionInfo> = ({
             name="Buyer"
             value={
               isPreview ? (
-                <Copiable copiableContent={buyerAddress ?? ""} info="Copy Buyer Address">
-                  <StyledA
+                <Copiable
+                  copiableContent={buyerAddress ?? ""}
+                  info="Copy Buyer Address"
+                  tooltipProps={{
+                    small: true,
+                  }}
+                >
+                  <a
+                    className={aStyle}
                     href={`${SUPPORTED_CHAINS[DEFAULT_CHAIN].blockExplorers?.default.url}/address/${buyerAddress}`}
                     target="_blank"
-                    rel="noreferrer"
+                    rel="noopener noreferrer"
                   >
                     {displayBuyerAddress}
-                  </StyledA>
+                  </a>
                 </Copiable>
               ) : (
                 displayBuyerAddress
@@ -173,14 +122,21 @@ const TransactionInfo: React.FC<ITransactionInfo> = ({
             name="Seller"
             value={
               isPreview ? (
-                <Copiable copiableContent={sellerAddress ?? ""} info="Copy Seller Address">
-                  <StyledA
+                <Copiable
+                  copiableContent={sellerAddress ?? ""}
+                  info="Copy Seller Address"
+                  tooltipProps={{
+                    small: true,
+                  }}
+                >
+                  <a
+                    className={aStyle}
                     href={`${SUPPORTED_CHAINS[DEFAULT_CHAIN].blockExplorers?.default.url}/address/${sellerAddress}`}
                     target="_blank"
-                    rel="noreferrer"
+                    rel="noopener noreferrer"
                   >
                     {displaySellerAddress}
-                  </StyledA>
+                  </a>
                 </Copiable>
               ) : (
                 displaySellerAddress
@@ -190,8 +146,8 @@ const TransactionInfo: React.FC<ITransactionInfo> = ({
             isPreview={isPreview}
           />
         ) : null}
-      </RestOfFieldsContainer>
-    </Container>
+      </div>
+    </div>
   );
 };
 

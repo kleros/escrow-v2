@@ -1,5 +1,4 @@
 import React from "react";
-import styled, { css } from "styled-components";
 
 import DarkModeIcon from "svgs/menu-icons/dark-mode.svg";
 import HelpIcon from "svgs/menu-icons/help.svg";
@@ -7,53 +6,19 @@ import LightModeIcon from "svgs/menu-icons/light-mode.svg";
 // import NotificationsIcon from "svgs/menu-icons/notifications.svg";
 import SettingsIcon from "svgs/menu-icons/settings.svg";
 
-import { useToggleTheme } from "hooks/useToggleThemeContext";
-
-import { landscapeStyle } from "styles/landscapeStyle";
+import { useTheme } from "hooks/useToggleThemeContext";
 
 import LightButton from "components/LightButton";
 
 import { IHelp, ISettings } from "../index";
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-
-  ${landscapeStyle(
-    () => css`
-      flex-direction: row;
-    `
-  )}
-`;
-
-const ButtonContainer = styled.div`
-  min-height: 32px;
-  display: flex;
-  align-items: center;
-
-  button {
-    padding: 0px;
-  }
-
-  .button-text {
-    display: block;
-  }
-
-  ${landscapeStyle(
-    () => css`
-      .button-text {
-        display: none;
-      }
-    `
-  )}
-`;
+import clsx from "clsx";
 
 interface IMenu {
   isMobileNavbar?: boolean;
 }
 
 const Menu: React.FC<ISettings & IHelp & IMenu> = ({ toggleIsHelpOpen, toggleIsSettingsOpen, isMobileNavbar }) => {
-  const [theme, toggleTheme] = useToggleTheme();
+  const [theme, toggleTheme] = useTheme();
   const isLightTheme = theme === "light";
 
   const buttons = [
@@ -61,30 +26,33 @@ const Menu: React.FC<ISettings & IHelp & IMenu> = ({ toggleIsHelpOpen, toggleIsS
     {
       text: "Settings",
       Icon: SettingsIcon,
-      onClick: () => toggleIsSettingsOpen(),
+      onPress: () => toggleIsSettingsOpen(),
     },
     {
       text: "Help",
       Icon: HelpIcon,
-      onClick: () => {
+      onPress: () => {
         toggleIsHelpOpen();
       },
     },
     {
       text: `${isLightTheme ? "Dark" : "Light"} Mode`,
       Icon: isLightTheme ? DarkModeIcon : LightModeIcon,
-      onClick: () => toggleTheme(),
+      onPress: () => toggleTheme(),
     },
   ];
 
   return (
-    <Container>
-      {buttons.map(({ text, Icon, onClick }) => (
-        <ButtonContainer key={Icon}>
-          <LightButton {...{ text, onClick, Icon, isMobileNavbar }} />
-        </ButtonContainer>
+    <div className="flex flex-col lg:flex-row">
+      {buttons.map(({ text, Icon, onPress }, index) => (
+        <div
+          key={index}
+          className={clsx("flex items-center min-h-8", "[&_.button-text]:block lg:[&_.button-text]:hidden")}
+        >
+          <LightButton {...{ text, onPress, Icon, isMobileNavbar }} />
+        </div>
       ))}
-    </Container>
+    </div>
   );
 };
 
