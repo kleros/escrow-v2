@@ -1,7 +1,7 @@
 import React from "react";
 import Header from "pages/NewTransaction/Header";
 import NavigationButtons from "pages/NewTransaction/NavigationButtons";
-import { useNewTransactionContext } from "~src/context/NewTransactionContext";
+import { useNewTransactionContext } from "src/context/NewTransactionContext";
 import { TextField } from "@kleros/ui-components-library";
 
 const Title: React.FC = () => {

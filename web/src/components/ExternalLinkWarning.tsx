@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, Modal } from "@kleros/ui-components-library";
 import clsx from "clsx";
-import { baseModalOverlayStyle, baseModalStyle } from "~src/styles/modalStyles";
+import { baseModalOverlayStyle, baseModalStyle } from "src/styles/modalStyles";
 
 interface IExternalLinkWarning {
   isOpen: boolean;
