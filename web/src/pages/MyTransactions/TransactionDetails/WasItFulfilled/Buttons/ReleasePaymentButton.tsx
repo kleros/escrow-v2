@@ -53,7 +53,7 @@ const ReleasePaymentButton: React.FC = () => {
         text="Yes. Release full payment"
         onPress={handleReleasePayment}
       />
-      {isModalOpen ? <PaymentReleased toggleModal={toggleModal} /> : null}
+      <PaymentReleased isOpen={isModalOpen} toggleModal={toggleModal} />
     </>
   );
 };
