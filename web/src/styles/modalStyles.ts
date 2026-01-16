@@ -7,5 +7,3 @@ export const baseModalStyle = clsx(
   "border border-klerosUIComponentsStroke",
   "p-8 pl-9 shadow-custom"
 );
-
-export const baseModalOverlayStyle = "w-screen h-screen";

@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, Modal } from "@kleros/ui-components-library";
 import clsx from "clsx";
-import { baseModalOverlayStyle, baseModalStyle } from "src/styles/modalStyles";
+import { baseModalStyle } from "src/styles/modalStyles";
 
 interface IExternalLinkWarning {
   isOpen: boolean;
@@ -14,7 +14,6 @@ const ExternalLinkWarning: React.FC<IExternalLinkWarning> = ({ isOpen, url, onCo
   return (
     <Modal
       className={clsx(baseModalStyle, "w-[400px] max-w-[90vw] gap-4 items-center")}
-      modalOverlayClassname={baseModalOverlayStyle}
       isOpen={isOpen}
       isDismissable
       onOpenChange={(open) => !open && onCancel()}
