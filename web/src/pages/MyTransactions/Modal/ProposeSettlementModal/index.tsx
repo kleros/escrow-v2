@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AmountField from "./AmountField";
 import Buttons from "./Buttons";
 import { Modal } from "@kleros/ui-components-library";
@@ -13,6 +13,13 @@ interface IProposeSettlementModal {
 const ProposeSettlementModal: React.FC<IProposeSettlementModal> = ({ isOpen, toggleModal, text }) => {
   const [amountProposed, setAmountProposed] = useState("0");
   const [isAmountValid, setIsAmountValid] = useState(true);
+
+  useEffect(() => {
+    if (!isOpen) {
+      setAmountProposed("0");
+      setIsAmountValid(true);
+    }
+  }, [isOpen]);
 
   return (
     <Modal className={baseModalStyle} isOpen={isOpen} isDismissable onOpenChange={toggleModal}>
