@@ -6,6 +6,8 @@ import { getGraphqlUrl } from "utils/getGraphqlUrl";
 import clsx from "clsx";
 
 const Header: React.FC = () => {
+  const SHOW_STATUS_BANNER = import.meta.env.REACT_APP_SHOW_STATUS_BANNER !== "false";
+
   return (
     <div
       className={clsx(
@@ -13,19 +15,21 @@ const Header: React.FC = () => {
         "bg-klerosUIComponentsPrimaryPurple dark:bg-light-blue-65 backdrop-blur-none dark:backdrop-blur-md"
       )}
     >
-      <StatusBanner
-        className="sticky! [&_.status-text_h2]:m-0 [&_.status-text_h2]:leading-6"
-        autoHide
-        watcherOptions={{ threshold: 5000, interval: 60_000 }} // 5000 blocks threshold, 60 sec interval check
-        theme={{
-          colors: {
-            main: "var(--klerosUIComponentsWhiteBackground)",
-            primary: "var(--klerosUIComponentsPrimaryText)",
-            secondary: "var(--klerosUIComponentsSecondaryText)",
-          },
-        }}
-        subgraphs={[{ name: "Kleros Escrow", url: getGraphqlUrl() }]}
-      />
+      {SHOW_STATUS_BANNER && (
+        <StatusBanner
+          className="sticky! [&_.status-text_h2]:m-0 [&_.status-text_h2]:leading-6"
+          autoHide
+          watcherOptions={{ threshold: 5000, interval: 60_000 }} // 5000 blocks threshold, 60 sec interval check
+          theme={{
+            colors: {
+              main: "var(--klerosUIComponentsWhiteBackground)",
+              primary: "var(--klerosUIComponentsPrimaryText)",
+              secondary: "var(--klerosUIComponentsSecondaryText)",
+            },
+          }}
+          subgraphs={[{ name: "Kleros Escrow", url: getGraphqlUrl() }]}
+        />
+      )}
       <div className="w-full px-6">
         <DesktopHeader />
         <MobileHeader />
