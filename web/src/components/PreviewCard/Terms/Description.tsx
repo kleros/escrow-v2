@@ -126,7 +126,7 @@ const Description: React.FC<IDescription> = ({
       </div>
       <p className="m-0 wrap-break-word">
         After the delivery deadline, you can start a complaint (propose a settlement or raise a dispute). In case of a
-        dispute, it will be arbitrated by the Kleros Freelancing Court.
+        dispute, it will be arbitrated by the Kleros General Court.
       </p>
     </div>
   );

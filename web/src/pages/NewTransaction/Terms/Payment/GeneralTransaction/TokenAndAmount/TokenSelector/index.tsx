@@ -46,7 +46,7 @@ const TokenSelector: React.FC = () => {
   return (
     <div className="relative flex flex-col gap-2">
       <DropdownButton {...{ loading, sendingToken }} onClick={() => setIsOpen(!isOpen)} />
-      {isOpen && <TokenListModal {...{ setIsOpen, tokens, setTokens, handleSelectToken }} />}
+      {isOpen && <TokenListModal {...{ isOpen, setIsOpen, tokens, setTokens, handleSelectToken }} />}
     </div>
   );
 };

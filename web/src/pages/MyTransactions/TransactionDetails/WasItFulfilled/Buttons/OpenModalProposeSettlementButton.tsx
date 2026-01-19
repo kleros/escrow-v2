@@ -13,7 +13,7 @@ const OpenModalProposeSettlementButton: React.FC<IOpenModalProposeSettlementButt
   return (
     <>
       <Button variant="secondary" text={buttonText} onPress={toggleModal} />
-      {isModalOpen ? <ProposeSettlementModal text="Propose a settlement" toggleModal={toggleModal} /> : null}
+      <ProposeSettlementModal isOpen={isModalOpen} text="Propose a settlement" toggleModal={toggleModal} />
     </>
   );
 };

@@ -1,6 +1,6 @@
 import React from "react";
 import Arrow from "svgs/icons/arrow-down.svg";
-import { cn } from "~src/utils";
+import { cn } from "src/utils";
 
 interface ISimpleToggleButton extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   isOpen: boolean;

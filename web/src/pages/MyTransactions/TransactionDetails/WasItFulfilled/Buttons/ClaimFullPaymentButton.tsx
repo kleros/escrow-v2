@@ -56,7 +56,7 @@ const ClaimFullPaymentButton: React.FC = () => {
         text="No. Claim full payment"
         onPress={handleExecuteTransaction}
       />
-      {isModalOpen ? <PaymentReleased toggleModal={toggleModal} /> : null}
+      <PaymentReleased isOpen={isModalOpen} toggleModal={toggleModal} />
     </>
   );
 };
