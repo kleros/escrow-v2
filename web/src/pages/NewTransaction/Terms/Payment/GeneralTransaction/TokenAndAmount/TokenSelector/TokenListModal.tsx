@@ -4,7 +4,7 @@ import { useNewTransactionContext } from "context/NewTransactionContext";
 import TokenItem from "./TokenItem";
 import { useFilteredTokens } from "hooks/useFilteredTokens";
 import clsx from "clsx";
-import { baseModalStyle } from "~src/styles/modalStyles";
+import { baseModalStyle } from "src/styles/modalStyles";
 
 export const TokenListModal = ({ isOpen, setIsOpen, tokens, setTokens, handleSelectToken }) => {
   const [searchQuery, setSearchQuery] = useState("");

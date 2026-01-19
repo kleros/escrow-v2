@@ -3,7 +3,7 @@ import Header from "./Header";
 import Description from "./Description";
 import CheckCircleFull from "svgs/icons/check-circle-full.svg";
 import { Button, Modal } from "@kleros/ui-components-library";
-import { baseModalStyle } from "~src/styles/modalStyles";
+import { baseModalStyle } from "src/styles/modalStyles";
 
 interface IPaymentReleased {
   isOpen: boolean;

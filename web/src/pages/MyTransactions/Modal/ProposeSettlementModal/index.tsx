@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import AmountField from "./AmountField";
 import Buttons from "./Buttons";
 import { Modal } from "@kleros/ui-components-library";
-import { baseModalStyle } from "~src/styles/modalStyles";
+import { baseModalStyle } from "src/styles/modalStyles";
 
 interface IProposeSettlementModal {
   isOpen: boolean;

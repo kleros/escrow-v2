@@ -1,7 +1,7 @@
 import React from "react";
 import clsx from "clsx";
 import { Modal } from "@kleros/ui-components-library";
-import { baseModalStyle } from "~src/styles/modalStyles";
+import { baseModalStyle } from "src/styles/modalStyles";
 import Description from "./Description";
 import Buttons from "./Buttons";
 import FeeRequired from "./FeeRequired";
