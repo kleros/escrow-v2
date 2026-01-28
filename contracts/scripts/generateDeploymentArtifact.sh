@@ -15,10 +15,12 @@ address=$2
 # Workaround: query the address of the implementation, and manually change the address to the proxy's in the artifact.
 # Example: WETH on Gnosis chain, https://gnosisscan.io/address/0x6A023CCd1ff6F2045C3309768eAd9E68F978f6e1#code
 
+url="https://api.etherscan.io/v2"
+
 case $network in
 gnosischain)
-  url="https://api.gnosisscan.io"
-  apiKey=$($SCRIPT_DIR/dotenv.sh GNOSISSCAN_API_KEY)
+  chainId=100
+  apiKey=$($SCRIPT_DIR/dotenv.sh ETHERSCAN_API_KEY_FIX)
   ;;
 chiado)
   # Warning: these are distinct instances!
@@ -28,27 +30,32 @@ chiado)
   apiKey=""
   ;;
 arbitrum)
-  url="https://api.arbiscan.io"
-  apiKey=$($SCRIPT_DIR/dotenv.sh ARBISCAN_API_KEY)
+  chainId=42161
+  apiKey=$($SCRIPT_DIR/dotenv.sh ETHERSCAN_API_KEY_FIX)
   ;;
 arbitrumSepolia)
-  url="https://api-sepolia.arbiscan.io"
-  apiKey=$($SCRIPT_DIR/dotenv.sh ARBISCAN_API_KEY)
+  chainId=421614
+  apiKey=$($SCRIPT_DIR/dotenv.sh ETHERSCAN_API_KEY_FIX)
   ;;
 mainnet)
-  url="https://api.etherscan.io"
-  apiKey=$($SCRIPT_DIR/dotenv.sh ETHERSCAN_API_KEY)
+  chainId=1
+  apiKey=$($SCRIPT_DIR/dotenv.sh ETHERSCAN_API_KEY_FIX)
   ;;
 sepolia)
-  url="https://api-sepolia.etherscan.io"
-  apiKey=$($SCRIPT_DIR/dotenv.sh ETHERSCAN_API_KEY)
+  chainId=11155111
+  apiKey=$($SCRIPT_DIR/dotenv.sh ETHERSCAN_API_KEY_FIX)
   ;;
 *)
   echo "error: unknown network $network"
   exit 1
 esac
 
+
 query="$url/api?module=contract&action=getabi&address=$address"
+if [[ -n $chainId ]]
+then
+  query="$query&chainid=$chainId"
+fi
 if [[ -n $apiKey ]]
 then
   query="$query&apikey=$apiKey"
@@ -68,4 +75,6 @@ jq \
   --argjson abi "$abi" \
   '{ "address": $address, "abi": $abi }' <<< '{}'
 
+
+# https://api.etherscan.io/v2/api?chainid=42161&module=contract&action=getabi&apikey=1W5G377DC58GS36T3BYIB9KCFVFCGQ216N&address=0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9
 
