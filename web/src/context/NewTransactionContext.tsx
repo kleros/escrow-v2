@@ -5,6 +5,7 @@ export interface IToken {
   symbol: string;
   address: string;
   logo: string;
+  decimals?: number;
 }
 
 interface INewTransactionContext {

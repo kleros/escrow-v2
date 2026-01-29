@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
-import { Alchemy } from "alchemy-sdk";
+import { Alchemy, TokenMetadataResponse } from "alchemy-sdk";
 
 import { DEFAULT_CHAIN } from "consts/chains";
 import { alchemyConfig } from "utils/alchemyConfig";
 
 export const useTokenMetadata = (tokenAddress: string) => {
-  const [tokenMetadata, setTokenMetadata] = useState<any>(null);
+  const [tokenMetadata, setTokenMetadata] = useState<TokenMetadataResponse | null>(null);
 
   useEffect(() => {
     const fetchTokenMetadata = async () => {

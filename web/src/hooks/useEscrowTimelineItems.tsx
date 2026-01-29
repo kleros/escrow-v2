@@ -1,6 +1,6 @@
 import React from "react";
 import { useEffect, useMemo, useState } from "react";
-import { formatEther } from "viem";
+import { formatETH, formatTokenAmount } from "utils/format";
 import { getFormattedDate } from "utils/getFormattedDate";
 import { resolutionToString } from "utils/resolutionToString";
 import { formatTimeoutDuration } from "utils/formatTimeoutDuration";
@@ -57,6 +57,8 @@ const useEscrowTimelineItems = (
   transactionCreationTimestamp: number,
   status: string,
   assetSymbol: string,
+  isNativeTransaction: boolean,
+  tokenDecimals?: number,
   buyer: string,
   seller: string,
   payments: Payment[],
@@ -86,9 +88,12 @@ const useEscrowTimelineItems = (
       payments?.forEach((payment) => {
         const isBuyer = payment.party.toLowerCase() === buyer.toLowerCase();
         const formattedDate = getFormattedDate(new Date(payment.timestamp * 1000));
+        const formattedAmount = isNativeTransaction
+          ? formatETH(payment.amount)
+          : formatTokenAmount(payment.amount, tokenDecimals);
         const title = (
           <>
-            The {isBuyer ? "buyer" : "seller"} paid {formatEther(payment.amount)}{" "}
+            The {isBuyer ? "buyer" : "seller"} paid {formattedAmount}{" "}
             {assetSymbol ? assetSymbol : <Skeleton className="z-0" width={30} />}
           </>
         );
@@ -117,9 +122,12 @@ const useEscrowTimelineItems = (
           } answer [Timeout: ${formatTimeoutDuration(timeLeft)}]`;
         }
 
+        const formattedAmount = isNativeTransaction
+          ? formatETH(proposal.amount)
+          : formatTokenAmount(proposal.amount, tokenDecimals);
         const title = (
           <>
-            The {proposal.party === "1" ? "buyer" : "seller"} proposed: Pay {formatEther(proposal.amount)}{" "}
+            The {proposal.party === "1" ? "buyer" : "seller"} proposed: Pay {formattedAmount}{" "}
             {assetSymbol ? assetSymbol : <Skeleton className="z-0" width={30} />}
           </>
         );
@@ -185,6 +193,8 @@ const useEscrowTimelineItems = (
     settlementTimeout,
     currentTime,
     assetSymbol,
+    isNativeTransaction,
+    tokenDecimals,
     buyer,
     seller,
   ]);

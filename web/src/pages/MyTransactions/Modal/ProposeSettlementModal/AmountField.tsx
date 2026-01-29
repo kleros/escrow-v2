@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { BigNumberField } from "@kleros/ui-components-library";
-import { parseEther } from "viem";
+import { parseUnits } from "viem";
 import { useTransactionDetailsContext } from "context/TransactionDetailsContext";
+import { useTokenMetadata } from "hooks/useTokenMetadata";
 
 interface IAmountField {
   amountProposed: string;
@@ -10,21 +11,23 @@ interface IAmountField {
 }
 
 const AmountField: React.FC<IAmountField> = ({ amountProposed, setAmountProposed, setIsAmountValid }) => {
-  const { amount } = useTransactionDetailsContext();
+  const { amount, token } = useTransactionDetailsContext();
+  const { tokenMetadata } = useTokenMetadata(token);
+  const tokenDecimals = tokenMetadata?.decimals ?? 18;
   const [error, setError] = useState("");
 
   useEffect(() => {
-    const transactionAmount = parseFloat(amount);
-    const proposedAmount = parseEther(amountProposed);
+    const transactionAmount = typeof amount === "bigint" ? amount : amount ? BigInt(amount) : 0n;
+    const proposedAmount = amountProposed ? parseUnits(amountProposed, tokenDecimals) : 0n;
 
-    if (amountProposed && transactionAmount < proposedAmount) {
+    if (amountProposed && proposedAmount > transactionAmount) {
       setError("Proposed amount exceeds transaction amount");
       setIsAmountValid(false);
     } else {
       setError("");
       setIsAmountValid(true);
     }
-  }, [amountProposed, amount, setIsAmountValid]);
+  }, [amountProposed, amount, setIsAmountValid, tokenDecimals]);
 
   return (
     <BigNumberField

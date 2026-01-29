@@ -23,6 +23,8 @@ interface IPreviewCard {
   sellerAddress: string;
   deadline: number;
   assetSymbol: string;
+  isNativeTransaction: boolean;
+  tokenDecimals?: number;
   overrideIsList: boolean;
   extraDescriptionUri: string;
   isPreview: boolean;
@@ -49,6 +51,8 @@ const PreviewCard: React.FC<IPreviewCard> = ({
   sellerAddress,
   deadline,
   assetSymbol,
+  isNativeTransaction,
+  tokenDecimals,
   overrideIsList,
   extraDescriptionUri,
   isPreview,
@@ -91,6 +95,8 @@ const PreviewCard: React.FC<IPreviewCard> = ({
         isPreview,
         status,
         assetSymbol,
+        isNativeTransaction,
+        tokenDecimals,
         transactionCreationTimestamp,
         buyerAddress,
         sellerAddress,

@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { formatEther } from "viem";
+import { formatETH, formatTokenAmount } from "utils/format";
 import { useTransactionDetailsContext } from "context/TransactionDetailsContext";
 import { isUndefined } from "utils/index";
 import { pickBufferFor } from "utils/bufferRules";
@@ -25,6 +25,7 @@ const TransactionDetails: React.FC = () => {
   const nativeTokenSymbol = useNativeTokenSymbol();
   const { tokenMetadata } = useTokenMetadata(transactionDetails?.escrow?.token);
   const erc20TokenSymbol = tokenMetadata?.symbol;
+  const tokenDecimals = tokenMetadata?.decimals ?? 18;
   const { setTransactionDetails } = useTransactionDetailsContext();
 
   const {
@@ -46,6 +47,12 @@ const TransactionDetails: React.FC = () => {
 
   const transactionInfo = useFetchIpfsJson(transactionUri);
   const assetSymbol = token ? erc20TokenSymbol : nativeTokenSymbol;
+  const isNativeTransaction = !token;
+  const formattedAmount = !isUndefined(amount)
+    ? isNativeTransaction
+      ? formatETH(amount)
+      : formatTokenAmount(amount, tokenDecimals)
+    : "";
 
   useEffect(() => {
     if (transactionDetails?.escrow) {
@@ -75,10 +82,12 @@ const TransactionDetails: React.FC = () => {
           buyerAddress={buyer}
           sellerAddress={seller}
           transactionCreationTimestamp={timestamp}
-          sendingQuantity={!isUndefined(amount) ? formatEther(amount) : ""}
+          sendingQuantity={formattedAmount}
           deadline={deliveryDeadlineMs}
           overrideIsList={false}
-          amount={!isUndefined(amount) ? formatEther(amount) : ""}
+          amount={formattedAmount}
+          isNativeTransaction={isNativeTransaction}
+          tokenDecimals={tokenDecimals}
           isPreview={false}
           feeTimeout={escrowParameters?.escrowParameters.feeTimeout}
           settlementTimeout={escrowParameters?.escrowParameters.settlementTimeout}

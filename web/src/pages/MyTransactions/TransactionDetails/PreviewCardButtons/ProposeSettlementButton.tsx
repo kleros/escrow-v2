@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Button } from "@kleros/ui-components-library";
 import { usePublicClient } from "wagmi";
-import { parseEther } from "viem";
+import { parseUnits } from "viem";
 import { isUndefined } from "utils/index";
 import { wrapWithToast } from "utils/wrapWithToast";
 import { useTransactionDetailsContext } from "context/TransactionDetailsContext";
+import { useTokenMetadata } from "hooks/useTokenMetadata";
 import {
   useSimulateEscrowUniversalProposeSettlement,
   useWriteEscrowUniversalProposeSettlement,
@@ -26,15 +27,21 @@ const ProposeSettlementButton: React.FC<IProposeSettlementButton> = ({
 }) => {
   const [isSending, setIsSending] = useState<boolean>(false);
   const publicClient = usePublicClient();
-  const { id } = useTransactionDetailsContext();
+  const { id, token } = useTransactionDetailsContext();
+  const { tokenMetadata } = useTokenMetadata(token);
+  const tokenDecimals = tokenMetadata?.decimals ?? 18;
   const refetchQuery = useQueryRefetch();
+  const formattedAmountProposed = useMemo(() => {
+    if (!amountProposed) return 0n;
+    return parseUnits(amountProposed, tokenDecimals);
+  }, [amountProposed, tokenDecimals]);
 
   const {
     data: proposeSettlementConfig,
     isLoading,
     isError,
   } = useSimulateEscrowUniversalProposeSettlement({
-    args: [BigInt(id), parseEther(amountProposed)],
+    args: [BigInt(id), formattedAmountProposed],
   });
 
   const { writeContractAsync: proposeSettlement } = useWriteEscrowUniversalProposeSettlement(proposeSettlementConfig);
