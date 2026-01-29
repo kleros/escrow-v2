@@ -53,10 +53,9 @@ const DepositPaymentButton: React.FC = () => {
     [deliveryDeadlineTimestamp, bufferSec]
   );
   const isNativeTransaction = sendingToken?.address === "native";
-  //Use token specific decimals or fallback to 18 when missing.
-  const tokenDecimals = isNativeTransaction ? 18 : sendingToken?.decimals ?? 18;
+  const tokenDecimals = isNativeTransaction ? 18 : sendingToken?.decimals;
   const transactionValue = useMemo(
-    () => (isNativeTransaction ? parseEther(sendingQuantity) : parseUnits(sendingQuantity, tokenDecimals)),
+    () => (isNativeTransaction ? parseEther(sendingQuantity) : parseUnits(sendingQuantity, tokenDecimals ?? 18)),
     [isNativeTransaction, sendingQuantity, tokenDecimals]
   );
 

@@ -25,7 +25,7 @@ const TransactionDetails: React.FC = () => {
   const nativeTokenSymbol = useNativeTokenSymbol();
   const { tokenMetadata } = useTokenMetadata(transactionDetails?.escrow?.token);
   const erc20TokenSymbol = tokenMetadata?.symbol;
-  const tokenDecimals = tokenMetadata?.decimals ?? 18;
+  const tokenDecimals = tokenMetadata?.decimals;
   const { setTransactionDetails } = useTransactionDetailsContext();
 
   const {

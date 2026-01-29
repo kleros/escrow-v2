@@ -13,12 +13,12 @@ interface IAmountField {
 const AmountField: React.FC<IAmountField> = ({ amountProposed, setAmountProposed, setIsAmountValid }) => {
   const { amount, token } = useTransactionDetailsContext();
   const { tokenMetadata } = useTokenMetadata(token);
-  const tokenDecimals = tokenMetadata?.decimals ?? 18;
+  const tokenDecimals = tokenMetadata?.decimals;
   const [error, setError] = useState("");
 
   useEffect(() => {
     const transactionAmount = typeof amount === "bigint" ? amount : amount ? BigInt(amount) : 0n;
-    const proposedAmount = amountProposed ? parseUnits(amountProposed, tokenDecimals) : 0n;
+    const proposedAmount = amountProposed ? parseUnits(amountProposed, tokenDecimals ?? 18) : 0n;
 
     if (amountProposed && proposedAmount > transactionAmount) {
       setError("Proposed amount exceeds transaction amount");

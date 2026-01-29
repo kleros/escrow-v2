@@ -29,11 +29,11 @@ const ProposeSettlementButton: React.FC<IProposeSettlementButton> = ({
   const publicClient = usePublicClient();
   const { id, token } = useTransactionDetailsContext();
   const { tokenMetadata } = useTokenMetadata(token);
-  const tokenDecimals = tokenMetadata?.decimals ?? 18;
+  const tokenDecimals = tokenMetadata?.decimals;
   const refetchQuery = useQueryRefetch();
   const formattedAmountProposed = useMemo(() => {
     if (!amountProposed) return 0n;
-    return parseUnits(amountProposed, tokenDecimals);
+    return parseUnits(amountProposed, tokenDecimals ?? 18);
   }, [amountProposed, tokenDecimals]);
 
   const {
@@ -47,7 +47,7 @@ const ProposeSettlementButton: React.FC<IProposeSettlementButton> = ({
   const { writeContractAsync: proposeSettlement } = useWriteEscrowUniversalProposeSettlement(proposeSettlementConfig);
 
   const handleProposeSettlement = () => {
-    if (!isUndefined(proposeSettlement)) {
+    if (!isUndefined(proposeSettlement) && proposeSettlementConfig && publicClient) {
       setIsSending(true);
       wrapWithToast(async () => await proposeSettlement(proposeSettlementConfig.request), publicClient)
         .then((wrapResult) => {
