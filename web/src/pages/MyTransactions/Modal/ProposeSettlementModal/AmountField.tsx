@@ -13,10 +13,18 @@ interface IAmountField {
 const AmountField: React.FC<IAmountField> = ({ amountProposed, setAmountProposed, setIsAmountValid }) => {
   const { amount, token } = useTransactionDetailsContext();
   const { tokenMetadata } = useTokenMetadata(token);
-  const tokenDecimals = tokenMetadata?.decimals;
   const [error, setError] = useState("");
+  const tokenDecimals = tokenMetadata?.decimals;
+  const isDecimalsLoading = !!token && tokenDecimals === undefined;
 
   useEffect(() => {
+    //Don't validate until decimals are loaded for ERC20 transactions
+    if (isDecimalsLoading) {
+      setError("");
+      setIsAmountValid(false);
+      return;
+    }
+
     const transactionAmount = typeof amount === "bigint" ? amount : amount ? BigInt(amount) : 0n;
     const proposedAmount = amountProposed ? parseUnits(amountProposed, tokenDecimals ?? 18) : 0n;
 
@@ -27,7 +35,7 @@ const AmountField: React.FC<IAmountField> = ({ amountProposed, setAmountProposed
       setError("");
       setIsAmountValid(true);
     }
-  }, [amountProposed, amount, setIsAmountValid, tokenDecimals]);
+  }, [amountProposed, amount, setIsAmountValid, tokenDecimals, isDecimalsLoading]);
 
   return (
     <BigNumberField

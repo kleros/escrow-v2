@@ -30,7 +30,9 @@ const ProposeSettlementButton: React.FC<IProposeSettlementButton> = ({
   const { id, token } = useTransactionDetailsContext();
   const { tokenMetadata } = useTokenMetadata(token);
   const tokenDecimals = tokenMetadata?.decimals;
+  const isDecimalsLoading = !!token && tokenDecimals === undefined;
   const refetchQuery = useQueryRefetch();
+
   const formattedAmountProposed = useMemo(() => {
     if (!amountProposed) return 0n;
     return parseUnits(amountProposed, tokenDecimals ?? 18);
@@ -68,7 +70,7 @@ const ProposeSettlementButton: React.FC<IProposeSettlementButton> = ({
   return (
     <Button
       isLoading={isSending || isLoading}
-      isDisabled={isSending || !isAmountValid || isLoading || isError}
+      isDisabled={isSending || !isAmountValid || isLoading || isError || isDecimalsLoading}
       text={buttonText}
       onPress={handleProposeSettlement}
     />

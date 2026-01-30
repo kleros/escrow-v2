@@ -53,11 +53,11 @@ const DepositPaymentButton: React.FC = () => {
     [deliveryDeadlineTimestamp, bufferSec]
   );
   const isNativeTransaction = sendingToken?.address === "native";
-  const tokenDecimals = isNativeTransaction ? 18 : sendingToken?.decimals;
-  const transactionValue = useMemo(
-    () => (isNativeTransaction ? parseEther(sendingQuantity) : parseUnits(sendingQuantity, tokenDecimals ?? 18)),
-    [isNativeTransaction, sendingQuantity, tokenDecimals]
-  );
+  const transactionValue = useMemo(() => {
+    if (isNativeTransaction) return parseEther(sendingQuantity);
+    if (sendingToken?.decimals) return parseUnits(sendingQuantity, sendingToken.decimals);
+    return 0n;
+  }, [isNativeTransaction, sendingQuantity, sendingToken?.decimals]);
 
   const { data: nativeBalance } = useBalance({
     query: { enabled: isNativeTransaction },
@@ -207,7 +207,8 @@ const DepositPaymentButton: React.FC = () => {
           isLoadingNativeConfig ||
           isLoadingERC20Config ||
           isErrorNativeConfig ||
-          isErrorERC20Config
+          isErrorERC20Config ||
+          transactionValue === 0n
         }
         text={isNativeTransaction || isApproved ? "Deposit the Payment" : "Approve Token"}
         onPress={isNativeTransaction || isApproved ? handleCreateTransaction : handleApproveToken}
