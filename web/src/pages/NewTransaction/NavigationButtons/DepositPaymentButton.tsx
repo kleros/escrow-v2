@@ -55,7 +55,7 @@ const DepositPaymentButton: React.FC = () => {
   const isNativeTransaction = sendingToken?.address === "native";
   const transactionValue = useMemo(() => {
     if (isNativeTransaction) return parseEther(sendingQuantity);
-    if (sendingToken?.decimals) return parseUnits(sendingQuantity, sendingToken.decimals);
+    if (sendingToken?.decimals !== undefined) return parseUnits(sendingQuantity, sendingToken.decimals);
     return 0n;
   }, [isNativeTransaction, sendingQuantity, sendingToken?.decimals]);
 
