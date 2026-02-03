@@ -8,8 +8,10 @@ type TokenMetadataWithOptionalDecimals = Omit<TokenMetadataResponse, "decimals">
   decimals?: number;
 };
 
-export const useTokenMetadata = (tokenAddress: string) => {
-  const [tokenMetadata, setTokenMetadata] = useState<TokenMetadataWithOptionalDecimals | null>(null);
+type TokenAddress = string | null | undefined;
+
+export const useTokenMetadata = (tokenAddress: TokenAddress) => {
+  const [tokenMetadata, setTokenMetadata] = useState<TokenMetadataWithOptionalDecimals | null | undefined>(undefined);
 
   useEffect(() => {
     const fetchTokenMetadata = async () => {

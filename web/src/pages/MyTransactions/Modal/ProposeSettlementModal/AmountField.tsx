@@ -15,7 +15,8 @@ const AmountField: React.FC<IAmountField> = ({ amountProposed, setAmountProposed
   const { tokenMetadata } = useTokenMetadata(token);
   const [error, setError] = useState("");
   const tokenDecimals = tokenMetadata?.decimals;
-  const isDecimalsLoading = !!token && tokenDecimals === undefined;
+  const isDecimalsLoading = !!token && tokenMetadata === undefined;
+  const isDecimalsError = !!token && tokenMetadata === null;
 
   useEffect(() => {
     //Don't validate until decimals are loaded for ERC20 transactions
@@ -25,8 +26,22 @@ const AmountField: React.FC<IAmountField> = ({ amountProposed, setAmountProposed
       return;
     }
 
+    if (isDecimalsError) {
+      setError("Unable to load token metadata");
+      setIsAmountValid(false);
+      return;
+    }
+
     const transactionAmount = typeof amount === "bigint" ? amount : amount ? BigInt(amount) : 0n;
-    const parsedAmount = amountProposed ? parseUnits(amountProposed, tokenDecimals ?? 18) : 0n;
+
+    let parsedAmount: bigint;
+    try {
+      parsedAmount = amountProposed ? parseUnits(amountProposed, tokenDecimals ?? 18) : 0n;
+    } catch {
+      setError("Invalid amount format");
+      setIsAmountValid(false);
+      return;
+    }
 
     if (amountProposed && parsedAmount > transactionAmount) {
       setError("Proposed amount exceeds transaction amount");
