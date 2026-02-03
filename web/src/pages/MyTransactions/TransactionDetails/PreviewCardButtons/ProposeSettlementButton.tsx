@@ -35,7 +35,7 @@ const ProposeSettlementButton: React.FC<IProposeSettlementButton> = ({
   const isDecimalsMissing = !!token && !!tokenMetadata && tokenDecimals === undefined;
   const refetchQuery = useQueryRefetch();
 
-  const formattedAmountProposed = useMemo(() => {
+  const parsedAmountProposed = useMemo(() => {
     if (!amountProposed) return 0n;
     return parseUnits(amountProposed, tokenDecimals ?? 18);
   }, [amountProposed, tokenDecimals]);
@@ -45,7 +45,7 @@ const ProposeSettlementButton: React.FC<IProposeSettlementButton> = ({
     isLoading,
     isError,
   } = useSimulateEscrowUniversalProposeSettlement({
-    args: [BigInt(id), formattedAmountProposed],
+    args: [BigInt(id), parsedAmountProposed],
   });
 
   const { writeContractAsync: proposeSettlement } = useWriteEscrowUniversalProposeSettlement(proposeSettlementConfig);
