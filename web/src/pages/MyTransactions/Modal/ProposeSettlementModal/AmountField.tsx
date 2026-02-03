@@ -17,6 +17,7 @@ const AmountField: React.FC<IAmountField> = ({ amountProposed, setAmountProposed
   const tokenDecimals = tokenMetadata?.decimals;
   const isDecimalsLoading = !!token && tokenMetadata === undefined;
   const isDecimalsError = !!token && tokenMetadata === null;
+  const isDecimalsMissing = !!token && !!tokenMetadata && tokenDecimals === undefined;
 
   useEffect(() => {
     //Don't validate until decimals are loaded for ERC20 transactions
@@ -26,7 +27,7 @@ const AmountField: React.FC<IAmountField> = ({ amountProposed, setAmountProposed
       return;
     }
 
-    if (isDecimalsError) {
+    if (isDecimalsError || isDecimalsMissing) {
       setError("Unable to load token metadata");
       setIsAmountValid(false);
       return;
@@ -50,7 +51,7 @@ const AmountField: React.FC<IAmountField> = ({ amountProposed, setAmountProposed
       setError("");
       setIsAmountValid(true);
     }
-  }, [amountProposed, amount, setIsAmountValid, tokenDecimals, isDecimalsLoading, isDecimalsError]);
+  }, [amountProposed, amount, setIsAmountValid, tokenDecimals, isDecimalsLoading, isDecimalsError, isDecimalsMissing]);
 
   return (
     <BigNumberField
