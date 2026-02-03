@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Card } from "@kleros/ui-components-library";
-import { formatEther } from "viem";
+import { formatETH, formatTokenAmount } from "utils/format";
 
 import { useIsList } from "context/IsListProvider";
 import { mapStatusToEnum } from "utils/mapStatusToEnum";
@@ -43,9 +43,11 @@ const TransactionCard: React.FC<ITransactionCard> = ({
   const nativeTokenSymbol = useNativeTokenSymbol();
   const { tokenMetadata } = useTokenMetadata(token);
   const erc20TokenSymbol = tokenMetadata?.symbol;
+  const tokenDecimals = tokenMetadata?.decimals;
   const assetSymbol = token ? erc20TokenSymbol : nativeTokenSymbol;
   const title = transactionInfo?.title;
   const navigateAndScrollTop = useNavigateAndScrollTop();
+  const formattedAmount = token ? formatTokenAmount(amount, tokenDecimals) : formatETH(amount);
 
   const currentStatusEnum = mapStatusToEnum(status);
 
@@ -61,7 +63,7 @@ const TransactionCard: React.FC<ITransactionCard> = ({
               <Skeleton className="z-0" />
             )}
             <TransactionInfo
-              amount={formatEther(amount)}
+              amount={formattedAmount}
               buyerAddress={buyer}
               sellerAddress={seller}
               deadlineDate={new Date(deadline * 1000).toLocaleString()}
@@ -86,7 +88,7 @@ const TransactionCard: React.FC<ITransactionCard> = ({
               <Skeleton className="ml-[92px]" width={200} />
             )}
             <TransactionInfo
-              amount={formatEther(amount)}
+              amount={formattedAmount}
               buyerAddress={buyer}
               sellerAddress={seller}
               deadlineDate={new Date(deadline * 1000).toLocaleString()}

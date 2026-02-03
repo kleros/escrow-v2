@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useTokenMetadata } from "./useTokenMetadata";
 import { IToken } from "context/NewTransactionContext";
+import { TOKENS_STORAGE_KEY } from "utils/initializeTokens";
 
 export const useFilteredTokens = (
   searchQuery: string,
@@ -32,6 +33,7 @@ export const useFilteredTokens = (
             symbol: tokenMetadata.symbol,
             address: searchQuery.toLowerCase(),
             logo: tokenMetadata.logo,
+            decimals: tokenMetadata.decimals,
           };
 
           const updatedTokens = [...tokens, resultToken];
@@ -41,7 +43,7 @@ export const useFilteredTokens = (
 
           filtered = [resultToken];
           setTokens(uniqueTokens);
-          localStorage.setItem("tokens", JSON.stringify(uniqueTokens));
+          localStorage.setItem(TOKENS_STORAGE_KEY, JSON.stringify(uniqueTokens));
         }
       } else {
         filtered = tokens.filter((token) => token.symbol.toLowerCase().includes(searchQuery.toLowerCase()));

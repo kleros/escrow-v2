@@ -8,6 +8,8 @@ interface IEscrowTimeline {
   transactionCreationTimestamp: number;
   status: boolean;
   assetSymbol: string;
+  isNativeTransaction: boolean;
+  tokenDecimals?: number;
   buyerAddress: string;
   sellerAddress: string;
   payments: Payment[];
@@ -22,6 +24,8 @@ const EscrowTimeline: React.FC<IEscrowTimeline> = ({
   transactionCreationTimestamp,
   status,
   assetSymbol,
+  isNativeTransaction,
+  tokenDecimals,
   buyerAddress,
   sellerAddress,
   payments,
@@ -37,6 +41,8 @@ const EscrowTimeline: React.FC<IEscrowTimeline> = ({
     transactionCreationTimestamp,
     status,
     assetSymbol,
+    isNativeTransaction,
+    tokenDecimals,
     buyerAddress,
     sellerAddress,
     payments,

@@ -50,6 +50,8 @@ const Preview: React.FC = () => {
         buyerAddress={resolvedBuyerAddress}
         sellerAddress={resolvedSellerAddress}
         assetSymbol={isNativeTransaction ? nativeTokenSymbol : sendingToken.symbol}
+        isNativeTransaction={isNativeTransaction}
+        tokenDecimals={sendingToken.decimals}
         overrideIsList={false}
         isPreview={true}
         deadline={new Date(deadline).getTime()}

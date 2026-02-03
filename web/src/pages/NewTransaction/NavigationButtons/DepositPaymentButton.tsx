@@ -38,6 +38,8 @@ const DepositPaymentButton: React.FC = () => {
   const [isSending, setIsSending] = useState(false);
   const [isApproved, setIsApproved] = useState(false);
   const { address, chain } = useAccount();
+  const chainId = chain?.id;
+  const escrowAddress = chainId ? escrowUniversalAddress?.[chainId] : undefined;
   const buyerEnsResult = useEnsAddress({ name: normalize(buyerAddress), chainId: 1 });
   const sellerEnsResult = useEnsAddress({ name: normalize(sellerAddress), chainId: 1 });
   const finalBuyerAddress = buyerEnsResult.data || buyerAddress;
@@ -51,10 +53,11 @@ const DepositPaymentButton: React.FC = () => {
     [deliveryDeadlineTimestamp, bufferSec]
   );
   const isNativeTransaction = sendingToken?.address === "native";
-  const transactionValue = useMemo(
-    () => (isNativeTransaction ? parseEther(sendingQuantity) : parseUnits(sendingQuantity, 18)),
-    [isNativeTransaction, sendingQuantity]
-  );
+  const transactionValue = useMemo(() => {
+    if (isNativeTransaction) return parseEther(sendingQuantity);
+    if (sendingToken?.decimals !== undefined) return parseUnits(sendingQuantity, sendingToken.decimals);
+    return 0n;
+  }, [isNativeTransaction, sendingQuantity, sendingToken?.decimals]);
 
   const { data: nativeBalance } = useBalance({
     query: { enabled: isNativeTransaction },
@@ -73,18 +76,18 @@ const DepositPaymentButton: React.FC = () => {
     if (isUndefined(sendingQuantity)) return true;
 
     if (isNativeTransaction) {
-      return nativeBalance ? parseFloat(sendingQuantity) > parseFloat(nativeBalance.value.toString()) : true;
+      return nativeBalance ? transactionValue > nativeBalance.value : true;
     }
 
-    return isUndefined(tokenBalance) ? true : parseFloat(sendingQuantity) > parseFloat(tokenBalance.toString());
-  }, [sendingQuantity, tokenBalance, nativeBalance, isNativeTransaction]);
+    return isUndefined(tokenBalance) ? true : transactionValue > tokenBalance;
+  }, [sendingQuantity, tokenBalance, nativeBalance, isNativeTransaction, transactionValue]);
 
   const { data: allowance, refetch: refetchAllowance } = useReadContract({
-    query: { enabled: !isNativeTransaction && chain?.id && !insufficientBalance },
+    query: { enabled: !isNativeTransaction && !!escrowAddress && !insufficientBalance },
     address: sendingToken?.address as `0x${string}`,
     abi: erc20Abi,
     functionName: "allowance",
-    args: [address as `0x${string}`, escrowUniversalAddress?.[chain?.id]],
+    args: [address as `0x${string}`, escrowAddress as `0x${string}`],
   });
 
   useEffect(() => {
@@ -105,7 +108,12 @@ const DepositPaymentButton: React.FC = () => {
         ethAddressPattern.test(finalSellerAddress) &&
         !insufficientBalance,
     },
-    args: [disputeDeadlineTimestamp, transactionUri, finalBuyerAddress, finalSellerAddress],
+    args: [
+      disputeDeadlineTimestamp,
+      transactionUri,
+      finalBuyerAddress as `0x${string}`,
+      finalSellerAddress as `0x${string}`,
+    ],
     value: transactionValue,
   });
 
@@ -140,17 +148,17 @@ const DepositPaymentButton: React.FC = () => {
     useWriteEscrowUniversalCreateErc20Transaction(createERC20TransactionConfig);
 
   const { data: approveConfig } = useSimulateContract({
-    query: { enabled: !isNativeTransaction && chain?.id && !insufficientBalance },
+    query: { enabled: !isNativeTransaction && !!escrowAddress && !insufficientBalance },
     address: sendingToken?.address as `0x${string}`,
     abi: erc20Abi,
     functionName: "approve",
-    args: [escrowUniversalAddress?.[chain?.id], transactionValue],
+    args: [escrowAddress as `0x${string}`, transactionValue],
   });
 
   const { writeContractAsync: approve } = useWriteContract(approveConfig);
 
   const handleApproveToken = async () => {
-    if (!isUndefined(approve)) {
+    if (!isUndefined(approve) && approveConfig && publicClient) {
       setIsSending(true);
       try {
         const wrapResult = await wrapWithToast(async () => await approve(approveConfig.request), publicClient);
@@ -199,7 +207,8 @@ const DepositPaymentButton: React.FC = () => {
           isLoadingNativeConfig ||
           isLoadingERC20Config ||
           isErrorNativeConfig ||
-          isErrorERC20Config
+          isErrorERC20Config ||
+          transactionValue === 0n
         }
         text={isNativeTransaction || isApproved ? "Deposit the Payment" : "Approve Token"}
         onPress={isNativeTransaction || isApproved ? handleCreateTransaction : handleApproveToken}
