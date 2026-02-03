@@ -33,7 +33,18 @@ const TokenSelector: React.FC = () => {
   useEffect(() => {
     if (tokens?.length > 0) {
       const nativeToken = tokens.find((token) => token.address === "native");
-      setSendingToken(JSON.parse(localStorage.getItem(SELECTED_TOKEN_STORAGE_KEY) ?? "null") || nativeToken);
+
+      let storedToken = null;
+      try {
+        const storedValue = localStorage.getItem(SELECTED_TOKEN_STORAGE_KEY);
+        if (storedValue) {
+          storedToken = JSON.parse(storedValue);
+        }
+      } catch (error) {
+        console.error("Error parsing stored token:", error);
+      }
+
+      setSendingToken(storedToken || nativeToken);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
