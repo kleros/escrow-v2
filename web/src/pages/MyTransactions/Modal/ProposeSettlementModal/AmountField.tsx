@@ -26,9 +26,9 @@ const AmountField: React.FC<IAmountField> = ({ amountProposed, setAmountProposed
     }
 
     const transactionAmount = typeof amount === "bigint" ? amount : amount ? BigInt(amount) : 0n;
-    const proposedAmount = amountProposed ? parseUnits(amountProposed, tokenDecimals ?? 18) : 0n;
+    const parsedAmount = amountProposed ? parseUnits(amountProposed, tokenDecimals ?? 18) : 0n;
 
-    if (amountProposed && proposedAmount > transactionAmount) {
+    if (amountProposed && parsedAmount > transactionAmount) {
       setError("Proposed amount exceeds transaction amount");
       setIsAmountValid(false);
     } else {
