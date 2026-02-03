@@ -15,7 +15,7 @@ export const useTokenMetadata = (tokenAddress: TokenAddress) => {
 
   useEffect(() => {
     const fetchTokenMetadata = async () => {
-      if (!tokenAddress || tokenAddress === "native") return;
+      if (!tokenAddress) return;
       const alchemy = new Alchemy(alchemyConfig(DEFAULT_CHAIN));
       try {
         const metadata = await alchemy.core.getTokenMetadata(tokenAddress);

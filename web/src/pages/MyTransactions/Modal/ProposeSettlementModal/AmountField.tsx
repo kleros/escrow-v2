@@ -50,7 +50,7 @@ const AmountField: React.FC<IAmountField> = ({ amountProposed, setAmountProposed
       setError("");
       setIsAmountValid(true);
     }
-  }, [amountProposed, amount, setIsAmountValid, tokenDecimals, isDecimalsLoading]);
+  }, [amountProposed, amount, setIsAmountValid, tokenDecimals, isDecimalsLoading, isDecimalsError]);
 
   return (
     <BigNumberField
