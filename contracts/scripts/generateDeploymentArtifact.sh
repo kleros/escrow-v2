@@ -74,7 +74,3 @@ jq \
   --arg address "$address" \
   --argjson abi "$abi" \
   '{ "address": $address, "abi": $abi }' <<< '{}'
-
-
-# https://api.etherscan.io/v2/api?chainid=42161&module=contract&action=getabi&apikey=1W5G377DC58GS36T3BYIB9KCFVFCGQ216N&address=0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9
-
