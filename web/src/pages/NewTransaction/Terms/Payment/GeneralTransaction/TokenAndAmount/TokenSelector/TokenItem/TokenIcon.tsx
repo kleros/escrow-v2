@@ -1,5 +1,4 @@
 import React from "react";
-import styled from "styled-components";
 import ArbIcon from "svgs/icons/tokens/arb.svg";
 import DaiIcon from "svgs/icons/tokens/dai.svg";
 import EthIcon from "svgs/icons/tokens/eth.svg";
@@ -11,19 +10,6 @@ import UsdcIcon from "svgs/icons/tokens/usdc.svg";
 import UsdtIcon from "svgs/icons/tokens/usdt.svg";
 import WethIcon from "svgs/icons/tokens/weth.svg";
 import UnknownTokenIcon from "svgs/icons/tokens/unknown.svg";
-
-export const TokenLogoImg = styled.img`
-  width: 24px;
-  height: 24px;
-`;
-
-export const StyledUnknownTokenIcon = styled(UnknownTokenIcon)`
-  width: 24px;
-  height: 24px;
-  circle {
-    fill: ${({ theme }) => theme.stroke};
-  }
-`;
 
 const tokenIcons = {
   arb: ArbIcon,
@@ -48,9 +34,9 @@ const TokenIcon = ({ symbol, logo }) => {
   if (TokenLogoComponent) {
     return <TokenLogoComponent width={24} height={24} />;
   } else if (logo) {
-    return <TokenLogoImg src={logo} alt={`${symbol} logo`} />;
+    return <img width={24} height={24} src={logo} alt={`${symbol} logo`} />;
   } else {
-    return <StyledUnknownTokenIcon width={24} height={24} />;
+    return <UnknownTokenIcon className="[&_circle]:fill-klerosUIComponentsStroke" width={24} height={24} />;
   }
 };
 

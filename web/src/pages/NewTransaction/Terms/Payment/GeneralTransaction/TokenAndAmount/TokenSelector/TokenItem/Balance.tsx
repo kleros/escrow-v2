@@ -1,21 +1,10 @@
 import React, { useMemo } from "react";
-import styled from "styled-components";
 import Skeleton from "react-loading-skeleton";
 import { useAccount, useBalance, useReadContract } from "wagmi";
 import { IToken } from "context/NewTransactionContext";
 import { isUndefined } from "utils/index";
 import { getFormattedBalance } from "utils/getFormattedBalance";
 import { erc20Abi } from "viem";
-
-const Container = styled.p`
-  color: ${({ theme }) => theme.primaryText};
-  margin: 0;
-`;
-
-const StyledAmountSkeleton = styled(Skeleton)`
-  width: 52px;
-  height: 20px;
-`;
 
 interface IBalance {
   token: IToken;
@@ -44,10 +33,10 @@ const Balance: React.FC<IBalance> = ({ token }) => {
   }, [isNativeTransaction, nativeBalance, tokenBalance, token]);
 
   return (
-    <Container>
-      {isUndefined(formattedBalance) ? <StyledAmountSkeleton /> : null}
+    <p className="text-klerosUIComponentsPrimaryText m-0">
+      {isUndefined(formattedBalance) ? <Skeleton width={52} height={20} /> : null}
       {!isUndefined(formattedBalance) && formattedBalance !== "0" ? formattedBalance : null}
-    </Container>
+    </p>
   );
 };
 

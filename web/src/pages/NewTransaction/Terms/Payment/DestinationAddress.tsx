@@ -1,34 +1,10 @@
 import React, { useState, useEffect, useMemo } from "react";
-import styled, { css } from "styled-components";
-import { responsiveSize } from "styles/responsiveSize";
-import { landscapeStyle } from "styles/landscapeStyle";
-import { Field } from "@kleros/ui-components-library";
+import { TextField } from "@kleros/ui-components-library";
 import { useDebounce } from "react-use";
 import { useEnsAddress } from "wagmi";
 import { useNewTransactionContext } from "context/NewTransactionContext";
 import { ensDomainPattern, validateAddress } from "utils/validateAddress";
 import { isEmpty } from "src/utils";
-
-const StyledField = styled(Field)`
-  margin-bottom: ${responsiveSize(68, 40)};
-
-  small {
-    margin-top: 6px;
-    svg {
-      margin-top: 8px;
-    }
-  }
-
-  input {
-    font-size: 16px;
-  }
-
-  ${landscapeStyle(
-    () => css`
-      width: ${responsiveSize(342, 574)};
-    `
-  )}
-`;
 
 interface IDestinationAddress {
   recipientAddress: string;
@@ -54,11 +30,6 @@ const DestinationAddress: React.FC<IDestinationAddress> = ({ recipientAddress, s
     }
   }, [debouncedRecipientAddress, ensResult.data, setIsRecipientAddressResolved]);
 
-  const handleWrite = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const input = event.target.value;
-    setRecipientAddress(input);
-  };
-
   const message = useMemo(() => {
     if (isEmpty(debouncedRecipientAddress) || isValid) {
       return "The ETH address or ENS of the person/entity that will receive the funds.";
@@ -74,14 +45,14 @@ const DestinationAddress: React.FC<IDestinationAddress> = ({ recipientAddress, s
   }, [debouncedRecipientAddress, isValid]);
 
   return (
-    <StyledField
-      type="text"
+    <TextField
+      aria-label="Destination address"
+      className="lg:w-fluid-342-574"
       value={recipientAddress}
-      onChange={handleWrite}
+      onChange={(value) => setRecipientAddress(value)}
       placeholder="eg. 0x123ABC... or john.eth"
       variant={variant}
       message={message}
-      maxLength={42}
     />
   );
 };

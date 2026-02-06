@@ -1,17 +1,17 @@
 import React from "react";
-import { useTheme } from "styled-components";
+import { useTheme } from "src/hooks/useToggleThemeContext";
 import { useWindowSize } from "react-use";
-import { BREAKPOINT_LANDSCAPE } from "styles/landscapeStyle";
 import HeroLightMobile from "svgs/hero/hero-lightmode-mobile.svg";
 import HeroDarkMobile from "svgs/hero/hero-darkmode-mobile.svg";
 import HeroLightDesktop from "svgs/hero/hero-lightmode-desktop.svg";
 import HeroDarkDesktop from "svgs/hero/hero-darkmode-desktop.svg";
+import { LG_BREAKPOINT } from "src/styles/breakpoints";
 
 const HeroImage = () => {
   const { width } = useWindowSize();
-  const theme = useTheme();
-  const themeIsLight = theme.name === "light";
-  const screenIsBig = width > BREAKPOINT_LANDSCAPE;
+  const [theme] = useTheme();
+  const themeIsLight = theme === "light";
+  const screenIsBig = width > LG_BREAKPOINT;
   return <div>{screenIsBig ? <HeroDesktop {...{ themeIsLight }} /> : <HeroMobile {...{ themeIsLight }} />}</div>;
 };
 

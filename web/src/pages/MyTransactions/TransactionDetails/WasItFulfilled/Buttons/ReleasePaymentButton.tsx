@@ -16,7 +16,11 @@ const ReleasePaymentButton: React.FC = () => {
   const { id, amount } = useTransactionDetailsContext();
   const refetchQuery = useQueryRefetch();
 
-  const { data: releaseFullPaymentConfig, isLoading, isError } = useSimulateEscrowUniversalPay({
+  const {
+    data: releaseFullPaymentConfig,
+    isLoading,
+    isError,
+  } = useSimulateEscrowUniversalPay({
     args: [id, amount],
   });
 
@@ -45,11 +49,11 @@ const ReleasePaymentButton: React.FC = () => {
     <>
       <Button
         isLoading={isSending || isLoading}
-        disabled={isSending || isLoading || isError}
-        text={"Yes. Release full payment"}
-        onClick={handleReleasePayment}
+        isDisabled={isSending || isLoading || isError}
+        text="Yes. Release full payment"
+        onPress={handleReleasePayment}
       />
-      {isModalOpen ? <PaymentReleased toggleModal={toggleModal} /> : null}
+      <PaymentReleased isOpen={isModalOpen} toggleModal={toggleModal} />
     </>
   );
 };

@@ -1,16 +1,9 @@
 import React from "react";
-import styled from "styled-components";
 import Header from "pages/NewTransaction/Header";
 import NavigationButtons from "../../../NavigationButtons";
 import DestinationAddress from "../DestinationAddress";
 import ToDivider from "../ToDivider";
 import TokenAndAmount from "./TokenAndAmount";
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
 
 interface ITokenTransaction {
   headerText: string;
@@ -36,13 +29,13 @@ const TokenTransaction: React.FC<ITokenTransaction> = ({
   setRecipientAddress,
 }) => {
   return (
-    <Container>
+    <div className="flex flex-col items-center">
       <Header text={headerText} />
       <TokenAndAmount quantity={quantity} setQuantity={setQuantity} token={token} setToken={setToken} />
       <ToDivider />
       <DestinationAddress recipientAddress={recipientAddress} setRecipientAddress={setRecipientAddress} />
       <NavigationButtons prevRoute={prevRoute} nextRoute={nextRoute} />
-    </Container>
+    </div>
   );
 };
 

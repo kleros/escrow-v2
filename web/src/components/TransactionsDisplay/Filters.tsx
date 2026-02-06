@@ -1,8 +1,5 @@
 import React from "react";
 
-import styled, { css } from "styled-components";
-import { hoverShortTransitionTiming } from "styles/commonStyles";
-
 import { useNavigate, useParams } from "react-router-dom";
 import { DropdownSelect } from "@kleros/ui-components-library";
 
@@ -12,41 +9,12 @@ import { decodeURIFilter, encodeURIFilter, useRootPath } from "utils/uri";
 
 import ListIcon from "svgs/icons/list.svg";
 import GridIcon from "svgs/icons/grid.svg";
+import clsx from "clsx";
 
-const Container = styled.div`
-  display: flex;
-  justify-content: end;
-  gap: 12px;
-  width: fit-content;
-`;
-
-const IconsContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 4px;
-`;
-
-const BaseIconStyles = css`
-  ${hoverShortTransitionTiming}
-  cursor: pointer;
-  fill: ${({ theme }) => theme.primaryBlue};
-  width: 16px;
-  height: 16px;
-  overflow: hidden;
-
-  :hover {
-    fill: ${({ theme }) => theme.secondaryBlue};
-  }
-`;
-
-const StyledGridIcon = styled(GridIcon)`
-  ${BaseIconStyles}
-`;
-
-const StyledListIcon = styled(ListIcon)`
-  ${BaseIconStyles}
-`;
+const iconStyles = clsx(
+  "transition duration-100 cursor-pointer overflow-hidden",
+  "fill-klerosUIComponentsPrimaryBlue hover:fill-klerosUIComponentsSecondaryBlue"
+);
 
 const Filters: React.FC = () => {
   const { order, filter } = useParams();
@@ -63,23 +31,26 @@ const Filters: React.FC = () => {
   const isDesktop = useIsDesktop();
 
   return (
-    <Container>
+    <div className="flex justify-end gap-3 w-fit">
       <DropdownSelect
         smallButton
         simpleButton
         items={[
-          { value: "desc", text: "Newest" },
-          { value: "asc", text: "Oldest" },
+          { id: "desc", itemValue: "desc", text: "Newest" },
+          { id: "asc", itemValue: "asc", text: "Oldest" },
         ]}
-        defaultValue={order}
-        callback={handleOrderChange}
+        defaultSelectedKey={order}
+        callback={(item) => handleOrderChange(item.itemValue)}
       />
       {isDesktop ? (
-        <IconsContainer>
+        <div className="flex justify-center items-center gap-1">
           {isList ? (
-            <StyledGridIcon onClick={() => setIsList(false)} />
+            <GridIcon width={16} height={16} className={iconStyles} onClick={() => setIsList(false)} />
           ) : (
-            <StyledListIcon
+            <ListIcon
+              width={16}
+              height={16}
+              className={iconStyles}
               onClick={() => {
                 if (isDesktop) {
                   setIsList(true);
@@ -87,9 +58,9 @@ const Filters: React.FC = () => {
               }}
             />
           )}
-        </IconsContainer>
+        </div>
       ) : null}
-    </Container>
+    </div>
   );
 };
 

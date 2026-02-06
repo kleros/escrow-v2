@@ -1,13 +1,10 @@
 import React, { useEffect, useState } from "react";
-import styled from "styled-components";
 
 import { useAccount } from "wagmi";
 
 import { Button } from "@kleros/ui-components-library";
 
 import { EMAIL_REGEX } from "consts/index";
-
-import { responsiveSize } from "styles/responsiveSize";
 
 import { ISettings } from "../../../../index";
 
@@ -19,40 +16,13 @@ import { errorToast, infoToast, successToast } from "utils/wrapWithToast";
 import InfoCard from "components/InfoCard";
 import EmailVerificationInfo from "./EmailVerificationInfo";
 
-const FormContainer = styled.form`
-  width: 100%;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  padding: 0 ${responsiveSize(12, 32, 300)};
-  padding-bottom: 16px;
-  gap: 16px;
-`;
-
-const ButtonContainer = styled.div`
-  display: flex;
-  justify-content: end;
-`;
-
-const FormContactContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-const StyledInfoCard = styled(InfoCard)`
-  width: fit-content;
-  font-size: 14px;
-  margin-bottom: 8px;
-  word-wrap: break-word;
-`;
-
 const FormContactDetails: React.FC<ISettings> = ({ toggleIsSettingsOpen }) => {
   const [emailInput, setEmailInput] = useState<string>("");
-  const [emailIsValid, setEmailIsValid] = useState<boolean>(false);
   const { address } = useAccount();
   const { user, isAddingUser, isFetchingUser, addUser, updateEmail, isUpdatingUser, userExists } = useAtlasProvider();
 
   const isEditingEmail = user?.email !== emailInput;
+  const emailIsValid = EMAIL_REGEX.test(emailInput);
 
   const isEmailUpdateable = user?.email
     ? !isUndefined(user?.emailUpdateableAt) && new Date(user.emailUpdateableAt!).getTime() < new Date().getTime()
@@ -100,7 +70,7 @@ const FormContactDetails: React.FC<ISettings> = ({ toggleIsSettingsOpen }) => {
   };
 
   return (
-    <FormContainer onSubmit={handleSubmit}>
+    <form className="w-full relative flex flex-col gap-4 py-0 pb-4 px-fluid-12-32-300" onSubmit={handleSubmit}>
       {/* <FormContactContainer>
         <FormContact
           contactLabel="Telegram"
@@ -113,32 +83,33 @@ const FormContactDetails: React.FC<ISettings> = ({ toggleIsSettingsOpen }) => {
           isEditing={isEditingTelegram}
         />
       </FormContactContainer> */}
-      <FormContactContainer>
+      <div className="flex flex-col">
         <FormContact
           contactLabel="Email"
           contactPlaceholder="your.email@email.com"
           contactInput={emailInput}
           contactIsValid={emailIsValid}
           setContactInput={setEmailInput}
-          setContactIsValid={setEmailIsValid}
-          validator={EMAIL_REGEX}
           isEditing={isEditingEmail}
         />
-      </FormContactContainer>
+      </div>
       {!isEmailUpdateable ? (
-        <StyledInfoCard msg={`You can update email again ${timeLeftUntil(user?.emailUpdateableAt!)}`} />
+        <InfoCard
+          className="w-fit text-sm mb-2 wrap-break-word"
+          msg={`You can update email again ${timeLeftUntil(user?.emailUpdateableAt!)}`}
+        />
       ) : null}
-      <ButtonContainer>
+      <div className="flex justify-end">
         <Button
           text="Save"
-          disabled={
+          isDisabled={
             !isEditingEmail || !emailIsValid || isAddingUser || isFetchingUser || isUpdatingUser || !isEmailUpdateable
           }
           isLoading={isAddingUser || isUpdatingUser}
         />
-      </ButtonContainer>
+      </div>
       <EmailVerificationInfo toggleIsSettingsOpen={toggleIsSettingsOpen} />
-    </FormContainer>
+    </form>
   );
 };
 

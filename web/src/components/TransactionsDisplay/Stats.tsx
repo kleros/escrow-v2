@@ -1,28 +1,13 @@
 import React from "react";
-import styled from "styled-components";
-
-const FieldWrapper = styled.div`
-  display: inline-flex;
-  gap: 8px;
-`;
-
-const SeparatorLabel = styled.label`
-  margin: 0 8px;
-  color: ${({ theme }) => theme.primaryText};
-`;
-
-const StyledLabel = styled.label`
-  color: ${({ theme }) => theme.primaryText};
-`;
 
 const Field: React.FC<{ label: string; value: string }> = ({ label, value }) => (
-  <FieldWrapper>
-    <StyledLabel>{label}</StyledLabel>
-    <small>{value}</small>
-  </FieldWrapper>
+  <div className="inline-flex gap-2 items-center">
+    <label className="text-klerosUIComponentsPrimaryText">{label}</label>
+    <small className="text-klerosUIComponentsPrimaryText text-sm font-semibold">{value}</small>
+  </div>
 );
 
-const Separator: React.FC = () => <SeparatorLabel>|</SeparatorLabel>;
+const Separator: React.FC = () => <label className="mx-2 text-klerosUIComponentsPrimaryText">|</label>;
 
 export interface IStats {
   totalTransactions: number;

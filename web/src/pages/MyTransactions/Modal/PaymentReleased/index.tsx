@@ -1,29 +1,23 @@
-import React, { useRef } from "react";
-import { useClickAway } from "react-use";
-import { StyledModal } from "pages/MyTransactions/Modal/StyledModal";
-import VerifiedLogo from "./VerifiedLogo";
+import React from "react";
 import Header from "./Header";
 import Description from "./Description";
-import CloseButton from "./CloseButton";
-import { Overlay } from "components/Overlay";
+import CheckCircleFull from "svgs/icons/check-circle-full.svg";
+import { Button, Modal } from "@kleros/ui-components-library";
+import { baseModalStyle } from "src/styles/modalStyles";
 
 interface IPaymentReleased {
+  isOpen: boolean;
   toggleModal: () => void;
 }
 
-const PaymentReleased: React.FC<IPaymentReleased> = ({ toggleModal }) => {
-  const containerRef = useRef(null);
-  useClickAway(containerRef, () => toggleModal());
-
+const PaymentReleased: React.FC<IPaymentReleased> = ({ isOpen, toggleModal }) => {
   return (
-    <Overlay>
-      <StyledModal ref={containerRef}>
-        <VerifiedLogo />
-        <Header />
-        <Description />
-        <CloseButton toggleModal={toggleModal} />
-      </StyledModal>
-    </Overlay>
+    <Modal className={baseModalStyle} isOpen={isOpen} isDismissable onOpenChange={toggleModal}>
+      <CheckCircleFull className="mb-3" />
+      <Header />
+      <Description />
+      <Button variant="secondary" text="Close" onPress={toggleModal} />
+    </Modal>
   );
 };
 export default PaymentReleased;

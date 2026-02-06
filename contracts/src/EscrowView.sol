@@ -4,7 +4,8 @@ pragma solidity 0.8.24;
 
 import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
 import {IERC20Metadata} from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
-import {EscrowUniversal, Transaction, NATIVE, Party, Status, IERC20} from "./EscrowUniversal.sol";
+import {EscrowUniversal} from "./EscrowUniversal.sol";
+import {Transaction, NATIVE, Party, Status, IERC20} from "./interfaces/Types.sol";
 
 /// @title EscrowView
 /// @notice A view contract for EscrowUniversal to facilitate the display of ruling options.

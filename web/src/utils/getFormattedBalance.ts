@@ -1,7 +1,7 @@
-import { formatETH, formatPNK } from "./format";
+import { formatETH, formatTokenAmount } from "./format";
 
 export const getFormattedBalance = (balanceData: bigint, token: any) => {
   if (balanceData === undefined) return undefined;
-  if (token?.symbol === "PNK") return formatPNK(balanceData);
-  return formatETH(balanceData);
+  if (token?.address === "native") return formatETH(balanceData);
+  return formatTokenAmount(balanceData, token?.decimals);
 };

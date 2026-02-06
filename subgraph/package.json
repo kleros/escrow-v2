@@ -1,6 +1,6 @@
 {
   "name": "@kleros/escrow-v2-subgraph",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "license": "MIT",
   "scripts": {
     "update:arbitrum-sepolia-devnet": "./scripts/update.sh arbitrumSepoliaDevnet arbitrum-sepolia",
@@ -13,6 +13,9 @@
     "deploy:arbitrum-sepolia-devnet": "graph deploy escrow-v2-devnet -l v$npm_package_version",
     "deploy:arbitrum-sepolia": "graph deploy escrow-v2-testnet -l v$npm_package_version",
     "deploy:arbitrum": "graph deploy escrow-v2-neo -l v$npm_package_version",
+    "deploy-goldsky:arbitrum-sepolia-devnet": "goldsky subgraph deploy escrow-v2-devnet/v$npm_package_version --path .",
+    "deploy-goldsky:arbitrum-sepolia": "goldsky subgraph deploy escrow-v2-testnet/v$npm_package_version --path .",
+    "deploy-goldsky:arbitrum": "goldsky subgraph deploy escrow-v2-mainnet/v$npm_package_version --path .",
     "create-local": "graph create --node http://localhost:8020/ kleros/escrow-v2-local",
     "remove-local": "graph remove --node http://localhost:8020/ kleros/escrow-v2-local",
     "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 kleros/escrow-v2-local --version-label v$(date +%s)",
@@ -27,6 +30,7 @@
     "@graphprotocol/graph-ts": "^0.37.0"
   },
   "devDependencies": {
+    "@goldskycom/cli": "^13.1.1",
     "@graphprotocol/graph-cli": "0.95.0",
     "@kleros/escrow-v2-eslint-config": "workspace:^",
     "@kleros/escrow-v2-prettier-config": "workspace:^",

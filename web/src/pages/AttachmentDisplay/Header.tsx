@@ -1,72 +1,35 @@
 import React from "react";
-import styled from "styled-components";
-
 import { useNavigate } from "react-router-dom";
 
 import { Button } from "@kleros/ui-components-library";
 
 import Arrow from "svgs/icons/arrow-left.svg";
 import PaperClip from "svgs/icons/paperclip.svg";
-
-import { responsiveSize } from "styles/responsiveSize";
-
-const Container = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 38px;
-`;
-
-const TitleContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 8px;
-`;
-
-const Title = styled.h1`
-  margin: 0px;
-  font-size: ${responsiveSize(16, 24)};
-`;
-
-const StyledPaperClip = styled(PaperClip)`
-  width: ${responsiveSize(16, 24)};
-  height: ${responsiveSize(16, 24)};
-  path {
-    fill: ${({ theme }) => theme.primaryPurple};
-  }
-`;
-
-const StyledButton = styled(Button)`
-  background-color: transparent;
-  padding: 0;
-  .button-text {
-    color: ${({ theme }) => theme.primaryBlue};
-    font-weight: 400;
-  }
-  .button-svg {
-    path {
-      fill: ${({ theme }) => theme.primaryBlue};
-    }
-  }
-  :focus,
-  :hover {
-    background-color: transparent;
-  }
-`;
+import clsx from "clsx";
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
 
   return (
-    <Container>
-      <TitleContainer>
-        <StyledPaperClip />
-        <Title>Attachment File</Title>{" "}
-      </TitleContainer>
-      <StyledButton text="Return" Icon={Arrow} onClick={() => navigate(-1)} />
-    </Container>
+    <div className="flex w-full justify-between items-center mb-10">
+      <div className="flex items-center gap-2">
+        <PaperClip className="size-fluid-16-24 fill-klerosUIComponentsPrimaryPurple" />
+        <h1 className="m-0 text-(length:--spacing-fluid-16-24)">Attachment File</h1>{" "}
+      </div>
+      <Button
+        className={clsx(
+          "bg-transparent p-0",
+          "[&_.button-text]:text-klerosUIComponentsPrimaryBlue [&_.button-text]:font-normal",
+          "[&_.button-svg_path]:fill-klerosUIComponentsPrimaryBlue",
+          "focus:bg-transparent hover:bg-transparent",
+          "focus:[&_.button-svg_path]:fill-klerosUIComponentsSecondaryBlue hover:[&_.button-svg_path]:fill-klerosUIComponentsSecondaryBlue",
+          "focus:[&_.button-text]:text-klerosUIComponentsSecondaryBlue hover:[&_.button-text]:text-klerosUIComponentsSecondaryBlue"
+        )}
+        text="Return"
+        Icon={Arrow}
+        onPress={() => navigate(-1)}
+      />
+    </div>
   );
 };
 

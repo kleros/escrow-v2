@@ -1,68 +1,40 @@
 import React from "react";
-import styled, { useTheme } from "styled-components";
-
 import DesktopHeader from "./DesktopHeader";
 import MobileHeader from "./MobileHeader";
 import { StatusBanner } from "subgraph-status";
 import { getGraphqlUrl } from "utils/getGraphqlUrl";
+import clsx from "clsx";
 
-const Container = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  position: sticky;
-  z-index: 10;
-  top: 0;
-  width: 100%;
-  background-color: ${({ theme }) => (theme.name === "dark" ? `${theme.lightBlue}A6` : theme.primaryPurple)};
-  backdrop-filter: ${({ theme }) => (theme.name === "dark" ? "blur(12px)" : "none")};
-  -webkit-backdrop-filter: ${({ theme }) => (theme.name === "dark" ? "blur(12px)" : "none")}; // Safari support
-`;
-
-export const PopupContainer = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 30;
-  background-color: ${({ theme }) => theme.blackLowOpacity};
-`;
-
-const HeaderContainer = styled.div`
-  width: 100%;
-  padding: 0px 24px;
-`;
-
-const StyledBanner = styled(StatusBanner)`
-  position: sticky !important;
-  .status-text {
-    h2 {
-      margin: 0;
-      line-height: 24px;
-    }
-  }
-`;
 const Header: React.FC = () => {
-  const theme = useTheme();
+  const SHOW_STATUS_BANNER = import.meta.env.REACT_APP_SHOW_STATUS_BANNER !== "false";
+
   return (
-    <Container>
-      <StyledBanner
-        autoHide
-        watcherOptions={{ threshold: 5000, interval: 60_000 }} // 5000 blocks threshold, 60 sec interval check
-        theme={{
-          colors: {
-            main: theme.whiteBackground,
-            primary: theme.primaryText,
-            secondary: theme.secondaryText,
-          },
-        }}
-        subgraphs={[{ name: "Kleros Escrow", url: getGraphqlUrl() }]}
-      />
-      <HeaderContainer>
+    <div
+      className={clsx(
+        "flex flex-wrap sticky z-10 top-0 w-full",
+        "bg-klerosUIComponentsPrimaryPurple dark:bg-light-blue-65 backdrop-blur-none dark:backdrop-blur-md"
+      )}
+    >
+      {SHOW_STATUS_BANNER && (
+        <StatusBanner
+          className="sticky! [&_.status-text_h2]:m-0 [&_.status-text_h2]:leading-6"
+          autoHide
+          watcherOptions={{ threshold: 5000, interval: 60_000 }} // 5000 blocks threshold, 60 sec interval check
+          theme={{
+            colors: {
+              main: "var(--klerosUIComponentsWhiteBackground)",
+              primary: "var(--klerosUIComponentsPrimaryText)",
+              secondary: "var(--klerosUIComponentsSecondaryText)",
+            },
+          }}
+          subgraphs={[{ name: "Kleros Escrow", url: getGraphqlUrl() }]}
+        />
+      )}
+      <div className="w-full px-6">
         <DesktopHeader />
         <MobileHeader />
-      </HeaderContainer>
-    </Container>
+      </div>
+    </div>
   );
 };
 

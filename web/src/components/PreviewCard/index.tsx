@@ -1,6 +1,4 @@
 import React from "react";
-import styled, { css } from "styled-components";
-import { landscapeStyle } from "styles/landscapeStyle";
 import { Card } from "@kleros/ui-components-library";
 import Header from "./Header";
 import TransactionInfo from "components/TransactionInfo";
@@ -8,42 +6,9 @@ import Terms from "./Terms";
 import EscrowTimeline from "./EscrowTimeline";
 import PreviewCardButtons from "pages/MyTransactions/TransactionDetails/PreviewCardButtons";
 import { DisputeRequest, HasToPayFee, Payment, SettlementProposal, TransactionResolved } from "src/graphql/graphql";
+import clsx from "clsx";
 
-export const StyledCard = styled(Card)<{ isPreview?: boolean }>`
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  padding: 20px 16px 16px;
-  width: 100%;
-  height: auto;
-
-  ${({ isPreview }) =>
-    isPreview &&
-    css`
-      padding-bottom: 36px;
-    `}
-
-  ${landscapeStyle(
-    () => css`
-      padding: 32px;
-      gap: 24px;
-    `
-  )}
-`;
-
-export const Divider = styled.hr`
-  display: flex;
-  border: none;
-  height: 1px;
-  background-color: ${({ theme }) => theme.stroke};
-  margin: 0;
-`;
-
-const TransactionInfoContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-`;
+const dividerStyle = "flex border-none h-px bg-klerosUIComponentsStroke m-0";
 
 interface IPreviewCard {
   escrowType: string;
@@ -58,6 +23,8 @@ interface IPreviewCard {
   sellerAddress: string;
   deadline: number;
   assetSymbol: string;
+  isNativeTransaction: boolean;
+  tokenDecimals?: number;
   overrideIsList: boolean;
   extraDescriptionUri: string;
   isPreview: boolean;
@@ -84,6 +51,8 @@ const PreviewCard: React.FC<IPreviewCard> = ({
   sellerAddress,
   deadline,
   assetSymbol,
+  isNativeTransaction,
+  tokenDecimals,
   overrideIsList,
   extraDescriptionUri,
   isPreview,
@@ -96,17 +65,17 @@ const PreviewCard: React.FC<IPreviewCard> = ({
   settlementTimeout,
   arbitrationCost,
 }) => (
-  <StyledCard {...{ isPreview }}>
+  <Card className={clsx("flex flex-col gap-4 lg:gap-6", "w-full h-auto p-4 pt-5 lg:p-8", isPreview && "pb-9")}>
     <Header {...{ escrowType, escrowTitle, status, transactionHash, isCard: false }} />
-    <TransactionInfoContainer>
-      <Divider />
+    <div className="flex flex-col gap-6">
+      <hr className={dividerStyle} />
       <TransactionInfo
         amount={sendingQuantity}
         isPreview={true}
         {...{ overrideIsList, deadline, sellerAddress, buyerAddress, assetSymbol }}
       />
-      <Divider />
-    </TransactionInfoContainer>
+      <hr className={dividerStyle} />
+    </div>
     <Terms
       {...{
         escrowType,
@@ -120,12 +89,14 @@ const PreviewCard: React.FC<IPreviewCard> = ({
         extraDescriptionUri,
       }}
     />
-    <Divider />
+    <hr className={dividerStyle} />
     <EscrowTimeline
       {...{
         isPreview,
         status,
         assetSymbol,
+        isNativeTransaction,
+        tokenDecimals,
         transactionCreationTimestamp,
         buyerAddress,
         sellerAddress,
@@ -139,7 +110,7 @@ const PreviewCard: React.FC<IPreviewCard> = ({
       }}
     />
     {!isPreview ? <PreviewCardButtons {...{ feeTimeout, settlementTimeout, arbitrationCost }} /> : null}
-  </StyledCard>
+  </Card>
 );
 
 export default PreviewCard;

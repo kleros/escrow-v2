@@ -17,11 +17,16 @@ const ClaimFullPaymentButton: React.FC = () => {
   const publicClient = usePublicClient();
   const { id } = useTransactionDetailsContext();
 
-  const { data: executeTransactionConfig, isLoading, isError } = useSimulateEscrowUniversalExecuteTransaction({
+  const {
+    data: executeTransactionConfig,
+    isLoading,
+    isError,
+  } = useSimulateEscrowUniversalExecuteTransaction({
     args: [id],
   });
 
-  const { writeContractAsync: executeTransaction } = useWriteEscrowUniversalExecuteTransaction(executeTransactionConfig);
+  const { writeContractAsync: executeTransaction } =
+    useWriteEscrowUniversalExecuteTransaction(executeTransactionConfig);
 
   const handleExecuteTransaction = () => {
     if (!isUndefined(executeTransaction)) {
@@ -47,11 +52,11 @@ const ClaimFullPaymentButton: React.FC = () => {
     <>
       <Button
         isLoading={isSending || isLoading}
-        disabled={isSending || isLoading || isError}
-        text={"No. Claim full payment"}
-        onClick={handleExecuteTransaction}
+        isDisabled={isSending || isLoading || isError}
+        text="No. Claim full payment"
+        onPress={handleExecuteTransaction}
       />
-      {isModalOpen ? <PaymentReleased toggleModal={toggleModal} /> : null}
+      <PaymentReleased isOpen={isModalOpen} toggleModal={toggleModal} />
     </>
   );
 };

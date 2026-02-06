@@ -1,8 +1,6 @@
 import React, { useEffect } from "react";
-import styled from "styled-components";
-import { responsiveSize } from "styles/responsiveSize";
 import { useParams } from "react-router-dom";
-import { formatEther } from "viem";
+import { formatETH, formatTokenAmount } from "utils/format";
 import { useTransactionDetailsContext } from "context/TransactionDetailsContext";
 import { isUndefined } from "utils/index";
 import { pickBufferFor } from "utils/bufferRules";
@@ -17,19 +15,6 @@ import useFetchIpfsJson from "hooks/useFetchIpfsJson";
 import { useTokenMetadata } from "hooks/useTokenMetadata";
 import BufferPeriodWarning from "./InfoCards/BufferPeriodWarning";
 
-const Container = styled.div``;
-
-const OverviewContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 32px;
-`;
-
-const Header = styled.h1`
-  margin-bottom: ${responsiveSize(12, 24)};
-  font-size: ${responsiveSize(20, 24)};
-`;
-
 const TransactionDetails: React.FC = () => {
   const { id } = useParams();
   const { data: transactionDetails } = useTransactionDetailsQuery(id);
@@ -40,6 +25,7 @@ const TransactionDetails: React.FC = () => {
   const nativeTokenSymbol = useNativeTokenSymbol();
   const { tokenMetadata } = useTokenMetadata(transactionDetails?.escrow?.token);
   const erc20TokenSymbol = tokenMetadata?.symbol;
+  const tokenDecimals = tokenMetadata?.decimals;
   const { setTransactionDetails } = useTransactionDetailsContext();
 
   const {
@@ -61,6 +47,12 @@ const TransactionDetails: React.FC = () => {
 
   const transactionInfo = useFetchIpfsJson(transactionUri);
   const assetSymbol = token ? erc20TokenSymbol : nativeTokenSymbol;
+  const isNativeTransaction = !token;
+  const formattedAmount = !isUndefined(amount)
+    ? isNativeTransaction
+      ? formatETH(amount)
+      : formatTokenAmount(amount, tokenDecimals)
+    : "";
 
   useEffect(() => {
     if (transactionDetails?.escrow) {
@@ -77,9 +69,9 @@ const TransactionDetails: React.FC = () => {
   const deliveryDeadlineMs = disputeDeadlineMs - bufferSecNumber * 1000;
 
   return (
-    <Container>
-      <Header>Transaction #{id}</Header>
-      <OverviewContainer>
+    <div>
+      <h1 className="mb-fluid-12-24 text-(length:--spacing-fluid-20-24)">Transaction #{id}</h1>
+      <div className="flex flex-col gap-8">
         <BufferPeriodWarning disputeDeadlineMs={disputeDeadlineMs} deliveryDeadlineMs={deliveryDeadlineMs} />
         <PreviewCard
           escrowType={"general"}
@@ -90,10 +82,12 @@ const TransactionDetails: React.FC = () => {
           buyerAddress={buyer}
           sellerAddress={seller}
           transactionCreationTimestamp={timestamp}
-          sendingQuantity={!isUndefined(amount) ? formatEther(amount) : ""}
+          sendingQuantity={formattedAmount}
           deadline={deliveryDeadlineMs}
           overrideIsList={false}
-          amount={!isUndefined(amount) ? formatEther(amount) : ""}
+          amount={formattedAmount}
+          isNativeTransaction={isNativeTransaction}
+          tokenDecimals={tokenDecimals}
           isPreview={false}
           feeTimeout={escrowParameters?.escrowParameters.feeTimeout}
           settlementTimeout={escrowParameters?.escrowParameters.settlementTimeout}
@@ -112,8 +106,8 @@ const TransactionDetails: React.FC = () => {
         />
         {status === "NoDispute" && payments?.length === 0 ? <WasItFulfilled /> : null}
         <InfoCards />
-      </OverviewContainer>
-    </Container>
+      </div>
+    </div>
   );
 };
 

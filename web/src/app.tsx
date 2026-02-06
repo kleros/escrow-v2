@@ -3,10 +3,12 @@ import { Navigate, Route } from "react-router-dom";
 import { SentryRoutes } from "./utils/sentry";
 import "react-loading-skeleton/dist/skeleton.css";
 import "react-toastify/dist/ReactToastify.css";
+import "overlayscrollbars/styles/overlayscrollbars.css";
+import "./global.css";
 import Web3Provider from "context/Web3Provider";
 import IsListProvider from "context/IsListProvider";
 import QueryClientProvider from "context/QueryClientProvider";
-import StyledComponentsProvider from "context/StyledComponentsProvider";
+import ThemeProvider from "context/ThemeProvider";
 import GraphqlBatcherProvider from "context/GraphqlBatcher";
 import Layout from "layout/index";
 import NewTransaction from "./pages/NewTransaction";
@@ -18,7 +20,7 @@ import Settings from "./pages/Settings";
 
 const App: React.FC = () => {
   return (
-    <StyledComponentsProvider>
+    <ThemeProvider>
       <Web3Provider>
         <QueryClientProvider>
           <AtlasProvider>
@@ -41,7 +43,7 @@ const App: React.FC = () => {
           </AtlasProvider>
         </QueryClientProvider>
       </Web3Provider>
-    </StyledComponentsProvider>
+    </ThemeProvider>
   );
 };
 

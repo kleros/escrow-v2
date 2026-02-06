@@ -1,35 +1,25 @@
-import React, { useRef } from "react";
+import React from "react";
+import clsx from "clsx";
+import { Modal } from "@kleros/ui-components-library";
+import { baseModalStyle } from "src/styles/modalStyles";
 import Description from "./Description";
-import { Overlay } from "components/Overlay";
-import Header from "./Header";
-import { useClickAway } from "react-use";
 import Buttons from "./Buttons";
 import FeeRequired from "./FeeRequired";
-import { StyledModal } from "../StyledModal";
-import styled from "styled-components";
-
-const ReStyledModal = styled(StyledModal)`
-  gap: 32px;
-`;
 
 interface IRaiseDisputeModal {
+  isOpen: boolean;
   toggleModal: () => void;
   arbitrationCost: bigint;
 }
 
-const RaiseDisputeModal: React.FC<IRaiseDisputeModal> = ({ toggleModal, arbitrationCost }) => {
-  const containerRef = useRef(null);
-  useClickAway(containerRef, () => toggleModal());
-
+const RaiseDisputeModal: React.FC<IRaiseDisputeModal> = ({ isOpen, toggleModal, arbitrationCost }) => {
   return (
-    <Overlay>
-      <ReStyledModal ref={containerRef}>
-        <Header />
-        <Description />
-        <FeeRequired {...{ arbitrationCost }} />
-        <Buttons {...{ toggleModal, arbitrationCost }} />
-      </ReStyledModal>
-    </Overlay>
+    <Modal className={clsx(baseModalStyle, "gap-8")} isOpen={isOpen} isDismissable onOpenChange={toggleModal}>
+      <h1 className="m-0">Raise a dispute</h1>
+      <Description />
+      <FeeRequired {...{ arbitrationCost }} />
+      <Buttons {...{ toggleModal, arbitrationCost }} />
+    </Modal>
   );
 };
 

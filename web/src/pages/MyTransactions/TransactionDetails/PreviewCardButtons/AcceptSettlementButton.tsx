@@ -16,7 +16,11 @@ const AcceptButton: React.FC = () => {
   const { id } = useTransactionDetailsContext();
   const refetchQuery = useQueryRefetch();
 
-  const { data: acceptSettlementConfig, isLoading, isError } = useSimulateEscrowUniversalAcceptSettlement({
+  const {
+    data: acceptSettlementConfig,
+    isLoading,
+    isError,
+  } = useSimulateEscrowUniversalAcceptSettlement({
     args: [BigInt(id)],
   });
 
@@ -42,9 +46,9 @@ const AcceptButton: React.FC = () => {
   return (
     <Button
       isLoading={isSending || isLoading}
-      disabled={isSending || isLoading || isError}
+      isDisabled={isSending || isLoading || isError}
       text="Accept"
-      onClick={handleAcceptSettlement}
+      onPress={handleAcceptSettlement}
     />
   );
 };

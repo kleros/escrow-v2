@@ -76,6 +76,7 @@ const deployEscrow = async (
   const PNK = await deployments.getOrNull("PNK");
   const USDC = await deployments.getOrNull("USDC");
   const USDCe = await deployments.getOrNull("USDCe"); // USDC.e (Bridged USDC)
+  const USDT = await deployments.getOrNull("USDT");
   const caps = {
     [ethers.ZeroAddress]: ethers.parseUnits("0.3"),
     [WETH.address]: ethers.parseUnits("0.3"),
@@ -89,6 +90,9 @@ const deployEscrow = async (
   }
   if (USDCe) {
     caps[USDCe.address] = ethers.parseUnits("1000", 6);
+  }
+  if (USDT) {
+    caps[USDT.address] = ethers.parseUnits("1000", 6);
   }
   for (const [token, cap] of Object.entries(caps)) {
     console.log("Setting cap for", token, cap);

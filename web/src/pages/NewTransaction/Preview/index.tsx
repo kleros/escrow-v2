@@ -1,18 +1,11 @@
 import React from "react";
-import styled from "styled-components";
 import { useEnsAddress } from "wagmi";
 import { useNewTransactionContext } from "context/NewTransactionContext";
 import PreviewCard from "components/PreviewCard";
-import Header from "./Header";
 import NavigationButtons from "../NavigationButtons";
 import { useNativeTokenSymbol } from "hooks/useNativeTokenSymbol";
 import { ensDomainPattern } from "utils/validateAddress";
-
-const Container = styled.div`
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-`;
+import clsx from "clsx";
 
 const Preview: React.FC = () => {
   const {
@@ -44,12 +37,21 @@ const Preview: React.FC = () => {
   const resolvedSellerAddress = sellerEnsResolvedAddress || sellerAddress;
 
   return (
-    <Container>
-      <Header />
+    <div className="flex flex-col items-center">
+      <h1
+        className={clsx(
+          "m-0 mt-fluid-4-20 mb-fluid-20-24",
+          "font-normal text-klerosUIComponentsSecondaryPurple text-(length:--spacing-fluid-20-24)"
+        )}
+      >
+        Preview
+      </h1>
       <PreviewCard
         buyerAddress={resolvedBuyerAddress}
         sellerAddress={resolvedSellerAddress}
         assetSymbol={isNativeTransaction ? nativeTokenSymbol : sendingToken.symbol}
+        isNativeTransaction={isNativeTransaction}
+        tokenDecimals={sendingToken.decimals}
         overrideIsList={false}
         isPreview={true}
         deadline={new Date(deadline).getTime()}
@@ -63,7 +65,7 @@ const Preview: React.FC = () => {
         }}
       />
       <NavigationButtons prevRoute="/new-transaction/notifications" nextRoute="/new-transaction/deliverable" />
-    </Container>
+    </div>
   );
 };
 

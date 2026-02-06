@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useTokenMetadata } from "./useTokenMetadata";
 import { IToken } from "context/NewTransactionContext";
+import { TOKENS_STORAGE_KEY } from "utils/initializeTokens";
 
 export const useFilteredTokens = (
   searchQuery: string,
@@ -23,20 +24,27 @@ export const useFilteredTokens = (
           filtered = [sendingToken, ...tokens.filter((token) => token.address !== sendingToken.address)];
         }
       } else if (tokenMetadata) {
-        const resultToken = {
-          symbol: tokenMetadata.symbol,
-          address: searchQuery.toLowerCase(),
-          logo: tokenMetadata.logo,
-        };
+        const existingToken = tokens.find((t) => t.address.toLowerCase() === searchQuery.toLowerCase());
 
-        const updatedTokens = [...tokens, resultToken];
-        const uniqueTokens = Array.from(new Set(updatedTokens.map((a) => a.address))).map((address) => {
-          return updatedTokens.find((a) => a.address === address);
-        });
+        if (existingToken) {
+          filtered = [existingToken];
+        } else {
+          const resultToken = {
+            symbol: tokenMetadata.symbol,
+            address: searchQuery.toLowerCase(),
+            logo: tokenMetadata.logo,
+            decimals: tokenMetadata.decimals,
+          };
 
-        filtered = [resultToken];
-        setTokens(uniqueTokens);
-        localStorage.setItem("tokens", JSON.stringify(uniqueTokens));
+          const updatedTokens = [...tokens, resultToken];
+          const uniqueTokens = Array.from(new Set(updatedTokens.map((a) => a.address))).map((address) => {
+            return updatedTokens.find((a) => a.address === address);
+          });
+
+          filtered = [resultToken];
+          setTokens(uniqueTokens);
+          localStorage.setItem(TOKENS_STORAGE_KEY, JSON.stringify(uniqueTokens));
+        }
       } else {
         filtered = tokens.filter((token) => token.symbol.toLowerCase().includes(searchQuery.toLowerCase()));
       }

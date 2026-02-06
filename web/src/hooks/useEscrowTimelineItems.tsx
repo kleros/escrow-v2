@@ -1,21 +1,29 @@
 import React from "react";
 import { useEffect, useMemo, useState } from "react";
-import { DefaultTheme, useTheme } from "styled-components";
-import { formatEther } from "viem";
+import { formatETH, formatTokenAmount } from "utils/format";
 import { getFormattedDate } from "utils/getFormattedDate";
 import { resolutionToString } from "utils/resolutionToString";
 import { formatTimeoutDuration } from "utils/formatTimeoutDuration";
 import CheckCircleOutlineIcon from "components/StyledIcons/CheckCircleOutlineIcon";
 import LawBalanceIcon from "components/StyledIcons/LawBalanceIcon";
-import { StyledSkeleton } from "components/StyledSkeleton";
 import { DisputeRequest, HasToPayFee, Payment, SettlementProposal, TransactionResolved } from "src/graphql/graphql";
+import Skeleton from "react-loading-skeleton";
+
+type Variant = "primaryBlue" | "secondaryBlue" | "warning" | "secondaryPurple" | "success";
+const variantToCssVar: Record<Variant, string> = {
+  primaryBlue: "--klerosUIComponentsPrimaryBlue",
+  secondaryBlue: "--klerosUIComponentsSecondaryBlue",
+  warning: "--klerosUIComponentsWarning",
+  secondaryPurple: "--klerosUIComponentsSecondaryPurple",
+  success: "--klerosUIComponentsSuccess",
+};
 
 interface TimelineItem {
   title: string;
   party?: string;
   subtitle: string;
   rightSided: boolean;
-  variant: keyof DefaultTheme;
+  variant: string;
   Icon?: React.ElementType;
 }
 
@@ -23,11 +31,15 @@ function calculateTimeLeft(timestamp: number, timeout: number, currentTime: numb
   return Math.max(timeout - (currentTime - timestamp), 0);
 }
 
+function getThemeColor(variant: Variant): string {
+  return getComputedStyle(document.documentElement).getPropertyValue(variantToCssVar[variant]).trim();
+}
+
 function createTimelineItem(
   formattedDate: string,
   title: string,
   party: string,
-  variant: keyof DefaultTheme,
+  variant: Variant,
   Icon?: React.ElementType
 ): TimelineItem {
   return {
@@ -35,7 +47,7 @@ function createTimelineItem(
     party,
     subtitle: formattedDate,
     rightSided: true,
-    variant,
+    variant: getThemeColor(variant),
     ...(Icon && { Icon }),
   };
 }
@@ -45,6 +57,8 @@ const useEscrowTimelineItems = (
   transactionCreationTimestamp: number,
   status: string,
   assetSymbol: string,
+  isNativeTransaction: boolean,
+  tokenDecimals?: number,
   buyer: string,
   seller: string,
   payments: Payment[],
@@ -55,7 +69,6 @@ const useEscrowTimelineItems = (
   feeTimeout: number,
   settlementTimeout: number
 ): TimelineItem[] => {
-  const theme = useTheme();
   const [currentTime, setCurrentTime] = useState<number>(Math.floor(Date.now() / 1000));
 
   useEffect(() => {
@@ -69,20 +82,23 @@ const useEscrowTimelineItems = (
     const formattedCreationDate = isPreview
       ? getFormattedDate(new Date())
       : getFormattedDate(new Date(transactionCreationTimestamp * 1000));
-    timelineItems.push(createTimelineItem(formattedCreationDate, "Escrow created", "", theme.primaryBlue));
+    timelineItems.push(createTimelineItem(formattedCreationDate, "Escrow created", "", "primaryBlue"));
 
     if (!isPreview) {
       payments?.forEach((payment) => {
         const isBuyer = payment.party.toLowerCase() === buyer.toLowerCase();
         const formattedDate = getFormattedDate(new Date(payment.timestamp * 1000));
+        const formattedAmount = isNativeTransaction
+          ? formatETH(payment.amount)
+          : formatTokenAmount(payment.amount, tokenDecimals);
         const title = (
           <>
-            The {isBuyer ? "buyer" : "seller"} paid {formatEther(payment.amount)}{" "}
-            {assetSymbol ? assetSymbol : <StyledSkeleton width={30} />}
+            The {isBuyer ? "buyer" : "seller"} paid {formattedAmount}{" "}
+            {assetSymbol ? assetSymbol : <Skeleton className="z-0" width={30} />}
           </>
         );
 
-        timelineItems.push(createTimelineItem(formattedDate, title, "", theme.secondaryBlue));
+        timelineItems.push(createTimelineItem(formattedDate, title, "", "secondaryBlue"));
       });
 
       settlementProposals?.forEach((proposal, index) => {
@@ -106,13 +122,16 @@ const useEscrowTimelineItems = (
           } answer [Timeout: ${formatTimeoutDuration(timeLeft)}]`;
         }
 
+        const formattedAmount = isNativeTransaction
+          ? formatETH(proposal.amount)
+          : formatTokenAmount(proposal.amount, tokenDecimals);
         const title = (
           <>
-            The {proposal.party === "1" ? "buyer" : "seller"} proposed: Pay {formatEther(proposal.amount)}{" "}
-            {assetSymbol ? assetSymbol : <StyledSkeleton width={30} />}
+            The {proposal.party === "1" ? "buyer" : "seller"} proposed: Pay {formattedAmount}{" "}
+            {assetSymbol ? assetSymbol : <Skeleton className="z-0" width={30} />}
           </>
         );
-        timelineItems.push(createTimelineItem(formattedDate, title, subtitle, theme.warning));
+        timelineItems.push(createTimelineItem(formattedDate, title, subtitle, "warning"));
       });
 
       hasToPayFees?.forEach((fee) => {
@@ -127,7 +146,7 @@ const useEscrowTimelineItems = (
           ? "Arbitration fees deposited"
           : `${fee.party === "2" ? "Seller" : "Buyer"}${timeoutCountdownMessage}`;
 
-        timelineItems.push(createTimelineItem(formattedDate, title, party, theme.secondaryPurple));
+        timelineItems.push(createTimelineItem(formattedDate, title, party, "secondaryPurple"));
       });
 
       if (disputeRequest) {
@@ -137,7 +156,7 @@ const useEscrowTimelineItems = (
             formattedDate,
             "Dispute created",
             `Case #${disputeRequest.id}`,
-            theme.secondaryPurple,
+            "secondaryPurple",
             LawBalanceIcon
           )
         );
@@ -152,7 +171,7 @@ const useEscrowTimelineItems = (
               formattedDate,
               "Concluded",
               resolutionToString(resolutionEvent.resolution),
-              theme.success,
+              "success",
               CheckCircleOutlineIcon
             )
           );
@@ -173,8 +192,9 @@ const useEscrowTimelineItems = (
     feeTimeout,
     settlementTimeout,
     currentTime,
-    theme,
     assetSymbol,
+    isNativeTransaction,
+    tokenDecimals,
     buyer,
     seller,
   ]);

@@ -1,5 +1,4 @@
 import React from "react";
-import styled, { css } from "styled-components";
 
 import Identicon from "react-identicons";
 import { isAddress } from "viem";
@@ -9,111 +8,7 @@ import { useAccount, useChainId, useEnsAvatar, useEnsName } from "wagmi";
 import { getChain } from "consts/chains";
 import { shortenAddress } from "utils/shortenAddress";
 
-import { landscapeStyle } from "styles/landscapeStyle";
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: auto;
-  align-items: flex-start;
-  gap: 8px;
-  align-items: center;
-  background-color: ${({ theme }) => theme.whiteBackground};
-  padding: 0px;
-  cursor: pointer;
-
-  &:hover {
-    label {
-      color: ${({ theme }) => theme.white} !important;
-      transition: color 0.2s;
-    }
-  }
-
-  ${landscapeStyle(
-    () => css`
-      background-color: ${({ theme }) => theme.whiteLowOpacitySubtle};
-      &:hover {
-        transition: background-color 0.1s;
-        background-color: ${({ theme }) => theme.whiteLowOpacityStrong};
-      }
-      flex-direction: row;
-      align-content: center;
-      border-radius: 300px;
-      gap: 0px;
-      padding: 0 12px;
-    `
-  )}
-`;
-
-const AccountContainer = styled.div`
-  min-height: 32px;
-  display: flex;
-  align-items: center;
-  width: fit-content;
-  gap: 8px;
-
-  > label {
-    font-size: 16px;
-    font-weight: 600;
-  }
-
-  ${landscapeStyle(
-    () => css`
-      gap: 12px;
-      > label {
-        color: ${({ theme }) => theme.white}CC !important;
-        font-weight: 400;
-        font-size: 14px;
-      }
-    `
-  )}
-`;
-
-const ChainConnectionContainer = styled.div`
-  display: flex;
-  width: fit-content;
-  min-height: 32px;
-  align-items: center;
-  padding-left: 0px;
-  > label {
-    color: ${({ theme }) => theme.success};
-    font-size: 16px;
-
-    font-weight: 500;
-  }
-
-  :before {
-    content: "";
-    width: 8px;
-    height: 8px;
-    margin: 0px 13px 0px 3px;
-    border-radius: 50%;
-    background-color: ${({ theme }) => theme.success};
-  }
-
-  ${landscapeStyle(
-    () => css`
-      display: none;
-    `
-  )}
-`;
-
-const StyledIdenticon = styled(Identicon)<{ size: `${number}` }>`
-  align-items: center;
-  svg {
-    width: ${({ size }) => size + "px"};
-    height: ${({ size }) => size + "px"};
-  }
-`;
-
-const StyledAvatar = styled.img<{ size: `${number}` }>`
-  align-items: center;
-  object-fit: cover;
-  border-radius: 50%;
-  width: ${({ size }) => size + "px"};
-  height: ${({ size }) => size + "px"};
-`;
+import clsx from "clsx";
 
 interface IIdenticonOrAvatar {
   size?: `${number}`;
@@ -134,9 +29,9 @@ export const IdenticonOrAvatar: React.FC<IIdenticonOrAvatar> = ({ size = "16", a
   });
 
   return avatar ? (
-    <StyledAvatar src={avatar} alt="avatar" size={size} />
+    <img className="object-cover rounded-full" src={avatar} alt="avatar" width={size} height={size} />
   ) : (
-    <StyledIdenticon size={size} string={address} />
+    <Identicon size={size} string={address} />
   );
 };
 
@@ -164,15 +59,34 @@ export const ChainDisplay: React.FC = () => {
 
 const AccountDisplay: React.FC = () => {
   return (
-    <Container>
-      <AccountContainer>
+    <div
+      className={clsx(
+        "flex flex-col justify-between items-center gap-2 h-auto p-0",
+        "lg:flex-row lg:content-center lg:rounded-[300px] lg:gap-0 lg:py-0 lg:px-3",
+        "cursor-pointer bg-klerosUIComponentsWhiteBackground lg:bg-white-low-opacity-subtle",
+        "lg:hover:bg-white-low-opacity-strong lg:hover:transition-[background-color_0.1s]",
+        "hover:[&_label]:text-white hover:[&_label]:transition-colors hover:[&_label]:duration-200"
+      )}
+    >
+      <div
+        className={clsx(
+          "flex items-center w-fit min-h-8 gap-2 lg:gap-3",
+          "[&>label]:text-base [&>label]:font-semibold lg:[&>label]:text-sm lg:[&>label]:font-normal"
+        )}
+      >
         <IdenticonOrAvatar size="32" />
         <AddressOrName />
-      </AccountContainer>
-      <ChainConnectionContainer>
+      </div>
+      <div
+        className={clsx(
+          "flex w-fit min-h-8 items-center pl-0 lg:hidden",
+          "[&>label]:text-klerosUIComponentsSuccess [&>label]:text-base [&>label]:font-medium",
+          "before:content-[''] before:w-2 before:h-2 before:rounded-full before:bg-klerosUIComponentsSuccess before:my-0 before:mr-[13px] before:ml-[3px]"
+        )}
+      >
         <ChainDisplay />
-      </ChainConnectionContainer>
-    </Container>
+      </div>
+    </div>
   );
 };
 

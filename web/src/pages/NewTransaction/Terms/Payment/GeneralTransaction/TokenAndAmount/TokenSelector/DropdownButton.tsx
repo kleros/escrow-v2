@@ -1,64 +1,30 @@
 import React from "react";
-import styled from "styled-components";
-import { hoverShortTransitionTiming } from "styles/commonStyles";
 import Skeleton from "react-loading-skeleton";
 import TokenIcon from "./TokenItem/TokenIcon";
-
-const Container = styled.div`
-  ${hoverShortTransitionTiming}
-  border: 1px solid ${({ theme }) => theme.stroke};
-  border-radius: 3px;
-  width: 186px;
-  height: 45px;
-  position: relative;
-  padding: 9.5px 14px;
-  cursor: pointer;
-  background: ${({ theme }) => theme.whiteBackground};
-  color: ${({ theme }) => theme.primaryText};
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  :hover {
-    background-color: ${({ theme }) => theme.lightGrey};
-  }
-`;
-
-const DropdownArrow = styled.span`
-  border: solid ${({ theme }) => theme.stroke};
-  border-width: 0 1px 1px 0;
-  display: inline-block;
-  padding: 3px;
-  transform: rotate(45deg);
-  margin-left: 8px;
-`;
-
-const DropdownContent = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-`;
-
-const LogoSkeleton = styled(Skeleton)`
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  margin-bottom: 2px;
-`;
-
-const SymbolSkeleton = styled(Skeleton)`
-  width: 40px;
-  height: 16px;
-`;
+import clsx from "clsx";
 
 export const DropdownButton = ({ loading, sendingToken, onClick }) => {
   return (
-    <Container onClick={onClick}>
-      <DropdownContent>
-        {loading ? <LogoSkeleton /> : <TokenIcon symbol={sendingToken.symbol} logo={sendingToken.logo} />}
-        {loading ? <SymbolSkeleton /> : sendingToken?.symbol}
-      </DropdownContent>
-      <DropdownArrow />
-    </Container>
+    <div
+      className={clsx(
+        "relative flex items-center justify-between",
+        "h-[45px] w-48 py-2.5 px-3.5",
+        "cursor-pointer transition duration-100",
+        "border rounded-base border-klerosUIComponentsStroke",
+        "text-klerosUIComponentsPrimaryText",
+        "bg-klerosUIComponentsWhiteBackground hover:bg-klerosUIComponentsLightGrey"
+      )}
+      onClick={onClick}
+    >
+      <div className="flex items-center gap-2">
+        {loading ? (
+          <Skeleton className="rounded-full mb-0.5" width={24} height={24} />
+        ) : (
+          <TokenIcon symbol={sendingToken.symbol} logo={sendingToken.logo} />
+        )}
+        {loading ? <Skeleton width={40} height={16} /> : sendingToken?.symbol}
+      </div>
+      <span className="inline-block ml-2 p-1 border-r border-b border-klerosUIComponentsStroke rotate-45" />
+    </div>
   );
 };

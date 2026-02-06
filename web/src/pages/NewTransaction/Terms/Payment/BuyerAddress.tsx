@@ -1,78 +1,11 @@
 import React, { useState, useEffect, useMemo } from "react";
-import styled, { css } from "styled-components";
-import { responsiveSize } from "styles/responsiveSize";
-import { landscapeStyle } from "styles/landscapeStyle";
-import { Field } from "@kleros/ui-components-library";
+import { TextField } from "@kleros/ui-components-library";
 import { useAccount, useEnsAddress, useEnsName } from "wagmi";
 import { useDebounce } from "react-use";
 import { useNewTransactionContext } from "context/NewTransactionContext";
 import { ensDomainPattern, validateAddress } from "utils/validateAddress";
-import { isEmpty } from "src/utils";
+import { cn, isEmpty } from "src/utils";
 import SimpleToggleButton from "components/SimpleToggleButton";
-
-const Container = styled.div`
-  margin: 12px 0;
-`;
-
-const InfoRow = styled.div`
-  display: flex;
-  align-items: baseline;
-  justify-content: center;
-  margin-bottom: 8px;
-  gap: 8px;
-`;
-
-const SimpleToggleButtonContainer = styled.div`
-  margin-bottom: 8px;
-`;
-
-const StyledField = styled(Field)`
-  margin-bottom: ${responsiveSize(68, 40)};
-
-  small {
-    margin-top: 6px;
-    svg {
-      margin-top: 8px;
-    }
-  }
-
-  input {
-    font-size: 16px;
-  }
-
-  ${landscapeStyle(
-    () => css`
-      width: ${responsiveSize(342, 574)};
-    `
-  )};
-`;
-
-const FromConnectedAddress = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 6px;
-`
-
-const Collapse = styled.div<{ $open: boolean; }>`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  max-height: ${({ $open }) => ($open ? "160px" : "0")};
-  opacity: ${({ $open }) => ($open ? 1 : 0)};
-  overflow: hidden;
-  transition: max-height 0.5s, opacity 0.5s ease;
-`;
-
-const SecondaryLabel = styled.label`
-  color: ${({ theme }) => theme.secondaryText};
-  font-size: 12px;
-`;
-
-const PrimaryLabel = styled.label`
-  color: ${({ theme }) => theme.primaryText};
-  font-size: 12px;
-`;
 
 const BuyerAddress: React.FC = () => {
   const { address: walletAddress } = useAccount();
@@ -81,13 +14,8 @@ const BuyerAddress: React.FC = () => {
     chainId: 1,
   });
 
-  const {
-    buyerAddress,
-    setBuyerAddress,
-    isBuyerAddressCustom,
-    setIsBuyerAddressCustom,
-    setIsBuyerAddressResolved,
-  } = useNewTransactionContext();
+  const { buyerAddress, setBuyerAddress, isBuyerAddressCustom, setIsBuyerAddressCustom, setIsBuyerAddressResolved } =
+    useNewTransactionContext();
 
   const displayAddress = useMemo(() => {
     if (ensName) return ensName;
@@ -120,10 +48,6 @@ const BuyerAddress: React.FC = () => {
     }
   }, [debouncedAddress, ensResult.data, isBuyerAddressCustom, setIsBuyerAddressResolved]);
 
-  const handleWrite = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setBuyerAddress(e.target.value);
-  };
-
   const message = useMemo(() => {
     if (!isBuyerAddressCustom) return "";
     if (isEmpty(debouncedAddress) || isValid) {
@@ -138,13 +62,13 @@ const BuyerAddress: React.FC = () => {
   }, [debouncedAddress, isValid, isBuyerAddressCustom]);
 
   return (
-    <Container>
+    <div className="my-3">
       {!isBuyerAddressCustom && (
-        <InfoRow>
-          <FromConnectedAddress>
-            <SecondaryLabel>from:</SecondaryLabel>
-            <PrimaryLabel>{displayAddress}</PrimaryLabel>
-          </FromConnectedAddress>
+        <div className="flex items-baseline justify-center gap-2 mb-2">
+          <div className="flex flex-row gap-1.5">
+            <label className="text-xs text-klerosUIComponentsSecondaryText">from:</label>
+            <label className="text-xs text-klerosUIComponentsPrimaryText">{displayAddress}</label>
+          </div>
           <SimpleToggleButton
             isOpen={false}
             label="Set buyer as different address"
@@ -156,11 +80,17 @@ const BuyerAddress: React.FC = () => {
               setIsValid(true);
             }}
           />
-        </InfoRow>
+        </div>
       )}
 
-      <Collapse $open={isBuyerAddressCustom}>
-        <SimpleToggleButtonContainer>
+      <div
+        className={cn(
+          "flex flex-col justify-center items-center",
+          "overflow-hidden transition-[max-height,opacity] duration-500 ease-in-out",
+          isBuyerAddressCustom ? "max-h-40 opacity-100" : "max-h-0 opacity-0"
+        )}
+      >
+        <div className="mb-2">
           <SimpleToggleButton
             isOpen
             label={`Set buyer as the current address: ${displayAddress}`}
@@ -170,18 +100,18 @@ const BuyerAddress: React.FC = () => {
               setIsBuyerAddressResolved(true);
             }}
           />
-        </SimpleToggleButtonContainer>
-        <StyledField
-          type="text"
+        </div>
+        <TextField
+          aria-label="Buyer address"
+          className="lg:w-fluid-342-574"
           value={buyerAddress}
-          onChange={handleWrite}
+          onChange={(value) => setBuyerAddress(value)}
           placeholder="eg. 0x123ABC... or john.eth"
           variant={variant}
           message={message}
-          maxLength={42}
         />
-      </Collapse>
-    </Container>
+      </div>
+    </div>
   );
 };
 

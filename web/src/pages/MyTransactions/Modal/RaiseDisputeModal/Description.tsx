@@ -1,14 +1,8 @@
 import React from "react";
-import styled from "styled-components";
-
-const StyledP = styled.p`
-  color: ${({ theme }) => theme.secondaryText};
-  margin: 0;
-`;
 
 const Description: React.FC = () => {
   return (
-    <StyledP>
+    <p className="m-0 text-klerosUIComponentsSecondaryText">
       In order to raise a dispute, both parties involved need to deposit the arbitration fees. The fees are used to pay
       the jurors for their work.
       <br />
@@ -20,7 +14,7 @@ const Description: React.FC = () => {
       <br />
       After the juror's decision, both sides can still appeal the case if not satisfied with the result. It leads to
       another round with different jurors.
-    </StyledP>
+    </p>
   );
 };
 export default Description;

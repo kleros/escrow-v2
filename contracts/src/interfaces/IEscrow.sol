@@ -2,7 +2,7 @@
 
 pragma solidity 0.8.24;
 
-import "./Types.sol";
+import {IERC20, Party, Status, Resolution, Transaction} from "./Types.sol";
 
 interface IEscrow {
     // ************************************* //
@@ -76,7 +76,7 @@ interface IEscrow {
     /// @dev Create a transaction.
     /// @param _deadline Time after which a party can automatically execute the arbitrable transaction.
     /// @param _transactionUri The IPFS Uri Hash of the transaction.
-    /// @param _buyer Party that pays for the transaction. Note that msg.sender can provide finds on their behalf.
+    /// @param _buyer Party that pays for the transaction. Note that msg.sender can provide funds on their behalf.
     /// @param _seller The recipient of the transaction.
     /// @return transactionID The index of the transaction.
     function createNativeTransaction(
@@ -91,7 +91,7 @@ interface IEscrow {
     /// @param _token The ERC20 token contract.
     /// @param _deadline Time after which a party can automatically execute the arbitrable transaction.
     /// @param _transactionUri The IPFS Uri Hash of the transaction.
-    /// @param _buyer Party that pays for the transaction. Note that msg.sender can provide finds on their behalf.
+    /// @param _buyer Party that pays for the transaction. Note that msg.sender can provide funds on their behalf.
     /// @param _seller The recipient of the transaction.
     /// @return transactionID The index of the transaction.
     function createERC20Transaction(
@@ -156,6 +156,43 @@ interface IEscrow {
     /// @dev Getter to know the count of transactions.
     /// @return The count of transactions.
     function getTransactionCount() external view returns (uint256);
+
+    /// @dev Getter for transaction details.
+    /// @param _transactionID The index of the transaction.
+    /// @return buyer The buyer address.
+    /// @return seller The seller address.
+    /// @return amount The escrowed amount.
+    /// @return settlementBuyer Settlement amount proposed by the buyer.
+    /// @return settlementSeller Settlement amount proposed by the seller.
+    /// @return deadline The deadline timestamp.
+    /// @return disputeID The dispute ID if any.
+    /// @return buyerFee Total fees paid by the buyer.
+    /// @return sellerFee Total fees paid by the seller.
+    /// @return lastFeePaymentTime Timestamp of last fee payment or settlement proposal.
+    /// @return status Current status.
+    /// @return token Payment token (zero address for native).
+    function transactions(uint256 _transactionID)
+        external
+        view
+        returns (
+            address payable buyer,
+            address payable seller,
+            uint256 amount,
+            uint256 settlementBuyer,
+            uint256 settlementSeller,
+            uint256 deadline,
+            uint256 disputeID,
+            uint256 buyerFee,
+            uint256 sellerFee,
+            uint256 lastFeePaymentTime,
+            Status status,
+            IERC20 token
+        );
+
+    /// @dev Getter to map a dispute ID to its transaction ID.
+    /// @param _disputeID The dispute identifier from the arbitrator.
+    /// @return The corresponding transaction ID.
+    function disputeIDtoTransactionID(uint256 _disputeID) external view returns (uint256);
 
     // ************************************* //
     // *              Errors               * //

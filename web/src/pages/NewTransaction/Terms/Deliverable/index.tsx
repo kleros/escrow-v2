@@ -1,53 +1,14 @@
 import React from "react";
-import styled, { css } from "styled-components";
-import { landscapeStyle } from "styles/landscapeStyle";
 import { errorToast } from "utils/wrapWithToast";
-import { FileUploader, Textarea } from "@kleros/ui-components-library";
+import { FileUploader } from "@kleros/ui-components-library";
+import MarkdownEditor from "components/MarkdownEditor";
 import { useNewTransactionContext } from "context/NewTransactionContext";
-import { responsiveSize } from "styles/responsiveSize";
 import NavigationButtons from "../../NavigationButtons";
 import TokenTransaction from "../Payment/TokenTransaction";
 import Header from "pages/NewTransaction/Header";
 import { Roles, useAtlasProvider } from "@kleros/kleros-app";
 import { getFileUploaderMsg } from "src/utils";
 import useIsDesktop from "hooks/useIsDesktop";
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-
-const StyledTextArea = styled(Textarea)`
-  width: 84vw;
-  height: 200px;
-  margin-bottom: 16px;
-  textarea {
-    font-size: 16px;
-  }
-
-  ${landscapeStyle(
-    () => css`
-      width: ${responsiveSize(342, 699)};
-    `
-  )}
-`;
-
-const StyledFileUploader = styled(FileUploader)`
-  width: 84vw;
-  margin-bottom: ${responsiveSize(130, 72)};
-
-  small {
-    white-space: pre-line;
-    text-align: start;
-  }
-
-  ${landscapeStyle(
-    () => css`
-      width: ${responsiveSize(342, 699)};
-    `
-  )}
-`;
 
 const Deliverable: React.FC = () => {
   const {
@@ -65,8 +26,8 @@ const Deliverable: React.FC = () => {
   const { roleRestrictions } = useAtlasProvider();
 
   const isDesktop = useIsDesktop();
-  const handleWrite = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setDeliverableText(event.target.value);
+  const handleWrite = (value: string) => {
+    setDeliverableText(value);
   };
 
   const handleAttachFile = (file: File) => {
@@ -82,16 +43,19 @@ const Deliverable: React.FC = () => {
     (getFileUploaderMsg(Roles.Policy, roleRestrictions) ?? "");
 
   return (
-    <Container>
+    <div className="flex flex-col items-center">
       {escrowType === "general" ? (
         <>
           <Header text="Contract Terms" />
-          <StyledTextArea
-            value={deliverableText}
-            onChange={handleWrite}
-            placeholder="eg. I should receive a website created in React with the following specification: x,y,z."
-          />
-          <StyledFileUploader
+          <div className="w-[84vw] mb-4 lg:w-fluid-342-699">
+            <MarkdownEditor
+              value={deliverableText}
+              onChange={handleWrite}
+              placeholder="eg. I should receive a website created in React with the following specification: x,y,z."
+            />
+          </div>
+          <FileUploader
+            className="w-[84vw] lg:w-fluid-342-699 [&_small]:whitespace-pre-line [&_small]:text-sm"
             callback={handleAttachFile}
             variant={isDesktop ? "info" : undefined}
             msg={fileFootMessage}
@@ -111,7 +75,7 @@ const Deliverable: React.FC = () => {
           setRecipientAddress={setBuyerAddress}
         />
       )}
-    </Container>
+    </div>
   );
 };
 

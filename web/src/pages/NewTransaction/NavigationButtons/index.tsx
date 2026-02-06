@@ -1,16 +1,7 @@
 import React from "react";
-import styled from "styled-components";
 import PreviousButton from "./PreviousButton";
 import NextButton from "./NextButton";
 import DepositPaymentButton from "./DepositPaymentButton";
-
-const Container = styled.div`
-  display: flex;
-  gap: 24px;
-  margin-top: 24px;
-  flex-wrap: wrap;
-  justify-content: center;
-`;
 
 interface NavigationButtonsProps {
   prevRoute: string;
@@ -19,10 +10,14 @@ interface NavigationButtonsProps {
 
 const NavigationButtons: React.FC<NavigationButtonsProps> = ({ prevRoute, nextRoute }) => {
   return (
-    <Container>
+    <div className="flex flex-wrap justify-center gap-6 mt-6">
       <PreviousButton prevRoute={prevRoute} />
-      {prevRoute === "/new-transaction/notifications" ? <DepositPaymentButton /> : <NextButton nextRoute={nextRoute} />}
-    </Container>
+      {prevRoute === "/new-transaction/notifications" ? (
+        <DepositPaymentButton />
+      ) : (
+        <NextButton nextRoute={nextRoute ?? ""} />
+      )}
+    </div>
   );
 };
 
