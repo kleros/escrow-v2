@@ -33,6 +33,7 @@ const PreviewCardButtons: React.FC<IPreviewCardButtons> = ({ feeTimeout, settlem
   }, []);
 
   const isBuyer = useMemo(() => address?.toLowerCase() === buyer?.toLowerCase(), [address, buyer]);
+  const isSeller = useMemo(() => address?.toLowerCase() === seller?.toLowerCase(), [address, seller]);
 
   const shouldPayFee = useMemo(
     () =>
@@ -57,7 +58,7 @@ const PreviewCardButtons: React.FC<IPreviewCardButtons> = ({ feeTimeout, settlem
     () =>
       lastSettlementProposal
         ? (lastSettlementProposal.party === "1" && connectedAddress === seller.toLowerCase()) ||
-          (lastSettlementProposal.party === "2" && connectedAddress === buyer.toLowerCase())
+        (lastSettlementProposal.party === "2" && connectedAddress === buyer.toLowerCase())
         : false,
     [lastSettlementProposal, connectedAddress, buyer, seller]
   );
@@ -113,10 +114,10 @@ const PreviewCardButtons: React.FC<IPreviewCardButtons> = ({ feeTimeout, settlem
         </div>
       ) : null}
       {settlementTimeLeft <= 0 &&
-      ((status === "WaitingSettlementSeller" && isBuyer) || (status === "WaitingSettlementBuyer" && !isBuyer)) ? (
+        ((status === "WaitingSettlementSeller" && isBuyer) || (status === "WaitingSettlementBuyer" && isSeller)) ? (
         <OpenModalRaiseDisputeButton {...{ arbitrationCost }} />
       ) : null}
-      {feeTimeLeft <= 0 && ((status === "WaitingSeller" && isBuyer) || (status === "WaitingBuyer" && !isBuyer)) ? (
+      {feeTimeLeft <= 0 && ((status === "WaitingSeller" && isBuyer) || (status === "WaitingBuyer" && isSeller)) ? (
         <div className={containerStyle}>
           <TimeOutButton />
         </div>
