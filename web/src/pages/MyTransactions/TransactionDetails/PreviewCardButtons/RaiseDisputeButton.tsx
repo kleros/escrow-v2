@@ -23,8 +23,9 @@ const RaiseDisputeButton: React.FC<IRaiseDisputeButton> = ({ toggleModal, button
   const { address } = useAccount();
   const [isSending, setIsSending] = useState<boolean>(false);
   const publicClient = usePublicClient();
-  const { buyer, id } = useTransactionDetailsContext();
+  const { buyer, seller, id } = useTransactionDetailsContext();
   const isBuyer = useMemo(() => address?.toLowerCase() === buyer?.toLowerCase(), [address, buyer]);
+  const isSeller = useMemo(() => address?.toLowerCase() === seller?.toLowerCase(), [address, seller]);
   const refetchQuery = useQueryRefetch();
 
   const { data: balanceData } = useBalance({
@@ -53,7 +54,7 @@ const RaiseDisputeButton: React.FC<IRaiseDisputeButton> = ({ toggleModal, button
     isError: isErrorSellerConfig,
   } = useSimulateEscrowUniversalPayArbitrationFeeBySeller({
     query: {
-      enabled: !isBuyer && !insufficientBalance,
+      enabled: isSeller && !insufficientBalance,
     },
     args: [BigInt(id)],
     value: arbitrationCost,
@@ -81,7 +82,7 @@ const RaiseDisputeButton: React.FC<IRaiseDisputeButton> = ({ toggleModal, button
           console.error("Error raising dispute as buyer:", error);
           setIsSending(false);
         });
-    } else if (!isBuyer && !isUndefined(payArbitrationFeeBySeller)) {
+    } else if (isSeller && !isUndefined(payArbitrationFeeBySeller)) {
       setIsSending(true);
       wrapWithToast(async () => await payArbitrationFeeBySeller(payArbitrationFeeBySellerConfig.request), publicClient)
         .then((wrapResult) => {
