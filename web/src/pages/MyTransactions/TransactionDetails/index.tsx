@@ -14,6 +14,7 @@ import { useNativeTokenSymbol } from "hooks/useNativeTokenSymbol";
 import useFetchIpfsJson from "hooks/useFetchIpfsJson";
 import { useTokenMetadata } from "hooks/useTokenMetadata";
 import BufferPeriodWarning from "./InfoCards/BufferPeriodWarning";
+import { useAccount } from "wagmi";
 
 const TransactionDetails: React.FC = () => {
   const { id } = useParams();
@@ -28,6 +29,7 @@ const TransactionDetails: React.FC = () => {
   const tokenDecimals = tokenMetadata?.decimals;
   const { setTransactionDetails } = useTransactionDetailsContext();
 
+  const { address } = useAccount();
   const {
     timestamp,
     transactionUri,
@@ -44,6 +46,10 @@ const TransactionDetails: React.FC = () => {
     disputeRequest,
     resolvedEvents,
   } = useTransactionDetailsContext();
+
+  const isBuyer = address?.toLowerCase() === buyer?.toLowerCase();
+  const isSeller = address?.toLowerCase() === seller?.toLowerCase();
+  const isParty = isBuyer || isSeller;
 
   const transactionInfo = useFetchIpfsJson(transactionUri);
   const assetSymbol = token ? erc20TokenSymbol : nativeTokenSymbol;
@@ -104,8 +110,8 @@ const TransactionDetails: React.FC = () => {
             transactionHash,
           }}
         />
-        {status === "NoDispute" && payments?.length === 0 ? <WasItFulfilled /> : null}
-        <InfoCards />
+        {isParty && status === "NoDispute" && payments?.length === 0 ? <WasItFulfilled /> : null}
+        {isParty && <InfoCards />}
       </div>
     </div>
   );

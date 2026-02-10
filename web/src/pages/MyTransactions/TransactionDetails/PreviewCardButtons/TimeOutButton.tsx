@@ -16,8 +16,9 @@ const TimeOutButton: React.FC = () => {
   const { address } = useAccount();
   const [isSending, setIsSending] = useState<boolean>(false);
   const publicClient = usePublicClient();
-  const { buyer, id } = useTransactionDetailsContext();
+  const { buyer, seller, id } = useTransactionDetailsContext();
   const isBuyer = useMemo(() => address?.toLowerCase() === buyer?.toLowerCase(), [address, buyer]);
+  const isSeller = useMemo(() => address?.toLowerCase() === seller?.toLowerCase(), [address, seller]);
   const refetchQuery = useQueryRefetch();
 
   const {
@@ -38,7 +39,7 @@ const TimeOutButton: React.FC = () => {
   } = useSimulateEscrowUniversalTimeOutBySeller({
     args: [BigInt(id)],
     query: {
-      enabled: !isBuyer,
+      enabled: isSeller,
     },
   });
 
@@ -59,7 +60,7 @@ const TimeOutButton: React.FC = () => {
           console.error("Error timing out as buyer:", error);
           setIsSending(false);
         });
-    } else if (!isBuyer && !isUndefined(timeOutBySeller)) {
+    } else if (isSeller && !isUndefined(timeOutBySeller)) {
       setIsSending(true);
       wrapWithToast(async () => await timeOutBySeller(timeOutBySellerConfig.request), publicClient)
         .then((wrapResult) => {
