@@ -1,6 +1,6 @@
 import React, { lazy, Suspense } from "react";
 
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useLocation, useSearchParams } from "react-router-dom";
 
 import NewTabIcon from "svgs/icons/new-tab.svg";
 
@@ -13,6 +13,7 @@ import clsx from "clsx";
 const FileViewer = lazy(() => import("components/FileViewer"));
 
 const AttachmentDisplay: React.FC = () => {
+  const location = useLocation();
   const [searchParams] = useSearchParams();
   const url = searchParams.get("url");
 
@@ -42,7 +43,15 @@ const AttachmentDisplay: React.FC = () => {
               </div>
             }
           >
-            <FileViewer url={url} />
+            {
+              /* 
+              * Use the location.key as the key to force a re-render. 
+              * Without this, the FileViewer does not display documents if:
+              * - the same document is selected twice in a row from the Policies dropdown menu by mistake.
+              * - we are already in the Attachments page but want to see a different document.
+              */
+            }
+            <FileViewer key={location.key} url={url} />
           </Suspense>
         </>
       ) : null}
