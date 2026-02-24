@@ -21,7 +21,11 @@ export function useOpenContext() {
 const MobileHeader = () => {
   const [isOpen, toggleIsOpen] = useToggle(false);
   const containerRef = useRef(null);
-  useClickAway(containerRef, () => toggleIsOpen(false));
+
+  // useClickAway defaults to ["mousedown", "touchstart"]. 
+  // We use ["click"] so that when the user taps the Policies dropdown option, the option's handler runs and navigates before the menu closes. 
+  // Otherwise, touchstart would fire first, the menu would close, and a second tap would be required to actually select the Policy dropdownoption.
+  useClickAway(containerRef, () => toggleIsOpen(false), ["click"]);
   const memoizedContext = useMemo(() => ({ isOpen, toggleIsOpen }), [isOpen, toggleIsOpen]);
   return (
     <div ref={containerRef} className="flex items-center justify-between w-full h-16 lg:hidden">
