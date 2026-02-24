@@ -38,7 +38,10 @@ const Explore: React.FC<IExplore> = ({ isMobileNavbar }) => {
 
   const isActive = (to: string) =>
     to === "/" ? location.pathname === "/" : location.pathname.split("/")[1] === to.split("/")[1];
-  const isViewingPolicies = location.search.includes(policies[0].itemValue) || location.search.includes(policies[1].itemValue);
+
+  const urlParam = new URLSearchParams(location.search).get("url");
+  const isViewingPolicies =
+    !!urlParam && policies.some((p) => getIpfsUrl(p.itemValue) === urlParam);
 
   return (
     <div className="flex flex-col lg:flex-row">
