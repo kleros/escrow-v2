@@ -4,11 +4,28 @@ import { useOpenContext } from "../MobileHeader";
 import { cn } from "src/utils";
 import { DropdownSelect } from "@kleros/ui-components-library";
 import { getIpfsUrl } from "src/utils/getIpfsUrl";
-import { POLICIES } from "src/consts/policies";
+import PolicyIcon from "svgs/icons/policy.svg";
+import DocIcon from "svgs/icons/doc.svg";
+import { GENERAL_POLICY_IPFS_URL, GOOD_PRACTICES_IPFS_URL } from "~src/consts/policies";
 
 const links = [
   { to: "/new-transaction", text: "New Transaction" },
   { to: "/transactions/display/1/desc/all", text: "My Transactions" },
+];
+
+export const policies = [
+  {
+    id: "general",
+    text: "General Policy",
+    icon: <PolicyIcon className="fill-klerosUIComponentsPrimaryBlue w-4 h-4 mr-2" />,
+    itemValue: GENERAL_POLICY_IPFS_URL
+  },
+  {
+    id: "good_practices",
+    text: "Good Practices",
+    icon: <DocIcon className="fill-klerosUIComponentsPrimaryBlue w-4 h-4 mr-2" />,
+    itemValue: GOOD_PRACTICES_IPFS_URL
+  },
 ];
 
 interface IExplore {
@@ -25,7 +42,7 @@ const Explore: React.FC<IExplore> = ({ isMobileNavbar }) => {
 
   const urlParam = new URLSearchParams(location.search).get("url");
   const isViewingPolicies =
-    !!urlParam && POLICIES.some((p) => getIpfsUrl(p.itemValue) === urlParam);
+    !!urlParam && policies.some((p) => getIpfsUrl(p.itemValue) === urlParam);
 
   return (
     <div className="flex flex-col lg:flex-row">
@@ -62,7 +79,7 @@ const Explore: React.FC<IExplore> = ({ isMobileNavbar }) => {
         smallButton
         placeholder="Policies" // Acts as the dropdown label
         selectedKey={null} // Trick to not change the dropdown label when an item is clicked
-        items={POLICIES}
+        items={policies}
         callback={(item) => {
           navigate(`/attachment/?url=${getIpfsUrl(item.itemValue)}`);
           if (isMobileNavbar) toggleIsOpen();
