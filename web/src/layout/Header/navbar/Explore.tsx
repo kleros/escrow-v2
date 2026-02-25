@@ -59,6 +59,7 @@ const Explore: React.FC<IExplore> = ({ isMobileNavbar }) => {
           isMobileNavbar && isViewingPolicies ? "[&_span]:font-semibold" : "[&_span]:font-normal",
         )}
         simpleButton
+        smallButton
         placeholder="Policies" // Acts as the dropdown label
         selectedKey={null} // Trick to not change the dropdown label when an item is clicked
         items={POLICIES}
