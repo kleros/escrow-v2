@@ -86,6 +86,7 @@ export function handlePayment(event: PaymentEvent): void {
   payment.amount = event.params._amount;
   payment.timestamp = event.block.timestamp;
   payment.party = Bytes.fromHexString(event.params._party.toHex());
+  payment.transactionHash = event.transaction.hash;
 
   payment.save();
 }
@@ -124,6 +125,7 @@ export function handleHasToPayFee(event: HasToPayFeeEvent): void {
   hasToPayFee.escrow = escrowId;
   hasToPayFee.party = partyValue.toString();
   hasToPayFee.timestamp = event.block.timestamp;
+  hasToPayFee.transactionHash = event.transaction.hash;
   hasToPayFee.save();
 
   escrow.save();
@@ -157,6 +159,7 @@ export function handleNativeTransactionCreated(event: NativeTransactionCreatedEv
   let transactionCreatedId = event.transaction.hash.toHex() + "-" + event.logIndex.toString();
   let transactionCreated = new TransactionCreated(transactionCreatedId);
   transactionCreated.escrow = escrowId;
+  transactionCreated.transactionHash = event.transaction.hash;
 
   transactionCreated.save();
 }
@@ -190,6 +193,7 @@ export function handleERC20TransactionCreated(event: ERC20TransactionCreatedEven
   let transactionCreatedId = event.transaction.hash.toHex() + "-" + event.logIndex.toString();
   let transactionCreated = new TransactionCreated(transactionCreatedId);
   transactionCreated.escrow = escrowId;
+  transactionCreated.transactionHash = event.transaction.hash;
 
   transactionCreated.save();
 }
@@ -207,6 +211,7 @@ export function handleTransactionResolved(event: TransactionResolvedEvent): void
   transactionResolved.escrow = escrowId;
   transactionResolved.resolution = event.params._resolution;
   transactionResolved.timestamp = event.block.timestamp;
+  transactionResolved.transactionHash = event.transaction.hash;
   transactionResolved.save();
 
   let buyerId = escrow.buyer.toHex();
@@ -257,6 +262,7 @@ export function handleDisputeRequest(event: DisputeRequestEvent): void {
   disputeRequest.escrow = escrow.id;
   disputeRequest.timestamp = event.block.timestamp;
   disputeRequest.from = Bytes.fromHexString(event.transaction.from.toHex());
+  disputeRequest.transactionHash = event.transaction.hash;
   disputeRequest.save();
 
   let buyer = getUser(escrow.buyer.toHex());
@@ -303,6 +309,7 @@ export function handleSettlementProposed(event: SettlementProposedEvent): void {
   proposal.party = partyValue;
   proposal.amount = event.params._amount;
   proposal.timestamp = event.block.timestamp;
+  proposal.transactionHash = event.transaction.hash;
 
   proposal.save();
   escrow.save();
