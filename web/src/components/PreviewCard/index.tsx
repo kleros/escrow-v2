@@ -66,7 +66,7 @@ const PreviewCard: React.FC<IPreviewCard> = ({
   arbitrationCost,
 }) => (
   <Card className={clsx("flex flex-col gap-4 lg:gap-6", "w-full h-auto p-4 pt-5 lg:p-8", isPreview && "pb-9")}>
-    <Header {...{ escrowType, escrowTitle, status, transactionHash, isCard: false }} />
+    <Header {...{ escrowType, escrowTitle, status }} />
     <div className="flex flex-col gap-6">
       <hr className={dividerStyle} />
       <TransactionInfo
@@ -98,6 +98,7 @@ const PreviewCard: React.FC<IPreviewCard> = ({
         isNativeTransaction,
         tokenDecimals,
         transactionCreationTimestamp,
+        transactionHash,
         buyerAddress,
         sellerAddress,
         payments,
