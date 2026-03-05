@@ -59,7 +59,7 @@ function createTimelineItem(
     party: explorerUrl ? (
       <div className={cn("flex items-center", party ? "gap-x-2" : "")}>
         <span className="text-sm" style={{ color: themeColor }}>{party}</span>
-        <a href={explorerUrl} target="_blank" rel="noopener noreferrer">
+        <a href={explorerUrl} target="_blank" rel="noopener noreferrer" aria-label="View transaction on block explorer">
           <EtherscanIcon width={14} height={14} />
         </a>
       </div>
