@@ -6,7 +6,7 @@ import { resolutionToString } from "utils/resolutionToString";
 import { formatTimeoutDuration } from "utils/formatTimeoutDuration";
 import CheckCircleOutlineIcon from "components/StyledIcons/CheckCircleOutlineIcon";
 import LawBalanceIcon from "components/StyledIcons/LawBalanceIcon";
-import EtherscanIcon from "svgs/icons/etherscan.svg";
+import ExternalLinkIcon from "svgs/icons/external-link.svg";
 import { SUPPORTED_CHAINS, DEFAULT_CHAIN } from "consts/chains";
 import { DisputeRequest, HasToPayFee, Payment, SettlementProposal, TransactionResolved } from "src/graphql/graphql";
 import Skeleton from "react-loading-skeleton";
@@ -60,7 +60,7 @@ function createTimelineItem(
       <div className={cn("flex items-center", party ? "gap-x-2" : "")}>
         <span className="text-sm" style={{ color: themeColor }}>{party}</span>
         <a href={explorerUrl} target="_blank" rel="noopener noreferrer" aria-label="View transaction on block explorer">
-          <EtherscanIcon width={14} height={14} />
+          <ExternalLinkIcon width={14} height={14} />
         </a>
       </div>
     ) : (
