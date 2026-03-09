@@ -6,7 +6,8 @@ import { DisputeRequest, HasToPayFee, Payment, SettlementProposal, TransactionRe
 interface IEscrowTimeline {
   isPreview: boolean;
   transactionCreationTimestamp: number;
-  status: boolean;
+  transactionHash: string;
+  status: string;
   assetSymbol: string;
   isNativeTransaction: boolean;
   tokenDecimals?: number;
@@ -17,11 +18,14 @@ interface IEscrowTimeline {
   hasToPayFees: HasToPayFee[];
   disputeRequest: DisputeRequest;
   resolvedEvents: TransactionResolved[];
+  feeTimeout: number;
+  settlementTimeout: number;
 }
 
 const EscrowTimeline: React.FC<IEscrowTimeline> = ({
   isPreview,
   transactionCreationTimestamp,
+  transactionHash,
   status,
   assetSymbol,
   isNativeTransaction,
@@ -39,10 +43,10 @@ const EscrowTimeline: React.FC<IEscrowTimeline> = ({
   const items = useEscrowTimelineItems(
     isPreview,
     transactionCreationTimestamp,
+    transactionHash,
     status,
     assetSymbol,
     isNativeTransaction,
-    tokenDecimals,
     buyerAddress,
     sellerAddress,
     payments,
@@ -51,7 +55,8 @@ const EscrowTimeline: React.FC<IEscrowTimeline> = ({
     disputeRequest,
     resolvedEvents,
     feeTimeout,
-    settlementTimeout
+    settlementTimeout,
+    tokenDecimals,
   );
 
   return <CustomTimeline className="w-full" items={items} />;

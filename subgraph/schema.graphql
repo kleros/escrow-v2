@@ -65,6 +65,7 @@ type Payment @entity {
   amount: BigInt!
   party: Bytes!
   timestamp: BigInt
+  transactionHash: Bytes!
 }
 
 type HasToPayFee @entity {
@@ -72,6 +73,7 @@ type HasToPayFee @entity {
   escrow: Escrow!
   party: String
   timestamp: BigInt
+  transactionHash: Bytes!
 }
 
 type DisputeRequest @entity {
@@ -79,11 +81,13 @@ type DisputeRequest @entity {
   escrow: Escrow!
   timestamp: BigInt
   from: Bytes
+  transactionHash: Bytes!
 }
 
 type TransactionCreated @entity {
   id: ID!
   escrow: Escrow!
+  transactionHash: Bytes!
 }
 
 type TransactionResolved @entity {
@@ -91,6 +95,7 @@ type TransactionResolved @entity {
   escrow: Escrow!
   resolution: Int!
   timestamp: BigInt
+  transactionHash: Bytes!
 }
 
 type SettlementProposal @entity {
@@ -99,6 +104,7 @@ type SettlementProposal @entity {
   party: String
   amount: BigInt!
   timestamp: BigInt!
+  transactionHash: Bytes!
 }
 
 type EscrowParameters @entity {

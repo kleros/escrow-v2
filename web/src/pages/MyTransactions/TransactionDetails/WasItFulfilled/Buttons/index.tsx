@@ -7,8 +7,9 @@ import ClaimFullPaymentButton from "./ClaimFullPaymentButton";
 
 const Buttons: React.FC = () => {
   const { address } = useAccount();
-  const { buyer, payments, deadline } = useTransactionDetailsContext();
+  const { buyer, seller, payments, deadline } = useTransactionDetailsContext();
   const isBuyer = address?.toLowerCase() === buyer?.toLowerCase();
+  const isSeller = address?.toLowerCase() === seller?.toLowerCase();
   const currentTimeUnixSeconds = Math.floor(Date.now() / 1000);
 
   return (
@@ -17,7 +18,7 @@ const Buttons: React.FC = () => {
       {currentTimeUnixSeconds < deadline ? (
         <OpenModalProposeSettlementButton buttonText="Propose a settlement" />
       ) : null}
-      {currentTimeUnixSeconds > deadline && !isBuyer ? <ClaimFullPaymentButton /> : null}
+      {currentTimeUnixSeconds > deadline && isSeller ? <ClaimFullPaymentButton /> : null}
     </div>
   );
 };

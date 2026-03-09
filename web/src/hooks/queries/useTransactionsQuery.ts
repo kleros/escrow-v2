@@ -24,11 +24,13 @@ export const transactionFragment = graphql(`
       amount
       party
       timestamp
+      transactionHash
     }
     hasToPayFees {
       id
       party
       timestamp
+      transactionHash
     }
     createdEvents {
       id
@@ -37,12 +39,14 @@ export const transactionFragment = graphql(`
       id
       resolution
       timestamp
+      transactionHash
     }
     settlementProposals(orderBy: timestamp, orderDirection: asc) {
       id
       amount
       party
       timestamp
+      transactionHash
     }
     disputeRequest {
       id
@@ -51,6 +55,7 @@ export const transactionFragment = graphql(`
         id
       }
       timestamp
+      transactionHash
     }
   }
 `);
