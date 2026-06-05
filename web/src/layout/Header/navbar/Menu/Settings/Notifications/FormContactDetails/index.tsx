@@ -17,7 +17,7 @@ import InfoCard from "components/InfoCard";
 import EmailVerificationInfo from "./EmailVerificationInfo";
 
 const unsubscribeButtonsStyle =
-  "!bg-klerosUIComponentsError !border-klerosUIComponentsError hover:!bg-klerosUIComponentsError hover:opacity-75 [&_.button-text]:!text-white [&_.button-text]:!text-wrap";
+  "bg-klerosUIComponentsError! border-klerosUIComponentsError! hover:bg-klerosUIComponentsError! hover:opacity-75 [&_.button-text]:text-white! [&_.button-text]:text-wrap!";
 
 const FormContactDetails: React.FC<ISettings> = ({ toggleIsSettingsOpen }) => {
   const [emailInput, setEmailInput] = useState<string>("");
