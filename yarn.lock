@@ -5687,7 +5687,7 @@ __metadata:
   dependencies:
     "@graphql-codegen/cli": "npm:^4.0.1"
     "@graphql-codegen/client-preset": "npm:^4.6.2"
-    "@kleros/kleros-app": "npm:^2.1.0"
+    "@kleros/kleros-app": "npm:^3.0.1"
     "@kleros/kleros-v2-contracts": "npm:^0.10.0"
     "@kleros/ui-components-library": "npm:^3.8.0"
     "@mdxeditor/editor": "npm:^3.45.0"
@@ -5747,20 +5747,20 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@kleros/kleros-app@npm:^2.1.0":
-  version: 2.1.0
-  resolution: "@kleros/kleros-app@npm:2.1.0"
+"@kleros/kleros-app@npm:^3.0.1":
+  version: 3.0.1
+  resolution: "@kleros/kleros-app@npm:3.0.1"
   dependencies:
     jose: "npm:^5.9.6"
   peerDependencies:
-    "@tanstack/react-query": ^5.59.20
+    "@tanstack/react-query": ^5.69.0
     graphql: ^16.9.0
     graphql-request: ^7.1.2
     react: ^18.3.1
     react-dom: ^18.3.1
-    viem: ^2.21.42
-    wagmi: ^2.14.0
-  checksum: 10/4441b6a5764d03bb411abf698ecaedd9a1b60acdef9470da5a422d7326b3859cf5509077d36f5009a7bbc6b4bd24ce17ace399a65476b2ee3005cf034ac02a90
+    viem: ^2.24.1
+    wagmi: ^2.14.15
+  checksum: 10/3d41f8813534ac76a170ac0e6479d008d2afa6b38bebd8f4119966caca1db2bd5654412fa79bec1d59f0eb0014d3cdb3edbfd1dcbfdad7bf2383551d40b9153f
   languageName: node
   linkType: hard
 
