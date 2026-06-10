@@ -12,9 +12,7 @@ import { getAllowedAttachmentUrl } from "utils/urlValidation";
 import Header from "./Header";
 import clsx from "clsx";
 
-const FileViewer = lazy(() =>
-  import("@kleros/ui-components-library").then((m) => ({ default: m.FileViewer }))
-);
+const FileViewer = lazy(() => import("@kleros/ui-components-library").then((m) => ({ default: m.FileViewer })));
 
 const AttachmentDisplay: React.FC = () => {
   const location = useLocation();
@@ -48,18 +46,32 @@ const AttachmentDisplay: React.FC = () => {
               </div>
             }
           >
-            {
-              /* 
-              * Use the location.key as the key to force a re-render. 
-              * Without this, the FileViewer does not display documents if:
-              * - the same document is selected twice in a row from the Policies dropdown menu by mistake.
-              * - we are already in the Attachments page but want to see a different document.
-              */
-            }
+            {/*
+             * Use the location.key as the key to force a re-render.
+             * Without this, the FileViewer does not display documents if:
+             * - the same document is selected twice in a row from the Policies dropdown menu by mistake.
+             * - we are already in the Attachments page but want to see a different document.
+             */}
             <FileViewer key={location.key} url={safeUrl} />
           </Suspense>
         </>
       ) : null}
+
+      {url && !safeUrl ? (
+        <div className="flex flex-col gap-2 w-full">
+          <p className="text-klerosUIComponentsSecondaryText text-base">This link cannot be previewed here.</p>
+          <div
+            className={clsx(
+              "bg-klerosUIComponentsLightBackground border rounded-sm border-klerosUIComponentsStroke",
+              "text-sm font-mono text-klerosUIComponentsPrimaryText break-all",
+              "w-full py-2 px-3"
+            )}
+          >
+            {url}
+          </div>
+        </div>
+      ) : null}
+
       <ScrollTop />
     </div>
   );
