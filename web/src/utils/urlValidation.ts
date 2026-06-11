@@ -1,46 +1,36 @@
-const DANGEROUS_PROTOCOLS = ["javascript:", "vbscript:", "file:", "about:", "blob:", "filesystem:"];
+import { sanitizeUrl } from "@braintree/sanitize-url";
 
-const ALLOWED_PROTOCOLS = ["http:", "https:", "mailto:", "tel:", "ftp:"];
+import { IPFS_GATEWAY } from "consts/index";
 
-const ALLOWED_DATA_TYPES = ["image/jpeg", "image/png", "image/gif", "image/webp"];
+const BLANK_URL = "about:blank";
 
-const isValidDataUri = (url: string): boolean => {
-  const dataUriRegex = /^data:([^;,]+)(;base64)?,/i;
-  const match = url.match(dataUriRegex);
+const getGatewayOrigin = () => new URL(IPFS_GATEWAY).origin;
 
-  if (!match) {
-    return false;
+export const sanitizeHref = (url: string) => {
+  if (!url || typeof url !== "string") {
+    return "";
   }
 
-  const mimeType = match[1].toLowerCase();
-  return ALLOWED_DATA_TYPES.includes(mimeType);
+  const sanitized = sanitizeUrl(url.trim());
+  return sanitized === BLANK_URL ? "" : sanitized;
 };
 
-export const isValidUrl = (url: string): boolean => {
-  if (!url || typeof url !== "string") {
-    return false;
-  }
+export const isValidUrl = (url: string) => sanitizeHref(url) !== "";
 
-  const trimmedUrl = url.trim().toLowerCase();
-
-  if (trimmedUrl.length === 0) {
-    return false;
-  }
-
-  if (trimmedUrl.startsWith("data:")) {
-    return isValidDataUri(trimmedUrl);
-  }
-
-  for (const protocol of DANGEROUS_PROTOCOLS) {
-    if (trimmedUrl.startsWith(protocol)) {
-      return false;
-    }
+export const getAllowedAttachmentUrl = (url: string) => {
+  const safe = sanitizeHref(url);
+  if (!safe) {
+    return undefined;
   }
 
   try {
-    const urlObj = new URL(url);
-    return ALLOWED_PROTOCOLS.includes(urlObj.protocol);
+    const parsed = new URL(safe);
+    if (parsed.protocol !== "https:" || parsed.origin !== getGatewayOrigin() || !parsed.pathname.startsWith("/ipfs/")) {
+      return undefined;
+    }
+
+    return parsed.href;
   } catch {
-    return false;
+    return undefined;
   }
 };
