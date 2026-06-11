@@ -1964,6 +1964,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@braintree/sanitize-url@npm:^7.1.2":
+  version: 7.1.2
+  resolution: "@braintree/sanitize-url@npm:7.1.2"
+  checksum: 10/d9626ff8f8eb5e192cd055e6e743449c21102c76bb59e405b7028fe56230fa080bfcc80dfb1e21850a6876e75adda9f7b3c888cf0685942bb74da4d2866d6ec3
+  languageName: node
+  linkType: hard
+
 "@chainlink/contracts@npm:^1.4.0":
   version: 1.4.0
   resolution: "@chainlink/contracts@npm:1.4.0"
@@ -5685,6 +5692,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@kleros/escrow-v2-web@workspace:web"
   dependencies:
+    "@braintree/sanitize-url": "npm:^7.1.2"
     "@graphql-codegen/cli": "npm:^4.0.1"
     "@graphql-codegen/client-preset": "npm:^4.6.2"
     "@kleros/kleros-app": "npm:^3.0.1"
