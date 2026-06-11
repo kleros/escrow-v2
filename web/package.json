@@ -67,7 +67,7 @@
   },
   "dependencies": {
     "@braintree/sanitize-url": "^7.1.2",
-    "@kleros/kleros-app": "^2.1.0",
+    "@kleros/kleros-app": "^3.0.1",
     "@kleros/ui-components-library": "^3.8.0",
     "@mdxeditor/editor": "^3.45.0",
     "@reown/appkit": "^1.6.6",
