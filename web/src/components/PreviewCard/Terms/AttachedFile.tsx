@@ -28,7 +28,9 @@ const AttachedFile: React.FC<IAttachedFile> = ({ extraDescriptionUri }) => {
         wrapperProps={{ className: "w-fit" }}
         text={`This attachment link was flagged as unsafe and has been disabled: "${url}"`}
       >
-        <span className="flex gap-fluid-5-6 cursor-not-allowed opacity-50">{attachmentContent}</span>
+        <span className="flex gap-fluid-5-6 cursor-not-allowed opacity-50 text-klerosUIComponentsPrimaryBlue">
+          {attachmentContent}
+        </span>
       </Tooltip>
     );
   }
