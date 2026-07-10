@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useOpenContext } from "../MobileHeader";
 import { cn } from "src/utils";
 import { DropdownSelect } from "@kleros/ui-components-library";
-import { getIpfsUrl } from "src/utils/getIpfsUrl";
+import { toHttpUrl } from "src/utils/ipfs";
 import PolicyIcon from "svgs/icons/policy.svg";
 import DocIcon from "svgs/icons/doc.svg";
 import { GENERAL_POLICY_IPFS_URL, GOOD_PRACTICES_IPFS_URL } from "~src/consts/policies";
@@ -42,7 +42,7 @@ const Explore: React.FC<IExplore> = ({ isMobileNavbar }) => {
 
   const urlParam = new URLSearchParams(location.search).get("url");
   const isViewingPolicies =
-    !!urlParam && policies.some((p) => getIpfsUrl(p.itemValue) === urlParam);
+    !!urlParam && policies.some((p) => toHttpUrl(p.itemValue) === urlParam);
 
   return (
     <div className="flex flex-col lg:flex-row">
@@ -81,7 +81,7 @@ const Explore: React.FC<IExplore> = ({ isMobileNavbar }) => {
         selectedKey={null} // Trick to not change the dropdown label when an item is clicked
         items={policies}
         callback={(item) => {
-          navigate(`/attachment/?url=${getIpfsUrl(item.itemValue)}`);
+          navigate(`/attachment/?url=${toHttpUrl(item.itemValue)}`);
           if (isMobileNavbar) toggleIsOpen();
         }}
       />
