@@ -81,7 +81,7 @@ const Explore: React.FC<IExplore> = ({ isMobileNavbar }) => {
         selectedKey={null} // Trick to not change the dropdown label when an item is clicked
         items={policies}
         callback={(item) => {
-          navigate(`/attachment/?url=${toHttpUrl(item.itemValue)}`);
+          navigate(`/attachment/?url=${encodeURIComponent(toHttpUrl(item.itemValue) ?? "")}`);
           if (isMobileNavbar) toggleIsOpen();
         }}
       />
