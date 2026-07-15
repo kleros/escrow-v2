@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getIpfsUrl } from "utils/getIpfsUrl";
+import { isContentAddressed, toHttpUrl } from "utils/ipfs";
 
 const useFetchIpfsJson = (ipfsUri: string) => {
   const [data, setData] = useState(null);
@@ -9,9 +9,12 @@ const useFetchIpfsJson = (ipfsUri: string) => {
       if (!ipfsUri) return;
 
       try {
-        const formattedUri = getIpfsUrl(ipfsUri);
+        const url = toHttpUrl(ipfsUri);
+        if (!url || !isContentAddressed(ipfsUri)) {
+          throw new Error(`URI is not content-addressed: ${ipfsUri}`);
+        }
 
-        const response = await fetch(formattedUri);
+        const response = await fetch(url);
         if (!response.ok) {
           throw new Error(`IPFS fetch failed with status ${response.status}`);
         }

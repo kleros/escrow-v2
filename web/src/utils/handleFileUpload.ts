@@ -1,5 +1,6 @@
 import { errorToast, infoToast, successToast } from "./wrapWithToast";
 import { Roles } from "@kleros/kleros-app";
+import { isContentAddressed } from "./ipfs";
 
 type TransactionDetails = {
   title: string;
@@ -33,7 +34,8 @@ export const handleFileUpload = async (
 
       const fileHash = await uploadFile(deliverableFile, Roles.Policy);
 
-      if (!fileHash) throw Error("Error uploading file.");
+      //Uploads must produce a content-addressed IPFS URI.
+      if (!fileHash || !isContentAddressed(fileHash)) throw Error("Error uploading file.");
 
       transactionDetails.extraDescriptionUri = fileHash;
       setExtraDescriptionUri(fileHash);
@@ -45,7 +47,7 @@ export const handleFileUpload = async (
 
     const transactionObjectHash = await uploadFile(transactionJSON, Roles.Policy);
 
-    if (!transactionObjectHash) throw Error("Error uploading terms");
+    if (!transactionObjectHash || !isContentAddressed(transactionObjectHash)) throw Error("Error uploading terms");
 
     successToast("Contract terms uploaded successfully.");
     setIsFileUploading(false);
