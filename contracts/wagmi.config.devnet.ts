@@ -7,10 +7,6 @@ const getConfig = async (): Promise<Config> => {
   arbitrumSepoliaContracts.forEach((c) => console.log("✔ Found arbitrumSepolia artifact: %s", c.name));
   let contracts = arbitrumSepoliaContracts;
 
-  const chiadoContracts = await readArtifacts("gnosisChiado", "chiadoDevnet"); // renaming the Hardhat network improves this but breaks many other scripts
-  chiadoContracts.forEach((c) => console.log("✔ Found chiado artifact: %s", c.name));
-  contracts = merge(contracts, chiadoContracts);
-
   const sepoliaContracts = await readArtifacts("sepolia", "sepoliaDevnet");
   sepoliaContracts.forEach((c) => console.log("✔ Found sepolia artifact: %s", c.name));
   contracts = merge(contracts, sepoliaContracts);

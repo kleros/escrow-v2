@@ -129,19 +129,6 @@ const config: HardhatUserConfig = {
       saveDeployments: true,
       tags: ["production", "foreign", "layer1"],
     },
-    gnosischain: {
-      chainId: 100,
-      url: `https://rpc.gnosis.gateway.fm`,
-      accounts,
-      live: true,
-      saveDeployments: true,
-      tags: ["production", "foreign", "layer1"],
-      verify: {
-        etherscan: {
-          apiKey: process.env.GNOSISSCAN_API_KEY,
-        },
-      },
-    },
   },
   namedAccounts: {
     deployer: {

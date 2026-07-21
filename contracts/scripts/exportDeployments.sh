@@ -12,7 +12,5 @@ exportJson arbitrumSepolia
 exportJson arbitrumSepoliaDevnet
 exportJson sepolia
 exportJson sepoliaDevnet
-exportJson chiado
-exportJson chiadoDevnet
 exportJson arbitrum
 exportJson mainnet
