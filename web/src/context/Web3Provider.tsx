@@ -1,15 +1,7 @@
 import React from "react";
 
 import { fallback, http, WagmiProvider, webSocket } from "wagmi";
-import {
-  mainnet,
-  arbitrumSepolia,
-  gnosisChiado,
-  type AppKitNetwork,
-  arbitrum,
-  sepolia,
-  gnosis,
-} from "@reown/appkit/networks";
+import { mainnet, arbitrumSepolia, type AppKitNetwork, arbitrum, sepolia } from "@reown/appkit/networks";
 import { createAppKit } from "@reown/appkit/react";
 import { WagmiAdapter } from "@reown/appkit-adapter-wagmi";
 import { isProductionDeployment } from "consts/index";
@@ -28,8 +20,6 @@ const alchemyToViemChain: Record<number, string> = {
   [arbitrum.id]: "arb-mainnet",
   [mainnet.id]: "eth-mainnet",
   [sepolia.id]: "eth-sepolia",
-  [gnosis.id]: "gnosis-mainnet",
-  [gnosisChiado.id]: "gnosis-chiado",
 };
 
 type AlchemyProtocol = "https" | "wss";
@@ -54,16 +44,11 @@ export const getDefaultChainRpcUrl = (protocol: AlchemyProtocol) => {
 export const getTransports = () => {
   const alchemyTransport = (chain: AppKitNetwork) =>
     fallback([http(alchemyURL("https", chain.id)), webSocket(alchemyURL("wss", chain.id))]);
-  const defaultTransport = (chain: AppKitNetwork) =>
-    fallback([http(chain.rpcUrls.default?.http?.[0]), webSocket(chain.rpcUrls.default?.webSocket?.[0])]);
 
   return {
     [isProduction ? arbitrum.id : arbitrumSepolia.id]: isProduction
       ? alchemyTransport(arbitrum)
       : alchemyTransport(arbitrumSepolia),
-    [isProduction ? gnosis.id : gnosisChiado.id]: isProduction
-      ? defaultTransport(gnosis)
-      : defaultTransport(gnosisChiado),
     [mainnet.id]: alchemyTransport(mainnet), // Always enabled for ENS resolution
   };
 };

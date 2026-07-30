@@ -1,5 +1,5 @@
 import { type Chain, extractChain } from "viem";
-import { arbitrum, mainnet, arbitrumSepolia, gnosis, gnosisChiado, type AppKitNetwork } from "@reown/appkit/networks";
+import { arbitrum, mainnet, arbitrumSepolia, type AppKitNetwork } from "@reown/appkit/networks";
 
 import { isProductionDeployment } from "./index";
 
@@ -12,7 +12,6 @@ export const SUPPORTED_CHAINS: Record<number, AppKitNetwork> = {
 
 // Read Only
 export const QUERY_CHAINS: Record<number, AppKitNetwork> = {
-  [isProductionDeployment() ? gnosis.id : gnosisChiado.id]: isProductionDeployment() ? gnosis : gnosisChiado,
   [mainnet.id]: mainnet,
 };
 
