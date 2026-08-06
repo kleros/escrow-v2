@@ -6,8 +6,8 @@ export const fetchTokenInfo = async (address: string, alchemyInstance: Alchemy, 
   try {
     const metadata = await alchemyInstance.core.getTokenMetadata(address);
 
-    //Means alchemy knows nothing about the token, so we throw to try the contract directly.
-    if (!metadata.name && !metadata.symbol) {
+    //Means alchemy metadata is missing or incomplete, so we throw to try the contract directly.
+    if (!metadata.name || !metadata.symbol) {
       throw new Error("No token metadata returned by alchemy");
     }
 
@@ -26,6 +26,7 @@ export const fetchTokenInfo = async (address: string, alchemyInstance: Alchemy, 
 
     return {
       symbol: onchainMetadata.symbol.toUpperCase(),
+      logo: "",
       address,
       decimals: onchainMetadata.decimals,
     } as IToken;

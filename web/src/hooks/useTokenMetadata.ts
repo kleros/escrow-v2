@@ -21,8 +21,8 @@ export const useTokenMetadata = (tokenAddress: TokenAddress) => {
       try {
         const metadata = await alchemy.core.getTokenMetadata(tokenAddress);
 
-        //Means alchemy knows nothing about the token, so we throw to try the contract directly.
-        if (!metadata.name && !metadata.symbol) {
+        //Means alchemy metadata is missing or incomplete, so we throw to try the contract directly.
+        if (!metadata.name || !metadata.symbol) {
           throw new Error("No token metadata returned by alchemy");
         }
 
