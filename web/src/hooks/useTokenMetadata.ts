@@ -3,6 +3,7 @@ import { Alchemy, TokenMetadataResponse } from "alchemy-sdk";
 
 import { DEFAULT_CHAIN } from "consts/chains";
 import { alchemyConfig } from "utils/alchemyConfig";
+import { fetchOnchainTokenMetadata } from "utils/fetchOnchainTokenMetadata";
 
 type TokenMetadataWithOptionalDecimals = Omit<TokenMetadataResponse, "decimals"> & {
   decimals?: number;
@@ -19,13 +20,27 @@ export const useTokenMetadata = (tokenAddress: TokenAddress) => {
       const alchemy = new Alchemy(alchemyConfig(DEFAULT_CHAIN));
       try {
         const metadata = await alchemy.core.getTokenMetadata(tokenAddress);
+
+        //Means alchemy knows nothing about the token, so we throw to try the contract directly.
+        if (!metadata.name && !metadata.symbol) {
+          throw new Error("No token metadata returned by alchemy");
+        }
+
         setTokenMetadata({
           ...metadata,
           decimals: metadata.decimals ?? undefined, //Set undefined if null to facilitate checks in the UI
         });
       } catch (error) {
-        console.error("Error fetching token metadata:", error);
-        setTokenMetadata(null);
+        const onchainMetadata = await fetchOnchainTokenMetadata(tokenAddress as `0x${string}`, DEFAULT_CHAIN).catch(
+          () => null
+        );
+
+        if (onchainMetadata) {
+          setTokenMetadata({ ...onchainMetadata, logo: null });
+        } else {
+          console.error("Error fetching token metadata:", error);
+          setTokenMetadata(null);
+        }
       }
     };
 
