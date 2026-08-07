@@ -12,7 +12,7 @@ export const initializeTokens = async (address: string, setTokens, setLoading, c
     const balances = await alchemyInstance.core.getTokenBalances(address);
     const tokenList = await Promise.all(
       balances.tokenBalances.map(async (token) => {
-        const tokenInfo = await fetchTokenInfo(token.contractAddress, alchemyInstance);
+        const tokenInfo = await fetchTokenInfo(token.contractAddress, alchemyInstance, chainId);
         if (tokenInfo) {
           return {
             symbol: tokenInfo.symbol,
