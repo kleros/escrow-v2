@@ -5697,7 +5697,7 @@ __metadata:
     "@graphql-codegen/client-preset": "npm:^4.6.2"
     "@kleros/kleros-app": "npm:^3.0.1"
     "@kleros/kleros-v2-contracts": "npm:^0.10.0"
-    "@kleros/ui-components-library": "npm:^3.8.0"
+    "@kleros/ui-components-library": "npm:^3.10.0"
     "@mdxeditor/editor": "npm:^3.45.0"
     "@reown/appkit": "npm:^1.6.6"
     "@reown/appkit-adapter-wagmi": "npm:^1.6.6"
@@ -5786,9 +5786,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@kleros/ui-components-library@npm:^3.8.0":
-  version: 3.8.0
-  resolution: "@kleros/ui-components-library@npm:3.8.0"
+"@kleros/ui-components-library@npm:^3.10.0":
+  version: 3.10.0
+  resolution: "@kleros/ui-components-library@npm:3.10.0"
   dependencies:
     "@cyntler/react-doc-viewer": "npm:^1.17.0"
     "@internationalized/date": "npm:^3.7.0"
@@ -5811,7 +5811,7 @@ __metadata:
     react-dom: ^18.0.0
     react-is: ^18.0.0
     tailwindcss: ^4.0.11
-  checksum: 10/a9d9f363f0873767e6d4eef12d3186c63c2345f369eb7412efa48a0477d1121d573aa8db1fb1799534744721cab4b3e7d1368a95580dd8e7e90e1642222b0167
+  checksum: 10/af36941d40450479bd658c9bb0f4539409bba02ed1445d8cc5eea59294c73561b2ffeeaaa4c2c006e345b44cac77760ca78bf4e852c43cf598919df3ce119e34
   languageName: node
   linkType: hard
 
