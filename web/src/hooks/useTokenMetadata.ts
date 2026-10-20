@@ -11,12 +11,20 @@ type TokenMetadataWithOptionalDecimals = Omit<TokenMetadataResponse, "decimals">
 
 type TokenAddress = string | null | undefined;
 
+type TokenMetadataResult = {
+  address: string;
+  metadata: TokenMetadataWithOptionalDecimals | null;
+};
+
 export const useTokenMetadata = (tokenAddress: TokenAddress) => {
-  const [tokenMetadata, setTokenMetadata] = useState<TokenMetadataWithOptionalDecimals | null | undefined>(undefined);
+  const [result, setResult] = useState<TokenMetadataResult | undefined>(undefined);
 
   useEffect(() => {
+    if (!tokenAddress) return;
+    //Set on cleanup so a lookup that resolves after the address changed is ignored.
+    let isStale = false;
+
     const fetchTokenMetadata = async () => {
-      if (!tokenAddress) return;
       const alchemy = new Alchemy(alchemyConfig(DEFAULT_CHAIN));
       try {
         const metadata = await alchemy.core.getTokenMetadata(tokenAddress);
@@ -26,26 +34,38 @@ export const useTokenMetadata = (tokenAddress: TokenAddress) => {
           throw new Error("No token metadata returned by alchemy");
         }
 
-        setTokenMetadata({
-          ...metadata,
-          decimals: metadata.decimals ?? undefined, //Set undefined if null to facilitate checks in the UI
+        if (isStale) return;
+        setResult({
+          address: tokenAddress,
+          metadata: {
+            ...metadata,
+            decimals: metadata.decimals ?? undefined, //Set undefined if null to facilitate checks in the UI
+          },
         });
       } catch (error) {
         const onchainMetadata = await fetchOnchainTokenMetadata(tokenAddress as `0x${string}`, DEFAULT_CHAIN).catch(
           () => null
         );
 
+        if (isStale) return;
         if (onchainMetadata) {
-          setTokenMetadata({ ...onchainMetadata, logo: null });
+          setResult({ address: tokenAddress, metadata: { ...onchainMetadata, logo: null } });
         } else {
           console.error("Error fetching token metadata:", error);
-          setTokenMetadata(null);
+          setResult({ address: tokenAddress, metadata: null });
         }
       }
     };
 
     fetchTokenMetadata();
+
+    return () => {
+      isStale = true;
+    };
   }, [tokenAddress]);
+
+  //Only return metadata that belongs to the current address, so a previous lookup never leaks into a new one.
+  const tokenMetadata = tokenAddress && result?.address === tokenAddress ? result.metadata : undefined;
 
   return { tokenMetadata };
 };
