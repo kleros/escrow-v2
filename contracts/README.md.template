@@ -62,7 +62,6 @@ The ones below are optional:
 
 - `ETHERSCAN_API_KEY`: to verify the source of the newly deployed contracts on **Etherscan**.
 - `ARBISCAN_API_KEY`: to verify the source of the newly deployed contracts on **Arbitrum**.
-- `GNOSISSCAN_API_KEY`: to verify the source of the newly deployed contracts on **Gnosis chain**.
 
 #### 1. Deploy to a Local Network
 
@@ -148,10 +147,10 @@ yarn sourcify --network arbitrumSepolia
 scripts/generateDeploymentArtifact.sh <network> <address>
 ```
 
-#### Example: WETH on Gnosis chain
+#### Example: WETH on Arbitrum
 
 ```bash
-scripts/generateDeploymentArtifact.sh gnosischain 0xf8d1677c8a0c961938bf2f9adc3f3cfda759a9d9 > deployments/gnosischain/WETH.json
+scripts/generateDeploymentArtifact.sh arbitrum 0x82aF49447D8a07e3bd95BD0d56f35241523fBab1 > deployments/arbitrum/WETH.json
 ```
 
 ### Push the contracts to a Tenderly project

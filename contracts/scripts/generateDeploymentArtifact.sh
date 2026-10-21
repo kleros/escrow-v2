@@ -13,22 +13,10 @@ address=$2
 
 # Limitation: proxy contracts will return the proxy's ABI, not its implementation's ABI.
 # Workaround: query the address of the implementation, and manually change the address to the proxy's in the artifact.
-# Example: WETH on Gnosis chain, https://gnosisscan.io/address/0x6A023CCd1ff6F2045C3309768eAd9E68F978f6e1#code
 
 url="https://api.etherscan.io/v2"
 
 case $network in
-gnosischain)
-  chainId=100
-  apiKey=$($SCRIPT_DIR/dotenv.sh ETHERSCAN_API_KEY_FIX)
-  ;;
-chiado)
-  # Warning: these are distinct instances!
-  # https://blockscout.com/gnosis/chiado/api-docs
-  # https://blockscout.chiadochain.net
-  url="https://blockscout.com/gnosis/chiado"
-  apiKey=""
-  ;;
 arbitrum)
   chainId=42161
   apiKey=$($SCRIPT_DIR/dotenv.sh ETHERSCAN_API_KEY_FIX)

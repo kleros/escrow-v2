@@ -26,7 +26,7 @@ const ITEMS = [
   {
     text: "DApp Guide",
     Icon: Guide,
-    url: "https://docs.kleros.io/products/escrow",
+    url: "https://docs.kleros.io/products/escrow#v2-next-gen-upgrade",
   },
   {
     text: "Crypto Beginner's Guide",
@@ -36,7 +36,7 @@ const ITEMS = [
   {
     text: "FAQ",
     Icon: Faq,
-    url: "https://docs.kleros.io/kleros-faq",
+    url: "https://docs.kleros.io/welcome/faq",
   },
 ];
 

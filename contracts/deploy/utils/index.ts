@@ -15,8 +15,6 @@ export enum HomeChains {
 export enum ForeignChains {
   ETHEREUM_MAINNET = 1,
   ETHEREUM_SEPOLIA = 11155111,
-  GNOSIS_MAINNET = 100,
-  GNOSIS_CHIADO = 10200,
   HARDHAT = HardhatChain.HARDHAT,
 }
 
